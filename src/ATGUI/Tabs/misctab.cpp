@@ -22,6 +22,7 @@
 
 static char nickname[127] = "";
 
+
 void Misc::RenderTab()
 {
 	const char* strafeTypes[] = { "Forwards", "Backwards", "Left", "Right", "Rage" };
@@ -225,8 +226,12 @@ void Misc::RenderTab()
 			ImGui::Separator();
 			ImGui::Columns(2, nullptr, true);
 			{
+				
 				ImGui::Checkbox(XORSTR("Enabled"), &Settings::ThirdPerson::enabled);
 			    ImGui::Text(XORSTR("Showed Angle"));
+				UI::KeyBindButton(&Settings::ThirdPerson::toggleThirdPerson);
+				//Settings::ThirdPerson::enabled = ImGui::IsKeyPressed(!Settings::ThirdPerson::toggleThirdPerson, false);
+				
 			}
 			ImGui::NextColumn();
 			{

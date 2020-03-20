@@ -4,6 +4,8 @@
 #include "../settings.h"
 #include "../interfaces.h"
 
+static int frameSkip = 0;
+bool toggleTherdPerson = false;
 void ThirdPerson::OverrideView(CViewSetup *pSetup)
 {
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
@@ -18,7 +20,15 @@ void ThirdPerson::OverrideView(CViewSetup *pSetup)
 		input->m_fCameraInThirdPerson = false;
 		return;
 	}
-
+	/* toggle on and off the third person dor pressing the toggleThirdPerson key which is by default KEY_LALT*/
+	if (inputSystem->IsButtonDown(Settings::ThirdPerson::toggleThirdPerson) && frameSkip == 0) {
+		
+		Settings::ThirdPerson::enabled =  Settings::ThirdPerson::enabled ? false : true;
+		frameSkip = 100;
+		//Settings::ThirdPerson::enabled = ImGui::IsKeyPressed(!Settings::ThirdPerson::toggleThirdPerson, false);
+	}else if(frameSkip > 0){ frameSkip -= 1; }
+	
+	
 	if(localplayer->GetAlive() && Settings::ThirdPerson::enabled && !engine->IsTakingScreenshot())
 	{
 		QAngle viewAngles;

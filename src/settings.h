@@ -1151,6 +1151,7 @@ namespace Settings
 	namespace ThirdPerson
 	{
 		inline bool enabled = false;
+		inline ButtonCode_t toggleThirdPerson;
 		inline float distance = 30.0f;
         inline ShowedAngle type = ShowedAngle::REAL;
 	}
