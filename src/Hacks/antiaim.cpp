@@ -112,14 +112,16 @@ static void RageAntiAim(C_BasePlayer *const localplayer, QAngle& angle, bool bSe
     else
     {
         AntiAim::realAngle.y = angle.y;
-        AntiAim::realAngle.x = -89.0f;
+        AntiAim::realAngle.x = 89.0f;
     }
     // if(bSend) {
     //     AntiAim::realAngle.y = angle.y;
+    //     AntiAim::fakeAngle.x = 89.0f;
     // }
     // else
     // {
     //     AntiAim::fakeAngle.y = angle.y;
+    //     AntiAim::realAngle.x = 89.0f;
     // }
 }
 
@@ -144,62 +146,64 @@ static void LegitAntiAim(C_BasePlayer *const localplayer, QAngle& angle, bool bS
 //     else
 //     {
 //         AntiAim::fakeAngle.y = angle.y;
-        
 //     }
 }
 
-static void DoAntiAimX(QAngle& angle, bool bFlip, bool& clamp)
-{
-    static float pDance = 0.0f;
-    AntiAimType_X aa_type = Settings::AntiAim::Pitch::type;
+// static void DoAntiAimX(QAngle& angle, bool bFlip, bool& clamp)
+// {
+//     static float pDance = 0.0f;
+//     AntiAimType_X aa_type = Settings::AntiAim::Pitch::type;
 
-    switch (aa_type)
-    {
-        case AntiAimType_X::STATIC_UP:
-            angle.x = -89.0f;
-            break;
-        case AntiAimType_X::STATIC_DOWN:
-            angle.x = 89.0f;
-            break;
-        case AntiAimType_X::DANCE:
-            pDance += 45.0f;
-            if (pDance > 100)
-                pDance = 0.0f;
-            else if (pDance > 75.f)
-                angle.x = -89.f;
-            else if (pDance < 75.f)
-                angle.x = 89.f;
-            break;
-        case AntiAimType_X::FRONT:
-            angle.x = 0.0f;
-            break;
-        case AntiAimType_X::STATIC_UP_FAKE:
-            angle.x = bFlip ? 89.0f : -89.0f;
-            break;
-        case AntiAimType_X::STATIC_DOWN_FAKE:
-            angle.x = bFlip ? -89.0f : 89.0f;
-            break;
-        case AntiAimType_X::LISP_DOWN:
-            clamp = false;
-            angle.x = 1800089.0f;
-            break;
-        case AntiAimType_X::ANGEL_DOWN:
-            clamp = false;
-            angle.x = 36000088.0f;
-            break;
-        case AntiAimType_X::ANGEL_UP:
-            clamp = false;
-            angle.x = 35999912.0f;
-            break;
-        default:
-            break;
-    }
-}
+//     switch (aa_type)
+//     {
+//         case AntiAimType_X::STATIC_UP:
+//             angle.x = -89.0f;
+//             break;
+//         case AntiAimType_X::STATIC_DOWN:
+//             angle.x = 89.0f;
+//             break;
+//         case AntiAimType_X::DANCE:
+//             pDance += 45.0f;
+//             if (pDance > 100)
+//                 pDance = 0.0f;
+//             else if (pDance > 75.f)
+//                 angle.x = -89.f;
+//             else if (pDance < 75.f)
+//                 angle.x = 89.f;
+//             break;
+//         case AntiAimType_X::FRONT:
+//             angle.x = 0.0f;
+//             break;
+//         case AntiAimType_X::STATIC_UP_FAKE:
+//             angle.x = bFlip ? 89.0f : -89.0f;
+//             break;
+//         case AntiAimType_X::STATIC_DOWN_FAKE:
+//             angle.x = bFlip ? -89.0f : 89.0f;
+//             break;
+//         case AntiAimType_X::LISP_DOWN:
+//             clamp = false;
+//             angle.x = 1800089.0f;
+//             break;
+//         case AntiAimType_X::ANGEL_DOWN:
+//             clamp = false;
+//             angle.x = 36000088.0f;
+//             break;
+//         case AntiAimType_X::ANGEL_UP:
+//             clamp = false;
+//             angle.x = 35999912.0f;
+//             break;
+//         default:
+//             break;
+//     }
+// }
 
 void AntiAim::CreateMove(CUserCmd* cmd)
 {
     if (!Settings::AntiAim::RageAntiAim::enable && !Settings::AntiAim::LegitAntiAim::enable && !Settings::AntiAim::LBYBreaker::enabled)
+    {    
+        AntiAim::realAngle = AntiAim::fakeAngle = CreateMove::lastTickViewAngles;
         return;
+    }
 
     if (Settings::Aimbot::AimStep::enabled && Aimbot::aimStepInProgress)
         return;
@@ -290,7 +294,8 @@ void AntiAim::CreateMove(CUserCmd* cmd)
         CreateMove::sendPacket = bSend;
         if (Settings::AntiAim::HeadEdge::enabled && edging_head && !bSend)
             {angle.y = edge_angle.y;}
-    } 
+    }
+
 
     if (!ValveDSCheck::forceUT && (*csGameRules) && (*csGameRules)->IsValveDS())
     {

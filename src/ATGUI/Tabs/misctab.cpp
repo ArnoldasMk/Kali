@@ -222,24 +222,20 @@ void Misc::RenderTab()
 			}
 			ImGui::Columns(1);
 			ImGui::Separator();
-			ImGui::Text(XORSTR("Third Person"));
+			ImGui::Checkbox(XORSTR("Enable"), &Settings::ThirdPerson::enabled);
+			ImGui::SameLine(0.0f, -1.0f);{ImGui::Text(XORSTR("Third Person"));}
 			ImGui::Separator();
-			ImGui::Columns(2, nullptr, true);
-			{
-				
-				ImGui::Checkbox(XORSTR("Enabled"), &Settings::ThirdPerson::enabled);
-			    ImGui::Text(XORSTR("Showed Angle"));
-				UI::KeyBindButton(&Settings::ThirdPerson::toggleThirdPerson);
-				//Settings::ThirdPerson::enabled = ImGui::IsKeyPressed(!Settings::ThirdPerson::toggleThirdPerson, false);
-				
+			if (Settings::ThirdPerson::enabled) {
+				ImGui::Columns(1, nullptr, true);
+				{
+			    	ImGui::PushItemWidth(-1);
+					ImGui::SliderFloat(XORSTR("Camera Offset"), &Settings::ThirdPerson::distance, 0.f, 500.f, XORSTR("Camera Offset: %0.f"));
+                	ImGui::Combo(XORSTR("Showed Angle"), (int*)& Settings::ThirdPerson::type, angleTypes, IM_ARRAYSIZE(angleTypes));
+					UI::KeyBindButton(&Settings::ThirdPerson::toggleThirdPerson);
+					ImGui::PopItemWidth();	
+				}
 			}
-			ImGui::NextColumn();
-			{
-				ImGui::PushItemWidth(-1);
-				ImGui::SliderFloat(XORSTR("##TPCAMOFFSET"), &Settings::ThirdPerson::distance, 0.f, 500.f, XORSTR("Camera Offset: %0.f"));
-                ImGui::Combo(XORSTR("Showed Angle"), (int*)& Settings::ThirdPerson::type, angleTypes, IM_ARRAYSIZE(angleTypes));
-				ImGui::PopItemWidth();
-			}
+			
 			ImGui::Columns(1);
 			ImGui::Separator();
 			ImGui::Text(XORSTR("Grenade Helper"));

@@ -598,8 +598,10 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("Eventlog")][XORSTR("lines")] = Settings::Eventlog::lines;
 	LoadColor(settings[XORSTR("Eventlog")][XORSTR("color")], Settings::Eventlog::color);
 
-	settings[XORSTR("ThirdPerson")][XORSTR("enabled")] = Settings::ThirdPerson::enabled;
+	settings[XORSTR("ThirdPerson")][XORSTR("enabled")] =  Settings::ThirdPerson::enabled;
+	settings[XORSTR("ThirdPerson")][XORSTR("InThirdPerson")] = Settings::ThirdPerson::inTherdPersonView;
 	settings[XORSTR("ThirdPerson")][XORSTR("distance")] = Settings::ThirdPerson::distance;
+	settings[XORSTR("ThirdPerson")][XORSTR("togglekey")] = Util::GetButtonName(Settings::ThirdPerson::toggleThirdPerson);
 	settings[XORSTR("ThirdPerson")][XORSTR("type")] = (int) Settings::ThirdPerson::type;
 
 	settings[XORSTR("JumpThrow")][XORSTR("enabled")] = Settings::JumpThrow::enabled;
@@ -1172,7 +1174,9 @@ void Settings::LoadConfig(std::string path)
 	GetVal(settings[XORSTR("Eventlog")][XORSTR("color")], &Settings::Eventlog::color);
 
 	GetVal(settings[XORSTR("ThirdPerson")][XORSTR("enabled")], &Settings::ThirdPerson::enabled);
+	GetVal(settings[XORSTR("ThirdPerson")][XORSTR("InThirdPerson")], &Settings::ThirdPerson::inTherdPersonView);
 	GetVal(settings[XORSTR("ThirdPerson")][XORSTR("distance")], &Settings::ThirdPerson::distance);
+	GetButtonCode(settings[XORSTR("ThirdPerson")][XORSTR("togglekey")], &Settings::ThirdPerson::toggleThirdPerson);
 	GetVal(settings[XORSTR("ThirdPerson")][XORSTR("type")], (int*)&Settings::ThirdPerson::type);
 
 	GetVal(settings[XORSTR("JumpThrow")][XORSTR("enabled")], &Settings::JumpThrow::enabled);

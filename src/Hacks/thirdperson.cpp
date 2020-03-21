@@ -20,40 +20,45 @@ void ThirdPerson::OverrideView(CViewSetup *pSetup)
 		input->m_fCameraInThirdPerson = false;
 		return;
 	}
-	/* toggle on and off the third person dor pressing the toggleThirdPerson key which is by default KEY_LALT*/
-	if (inputSystem->IsButtonDown(Settings::ThirdPerson::toggleThirdPerson) && frameSkip == 0) {
-		
-		Settings::ThirdPerson::enabled =  Settings::ThirdPerson::enabled ? false : true;
-		frameSkip = 100;
-		//Settings::ThirdPerson::enabled = ImGui::IsKeyPressed(!Settings::ThirdPerson::toggleThirdPerson, false);
-	}else if(frameSkip > 0){ frameSkip -= 1; }
-	
 	
 	if(localplayer->GetAlive() && Settings::ThirdPerson::enabled && !engine->IsTakingScreenshot())
 	{
-		QAngle viewAngles;
-		engine->GetViewAngles(viewAngles);
-		trace_t tr;
-		Ray_t traceRay;
-		Vector eyePos = localplayer->GetEyePosition();
+		/* toggle on and off the third person dor pressing the toggleThirdPerson key which is by default KEY_LALT*/
+		if (inputSystem->IsButtonDown(Settings::ThirdPerson::toggleThirdPerson) && frameSkip == 0) {
+		
+			Settings::ThirdPerson::inTherdPersonView =  Settings::ThirdPerson::inTherdPersonView ? false : true;
+			frameSkip = 100;
 
-		Vector camOff = Vector(cos(DEG2RAD(viewAngles.y)) * Settings::ThirdPerson::distance,
-							   sin(DEG2RAD(viewAngles.y)) * Settings::ThirdPerson::distance,
-							   sin(DEG2RAD(-viewAngles.x)) * Settings::ThirdPerson::distance);
+		}else if(frameSkip > 0){ frameSkip -= 1; }
 
-		traceRay.Init(eyePos, (eyePos - camOff));
-		CTraceFilter traceFilter;
-		traceFilter.pSkip = localplayer;
-		trace->TraceRay(traceRay, MASK_SOLID, &traceFilter, &tr);
+		if (Settings::ThirdPerson::inTherdPersonView) {
 
-        input->m_fCameraInThirdPerson = true;
-		input->m_vecCameraOffset = Vector(viewAngles.x, viewAngles.y, Settings::ThirdPerson::distance * ((tr.fraction < 1.0f) ? tr.fraction : 1.0f) );
+			QAngle viewAngles;
+			engine->GetViewAngles(viewAngles);
+			trace_t tr;
+			Ray_t traceRay;
+			Vector eyePos = localplayer->GetEyePosition();
+
+			Vector camOff = Vector(cos(DEG2RAD(viewAngles.y)) * Settings::ThirdPerson::distance,
+							   		sin(DEG2RAD(viewAngles.y)) * Settings::ThirdPerson::distance,
+							   		sin(DEG2RAD(-viewAngles.x)) * Settings::ThirdPerson::distance);
+
+			traceRay.Init(eyePos, (eyePos - camOff));
+			CTraceFilter traceFilter;
+			traceFilter.pSkip = localplayer;
+			trace->TraceRay(traceRay, MASK_SOLID, &traceFilter, &tr);
+
+        	input->m_fCameraInThirdPerson = true;
+			input->m_vecCameraOffset = Vector(viewAngles.x, viewAngles.y, Settings::ThirdPerson::distance * ((tr.fraction < 1.0f) ? tr.fraction : 1.0f) );
+		
+		}
+		else if(input->m_fCameraInThirdPerson)
+		{
+			input->m_fCameraInThirdPerson = false;
+			input->m_vecCameraOffset = Vector(0.f, 0.f, 0.f);
+		}
 	}
-	else if(input->m_fCameraInThirdPerson)
-	{
-		input->m_fCameraInThirdPerson = false;
-		input->m_vecCameraOffset = Vector(0.f, 0.f, 0.f);
-	}
+	
 }
 
 
