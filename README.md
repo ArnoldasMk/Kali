@@ -4,18 +4,18 @@
 ===================
 
 # It looks like we are starting to get detected. Use public forks at your own Risk! 
-[![Join the chat at https://gitter.im/Aimtux-Fuzion/Lobby](https://img.shields.io/gitter/room/TechnologyAdvice/Stardust.svg?style=flat-square)](https://gitter.im/Aimtux-Fuzion/Lobby#)
+[![Join the Fuzion chat at https://gitter.im/Aimtux-Fuzion/Lobby](https://img.shields.io/gitter/room/TechnologyAdvice/Stardust.svg?style=flat-square)](https://gitter.im/Aimtux-Fuzion/Lobby#)
 
 Want to chat or play with other Fuzion users? Join us on Gitter!
 
 
-## What is Fuzion?
+## What is AmarHack?
 
-A fully featured internal hack for *CounterStrike : Global Offensive* written in C++.
+A fully featured internal hack for *CounterStrike : Global Offensive* written in C++. Which is a Fork if Aimtux-Fuzion
 
 ## AUR Installation
 
-* You can install Fuzion by using the AUR helper of your choice and installing the package [fuzion-git](https://aur.archlinux.org/packages/fuzion-git/)
+
 * Load Fuzion by using the command `fuzion-load`
 * Unload using `fuzion-unload`
 * As a development package, it will automatically update when you trigger your AUR helper, if a new commit has been pushed
@@ -24,7 +24,7 @@ A fully featured internal hack for *CounterStrike : Global Offensive* written in
 
 **Note:** _Do NOT download or compile as the root user._
 
-#### Download the dependencies required to build Fuzion:
+#### Download the dependencies required to build Amarhack:
 
 If you are having problems compiling make sure you've got the latest version of `g++`.
 
@@ -78,7 +78,7 @@ First of all, make sure CS:GO is open, it does not matter whether you are in gam
 
 Navigate to the directory where Fuzion was built if you have not ready.
 ```bash
-cd Fuzion
+cd AmarHack
 ```
 
 Now, you can inject the hack with the `load` script
@@ -100,7 +100,7 @@ Now, go back into CS:GO, if you are in the main menu of the game you should see 
 
 ## Using the hack
 
-Now that Fuzion has been injected into the game, press <kbd>Insert</kbd> on your keyboard to open the hack menu (<kbd>ALT</kbd>+<kbd>I</kbd> if you are using a laptop).
+Now that AmarHack has been injected into the game, press <kbd>Insert</kbd> on your keyboard to open the hack menu (<kbd>ALT</kbd>+<kbd>I</kbd> if you are using a laptop).
 
 If you want to change skins, create and load configs or open the player list, you can find those buttons at the top of the screen.
 
@@ -152,6 +152,7 @@ To add a config, copy the folder containing it to `~/.config/FuzionGH`
 ## Credits
 
 Special thanks to the Original AimTux project: [https://github.com/AimTuxOfficial/AimTux](https://github.com/AimTuxOfficial/AimTux).
+Special thanks to the Original AimTux project: [https://github.com/LWSS/Fuzion](https://github.com/LWSS/Fuzion)
 
 Special thanks to [@aixxe](http://www.github.com/aixxe/) ([aixxe.net](http://www.aixxe.net)) for the skin changer and with the initial project, as well as helping this project with source code (Available on [@aixxe's](http://www.github.com/aixxe/) github page.).
 
