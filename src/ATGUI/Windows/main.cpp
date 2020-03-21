@@ -47,7 +47,7 @@ void Main::RenderWindow()
 				"Aimbot",
 				"Triggerbot",
 				"Visuals",
-				"HvH",
+				"Anti Aim",
 				"Misc",
 		};
 
@@ -85,7 +85,7 @@ void Main::RenderWindow()
 				Visuals::RenderTab();
 				break;
 			case 3:
-				HvH::RenderTab();
+				AntiAim::RenderTab();
 				break;
 			case 4:
 				Misc::RenderTab();

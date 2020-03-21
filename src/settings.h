@@ -564,12 +564,15 @@ namespace Settings
             inline bool knifeHeld = false;
         }
 
-        namespace Yaw
+        namespace RageAntiAim
         {
-            inline bool enabled = false;
-            inline AntiAimType_Y type = AntiAimType_Y::NONE;
-            inline AntiAimType_Y typeFake = AntiAimType_Y::NONE;
+            inline bool enable = false;
         }
+
+		namespace LegitAntiAim 
+		{
+			inline bool enable = false;
+		}
 
         namespace Pitch
         {
@@ -1151,8 +1154,8 @@ namespace Settings
 	namespace ThirdPerson
 	{
 		inline bool enabled = false;
-		inline ButtonCode_t toggleThirdPerson;
-		inline float distance = 30.0f;
+		inline ButtonCode_t toggleThirdPerson = ButtonCode_t::KEY_LALT;
+		inline float distance = 50.0f;
         inline ShowedAngle type = ShowedAngle::REAL;
 	}
 

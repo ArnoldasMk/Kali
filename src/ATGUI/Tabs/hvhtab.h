@@ -1,6 +1,6 @@
 #pragma once
 
-namespace HvH
+namespace AntiAim
 {
 	void RenderTab();
 }
