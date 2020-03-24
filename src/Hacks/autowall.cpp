@@ -1,6 +1,6 @@
 #include "autowall.h"
 
-#include "aimbot.h"
+#include "legitbot.h"
 #include "../Utils/math.h"
 #include "../Utils/entity.h"
 #include "../interfaces.h"
@@ -83,7 +83,7 @@ static bool TraceToExit(Vector& end, trace_t* enter_trace, Vector start, Vector 
 		{
 			if (exit_trace->m_pEntityHit)
 			{
-				if (enter_trace->m_pEntityHit && enter_trace->m_pEntityHit == entityList->GetClientEntity(Aimbot::targetAimbot))
+				if (enter_trace->m_pEntityHit && enter_trace->m_pEntityHit == entityList->GetClientEntity(Legitbot::targetAimbot))
 					return true;
 			}
 

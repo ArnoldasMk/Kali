@@ -5,7 +5,7 @@
 #include "../SDK/IInputSystem.h"
 #include "../SDK/IGameEvent.h"
 
-namespace Aimbot
+namespace Legitbot
 {
 	extern bool aimStepInProgress;
 	extern std::vector<int64_t> friends;

@@ -160,13 +160,12 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("UI")][XORSTR("Fonts")][XORSTR("ESP")][XORSTR("size")] = Settings::UI::Fonts::ESP::size;
 	settings[XORSTR("UI")][XORSTR("Fonts")][XORSTR("ESP")][XORSTR("flags")] = Settings::UI::Fonts::ESP::flags;
 
-	for (auto i : Settings::Aimbot::weapons)
+	for (auto i : Settings::Legitbot::weapons)
 	{
 		// TODO this is kind of a hack and i'm too tired to find a better way to do this
 		// yes i tried defining a variable, skinSetting, and giving it the same value but woooooo operator overloading
 		// in C++ and weird shit
-		#define weaponSetting settings[XORSTR("Aimbot")][XORSTR("weapons")][Util::Items::GetItemName((enum ItemDefinitionIndex) i.first)]
-		weaponSetting[XORSTR("Enabled")] = i.second.enabled;
+		#define weaponSetting settings[XORSTR("Legitbot")][XORSTR("weapons")][Util::Items::GetItemName((enum ItemDefinitionIndex) i.first)]
 		weaponSetting[XORSTR("Silent")] = i.second.silent;
 		weaponSetting[XORSTR("Friendly")] = i.second.friendly;
 		weaponSetting[XORSTR("ClosestBone")] = i.second.closestBone;
@@ -184,7 +183,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
 		weaponSetting[XORSTR("ErrorMargin")][XORSTR("Enabled")] = i.second.errorMarginEnabled;
 		weaponSetting[XORSTR("ErrorMargin")][XORSTR("Value")] = i.second.errorMarginValue;
 		weaponSetting[XORSTR("AutoAim")][XORSTR("Enabled")] = i.second.autoAimEnabled;
-		weaponSetting[XORSTR("AutoAim")][XORSTR("FOV")] = i.second.autoAimFov;
+		weaponSetting[XORSTR("AimAssist")][XORSTR("Enable")] = i.second.aimAssistEnable;
+		weaponSetting[XORSTR("AutoAim")][XORSTR("LegitFOV")] = i.second.LegitautoAimFov;
 		weaponSetting[XORSTR("AimStep")][XORSTR("Enabled")] = i.second.aimStepEnabled;
 		weaponSetting[XORSTR("AimStep")][XORSTR("min")] = i.second.aimStepMin;
 		weaponSetting[XORSTR("AimStep")][XORSTR("max")] = i.second.aimStepMax;
@@ -193,7 +193,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
 		weaponSetting[XORSTR("RCS")][XORSTR("AmountX")] = i.second.rcsAmountX;
 		weaponSetting[XORSTR("RCS")][XORSTR("AmountY")] = i.second.rcsAmountY;
 		weaponSetting[XORSTR("AutoPistol")][XORSTR("Enabled")] = i.second.autoPistolEnabled;
-		weaponSetting[XORSTR("AutoShoot")][XORSTR("Enabled")] = i.second.autoShootEnabled;
+		//weaponSetting[XORSTR("AutoShoot")][XORSTR("Enabled")] = i.second.autoShootEnabled;
 		weaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")] = i.second.autoScopeEnabled;
 		weaponSetting[XORSTR("NoShoot")][XORSTR("Enabled")] = i.second.noShootEnabled;
 		weaponSetting[XORSTR("IgnoreJump")][XORSTR("Enabled")] = i.second.ignoreJumpEnabled;
@@ -207,6 +207,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
 		weaponSetting[XORSTR("AutoSlow")][XORSTR("enabled")] = i.second.autoSlow;
 		weaponSetting[XORSTR("Prediction")][XORSTR("enabled")] = i.second.predEnabled;
 		weaponSetting[XORSTR("ScopeControl")][XORSTR("Enabled")] = i.second.scopeControlEnabled;
+		
 
 		for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 			weaponSetting[XORSTR("DesiredBones")][XORSTR("Bones")][bone] = i.second.desiredBones[bone];
@@ -216,8 +217,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
 		#undef weaponSetting
 	}
 
-	settings[XORSTR("Aimbot")][XORSTR("AutoCrouch")][XORSTR("enabled")] = Settings::Aimbot::AutoCrouch::enabled;
-	settings[XORSTR("Aimbot")][XORSTR("AutoShoot")][XORSTR("velocityCheck")] = Settings::Aimbot::AutoShoot::velocityCheck;
+	settings[XORSTR("Legitbot")][XORSTR("AutoCrouch")][XORSTR("enabled")] = Settings::Legitbot::AutoCrouch::enabled;
+	//settings[XORSTR("Legitbot")][XORSTR("AutoShoot")][XORSTR("velocityCheck")] = Settings::Legitbot::AutoShoot::velocityCheck;
 
 	settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("no_enemy")] = Settings::AntiAim::AutoDisable::noEnemy;
 	settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("knife_held")] = Settings::AntiAim::AutoDisable::knifeHeld;
@@ -506,6 +507,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
 		#undef skinSetting
 	}
 
+	settings[XORSTR("Legitbot")][XORSTR("enabled")] = Settings::Legitbot::enabled;
+	settings[XORSTR("Ragebot")][XORSTR("enabled")] = Settings::Ragebot::enabled;
 	settings[XORSTR("ShowRanks")][XORSTR("enabled")] = Settings::ShowRanks::enabled;
 
 	settings[XORSTR("ShowSpectators")][XORSTR("enabled")] = Settings::ShowSpectators::enabled;
@@ -657,14 +660,14 @@ void Settings::LoadConfig(std::string path)
 
 	Fonts::SetupFonts();
 
-	Settings::Aimbot::weapons = {
+	Settings::Legitbot::weapons = {
 			{ ItemDefinitionIndex::INVALID, defaultSettings },
 	};
 
-	for (Json::ValueIterator itr = settings[XORSTR("Aimbot")][XORSTR("weapons")].begin(); itr != settings[XORSTR("Aimbot")][XORSTR("weapons")].end(); itr++)
+	for (Json::ValueIterator itr = settings[XORSTR("Legitbot")][XORSTR("weapons")].begin(); itr != settings[XORSTR("Legitbot")][XORSTR("weapons")].end(); itr++)
 	{
 		std::string weaponDataKey = itr.key().asString();
-		auto weaponSetting = settings[XORSTR("Aimbot")][XORSTR("weapons")][weaponDataKey];
+		auto weaponSetting = settings[XORSTR("Legitbot")][XORSTR("weapons")][weaponDataKey];
 
 		// XXX Using exception handling to deal with this is stupid, but I don't care to find a better solution
 		// XXX We can't use GetOrdinal() since the key type is a string...
@@ -678,11 +681,10 @@ void Settings::LoadConfig(std::string path)
 			weaponID = Util::Items::GetItemIndex(weaponDataKey);
 		}
 
-		if (Settings::Aimbot::weapons.find(weaponID) == Settings::Aimbot::weapons.end())
-			Settings::Aimbot::weapons[weaponID] = AimbotWeapon_t();
+		if (Settings::Legitbot::weapons.find(weaponID) == Settings::Legitbot::weapons.end())
+			Settings::Legitbot::weapons[weaponID] = AimbotWeapon_t();
 
 		AimbotWeapon_t weapon = {
-				.enabled = weaponSetting[XORSTR( "Enabled" )].asBool(),
 				.silent = weaponSetting[XORSTR( "Silent" )].asBool(),
 				.friendly = weaponSetting[XORSTR( "Friendly" )].asBool(),
 				.closestBone = weaponSetting[XORSTR( "ClosestBone" )].asBool(),
@@ -693,12 +695,13 @@ void Settings::LoadConfig(std::string path)
 				.smoothSaltEnabled = weaponSetting[XORSTR( "Smooth" )][XORSTR( "Salting" )][XORSTR( "Enabled" )].asBool(),
 				.errorMarginEnabled = weaponSetting[XORSTR( "ErrorMargin" )][XORSTR( "Enabled" )].asBool(),
 				.autoAimEnabled = weaponSetting[XORSTR( "AutoAim" )][XORSTR( "Enabled" )].asBool(),
+				.aimAssistEnable = weaponSetting[XORSTR("AimAssist")][XORSTR("Enable")].asBool(),
 				.aimStepEnabled = weaponSetting[XORSTR( "AimStep" )][XORSTR( "Enabled" )].asBool(),
 				.rcsEnabled = weaponSetting[XORSTR( "RCS" )][XORSTR( "Enabled" )].asBool(),
 				.rcsAlwaysOn = weaponSetting[XORSTR( "RCS" )][XORSTR( "AlwaysOn" )].asBool(),
 				.spreadLimitEnabled = weaponSetting[XORSTR( "SpreadLimit" )][XORSTR( "Enabled" )].asBool(),
 				.autoPistolEnabled = weaponSetting[XORSTR( "AutoPistol" )][XORSTR( "Enabled" )].asBool(),
-				.autoShootEnabled = weaponSetting[XORSTR( "AutoShoot" )][XORSTR( "Enabled" )].asBool(),
+				//.autoShootEnabled = weaponSetting[XORSTR( "AutoShoot" )][XORSTR( "Enabled" )].asBool(),
 				.autoScopeEnabled = weaponSetting[XORSTR( "AutoScope" )][XORSTR( "Enabled" )].asBool(),
 				.noShootEnabled = weaponSetting[XORSTR( "NoShoot" )][XORSTR( "Enabled" )].asBool(),
 				.ignoreJumpEnabled = weaponSetting[XORSTR( "IgnoreJump" )][XORSTR( "Enabled" )].asBool(),
@@ -718,7 +721,7 @@ void Settings::LoadConfig(std::string path)
 				.smoothAmount = weaponSetting[XORSTR( "Smooth" )][XORSTR( "Amount" )].asFloat(),
 				.smoothSaltMultiplier = weaponSetting[XORSTR( "Smooth" )][XORSTR( "Salting" )][XORSTR( "Multiplier" )].asFloat(),
 				.errorMarginValue = weaponSetting[XORSTR( "ErrorMargin" )][XORSTR( "Value" )].asFloat(),
-				.autoAimFov = weaponSetting[XORSTR( "AutoAim" )][XORSTR( "FOV" )].asFloat(),
+				.LegitautoAimFov = weaponSetting[XORSTR( "AutoAim" )][XORSTR( "LegitFOV" )].asFloat(),
 				.aimStepMin = weaponSetting[XORSTR( "AimStep" )][XORSTR( "min" )].asFloat(),
 				.aimStepMax = weaponSetting[XORSTR( "AimStep" )][XORSTR( "max" )].asFloat(),
 				.rcsAmountX = weaponSetting[XORSTR( "RCS" )][XORSTR( "AmountX" )].asFloat(),
@@ -729,12 +732,13 @@ void Settings::LoadConfig(std::string path)
 
 		for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 			weapon.desiredBones[bone] = weaponSetting[XORSTR("DesiredBones")][XORSTR("Bones")][bone].asBool();
-		Settings::Aimbot::weapons.at(weaponID) = weapon;
+		Settings::Legitbot::weapons.at(weaponID) = weapon;
 	}
 
-	GetVal(settings[XORSTR("Aimbot")][XORSTR("AutoCrouch")][XORSTR("enabled")], &Settings::Aimbot::AutoCrouch::enabled);
-	GetVal(settings[XORSTR("Aimbot")][XORSTR("AutoShoot")][XORSTR("velocityCheck")], &Settings::Aimbot::AutoShoot::velocityCheck);
-
+	GetVal(settings[XORSTR("Legitbot")][XORSTR("AutoCrouch")][XORSTR("enabled")], &Settings::Legitbot::AutoCrouch::enabled);
+	//GetVal(settings[XORSTR("Legitbot")][XORSTR("AutoShoot")][XORSTR("velocityCheck")], &Settings::Legitbot::AutoShoot::velocityCheck);
+	GetVal(settings[XORSTR("Legitbot")][XORSTR("enabled")], &Settings::Legitbot::enabled);
+	GetVal(settings[XORSTR("Ragebot")][XORSTR("enabled")], &Settings::Ragebot::enabled);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("no_enemy")], &Settings::AntiAim::AutoDisable::noEnemy);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("knife_held")], &Settings::AntiAim::AutoDisable::knifeHeld);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("enabled")], &Settings::AntiAim::RageAntiAim::enable);

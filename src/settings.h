@@ -175,8 +175,7 @@ enum class AntiAimType_X : int
 
 struct AimbotWeapon_t
 {
-	bool enabled,
-		 silent,
+	bool silent,
 		 friendly,
 		 closestBone,
 	     engageLock,
@@ -186,12 +185,13 @@ struct AimbotWeapon_t
 		 smoothSaltEnabled,
 		 errorMarginEnabled,
 		 autoAimEnabled,
+		 aimAssistEnable,
 		 aimStepEnabled,
 		 rcsEnabled,
 		 rcsAlwaysOn,
 		 spreadLimitEnabled,
 		 autoPistolEnabled,
-		 autoShootEnabled,
+		 //autoShootEnabled,
 		 autoScopeEnabled,
 		 noShootEnabled,
 		 ignoreJumpEnabled,
@@ -210,7 +210,7 @@ struct AimbotWeapon_t
 	float smoothAmount = 1.0f,
 		  smoothSaltMultiplier = 0.0f,
 		  errorMarginValue = 0.0f,
-		  autoAimFov = 180.0f,
+		  LegitautoAimFov = 15.0f,
 		  aimStepMin = 25.0f,
 		  aimStepMax = 35.0f,
 		  rcsAmountX = 2.0f,
@@ -227,8 +227,7 @@ struct AimbotWeapon_t
 				return false;
 		}
 
-		return this->enabled == another.enabled &&
-			this->silent == another.silent &&
+		return this->silent == another.silent &&
 			this->friendly == another.friendly &&
 			this->closestBone == another.closestBone &&
 			this->engageLock == another.engageLock &&
@@ -245,7 +244,8 @@ struct AimbotWeapon_t
 			this->errorMarginEnabled == another.errorMarginEnabled &&
 			this->errorMarginValue == another.errorMarginValue &&
 			this->autoAimEnabled == another.autoAimEnabled &&
-			this->autoAimFov == another.autoAimFov &&
+			this->aimAssistEnable == another.aimAssistEnable &&
+			this->LegitautoAimFov == another.LegitautoAimFov &&
 			this->aimStepEnabled == another.aimStepEnabled &&
 			this->aimStepMin == another.aimStepMin &&
 			this->aimStepMax == another.aimStepMax &&
@@ -254,7 +254,7 @@ struct AimbotWeapon_t
 			this->rcsAmountX == another.rcsAmountX &&
 			this->rcsAmountY == another.rcsAmountY &&
 			this->autoPistolEnabled == another.autoPistolEnabled &&
-			this->autoShootEnabled == another.autoShootEnabled &&
+			//this->autoShootEnabled == another.autoShootEnabled &&
 			this->autoScopeEnabled == another.autoScopeEnabled &&
 			this->noShootEnabled == another.noShootEnabled &&
 			this->ignoreJumpEnabled == another.ignoreJumpEnabled &&
@@ -349,7 +349,7 @@ namespace Settings
 			}
 			namespace Main
 			{
-				inline int posX = 20;
+				inline int posX = 30;
 				inline int posY = 20;
 				inline int sizeX = 960;
 				inline int sizeY = 645;
@@ -394,7 +394,7 @@ namespace Settings
 		}
 	}
     /* Default Aimbot Settings */
-	namespace Aimbot
+	namespace Legitbot
 	{
 		inline bool enabled = false;
         inline bool silent = false;
@@ -437,6 +437,11 @@ namespace Settings
             inline bool engageLock = false;
             inline bool engageLockTR = false; // Target Reacquisition ( re-target after getting a kill when spraying ).
             inline int engageLockTTR = 700; // Time to Target Reacquisition in ms
+		}
+
+		namespace AimAssist
+		{
+			inline bool enabled = false;
 		}
 
 		namespace AutoWall
@@ -526,6 +531,11 @@ namespace Settings
 		inline std::unordered_map<ItemDefinitionIndex, AimbotWeapon_t, Util::IntHash<ItemDefinitionIndex>> weapons = {
                 { ItemDefinitionIndex::INVALID, defaultSettings },
         };
+	}
+
+	namespace Ragebot
+	{
+		inline bool enabled = false;
 	}
 
 	namespace Triggerbot

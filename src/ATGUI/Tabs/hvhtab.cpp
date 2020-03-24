@@ -108,7 +108,7 @@ void AntiAim::RenderTab()
             ImGui::Checkbox(XORSTR("Resolve All"), &Settings::Resolver::resolveAll);
             ImGui::Separator();
             ImGui::Text(XORSTR("Movement"));
-            ImGui::Checkbox(XORSTR("Auto Crouch"), &Settings::Aimbot::AutoCrouch::enabled);
+            ImGui::Checkbox(XORSTR("Auto Crouch"), &Settings::Legitbot::AutoCrouch::enabled);
             ImGui::Separator();
             ImGui::Checkbox(XORSTR("Angle Indicator"), &Settings::AngleIndicator::enabled);
             ImGui::Checkbox(XORSTR("LBY Breaker"), &Settings::AntiAim::LBYBreaker::enabled);

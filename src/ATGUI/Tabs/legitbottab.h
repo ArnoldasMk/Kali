@@ -1,6 +1,7 @@
 #pragma once
 
-namespace Aimbot
+
+namespace Legitbot
 {
 	void RenderTab();
 }

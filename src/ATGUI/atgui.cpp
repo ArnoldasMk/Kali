@@ -29,9 +29,6 @@ void SetupMainMenuBar()
 		ImGui::Selectable(XORSTR("Skin & Model Changer Window"), &SkinModelChanger::showWindow, 0, ImVec2(ImGui::CalcTextSize(XORSTR("Skin & Model Changer Window"), nullptr, true).x, 0.0f));
 		ImGui::SameLine();
 
-		ImGui::Selectable(XORSTR("Config Window"), &Configs::showWindow, 0, ImVec2(ImGui::CalcTextSize(XORSTR("Config Window"), nullptr, true).x, 0.0f));
-		ImGui::SameLine();
-
 		ImGui::Selectable(XORSTR("Spectators Window"), &Settings::ShowSpectators::enabled, 0, ImVec2(ImGui::CalcTextSize(XORSTR("Spectators Window"), nullptr, true).x, 0.0f));
 		ImGui::SameLine();
 
@@ -39,6 +36,9 @@ void SetupMainMenuBar()
 		ImGui::SameLine();
 
 		ImGui::Selectable(XORSTR("Player List Window"), &PlayerList::showWindow, 0, ImVec2(ImGui::CalcTextSize(XORSTR("Player List Window"), nullptr, true).x, 0.0f));
+		ImGui::SameLine();
+
+		ImGui::Selectable(XORSTR("Config Window"), &Configs::showWindow, 0, ImVec2(ImGui::CalcTextSize(XORSTR("Config Window"), nullptr, true).x, 0.0f));
 		ImGui::SameLine();
 
 		ImGui::PopStyleVar();
@@ -54,7 +54,7 @@ void UI::SwapWindow()
 	if (engine->IsInGame())
 		return;
 
-    Draw::ImText( ImVec2( 4.f, 4.f ), ImColor( 255, 255, 255, 255 ), XORSTR( "Fuzion" ), nullptr, 0.0f, nullptr,
+    Draw::ImText( ImVec2( 4.f, 4.f ), ImColor( 255, 255, 255, 255 ), XORSTR( "AmarHack" ), nullptr, 0.0f, nullptr,
                   ImFontFlags_Shadow );
 }
 

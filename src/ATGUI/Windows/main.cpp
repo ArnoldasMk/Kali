@@ -4,7 +4,8 @@
 #include "../../ImGUI/imgui_internal.h"
 #include "../../Utils/xorstring.h"
 
-#include "../Tabs/aimbottab.h"
+#include "../Tabs/legitbottab.h"
+#include "../Tabs/ragebottab.h"
 #include "../Tabs/hvhtab.h"
 #include "../Tabs/misctab.h"
 #include "../Tabs/triggerbottab.h"
@@ -34,7 +35,7 @@ void Main::RenderWindow()
 
 	static int page = 0;
 
-	if (ImGui::Begin(XORSTR("Fuzion"), &Main::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_ShowBorders))
+	if (ImGui::Begin(XORSTR("AmarHack"), &Main::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_ShowBorders))
 	{
 		Settings::UI::Windows::Main::open = true;
 		ImVec2 temp = ImGui::GetWindowSize();
@@ -44,8 +45,9 @@ void Main::RenderWindow()
 		Settings::UI::Windows::Main::posX = (int)temp.x;
 		Settings::UI::Windows::Main::posY = (int)temp.y;
 		const char* tabs[] = {
-				"Aimbot",
-				"Triggerbot",
+				"Legit Bot",
+				"Rage Bot",
+				"Trigger Bot",
 				"Visuals",
 				"Anti Aim",
 				"Misc",
@@ -76,18 +78,21 @@ void Main::RenderWindow()
 		switch (page)
 		{
 			case 0:
-				Aimbot::RenderTab();
+				Legitbot::RenderTab();
 				break;
 			case 1:
-				Triggerbot::RenderTab();
+				Ragebot::RenderTab();
 				break;
 			case 2:
-				Visuals::RenderTab();
+				Triggerbot::RenderTab();
 				break;
 			case 3:
-				AntiAim::RenderTab();
+				Visuals::RenderTab();
 				break;
 			case 4:
+				AntiAim::RenderTab();
+				break;
+			case 5:
 				Misc::RenderTab();
 				break;
 		}

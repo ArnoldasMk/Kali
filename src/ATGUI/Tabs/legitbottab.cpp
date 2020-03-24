@@ -1,4 +1,5 @@
-#include "aimbottab.h"
+#include "legitbottab.h"
+#include "ragebottab.h"
 
 #include "../../SDK/definitions.h"
 #include "../../settings.h"
@@ -9,7 +10,7 @@
 #pragma GCC diagnostic ignored "-Wformat-security"
 
 static ItemDefinitionIndex currentWeapon = ItemDefinitionIndex::INVALID;
-static bool enabled = false;
+//static bool enabled = false;
 static bool silent = false;
 static bool friendly = false;
 static bool closestBone = false;
@@ -33,7 +34,8 @@ static float smoothSaltMultiplier = 0.0f;
 static bool errorMarginEnabled = false;
 static float errorMarginValue = 0.0f;
 static bool autoAimEnabled = false;
-static float autoAimValue = 180.0f;
+static bool aimAssistEnable = false;
+static float LegitautoAimValue = 15.0f;
 static bool aimStepEnabled = false;
 static float aimStepMin = 25.0f;
 static float aimStepMax = 35.0f;
@@ -42,7 +44,7 @@ static bool rcsAlwaysOn = false;
 static float rcsAmountX = 2.0f;
 static float rcsAmountY = 2.0f;
 static bool autoPistolEnabled = false;
-static bool autoShootEnabled = false;
+//static bool autoShootEnabled = false;
 static bool autoScopeEnabled = false;
 static bool noShootEnabled = false;
 static bool ignoreJumpEnabled = false;
@@ -61,63 +63,62 @@ static bool scopeControlEnabled = false;
 void UI::ReloadWeaponSettings()
 {
 	ItemDefinitionIndex index = ItemDefinitionIndex::INVALID;
-	if (Settings::Aimbot::weapons.find(currentWeapon) != Settings::Aimbot::weapons.end())
+	if (Settings::Legitbot::weapons.find(currentWeapon) != Settings::Legitbot::weapons.end())
 		index = currentWeapon;
 
-	enabled = Settings::Aimbot::weapons.at(index).enabled;
-	silent = Settings::Aimbot::weapons.at(index).silent;
-	friendly = Settings::Aimbot::weapons.at(index).friendly;
-	closestBone = Settings::Aimbot::weapons.at(index).closestBone;
-	engageLock = Settings::Aimbot::weapons.at(index).engageLock;
-	engageLockTR = Settings::Aimbot::weapons.at(index).engageLockTR;
-	engageLockTTR = Settings::Aimbot::weapons.at(index).engageLockTTR;
-	bone = Settings::Aimbot::weapons.at(index).bone;
-	aimkey = Settings::Aimbot::weapons.at(index).aimkey;
-	aimkeyOnly = Settings::Aimbot::weapons.at(index).aimkeyOnly;
-	smoothEnabled = Settings::Aimbot::weapons.at(index).smoothEnabled;
-	smoothValue = Settings::Aimbot::weapons.at(index).smoothAmount;
-	smoothType = Settings::Aimbot::weapons.at(index).smoothType;
-	smoothSaltEnabled = Settings::Aimbot::weapons.at(index).smoothSaltEnabled;
-	smoothSaltMultiplier = Settings::Aimbot::weapons.at(index).smoothSaltMultiplier;
-	errorMarginEnabled = Settings::Aimbot::weapons.at(index).errorMarginEnabled;
-	errorMarginValue = Settings::Aimbot::weapons.at(index).errorMarginValue;
-	autoAimEnabled = Settings::Aimbot::weapons.at(index).autoAimEnabled;
-	autoAimValue = Settings::Aimbot::weapons.at(index).autoAimFov;
-	aimStepEnabled = Settings::Aimbot::weapons.at(index).aimStepEnabled;
-	aimStepMin = Settings::Aimbot::weapons.at(index).aimStepMin;
-	aimStepMax = Settings::Aimbot::weapons.at(index).aimStepMax;
-	rcsEnabled = Settings::Aimbot::weapons.at(index).rcsEnabled;
-	rcsAlwaysOn = Settings::Aimbot::weapons.at(index).rcsAlwaysOn;
-	rcsAmountX = Settings::Aimbot::weapons.at(index).rcsAmountX;
-	rcsAmountY = Settings::Aimbot::weapons.at(index).rcsAmountY;
-	autoPistolEnabled = Settings::Aimbot::weapons.at(index).autoPistolEnabled;
-	autoShootEnabled = Settings::Aimbot::weapons.at(index).autoShootEnabled;
-	autoScopeEnabled = Settings::Aimbot::weapons.at(index).autoScopeEnabled;
-	noShootEnabled = Settings::Aimbot::weapons.at(index).noShootEnabled;
-	ignoreJumpEnabled = Settings::Aimbot::weapons.at(index).ignoreJumpEnabled;
-	ignoreEnemyJumpEnabled = Settings::Aimbot::weapons.at(index).ignoreEnemyJumpEnabled;
-	smokeCheck = Settings::Aimbot::weapons.at(index).smokeCheck;
-	flashCheck = Settings::Aimbot::weapons.at(index).flashCheck;
-	spreadLimitEnabled = Settings::Aimbot::weapons.at(index).spreadLimitEnabled;
-	spreadLimit = Settings::Aimbot::weapons.at(index).spreadLimit;
-	autoWallEnabled = Settings::Aimbot::weapons.at(index).autoWallEnabled;
-	autoWallValue = Settings::Aimbot::weapons.at(index).autoWallValue;
-	autoAimRealDistance = Settings::Aimbot::weapons.at(index).autoAimRealDistance;
-	autoSlow = Settings::Aimbot::weapons.at(index).autoSlow;
-	predEnabled = Settings::Aimbot::weapons.at(index).predEnabled;
-	scopeControlEnabled = Settings::Aimbot::weapons.at(index).scopeControlEnabled;
+	silent = Settings::Legitbot::weapons.at(index).silent;
+	friendly = Settings::Legitbot::weapons.at(index).friendly;
+	closestBone = Settings::Legitbot::weapons.at(index).closestBone;
+	engageLock = Settings::Legitbot::weapons.at(index).engageLock;
+	engageLockTR = Settings::Legitbot::weapons.at(index).engageLockTR;
+	engageLockTTR = Settings::Legitbot::weapons.at(index).engageLockTTR;
+	bone = Settings::Legitbot::weapons.at(index).bone;
+	aimkey = Settings::Legitbot::weapons.at(index).aimkey;
+	aimkeyOnly = Settings::Legitbot::weapons.at(index).aimkeyOnly;
+	smoothEnabled = Settings::Legitbot::weapons.at(index).smoothEnabled;
+	smoothValue = Settings::Legitbot::weapons.at(index).smoothAmount;
+	smoothType = Settings::Legitbot::weapons.at(index).smoothType;
+	smoothSaltEnabled = Settings::Legitbot::weapons.at(index).smoothSaltEnabled;
+	smoothSaltMultiplier = Settings::Legitbot::weapons.at(index).smoothSaltMultiplier;
+	errorMarginEnabled = Settings::Legitbot::weapons.at(index).errorMarginEnabled;
+	errorMarginValue = Settings::Legitbot::weapons.at(index).errorMarginValue;
+	autoAimEnabled = Settings::Legitbot::weapons.at(index).autoAimEnabled;
+	aimAssistEnable = Settings::Legitbot::weapons.at(index).aimAssistEnable;
+	LegitautoAimValue = Settings::Legitbot::weapons.at(index).LegitautoAimFov;
+	aimStepEnabled = Settings::Legitbot::weapons.at(index).aimStepEnabled;
+	aimStepMin = Settings::Legitbot::weapons.at(index).aimStepMin;
+	aimStepMax = Settings::Legitbot::weapons.at(index).aimStepMax;
+	rcsEnabled = Settings::Legitbot::weapons.at(index).rcsEnabled;
+	rcsAlwaysOn = Settings::Legitbot::weapons.at(index).rcsAlwaysOn;
+	rcsAmountX = Settings::Legitbot::weapons.at(index).rcsAmountX;
+	rcsAmountY = Settings::Legitbot::weapons.at(index).rcsAmountY;
+	autoPistolEnabled = Settings::Legitbot::weapons.at(index).autoPistolEnabled;
+	//autoShootEnabled = Settings::Legitbot::weapons.at(index).autoShootEnabled;
+	autoScopeEnabled = Settings::Legitbot::weapons.at(index).autoScopeEnabled;
+	noShootEnabled = Settings::Legitbot::weapons.at(index).noShootEnabled;
+	ignoreJumpEnabled = Settings::Legitbot::weapons.at(index).ignoreJumpEnabled;
+	ignoreEnemyJumpEnabled = Settings::Legitbot::weapons.at(index).ignoreEnemyJumpEnabled;
+	smokeCheck = Settings::Legitbot::weapons.at(index).smokeCheck;
+	flashCheck = Settings::Legitbot::weapons.at(index).flashCheck;
+	spreadLimitEnabled = Settings::Legitbot::weapons.at(index).spreadLimitEnabled;
+	spreadLimit = Settings::Legitbot::weapons.at(index).spreadLimit;
+	autoWallEnabled = Settings::Legitbot::weapons.at(index).autoWallEnabled;
+	autoWallValue = Settings::Legitbot::weapons.at(index).autoWallValue;
+	autoAimRealDistance = Settings::Legitbot::weapons.at(index).autoAimRealDistance;
+	autoSlow = Settings::Legitbot::weapons.at(index).autoSlow;
+	predEnabled = Settings::Legitbot::weapons.at(index).predEnabled;
+	scopeControlEnabled = Settings::Legitbot::weapons.at(index).scopeControlEnabled;
 
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
-		desiredBones[bone] = Settings::Aimbot::weapons.at(index).desiredBones[bone];
+		desiredBones[bone] = Settings::Legitbot::weapons.at(index).desiredBones[bone];
 }
 
 void UI::UpdateWeaponSettings()
 {
-	if (Settings::Aimbot::weapons.find(currentWeapon) == Settings::Aimbot::weapons.end())
-		Settings::Aimbot::weapons[currentWeapon] = AimbotWeapon_t();
+	if (Settings::Legitbot::weapons.find(currentWeapon) == Settings::Legitbot::weapons.end())
+		Settings::Legitbot::weapons[currentWeapon] = AimbotWeapon_t();
 
 	AimbotWeapon_t settings = {
-			.enabled = enabled,
 			.silent = silent,
 			.friendly = friendly,
 			.closestBone = closestBone,
@@ -128,12 +129,13 @@ void UI::UpdateWeaponSettings()
 			.smoothSaltEnabled = smoothSaltEnabled,
 			.errorMarginEnabled = errorMarginEnabled,
 			.autoAimEnabled = autoAimEnabled,
+			.aimAssistEnable = aimAssistEnable,
 			.aimStepEnabled = aimStepEnabled,
 			.rcsEnabled = rcsEnabled,
 			.rcsAlwaysOn = rcsAlwaysOn,
 			.spreadLimitEnabled = spreadLimitEnabled,
 			.autoPistolEnabled = autoPistolEnabled,
-			.autoShootEnabled = autoShootEnabled,
+			//.autoShootEnabled = autoShootEnabled,
 			.autoScopeEnabled = autoScopeEnabled,
 			.noShootEnabled = noShootEnabled,
 			.ignoreJumpEnabled = ignoreJumpEnabled,
@@ -153,7 +155,7 @@ void UI::UpdateWeaponSettings()
 			.smoothAmount = smoothValue,
 			.smoothSaltMultiplier = smoothSaltMultiplier,
 			.errorMarginValue = errorMarginValue,
-			.autoAimFov = autoAimValue,
+			.LegitautoAimFov = LegitautoAimValue,
 			.aimStepMin = aimStepMin,
 			.aimStepMax = aimStepMax,
 			.rcsAmountX = rcsAmountX,
@@ -165,30 +167,35 @@ void UI::UpdateWeaponSettings()
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 		settings.desiredBones[bone] = desiredBones[bone];
 
-	Settings::Aimbot::weapons.at(currentWeapon) = settings;
+	Settings::Legitbot::weapons.at(currentWeapon) = settings;
 
-	if (Settings::Aimbot::weapons.at(currentWeapon) == Settings::Aimbot::weapons.at(ItemDefinitionIndex::INVALID) &&
+	if (Settings::Legitbot::weapons.at(currentWeapon) == Settings::Legitbot::weapons.at(ItemDefinitionIndex::INVALID) &&
 		currentWeapon != ItemDefinitionIndex::INVALID)
 	{
-		Settings::Aimbot::weapons.erase(currentWeapon);
+		Settings::Legitbot::weapons.erase(currentWeapon);
 		UI::ReloadWeaponSettings();
 	}
 }
 
-void Aimbot::RenderTab()
+void Legitbot::RenderTab()
 {
 	const char* targets[] = { "PELVIS", "", "", "HIP", "LOWER SPINE", "MIDDLE SPINE", "UPPER SPINE", "NECK", "HEAD" };
 	const char* smoothTypes[] = { "Slow Near End", "Constant Speed", "Fast Near End" };
 	static char filterWeapons[32];
 
-	if (ImGui::Checkbox(XORSTR("Enabled"), &enabled))
-		UI::UpdateWeaponSettings();
-	ImGui::Separator();
+	
 
-	ImGui::Columns(3, nullptr, true);
+	ImGui::Columns(3, nullptr, false);
 	{
 		ImGui::SetColumnOffset(1, 200);
-		ImGui::PushItemWidth(-1);
+		ImGui::PushItemWidth(-10);
+
+		if (ImGui::Checkbox(XORSTR("Enabled"), &Settings::Legitbot::enabled))
+		{	
+			Settings::Ragebot::enabled = false;
+			UI::UpdateWeaponSettings();
+		}
+
 		ImGui::InputText(XORSTR("##FILTERWEAPONS"), filterWeapons, IM_ARRAYSIZE(filterWeapons));
 		ImGui::PopItemWidth();
 		ImGui::ListBoxHeader(XORSTR("##GUNS"), ImVec2(-1, -1));
@@ -205,7 +212,7 @@ void Aimbot::RenderTab()
 			ImGui::PushID((int) it.first);
 			std::string formattedName;
 			char changeIndicator = ' ';
-			bool isChanged = Settings::Aimbot::weapons.find(it.first) != Settings::Aimbot::weapons.end();
+			bool isChanged = Settings::Legitbot::weapons.find(it.first) != Settings::Legitbot::weapons.end();
 			if (!isDefault && isChanged)
 				changeIndicator = '*';
 			formattedName = changeIndicator + (isDefault ? Util::Items::GetItemDisplayName(it.first).c_str() : Util::Items::GetItemDisplayName(it.first));
@@ -223,21 +230,22 @@ void Aimbot::RenderTab()
 		ImGui::SetColumnOffset(2, ImGui::GetWindowWidth() / 2 + 75);
 		ImGui::BeginChild(XORSTR("COL1"), ImVec2(0, 0), true);
 		{
-			ImGui::Text(XORSTR("Target"));
+			ImGui::Text(XORSTR("Legitbot Target"));
 			ImGui::Separator();
-			ImGui::Columns(2, nullptr, false);
-			{
-				if (ImGui::Checkbox(XORSTR("FriendlyFire"), &friendly))
-					UI::UpdateWeaponSettings();
-			}
-			ImGui::NextColumn();
+			ImGui::Columns(1, nullptr, false);
 			{
 				ImGui::PushItemWidth(-1);
-				ImGui::Text(XORSTR("Aimbot Target"));
-				if(!closestBone){
-					if (ImGui::Combo(XORSTR("##AIMTARGET"), (int*)&bone, targets, IM_ARRAYSIZE(targets)))
-						UI::UpdateWeaponSettings();
-				}
+				if(ImGui::Checkbox(XORSTR("ClosestBone"), &closestBone))
+					UI::UpdateWeaponSettings();
+				
+				
+				ImGui::SameLine(0.0f, -1.0f);
+				{
+					if(!closestBone)
+					{
+						if (ImGui::Combo(XORSTR("##AIMTARGET"), (int*)&bone, targets, IM_ARRAYSIZE(targets)))
+							UI::UpdateWeaponSettings();
+					}
 				if( closestBone )
 				{
 					if(ImGui::Button(XORSTR("Bones"), ImVec2(-1, 0)))
@@ -326,11 +334,9 @@ void Aimbot::RenderTab()
 						ImGui::EndPopup();
 					}
 				}
-				if(ImGui::Checkbox(XORSTR("ClosestBone"), &closestBone))
-					UI::UpdateWeaponSettings();
+				}
+				
 
-				if(ImGui::Checkbox(XORSTR("EngageLock"), &engageLock))
-					UI::UpdateWeaponSettings();
 				if(engageLock)
 				{
 					if(ImGui::Checkbox(XORSTR("Target Reacquisition"), &engageLockTR))
@@ -343,24 +349,65 @@ void Aimbot::RenderTab()
 				}
 				ImGui::PopItemWidth();
 			}
-			ImGui::Columns(1);
+			ImGui::Columns(2);
 			ImGui::Separator();
-			ImGui::Text(XORSTR("Accuracy"));
+			ImGui::Text(XORSTR("Legitbot Type"));
+			
+			//Fov Settings Text
+			ImGui::NextColumn();
+			{
+				ImGui::Text("FOV Settings");
+			}
 			ImGui::Separator();
+
+			//Legitbot Settings
 			ImGui::Columns(2, nullptr, true);
 			{
 				if (ImGui::Checkbox(XORSTR("Auto Aim"), &autoAimEnabled))
+				{
+					aimAssistEnable = false;
 					UI::UpdateWeaponSettings();
-				if (ImGui::Checkbox(XORSTR("Recoil Control"), &rcsEnabled))
+				}
+
+				if (ImGui::Checkbox(XORSTR("Aim Assist"), &aimAssistEnable))
+				{
+					autoAimEnabled = false;
+					aimkeyOnly = false;
+					predEnabled = false;
+					errorMarginEnabled = false;
 					UI::UpdateWeaponSettings();
+				}
+			}
+
+			//FOV settings values
+			ImGui::NextColumn();
+			{
+				ImGui::PushItemWidth(-1);
+				if (ImGui::SliderFloat(XORSTR("##FOV"), &LegitautoAimValue, 0, 15))
+				{
+					UI::UpdateWeaponSettings();
+				}
 				if (ImGui::Checkbox(XORSTR("Distance-Based FOV"), &autoAimRealDistance))
+				{
 					UI::UpdateWeaponSettings();
+				}		
+				ImGui::PopItemWidth();		
+			}
+
+			ImGui::Columns(1);
+			ImGui::Separator();
+			ImGui::Text("Recoil Settings");
+			ImGui::Separator();
+			ImGui::Columns(2, nullptr, true);
+			{
+				if (ImGui::Checkbox(XORSTR("Recoil Control"), &rcsEnabled))
+				{
+					UI::UpdateWeaponSettings();
+				}
 			}
 			ImGui::NextColumn();
 			{
 				ImGui::PushItemWidth(-1);
-				if (ImGui::SliderFloat(XORSTR("##AA"), &autoAimValue, 0, 180))
-					UI::UpdateWeaponSettings();
 				ImGui::PopItemWidth();
 				if (ImGui::Button(XORSTR("RCS Settings"), ImVec2(-1, 0)))
 					ImGui::OpenPopup(XORSTR("optionRCSAmount"));
@@ -407,17 +454,17 @@ void Aimbot::RenderTab()
 					UI::UpdateWeaponSettings();
 				ImGui::PopItemWidth();
 			}
-			ImGui::Columns(1);
-			ImGui::Separator();
-			ImGui::Text(XORSTR("Autoshoot"));
-			ImGui::Separator();
-			if (ImGui::Checkbox(XORSTR("Auto Shoot"), &autoShootEnabled))
-				UI::UpdateWeaponSettings();
-			ImGui::Checkbox(XORSTR("Velocity Check"), &Settings::Aimbot::AutoShoot::velocityCheck);
-			if( ImGui::Checkbox(XORSTR("Spread Limit"), &spreadLimitEnabled) )
-				UI::UpdateWeaponSettings();
-			if( ImGui::SliderFloat(XORSTR("##SPREADLIMIT"), &spreadLimit, 0, 0.1) )
-				UI::UpdateWeaponSettings();
+			//ImGui::Columns(1);
+			//ImGui::Separator();
+			// ImGui::Text(XORSTR("Autoshoot"));
+			// ImGui::Separator();
+			// if (ImGui::Checkbox(XORSTR("Auto Shoot"), &autoShootEnabled))
+			// 	UI::UpdateWeaponSettings();
+			// ImGui::Checkbox(XORSTR("Velocity Check"), &Settings::Legitbot::AutoShoot::velocityCheck);
+			// if( ImGui::Checkbox(XORSTR("Spread Limit"), &spreadLimitEnabled) )
+			// 	UI::UpdateWeaponSettings();
+			// if( ImGui::SliderFloat(XORSTR("##SPREADLIMIT"), &spreadLimit, 0, 0.1) )
+			// 	UI::UpdateWeaponSettings();
 			ImGui::EndChild();
 		}
 	}
@@ -636,11 +683,11 @@ void Aimbot::RenderTab()
 
 			ImGui::Columns(1);
 			ImGui::Separator();
-			if (currentWeapon > ItemDefinitionIndex::INVALID && Settings::Aimbot::weapons.find(currentWeapon) != Settings::Aimbot::weapons.end())
+			if (currentWeapon > ItemDefinitionIndex::INVALID && Settings::Legitbot::weapons.find(currentWeapon) != Settings::Legitbot::weapons.end())
 			{
 				if (ImGui::Button(XORSTR("Clear Weapon Settings"), ImVec2(-1, 0)))
 				{
-					Settings::Aimbot::weapons.erase(currentWeapon);
+					Settings::Legitbot::weapons.erase(currentWeapon);
 					UI::ReloadWeaponSettings();
 				}
 			}

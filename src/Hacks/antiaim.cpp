@@ -1,6 +1,6 @@
 #include "antiaim.h"
 
-#include "aimbot.h"
+#include "legitbot.h"
 #include "../settings.h"
 #include "../Hooks/hooks.h"
 #include "../Utils/math.h"
@@ -84,16 +84,16 @@ static bool HasViableEnemy()
             || entity->GetImmune())
             continue;
 
-        if( !Aimbot::friends.empty() ) // check for friends, if any
+        if( !Legitbot::friends.empty() ) // check for friends, if any
         {
             IEngineClient::player_info_t entityInformation;
             engine->GetPlayerInfo(i, &entityInformation);
 
-            if (std::find(Aimbot::friends.begin(), Aimbot::friends.end(), entityInformation.xuid) != Aimbot::friends.end())
+            if (std::find(Legitbot::friends.begin(), Legitbot::friends.end(), entityInformation.xuid) != Legitbot::friends.end())
                 continue;
         }
 
-        if (Settings::Aimbot::friendly || !Entity::IsTeamMate(entity, localplayer))
+        if (Settings::Legitbot::friendly || !Entity::IsTeamMate(entity, localplayer))
             return true;
     }
 
@@ -129,16 +129,17 @@ static void LegitAntiAim(C_BasePlayer *const localplayer, QAngle& angle, bool bS
 
     float maxDelta = AntiAim::GetMaxDelta(localplayer->GetAnimState());
     //bSend ? angle.y -=  maxDelta/2.0f : angle.y += maxDelta/2.0f ;
-    bSend ? angle.y -=  40.0f : angle.y += 40.0f ;
+    bSend ? angle.y -=  20.0f : angle.y += 20.0f ;
 
     if(bSend) {
-        AntiAim::fakeAngle.y = angle.y;
-        AntiAim::fakeAngle.x = CreateMove::lastTickViewAngles.x;
+         AntiAim::realAngle.y = angle.y;
+        AntiAim::realAngle.x = CreateMove::lastTickViewAngles.x;
     }
     else
     {
-        AntiAim::realAngle.y = angle.y;
-        AntiAim::realAngle.x = CreateMove::lastTickViewAngles.x;
+        AntiAim::fakeAngle.y = angle.y;
+        AntiAim::fakeAngle.x = CreateMove::lastTickViewAngles.x;
+       
     }
 //     if(bSend) {
 //         AntiAim::realAngle.y = angle.y;
@@ -205,7 +206,7 @@ void AntiAim::CreateMove(CUserCmd* cmd)
         return;
     }
 
-    if (Settings::Aimbot::AimStep::enabled && Aimbot::aimStepInProgress)
+    if (Settings::Legitbot::AimStep::enabled && Legitbot::aimStepInProgress)
         return;
 
     QAngle oldAngle = cmd->viewangles;
