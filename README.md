@@ -6,17 +6,17 @@
 # It looks like we are starting to get detected. Use public forks at your own Risk! 
 [![Join the Fuzion chat at https://gitter.im/Aimtux-Fuzion/Lobby](https://img.shields.io/gitter/room/TechnologyAdvice/Stardust.svg?style=flat-square)](https://gitter.im/Aimtux-Fuzion/Lobby#)
 
-Want to chat or play with other Fuzion users? Join us on Gitter!
+Want to chat or play with other MissedIT users? Join us on Gitter!
 
 
 ## What is MissedIT?
 
-A fully featured internal hack for *CounterStrike : Global Offensive* written in C++. Which is a Fork if Aimtux-Fuzion
+A fully featured internal hack for *CounterStrike : Global Offensive* written in C++. Which is a Fork if Aimtux-MissedIT
 
 ## AUR Installation
 
 
-* Load Fuzion by using the command `./load`
+* Load MissedIT by using the command `./load`
 * Unload using `./unload`
 * As a development package, it will automatically update when you trigger your AUR helper, if a new commit has been pushed
 
@@ -47,14 +47,14 @@ sudo dnf install cmake gcc-c++ gdb git libstdc++-static mesa-libGL-devel SDL2-de
 
 ===================
 
-#### Download Fuzion:
+#### Download MissedIT:
 
 ```bash
 git clone --recursive https://github.com/MissedIt/MissedIT-csgo.git
 ```
 
 ```bash
-cd Fuzion
+cd MissedIT
 ```
 
 ===================
@@ -76,7 +76,7 @@ You can later update with
 
 First of all, make sure CS:GO is open, it does not matter whether you are in game or not. However, it is not recommended to inject while CS:GO is loading into a map. 
 
-Navigate to the directory where Fuzion was built if you have not ready.
+Navigate to the directory where MissedIT was built if you have not ready.
 ```bash
 cd MissedIT
 ```
@@ -152,10 +152,10 @@ To add a config, copy the folder containing it to `~/.config/MissedIT/CSGO`
 ## Credits
 
 Special thanks to the Original AimTux project: [https://github.com/AimTuxOfficial/AimTux](https://github.com/AimTuxOfficial/AimTux).
-Special thanks to the Original AimTux project: [https://github.com/LWSS/Fuzion](https://github.com/LWSS/Fuzion)
+Special thanks to the Original AimTux project: [https://github.com/LWSS/MissedIT](https://github.com/LWSS/MissedIT)
 
 Special thanks to [@aixxe](http://www.github.com/aixxe/) ([aixxe.net](http://www.aixxe.net)) for the skin changer and with the initial project, as well as helping this project with source code (Available on [@aixxe's](http://www.github.com/aixxe/) github page.).
 
 This project was also originally based upon Atex's [Linux Basehook](http://unknowncheats.me/forum/counterstrike-global-offensive/181878-linux-basehook.html).
 
-[telans](https://github.com/telans) for the AUR package [fuzion-git](https://aur.archlinux.org/packages/fuzion-git/)
+[telans](https://github.com/telans) for the AUR package [MissedIT-git](https://aur.archlinux.org/packages/MissedIT-git/)
