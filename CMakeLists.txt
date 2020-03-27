@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(amargo)
+project(MissedIT)
 set(CMAKE_CXX_STANDARD 17)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -46,5 +46,5 @@ EXCLUDE_FILES_FROM_DIR_IN_LIST("${SOURCE_FILES}" "${CMAKE_SOURCE_DIR}/src/ImGUI/
 
 include_directories(${INCLUDE_DIRS})
 
-add_library(amargo SHARED ${SOURCE_FILES})
-target_link_libraries(amargo SDL2 GL dl)
+add_library(MissedIT SHARED ${SOURCE_FILES})
+target_link_libraries(MissedIT SDL2 GL dl)

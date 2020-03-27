@@ -1,5 +1,5 @@
 <p align="center">
-<img src="http://i.imgur.com/mCtrbIN.png">
+<img src="missedit.jpg">
 </p>
 ===================
 
@@ -9,22 +9,22 @@
 Want to chat or play with other Fuzion users? Join us on Gitter!
 
 
-## What is AmarHack?
+## What is MissedIT?
 
 A fully featured internal hack for *CounterStrike : Global Offensive* written in C++. Which is a Fork if Aimtux-Fuzion
 
 ## AUR Installation
 
 
-* Load Fuzion by using the command `fuzion-load`
-* Unload using `fuzion-unload`
+* Load Fuzion by using the command `./load`
+* Unload using `./unload`
 * As a development package, it will automatically update when you trigger your AUR helper, if a new commit has been pushed
 
 ## Compiling
 
 **Note:** _Do NOT download or compile as the root user._
 
-#### Download the dependencies required to build Amarhack:
+#### Download the dependencies required to build MissedIT:
 
 If you are having problems compiling make sure you've got the latest version of `g++`.
 
@@ -50,7 +50,7 @@ sudo dnf install cmake gcc-c++ gdb git libstdc++-static mesa-libGL-devel SDL2-de
 #### Download Fuzion:
 
 ```bash
-git clone --recursive https://github.com/LWSS/Fuzion
+git clone --recursive https://github.com/MissedIt/MissedIT-csgo.git
 ```
 
 ```bash
@@ -78,7 +78,7 @@ First of all, make sure CS:GO is open, it does not matter whether you are in gam
 
 Navigate to the directory where Fuzion was built if you have not ready.
 ```bash
-cd AmarHack
+cd MissedIT
 ```
 
 Now, you can inject the hack with the `load` script
@@ -100,7 +100,7 @@ Now, go back into CS:GO, if you are in the main menu of the game you should see 
 
 ## Using the hack
 
-Now that AmarHack has been injected into the game, press <kbd>Insert</kbd> on your keyboard to open the hack menu (<kbd>ALT</kbd>+<kbd>I</kbd> if you are using a laptop).
+Now that MissedIT has been injected into the game, press <kbd>Insert</kbd> on your keyboard to open the hack menu (<kbd>ALT</kbd>+<kbd>I</kbd> if you are using a laptop).
 
 If you want to change skins, create and load configs or open the player list, you can find those buttons at the top of the screen.
 
@@ -116,12 +116,12 @@ If you wish to unload the hack from the game, you can do so by entering the comm
 
 Configs are stored in a hidden directory in your home folder. Specifically 
 ```
-~/.config/Fuzion
+~/.config/MissedIT/CSGO
 ```
 
 Each `config.json` is stored in a seperately named folder (The name you see in-game, in the config window). 
 
-To add a config, create a folder inside of the `~/.config/Fuzion` folder with a name of your choice, and paste the `config.json` inside of that folder.
+To add a config, create a folder inside of the `~/.config/MissedIT/CSGO` folder with a name of your choice, and paste the `config.json` inside of that folder.
 
 To see hidden folders inside your home folder, press <kbd>CTRL</kbd>+<kbd>H</kbd> when using a file manager.
 
@@ -134,12 +134,12 @@ ls -la ~/
 ## Grenade Configs
 
 ```
-~/.config/FuzionGH
+~/.config/MissedIT-GH/CSGO
 ```
 
 Each `config.json` is stored in the folder named after them map name.
 
-To add a config, copy the folder containing it to `~/.config/FuzionGH`
+To add a config, copy the folder containing it to `~/.config/MissedIT/CSGO`
 
 
 ## Screenshots
