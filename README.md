@@ -94,7 +94,7 @@ If the injection was successful you will see a message at the bottom saying `Suc
 
 Now, go back into CS:GO, if you are in the main menu of the game you should see a banner in the top left like so:
 
-![this](http://i.imgur.com/Gb0SV1u.png)
+<!-- ![this](http://i.imgur.com/Gb0SV1u.png) -->
 
 *Note:* if you are getting crashes ( that are unrelated to game updates ) Try disabling shader precaching in your Steam Client -> Steam -> Settings -> Shader Pre-Caching. 
 
