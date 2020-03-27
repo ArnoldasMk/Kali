@@ -115,7 +115,7 @@ void UI::ReloadWeaponSettings()
 
 void UI::UpdateWeaponSettings()
 {
-	if (Settings::Legitbot::weapons.find(currentWeapon) == Settings::Legitbot::weapons.end())
+	if (Settings::Legitbot::weapons.find(currentWeapon) == Settings::Legitbot::weapons.end() && Settings::Legitbot::enabled)
 		Settings::Legitbot::weapons[currentWeapon] = AimbotWeapon_t();
 
 	AimbotWeapon_t settings = {
@@ -163,6 +163,8 @@ void UI::UpdateWeaponSettings()
 			.autoWallValue = autoWallValue,
 			.spreadLimit = spreadLimit,
 	};
+
+
 
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 		settings.desiredBones[bone] = desiredBones[bone];
@@ -369,7 +371,7 @@ void Legitbot::RenderTab()
 					UI::UpdateWeaponSettings();
 				}
 
-				if (ImGui::Checkbox(XORSTR("Aim Assist"), &aimAssistEnable))
+				if (ImGui::Checkbox(XORSTR("Aim Assist //under Progress"), &aimAssistEnable))
 				{
 					autoAimEnabled = false;
 					aimkeyOnly = false;

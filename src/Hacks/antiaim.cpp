@@ -101,9 +101,9 @@ static bool HasViableEnemy()
 }
 static void RageAntiAim(C_BasePlayer *const localplayer, QAngle& angle, bool bSend){
 
-    float maxDelta = AntiAim::GetMaxDelta(localplayer->GetAnimState());
+    //float maxDelta = AntiAim::GetMaxDelta(localplayer->GetAnimState());
 
-    bSend ? angle.y -= maxDelta : angle.y -= 180.0f ;
+    bSend ? angle.y -= 190.0f : angle.y -= 180.0f ;
 
     if(bSend) {
         AntiAim::fakeAngle.y = angle.y;
@@ -114,89 +114,28 @@ static void RageAntiAim(C_BasePlayer *const localplayer, QAngle& angle, bool bSe
         AntiAim::realAngle.y = angle.y;
         AntiAim::realAngle.x = 89.0f;
     }
-    // if(bSend) {
-    //     AntiAim::realAngle.y = angle.y;
-    //     AntiAim::fakeAngle.x = 89.0f;
-    // }
-    // else
-    // {
-    //     AntiAim::fakeAngle.y = angle.y;
-    //     AntiAim::realAngle.x = 89.0f;
-    // }
 }
 
-static void LegitAntiAim(C_BasePlayer *const localplayer, QAngle& angle, bool bSend){
+static QAngle LegitAntiAim(CUserCmd* cmd ,C_BasePlayer *const localplayer, QAngle angle, bool bSend){
 
-    float maxDelta = AntiAim::GetMaxDelta(localplayer->GetAnimState());
+    //float maxDelta = AntiAim::GetMaxDelta(localplayer->GetAnimState());
     //bSend ? angle.y -=  maxDelta/2.0f : angle.y += maxDelta/2.0f ;
-    bSend ? angle.y -=  20.0f : angle.y += 20.0f ;
+    bSend ? angle.x = angle.x : angle.x = 89.0f ;
 
     if(bSend) {
-         AntiAim::realAngle.y = angle.y;
-        AntiAim::realAngle.x = CreateMove::lastTickViewAngles.x;
+        AntiAim::fakeAngle.y = CreateMove::lastTickViewAngles.y;
+        AntiAim::fakeAngle.x = angle.x;
+        return AntiAim::fakeAngle;
     }
     else
     {
-        AntiAim::fakeAngle.y = angle.y;
-        AntiAim::fakeAngle.x = CreateMove::lastTickViewAngles.x;
+        angle.y -= 180.0f;
+        AntiAim::realAngle.y = angle.y; 
+        AntiAim::realAngle.x = angle.x;
+        return AntiAim::realAngle;
        
     }
-//     if(bSend) {
-//         AntiAim::realAngle.y = angle.y;
-//     }
-//     else
-//     {
-//         AntiAim::fakeAngle.y = angle.y;
-//     }
 }
-
-// static void DoAntiAimX(QAngle& angle, bool bFlip, bool& clamp)
-// {
-//     static float pDance = 0.0f;
-//     AntiAimType_X aa_type = Settings::AntiAim::Pitch::type;
-
-//     switch (aa_type)
-//     {
-//         case AntiAimType_X::STATIC_UP:
-//             angle.x = -89.0f;
-//             break;
-//         case AntiAimType_X::STATIC_DOWN:
-//             angle.x = 89.0f;
-//             break;
-//         case AntiAimType_X::DANCE:
-//             pDance += 45.0f;
-//             if (pDance > 100)
-//                 pDance = 0.0f;
-//             else if (pDance > 75.f)
-//                 angle.x = -89.f;
-//             else if (pDance < 75.f)
-//                 angle.x = 89.f;
-//             break;
-//         case AntiAimType_X::FRONT:
-//             angle.x = 0.0f;
-//             break;
-//         case AntiAimType_X::STATIC_UP_FAKE:
-//             angle.x = bFlip ? 89.0f : -89.0f;
-//             break;
-//         case AntiAimType_X::STATIC_DOWN_FAKE:
-//             angle.x = bFlip ? -89.0f : 89.0f;
-//             break;
-//         case AntiAimType_X::LISP_DOWN:
-//             clamp = false;
-//             angle.x = 1800089.0f;
-//             break;
-//         case AntiAimType_X::ANGEL_DOWN:
-//             clamp = false;
-//             angle.x = 36000088.0f;
-//             break;
-//         case AntiAimType_X::ANGEL_UP:
-//             clamp = false;
-//             angle.x = 35999912.0f;
-//             break;
-//         default:
-//             break;
-//     }
-// }
 
 void AntiAim::CreateMove(CUserCmd* cmd)
 {
@@ -212,9 +151,6 @@ void AntiAim::CreateMove(CUserCmd* cmd)
     QAngle oldAngle = cmd->viewangles;
     float oldForward = cmd->forwardmove;
     float oldSideMove = cmd->sidemove;
-    
-    //AntiAim::realAngle = AntiAim::fakeAngle = CreateMove::lastTickViewAngles;
-    //AntiAim::realAngle = AntiAim::fakeAngle = CreateMove::lastTickViewAngles;
     
 
     QAngle angle = cmd->viewangles;
@@ -286,7 +222,7 @@ void AntiAim::CreateMove(CUserCmd* cmd)
     ** legit is for legit configs and rage is desined for hvh moments
     */
     if(Settings::AntiAim::LegitAntiAim::enable && !needToFlick) {
-        LegitAntiAim(localplayer, angle, bSend);
+       angle =  LegitAntiAim(cmd, localplayer, angle, bSend);
         CreateMove::sendPacket = bSend;
     }
     else if (Settings::AntiAim::RageAntiAim::enable && !needToFlick)
@@ -307,10 +243,10 @@ void AntiAim::CreateMove(CUserCmd* cmd)
     // if (Settings::AntiAim::Pitch::enabled)
     //     DoAntiAimX(angle, bSend, should_clamp);
 
-    if( should_clamp ){
-        Math::NormalizeAngles(angle);
-        Math::ClampAngles(angle);
-    }
+    // if( should_clamp ){
+    //     Math::NormalizeAngles(angle);
+    //     Math::ClampAngles(angle);
+    // }
 
     cmd->viewangles = angle;
 

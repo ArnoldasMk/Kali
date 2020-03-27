@@ -272,6 +272,75 @@ struct AimbotWeapon_t
 	}
 } const defaultSettings{};
 
+struct RagebotWeapon_t
+{
+	bool silent,
+		 friendly,
+		 closestBone,
+		 aimStepEnabled,
+		 rcsEnabled,
+		 rcsAlwaysOn,
+		 spreadLimitEnabled,
+		 autoPistolEnabled,
+		 autoShootEnabled,
+		 autoScopeEnabled,
+		 ignoreJumpEnabled,
+		 ignoreEnemyJumpEnabled,
+		 autoWallEnabled,
+		 autoSlow,
+		 predEnabled,
+		 scopeControlEnabled;
+	Bone bone = BONE_HEAD;
+	SmoothType smoothType = SmoothType::SLOW_END;
+	ButtonCode_t aimkey = ButtonCode_t ::MOUSE_MIDDLE;
+	float smoothAmount = 1.0f,
+		  smoothSaltMultiplier = 0.0f,
+		  errorMarginValue = 0.0f,
+		  RagebotautoAimFov = 360.0f,
+		  rcsAmountX = 2.0f,
+		  rcsAmountY = 2.0f,
+		  autoWallValue = 10.0f,
+		  spreadLimit = 1.0f;
+	bool desiredBones[31];
+
+	bool operator == (const RagebotWeapon_t& another) const
+	{
+		for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
+		{
+			if( this->desiredBones[bone] != another.desiredBones[bone] )
+				return false;
+		}
+
+		return this->silent == another.silent &&
+			this->friendly == another.friendly &&
+			this->closestBone == another.closestBone &&
+			this->bone == another.bone &&
+			this->aimkey == another.aimkey &&
+			this->smoothAmount == another.smoothAmount &&
+			this->smoothType == another.smoothType &&
+			this->smoothSaltMultiplier == another.smoothSaltMultiplier &&
+			this->errorMarginValue == another.errorMarginValue &&
+			this->RagebotautoAimFov == another.RagebotautoAimFov &&
+			this->aimStepEnabled == another.aimStepEnabled &&
+			this->rcsEnabled == another.rcsEnabled &&
+			this->rcsAlwaysOn == another.rcsAlwaysOn &&
+			this->rcsAmountX == another.rcsAmountX &&
+			this->rcsAmountY == another.rcsAmountY &&
+			this->autoPistolEnabled == another.autoPistolEnabled &&
+			this->autoShootEnabled == another.autoShootEnabled &&
+			this->autoScopeEnabled == another.autoScopeEnabled &&
+			this->ignoreJumpEnabled == another.ignoreJumpEnabled &&
+			this->ignoreEnemyJumpEnabled == another.ignoreEnemyJumpEnabled &&
+			this->spreadLimitEnabled == another.spreadLimitEnabled &&
+			this->spreadLimit == another.spreadLimit &&
+			this->autoWallEnabled == another.autoWallEnabled &&
+			this->autoWallValue == another.autoWallValue &&
+			this->autoSlow == another.autoSlow &&
+			this->predEnabled == another.predEnabled &&
+			this->scopeControlEnabled == another.scopeControlEnabled;
+	}
+} const ragedefault{};
+
 class ColorVar
 {
 public:
@@ -425,7 +494,7 @@ namespace Settings
 		namespace AutoAim
 		{
 			inline bool enabled = false;
-            inline float fov = 180.0f;
+            inline float fov = 15.0f;
             inline bool realDistance = false;
             inline bool closestBone = false;
             inline bool desiredBones[] = {true, true, true, true, true, true, true, // center mass
@@ -536,7 +605,135 @@ namespace Settings
 	namespace Ragebot
 	{
 		inline bool enabled = false;
+        inline bool silent = false;
+        inline bool friendly = false;
+        inline Bone bone = BONE_HEAD;
+        inline ButtonCode_t aimkey = ButtonCode_t::MOUSE_MIDDLE;
+        inline bool aimkeyOnly = false;
+
+		namespace Smooth
+		{
+			inline bool enabled = false;
+            inline float value = 0.5f;
+            inline SmoothType type = SmoothType::SLOW_END;
+
+			namespace Salting
+			{
+				inline bool enabled = false;
+                inline float multiplier = 0.0f;
+			}
+		}
+
+		namespace ErrorMargin
+		{
+			inline bool enabled = false;
+			inline float value = 0.0f;
+		}
+
+		namespace AutoAim
+		{
+			inline bool enabled = false;
+            inline float fov = 360.0f;
+            inline bool realDistance = false;
+            inline bool closestBone = false;
+            inline bool desiredBones[] = {true, true, true, true, true, true, true, // center mass
+                                          true, true, true, true, true, true, true, // left arm
+                                          true, true, true, true, true, true, true, // right arm
+                                          true, true, true, true, true, // left leg
+                                          true, true, true, true, true  // right leg
+            };
+		}
+
+		namespace AutoWall
+		{
+			inline bool enabled = false;
+			inline float value = 10.0f;
+		}
+
+		namespace AimStep
+		{
+			inline bool enabled = false;
+			inline float min = 25.0f;
+			inline float max = 35.0f;
+		}
+
+		namespace RCS
+		{
+			inline bool enabled = false;
+			inline bool always_on = false;
+			inline float valueX = 2.0f;
+			inline float valueY = 2.0f;
+		}
+
+		namespace AutoPistol
+		{
+			inline bool enabled = false;
+		}
+
+		namespace AutoShoot
+		{
+			inline bool enabled = false;
+			inline bool velocityCheck = false;
+			inline bool autoscope = false;
+		}
+
+		namespace AutoCrouch
+		{
+			inline bool enabled = false;
+		}
+
+		namespace AutoSlow
+		{
+			inline bool enabled = false;
+		}
+
+		namespace NoShoot
+		{
+			inline bool enabled = false;
+		}
+
+		namespace IgnoreJump
+		{
+			inline bool enabled = false;
+		}
+
+		namespace IgnoreEnemyJump
+		{
+			inline bool enabled = false;
+		}
+
+		namespace SmokeCheck
+		{
+			inline bool enabled = false;
+		}
+
+		namespace FlashCheck
+		{
+			inline bool enabled = false;
+		}
+
+		namespace SpreadLimit
+		{
+			inline bool enabled = false;
+			inline float value = 0.1f;
+		}
+
+		namespace Prediction
+		{
+			inline bool enabled = false;
+		}
+
+		namespace ScopeControl
+		{
+			inline bool enabled = false;
+		}
+
+		inline std::unordered_map<ItemDefinitionIndex, RagebotWeapon_t, Util::IntHash<ItemDefinitionIndex>> weapons = {
+                { ItemDefinitionIndex::INVALID, ragedefault },
+        };
 	}
+
+
 
 	namespace Triggerbot
 	{

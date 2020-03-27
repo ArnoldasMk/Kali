@@ -8,6 +8,10 @@
 #include "../settings.h"
 #include "../interfaces.h"
 
+#include <stdio.h>
+#include <string>
+#include <iostream>
+
 bool Legitbot::aimStepInProgress = false;
 std::vector<int64_t> Legitbot::friends = { };
 std::vector<long> killTimes = { 0 }; // the Epoch time from when we kill someone
@@ -749,7 +753,11 @@ bool AimKeyOnly (CUserCmd* cmd)
 
 void Legitbot::CreateMove(CUserCmd* cmd)
 {
+	if(!Settings::Legitbot::enabled)
+		return;
+		
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+	
 	if (!localplayer || !localplayer->GetAlive())
 		return;
 
@@ -862,19 +870,7 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 			*/
 			if ( !(GetClosestSpot(cmd, localplayer, player).IsZero())) 
 			{
-				shouldAim = false;
-				//aimAssist area
-				// QAngle delta = angle - oldAngle;
-    			// float sens = cvar->FindVar(XORSTR("sensitivity"))->GetFloat();
-    			// float m_pitch = cvar->FindVar(XORSTR("m_pitch"))->GetFloat();
-    			// float m_yaw = cvar->FindVar(XORSTR("m_yaw"))->GetFloat();
-    			// float zoomMultiplier = cvar->FindVar("zoom_sensitivity_ratio_mouse")->GetFloat();
-
-    			// Math::NormalizeAngles(delta);
-
-    			// cmd->mousedx = -delta.y / ( m_yaw * 0.1 * zoomMultiplier );
-    			// cmd->mousedy = delta.x / ( m_pitch * 0.1 * zoomMultiplier );
-
+				//under proress
 			}
 		}
 	}

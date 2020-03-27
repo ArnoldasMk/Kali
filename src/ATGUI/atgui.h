@@ -16,8 +16,10 @@ namespace UI
 	bool ColorPicker4(float col[4]);
 	void KeyBindButton(ButtonCode_t* key);
 	void UpdateWeaponSettings();
+	void UpdateRageWeaponSettings();
 	void AimBotTargetPicker();
 	void ReloadWeaponSettings();
+	void ReloadRageWeaponSettings();
 }
 
 

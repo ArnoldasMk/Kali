@@ -44,32 +44,14 @@ void AntiAim::RenderTab()
                 ImGui::Columns(1);
                 ImGui::Separator();
                 ImGui::Checkbox(XORSTR("Legit AntiAim"), &Settings::AntiAim::LegitAntiAim::enable);
-                if (Settings::AntiAim::LegitAntiAim::enable) { Settings::AntiAim::RageAntiAim::enable = false; }
+                if (Settings::AntiAim::LegitAntiAim::enable) 
+                {
+                    ImGui::Text("It can reveal you in overwatch Use in your own risk");
+                    Settings::AntiAim::RageAntiAim::enable = false;
+
+                }
                 ImGui::Separator();
-            {        
-                // ImGui::Columns(1);
-                // ImGui::Separator();
-                // ImGui::Checkbox(XORSTR("Pitch"), &Settings::AntiAim::Pitch::enabled);
-                // ImGui::Separator();
-                // ImGui::Columns(2, nullptr, true);
-                // {
-                //     ImGui::ItemSize(ImVec2(0.0f, 0.0f), 0.0f);
-                //     ImGui::Text(XORSTR("Pitch Actual"));
-                // }
-                // ImGui::NextColumn();
-                // {
-                //     ImGui::PushItemWidth(-1);
-                //     if (ImGui::Combo(XORSTR("##XTYPE"), (int*)& Settings::AntiAim::Pitch::type, xTypes, IM_ARRAYSIZE(xTypes)))
-                //     {
-                //         if (!ValveDSCheck::forceUT && ((*csGameRules) && (*csGameRules)->IsValveDS()) && Settings::AntiAim::Pitch::type >= AntiAimType_X::STATIC_UP_FAKE)
-                //         {
-                //             Settings::AntiAim::Pitch::type = AntiAimType_X::STATIC_UP;
-                //             ImGui::OpenPopup(XORSTR("Error###UNTRUSTED_AA"));
-                //         }
-                //     }
-                //     ImGui::PopItemWidth();
-                // }
- }
+        
                 ImGui::Columns(1);
                 ImGui::Separator();
                 ImGui::Text(XORSTR("Disable"));

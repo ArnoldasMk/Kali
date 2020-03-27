@@ -15,6 +15,7 @@
 #include "../Hacks/autoblock.h"
 #include "../Hacks/predictionsystem.h"
 #include "../Hacks/legitbot.h"
+#include "../Hacks/ragebot.h"
 #include "../Hacks/triggerbot.h"
 #include "../Hacks/autoknife.h"
 #include "../Hacks/antiaim.h"
@@ -23,7 +24,6 @@
 #include "../Hacks/esp.h"
 #include "../Hacks/tracereffect.h"
 #include "../Hacks/nofall.h"
-#include "../ATGUI/Tabs/legitbottab.h"
 
 bool CreateMove::sendPacket = true;
 QAngle CreateMove::lastTickViewAngles = QAngle(0, 0, 0);
@@ -56,9 +56,8 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
 		NoFall::PrePredictionCreateMove(cmd);
 
 		PredictionSystem::StartPrediction(cmd);
-			if(Settings::Legitbot::enabled) {
-				Legitbot::CreateMove(cmd);
-			}
+			Legitbot::CreateMove(cmd);
+			Ragebot::CreateMove(cmd);
 			Triggerbot::CreateMove(cmd);
 			AutoKnife::CreateMove(cmd);
             AntiAim::CreateMove(cmd);
