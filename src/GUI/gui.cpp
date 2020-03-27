@@ -6,14 +6,14 @@
 panorama::IUIPanel* GUI::menuRoot = nullptr;
 panorama::IUIPanel* GUI::hudRoot = nullptr;
 /* Custom Panels */
-panorama::IUIPanel* GUI::fuzionMain = nullptr;
+panorama::IUIPanel* GUI::MissedITMain = nullptr;
 
 // Javascript to force root panel to have our child and raise it.
 const char *cuckProtocol =
         "var parentPanel = $.GetContextPanel();\n"
-                "var fuzion = parentPanel.FindChild(\"FuzionMain\");\n"
-                "$.Msg(\"Loading Panel: \" + fuzion.id);"
-                "fuzion.BLoadLayoutFromString( \"%s\", false, false);\n";
+                "var MissedIT = parentPanel.FindChild(\"MissedITMain\");\n"
+                "$.Msg(\"Loading Panel: \" + MissedIT.id);"
+                "MissedIT.BLoadLayoutFromString( \"%s\", false, false);\n";
 
 static constexpr unsigned int JS_MAX = 65535;
 char jsCode[JS_MAX];
@@ -77,33 +77,33 @@ static void SetupAndCheckPanels()
         return;
     }
     /* Setup our Custom Panel */
-    if( !GUI::fuzionMain ){
-        cvar->ConsoleDPrintf("Creating Fuzion panel...\n");
+    if( !GUI::MissedITMain ){
+        cvar->ConsoleDPrintf("Creating MissedIT panel...\n");
         // Get rid of newlines, they mess up the javascript syntax
         std::replace(mainXML.begin(), mainXML.end(), '\n', ' ');
         snprintf(jsCode, JS_MAX, cuckProtocol, mainXML.c_str());
 
         panorama::CPanoramaSymbol type = panoramaEngine->AccessUIEngine()->MakeSymbol("Panel");
         cvar->ConsoleDPrintf("Panel symbol: (%s)\n", panoramaEngine->AccessUIEngine()->ResolveSymbol(type));
-        GUI::fuzionMain = panoramaEngine->AccessUIEngine()->CreatePanel(&type, "FuzionMain", root)->panel;
+        GUI::MissedITMain = panoramaEngine->AccessUIEngine()->CreatePanel(&type, "MissedITMain", root)->panel;
         panoramaEngine->AccessUIEngine()->RunScript(root, jsCode, "panorama/layout/base.xml", 8, 10, false);
         cvar->ConsoleDPrintf("Root ID: %s\n", root->GetID());
     }
     /* Afterwards, Set parent based on if we're in-game */
-    GUI::fuzionMain->SetParent( root );
+    GUI::MissedITMain->SetParent( root );
 }
 
 void GUI::ToggleUI()
 {
     SetupAndCheckPanels();
-    if( !panoramaEngine->AccessUIEngine()->IsValidPanelPointer(GUI::fuzionMain) ){
-        cvar->ConsoleDPrintf("[GUI::ToggleUI] - Something is wrong with our Fuzion Panel Pointer(%p)\n", (void*)GUI::fuzionMain);
+    if( !panoramaEngine->AccessUIEngine()->IsValidPanelPointer(GUI::MissedITMain) ){
+        cvar->ConsoleDPrintf("[GUI::ToggleUI] - Something is wrong with our MissedIT Panel Pointer(%p)\n", (void*)GUI::MissedITMain);
         return;
     }
-    if( !GUI::fuzionMain->HasBeenLayedOut() ){
-        cvar->ConsoleDPrintf("[GUI::ToggleUI] - Fuzion Panel not layed out yet. Try again.\n");
+    if( !GUI::MissedITMain->HasBeenLayedOut() ){
+        cvar->ConsoleDPrintf("[GUI::ToggleUI] - MissedIT Panel not layed out yet. Try again.\n");
         return;
     }
 
-    GUI::fuzionMain->SetVisible(!GUI::fuzionMain->IsVisible());
+    GUI::MissedITMain->SetVisible(!GUI::MissedITMain->IsVisible());
 }

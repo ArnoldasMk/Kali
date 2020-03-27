@@ -123,7 +123,6 @@ static Vector GetClosestSpot( CUserCmd* cmd, C_BasePlayer* localPlayer, C_BasePl
 	engine->GetViewAngles(viewAngles);
 
 	float tempFov = Settings::Ragebot::AutoAim::fov;
-	float tempDistance = Settings::Ragebot::AutoAim::fov * 5.f;
 
 	Vector pVecTarget = localPlayer->GetEyePosition();
 
@@ -158,11 +157,8 @@ static Vector GetClosestSpot( CUserCmd* cmd, C_BasePlayer* localPlayer, C_BasePl
 
 static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, Vector* bestSpot, float* bestDamage, AimTargetType aimTargetType = AimTargetType::FOV)
 {
-	static C_BasePlayer* lockedOn = nullptr;
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 	C_BasePlayer* closestEntity = nullptr;
-
-	float bestFov = Settings::Ragebot::AutoAim::fov;
 
 	for (int i = 1; i < engine->GetMaxClients(); ++i)
 	{
@@ -585,10 +581,6 @@ void Ragebot::UpdateValues()
 	Settings::Ragebot::silent = currentWeaponSetting.silent;
 	Settings::Ragebot::friendly = currentWeaponSetting.friendly;
 	Settings::Ragebot::bone = currentWeaponSetting.bone;
-	Settings::Ragebot::aimkey = currentWeaponSetting.aimkey;
-	Settings::Ragebot::Smooth::value = currentWeaponSetting.smoothAmount;
-	Settings::Ragebot::Smooth::type = currentWeaponSetting.smoothType;
-	Settings::Ragebot::ErrorMargin::value = currentWeaponSetting.errorMarginValue;
 	Settings::Ragebot::AutoAim::fov = currentWeaponSetting.RagebotautoAimFov;
 	Settings::Ragebot::AutoAim::closestBone = currentWeaponSetting.closestBone;
 	Settings::Ragebot::AimStep::enabled = currentWeaponSetting.aimStepEnabled;
@@ -601,7 +593,6 @@ void Ragebot::UpdateValues()
 	Settings::Ragebot::RCS::valueY = currentWeaponSetting.rcsAmountY;
 	Settings::Ragebot::IgnoreJump::enabled = currentWeaponSetting.ignoreJumpEnabled;
 	Settings::Ragebot::IgnoreEnemyJump::enabled = currentWeaponSetting.ignoreEnemyJumpEnabled;
-	Settings::Ragebot::Smooth::Salting::multiplier = currentWeaponSetting.smoothSaltMultiplier;
 	Settings::Ragebot::SpreadLimit::enabled = currentWeaponSetting.spreadLimitEnabled;
 	Settings::Ragebot::SpreadLimit::value = currentWeaponSetting.spreadLimit;
 	Settings::Ragebot::AutoWall::enabled = currentWeaponSetting.autoWallEnabled;

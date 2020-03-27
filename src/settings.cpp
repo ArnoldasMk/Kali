@@ -232,11 +232,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
 		weaponSetting[XORSTR("Friendly")] = i.second.friendly;
 		weaponSetting[XORSTR("ClosestBone")] = i.second.closestBone;
 		weaponSetting[XORSTR("TargetBone")] = (int) i.second.bone;
-		weaponSetting[XORSTR("AimKey")] = Util::GetButtonName(i.second.aimkey);
-		weaponSetting[XORSTR("Smooth")][XORSTR("Amount")] = i.second.smoothAmount;
-		weaponSetting[XORSTR("Smooth")][XORSTR("Type")] = (int) i.second.smoothType;
-		weaponSetting[XORSTR("Smooth")][XORSTR("Salting")][XORSTR("Multiplier")] = i.second.smoothSaltMultiplier;
-		weaponSetting[XORSTR("ErrorMargin")][XORSTR("Value")] = i.second.errorMarginValue;
 		weaponSetting[XORSTR("AutoAim")][XORSTR("LegitFOV")] = i.second.RagebotautoAimFov;
 		weaponSetting[XORSTR("AimStep")][XORSTR("Enabled")] = i.second.aimStepEnabled;
 		weaponSetting[XORSTR("RCS")][XORSTR("Enabled")] = i.second.rcsEnabled;
@@ -827,11 +822,6 @@ void Settings::LoadConfig(std::string path)
 				.scopeControlEnabled = weaponSetting[XORSTR( "ScopeControl" )][XORSTR( "Enabled" )].asBool(),
 
 				.bone = weaponSetting[XORSTR( "TargetBone" )].asInt(),
-				.smoothType = (SmoothType) weaponSetting[XORSTR( "Smooth" )][XORSTR( "Type" )].asInt(),
-				.aimkey = Util::GetButtonCode(weaponSetting[XORSTR( "AimKey" )].asCString()),
-				.smoothAmount = weaponSetting[XORSTR( "Smooth" )][XORSTR( "Amount" )].asFloat(),
-				.smoothSaltMultiplier = weaponSetting[XORSTR( "Smooth" )][XORSTR( "Salting" )][XORSTR( "Multiplier" )].asFloat(),
-				.errorMarginValue = weaponSetting[XORSTR( "ErrorMargin" )][XORSTR( "Value" )].asFloat(),
 				.RagebotautoAimFov = weaponSetting[XORSTR( "AutoAim" )][XORSTR( "LegitFOV" )].asFloat(),
 				.rcsAmountX = weaponSetting[XORSTR( "RCS" )][XORSTR( "AmountX" )].asFloat(),
 				.rcsAmountY = weaponSetting[XORSTR( "RCS" )][XORSTR( "AmountY" )].asFloat(),

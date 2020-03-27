@@ -56,8 +56,11 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
 		NoFall::PrePredictionCreateMove(cmd);
 
 		PredictionSystem::StartPrediction(cmd);
+		if (Settings::Legitbot::enabled){
 			Legitbot::CreateMove(cmd);
+		}else if (Settings::Ragebot::enabled) {
 			Ragebot::CreateMove(cmd);
+		}
 			Triggerbot::CreateMove(cmd);
 			AutoKnife::CreateMove(cmd);
             AntiAim::CreateMove(cmd);

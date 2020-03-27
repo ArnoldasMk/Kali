@@ -291,12 +291,7 @@ struct RagebotWeapon_t
 		 predEnabled,
 		 scopeControlEnabled;
 	Bone bone = BONE_HEAD;
-	SmoothType smoothType = SmoothType::SLOW_END;
-	ButtonCode_t aimkey = ButtonCode_t ::MOUSE_MIDDLE;
-	float smoothAmount = 1.0f,
-		  smoothSaltMultiplier = 0.0f,
-		  errorMarginValue = 0.0f,
-		  RagebotautoAimFov = 360.0f,
+	float RagebotautoAimFov = 360.0f,
 		  rcsAmountX = 2.0f,
 		  rcsAmountY = 2.0f,
 		  autoWallValue = 10.0f,
@@ -315,11 +310,6 @@ struct RagebotWeapon_t
 			this->friendly == another.friendly &&
 			this->closestBone == another.closestBone &&
 			this->bone == another.bone &&
-			this->aimkey == another.aimkey &&
-			this->smoothAmount == another.smoothAmount &&
-			this->smoothType == another.smoothType &&
-			this->smoothSaltMultiplier == another.smoothSaltMultiplier &&
-			this->errorMarginValue == another.errorMarginValue &&
 			this->RagebotautoAimFov == another.RagebotautoAimFov &&
 			this->aimStepEnabled == another.aimStepEnabled &&
 			this->rcsEnabled == another.rcsEnabled &&

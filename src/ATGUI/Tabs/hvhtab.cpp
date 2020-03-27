@@ -10,15 +10,6 @@
 
 void AntiAim::RenderTab()
 {
-    const char* yTypes[] = {
-            "NONE", "MAX_DELTA_LEFT", "MAX_DELTA_RIGHT", "MAX_DELTA_FLIPPER", "MAX_DELTA_LBY_AVOID"
-    };
-
-    const char* xTypes[] = {
-            "UP", "DOWN", "DANCE", "FRONT", // safe
-            "FAKE UP", "FAKE DOWN", "LISP DOWN", "ANGEL DOWN", "ANGEL UP" // untrusted
-    };
-
     ImGui::Columns(2, nullptr, true);
     {
         ImGui::BeginChild(XORSTR("HVH1"), ImVec2(0, 0), true);

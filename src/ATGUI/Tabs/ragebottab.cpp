@@ -23,19 +23,8 @@ static bool desiredBones[] = {true, true, true, true, true, true, true, // cente
 static Bone bone = BONE_HEAD;
 static ButtonCode_t aimkey = ButtonCode_t::MOUSE_MIDDLE;
 static bool aimkeyOnly = false;
-static bool smoothEnabled = false;
-static float smoothValue = 0.5f;
-static SmoothType smoothType = SmoothType::SLOW_END;
-static bool smoothSaltEnabled = false;
-static float smoothSaltMultiplier = 0.0f;
-static bool errorMarginEnabled = false;
-static float errorMarginValue = 0.0f;
-static bool autoAimEnabled = false;
-static bool aimAssistEnable = false;
 static float RagebotautoAimValue = 360.0f;
 static bool aimStepEnabled = false;
-static float aimStepMin = 25.0f;
-static float aimStepMax = 35.0f;
 static bool rcsEnabled = false;
 static bool rcsAlwaysOn = false;
 static float rcsAmountX = 2.0f;
@@ -43,11 +32,8 @@ static float rcsAmountY = 2.0f;
 static bool autoPistolEnabled = false;
 static bool autoShootEnabled = false;
 static bool autoScopeEnabled = false;
-static bool noShootEnabled = false;
 static bool ignoreJumpEnabled = false;
 static bool ignoreEnemyJumpEnabled = false;
-static bool smokeCheck = false;
-static bool flashCheck = false;
 static bool spreadLimitEnabled = false;
 static float spreadLimit = 0.1f;
 static bool autoWallEnabled = false;
@@ -66,11 +52,6 @@ void UI::ReloadRageWeaponSettings()
 	friendly = Settings::Ragebot::weapons.at(index).friendly;
 	closestBone = Settings::Ragebot::weapons.at(index).closestBone;
 	bone = Settings::Ragebot::weapons.at(index).bone;
-	aimkey = Settings::Ragebot::weapons.at(index).aimkey;
-	smoothValue = Settings::Ragebot::weapons.at(index).smoothAmount;
-	smoothType = Settings::Ragebot::weapons.at(index).smoothType;
-	smoothSaltMultiplier = Settings::Ragebot::weapons.at(index).smoothSaltMultiplier;
-	errorMarginValue = Settings::Ragebot::weapons.at(index).errorMarginValue;
 	RagebotautoAimValue = Settings::Ragebot::weapons.at(index).RagebotautoAimFov;
 	aimStepEnabled = Settings::Ragebot::weapons.at(index).aimStepEnabled;
 	rcsEnabled = Settings::Ragebot::weapons.at(index).rcsEnabled;
@@ -117,11 +98,6 @@ void UI::UpdateRageWeaponSettings()
 			.predEnabled = predEnabled,
 			.scopeControlEnabled = scopeControlEnabled,
 			.bone = bone,
-			.smoothType = smoothType,
-			.aimkey = aimkey,
-			.smoothAmount = smoothValue,
-			.smoothSaltMultiplier = smoothSaltMultiplier,
-			.errorMarginValue = errorMarginValue,
 			.RagebotautoAimFov = RagebotautoAimValue,
 			.rcsAmountX = rcsAmountX,
 			.rcsAmountY = rcsAmountY,
@@ -146,8 +122,6 @@ void UI::UpdateRageWeaponSettings()
 
 void Ragebot::RenderTab()
 {
-	const char* targets[] = { "PELVIS", "", "", "HIP", "LOWER SPINE", "MIDDLE SPINE", "UPPER SPINE", "NECK", "HEAD" };
-	const char* smoothTypes[] = { "Slow Near End", "Constant Speed", "Fast Near End" };
 	static char filterWeapons[32];
 
 	
