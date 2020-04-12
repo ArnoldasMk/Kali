@@ -204,7 +204,7 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, Vector* bestSpot, fl
 
 
 //Hitchance
-float hitchance()
+float Ragebothitchance()
 {
 	float hitchance = 101;
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
@@ -265,7 +265,7 @@ static void RagebotAutoSlow(C_BasePlayer* player, float& forward, float& sideMov
 
 	if( Settings::Ragebot::HitChance::enabled)
 	{
-		float hc = hitchance();
+		float hc = Ragebothitchance();
 		if( hc > Settings::Ragebot::HitChance::value )
 		{
 			cmd->buttons |= IN_WALK;
@@ -400,7 +400,7 @@ static void RagebotAutoShoot(C_BasePlayer* player, C_BaseCombatWeapon* activeWea
 	    return; // continue next tick
     }
 	
-	if( Settings::Ragebot::HitChance::enabled && (hitchance() < Settings::Ragebot::HitChance::value * 1.5))
+	if( Settings::Ragebot::HitChance::enabled && (Ragebothitchance() < Settings::Ragebot::HitChance::value * 1.5))
 	{
 		return;
 	}	

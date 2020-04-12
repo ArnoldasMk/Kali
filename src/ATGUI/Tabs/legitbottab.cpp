@@ -51,8 +51,8 @@ static bool ignoreJumpEnabled = false;
 static bool ignoreEnemyJumpEnabled = false;
 static bool smokeCheck = false;
 static bool flashCheck = false;
-static bool spreadLimitEnabled = false;
-static float spreadLimit = 0.1f;
+static bool hitchanceEnaled = false;
+static float hitchance = 0.1f;
 static bool autoWallEnabled = false;
 static float autoWallValue = 10.0f;
 static bool autoAimRealDistance = false;
@@ -100,8 +100,8 @@ void UI::ReloadWeaponSettings()
 	ignoreEnemyJumpEnabled = Settings::Legitbot::weapons.at(index).ignoreEnemyJumpEnabled;
 	smokeCheck = Settings::Legitbot::weapons.at(index).smokeCheck;
 	flashCheck = Settings::Legitbot::weapons.at(index).flashCheck;
-	spreadLimitEnabled = Settings::Legitbot::weapons.at(index).spreadLimitEnabled;
-	spreadLimit = Settings::Legitbot::weapons.at(index).spreadLimit;
+	hitchanceEnaled = Settings::Legitbot::weapons.at(index).hitchanceEnaled;
+	hitchance = Settings::Legitbot::weapons.at(index).hitchance;
 	autoWallEnabled = Settings::Legitbot::weapons.at(index).autoWallEnabled;
 	autoWallValue = Settings::Legitbot::weapons.at(index).autoWallValue;
 	autoAimRealDistance = Settings::Legitbot::weapons.at(index).autoAimRealDistance;
@@ -133,7 +133,7 @@ void UI::UpdateWeaponSettings()
 			.aimStepEnabled = aimStepEnabled,
 			.rcsEnabled = rcsEnabled,
 			.rcsAlwaysOn = rcsAlwaysOn,
-			.spreadLimitEnabled = spreadLimitEnabled,
+			.hitchanceEnaled = hitchanceEnaled,
 			.autoPistolEnabled = autoPistolEnabled,
 			//.autoShootEnabled = autoShootEnabled,
 			.autoScopeEnabled = autoScopeEnabled,
@@ -161,7 +161,7 @@ void UI::UpdateWeaponSettings()
 			.rcsAmountX = rcsAmountX,
 			.rcsAmountY = rcsAmountY,
 			.autoWallValue = autoWallValue,
-			.spreadLimit = spreadLimit,
+			.hitchance = hitchance,
 	};
 
 
@@ -353,7 +353,7 @@ void Legitbot::RenderTab()
 			}
 			ImGui::Columns(2);
 			ImGui::Separator();
-			ImGui::Text(XORSTR("Legitbot Type"));
+			ImGui::Text(XORSTR("Legitbot"));
 			
 			//Fov Settings Text
 			ImGui::NextColumn();
@@ -468,17 +468,29 @@ void Legitbot::RenderTab()
 					UI::UpdateWeaponSettings();
 				ImGui::PopItemWidth();
 			}
-			//ImGui::Columns(1);
-			//ImGui::Separator();
+			
 			// ImGui::Text(XORSTR("Autoshoot"));
 			// ImGui::Separator();
-			// if (ImGui::Checkbox(XORSTR("Auto Shoot"), &autoShootEnabled))
-			// 	UI::UpdateWeaponSettings();
-			// ImGui::Checkbox(XORSTR("Velocity Check"), &Settings::Legitbot::AutoShoot::velocityCheck);
-			// if( ImGui::Checkbox(XORSTR("Spread Limit"), &spreadLimitEnabled) )
-			// 	UI::UpdateWeaponSettings();
-			// if( ImGui::SliderFloat(XORSTR("##SPREADLIMIT"), &spreadLimit, 0, 0.1) )
-			// 	UI::UpdateWeaponSettings();
+			{
+				if(shootassist)
+				{
+					ImGui::Columns(1);
+					{
+						ImGui::Separator();
+						
+						ImGui::Checkbox(XORSTR("##HitchanceEnabled"), &hitchanceEnaled); 
+						ImGui::SameLine();
+						ImGui::Text(XORSTR("Hitchance"));
+						if( ImGui::SliderFloat(XORSTR("##HitChance"), &hitchance, 0, 100) ,XORSTR("HitChance value : %f %"))
+						{
+							UI::UpdateWeaponSettings();
+						}
+							
+					}
+					
+				}
+			}
+			
 			ImGui::EndChild();
 		}
 	}

@@ -512,6 +512,24 @@ static void Smooth(C_BasePlayer* player, QAngle& angle)
 	angle = viewAngles + toChange;
 }
 
+float hitchance()
+{
+	float hitchance = 101;
+	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+	C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
+	if (activeWeapon)
+	{
+		if (Settings::Ragebot::HitChance::value > 0)
+		{
+			float inaccuracy = activeWeapon->GetInaccuracy();
+			if (inaccuracy == 0) inaccuracy = 0.0000001;
+			inaccuracy = 1 / inaccuracy;
+			hitchance = inaccuracy;
+		}
+		return hitchance;
+	}
+}
+
 static void AutoCrouch(C_BasePlayer* player, CUserCmd* cmd)
 {
 	if (!Settings::Legitbot::AutoCrouch::enabled)
@@ -526,7 +544,7 @@ static void AutoCrouch(C_BasePlayer* player, CUserCmd* cmd)
 static void AutoSlow(C_BasePlayer* player, float& forward, float& sideMove, float& bestDamage, C_BaseCombatWeapon* active_weapon, CUserCmd* cmd)
 {
 
-	if (!Settings::Legitbot::AutoSlow::enabled){
+	if (!Settings::Ragebot::AutoSlow::enabled){
 		return;
 	}
 
@@ -547,9 +565,10 @@ static void AutoSlow(C_BasePlayer* player, float& forward, float& sideMove, floa
 	if (!activeWeapon || activeWeapon->GetAmmo() == 0)
 		return;
 
-	if( Settings::Legitbot::SpreadLimit::enabled)
+	if( Settings::Ragebot::HitChance::enabled)
 	{
-		if( (activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) > Settings::Legitbot::SpreadLimit::value )
+		float hc = hitchance();
+		if( hc > Settings::Ragebot::HitChance::value )
 		{
 			cmd->buttons |= IN_WALK;
 			forward = -forward;
@@ -557,7 +576,7 @@ static void AutoSlow(C_BasePlayer* player, float& forward, float& sideMove, floa
 			cmd->upmove = 0;
 			return;
 		}
-		else if( (active_weapon->GetSpread() + active_weapon->GetInaccuracy()) == Settings::Legitbot::SpreadLimit::value ) {
+		else if( hc == Settings::Ragebot::HitChance::value ) {
 			cmd->buttons |= IN_WALK;
 			forward = 0;
 			sideMove = 0;
@@ -568,7 +587,14 @@ static void AutoSlow(C_BasePlayer* player, float& forward, float& sideMove, floa
         {
             return;
         }
-		else {
+        else if (cmd->buttons & IN_ATTACK) 
+        {
+            forward = 0;
+			sideMove = 0;
+			return;
+        }
+		else 
+		{
 			cmd->buttons |= IN_RUN;
 			forward = 0;
 			sideMove = 0;
@@ -598,7 +624,8 @@ static void AutoSlow(C_BasePlayer* player, float& forward, float& sideMove, floa
         return;
     }
 
-	else {
+	else 
+	{
 		cmd->buttons |= IN_RUN;
 		return;
 	}
@@ -784,8 +811,15 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 			else if (Settings::Legitbot::ShootAssist::enabled) {
 				if (!(GetClosestSpot(cmd, localplayer, player).IsZero()) || !newTarget )
 				{
-					cmd->buttons |= IN_ATTACK;
-					shouldAim = true;
+					if(Settings::Legitbot::Hitchance::enabled)
+					{
+						if(hitchance() > Settings::Legitbot::Hitchance::value * 1.5)
+						{
+							cmd->buttons |= IN_ATTACK;
+							shouldAim = true;
+						}
+					}
+					
 				}
 			}
             else {
@@ -927,8 +961,8 @@ void Legitbot::UpdateValues()
 	Settings::Legitbot::Smooth::Salting::multiplier = currentWeaponSetting.smoothSaltMultiplier;
 	Settings::Legitbot::SmokeCheck::enabled = currentWeaponSetting.smokeCheck;
 	Settings::Legitbot::FlashCheck::enabled = currentWeaponSetting.flashCheck;
-	Settings::Legitbot::SpreadLimit::enabled = currentWeaponSetting.spreadLimitEnabled;
-	Settings::Legitbot::SpreadLimit::value = currentWeaponSetting.spreadLimit;
+	Settings::Legitbot::Hitchance::enabled = currentWeaponSetting.hitchanceEnaled;
+	Settings::Legitbot::Hitchance::value = currentWeaponSetting.hitchance;
 	Settings::Legitbot::AutoWall::enabled = currentWeaponSetting.autoWallEnabled;
 	Settings::Legitbot::AutoWall::value = currentWeaponSetting.autoWallValue;
 	Settings::Legitbot::AutoSlow::enabled = currentWeaponSetting.autoSlow;
