@@ -519,7 +519,7 @@ float hitchance()
 	C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
 	if (activeWeapon)
 	{
-		if (Settings::Ragebot::HitChance::value > 0)
+		if (Settings::Legitbot::Hitchance::value > 0)
 		{
 			float inaccuracy = activeWeapon->GetInaccuracy();
 			if (inaccuracy == 0) inaccuracy = 0.0000001;
@@ -544,7 +544,7 @@ static void AutoCrouch(C_BasePlayer* player, CUserCmd* cmd)
 static void AutoSlow(C_BasePlayer* player, float& forward, float& sideMove, float& bestDamage, C_BaseCombatWeapon* active_weapon, CUserCmd* cmd)
 {
 
-	if (!Settings::Ragebot::AutoSlow::enabled){
+	if (!Settings::Legitbot::AutoSlow::enabled){
 		return;
 	}
 
@@ -565,10 +565,10 @@ static void AutoSlow(C_BasePlayer* player, float& forward, float& sideMove, floa
 	if (!activeWeapon || activeWeapon->GetAmmo() == 0)
 		return;
 
-	if( Settings::Ragebot::HitChance::enabled)
+	if( Settings::Legitbot::Hitchance::enabled)
 	{
 		float hc = hitchance();
-		if( hc > Settings::Ragebot::HitChance::value )
+		if( hc > Settings::Legitbot::Hitchance::value )
 		{
 			cmd->buttons |= IN_WALK;
 			forward = -forward;
@@ -576,7 +576,7 @@ static void AutoSlow(C_BasePlayer* player, float& forward, float& sideMove, floa
 			cmd->upmove = 0;
 			return;
 		}
-		else if( hc == Settings::Ragebot::HitChance::value ) {
+		else if( hc == Settings::Legitbot::Hitchance::value ) {
 			cmd->buttons |= IN_WALK;
 			forward = 0;
 			sideMove = 0;
