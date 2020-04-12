@@ -32002,3 +32002,109 @@ Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
 [New Thread 0x7f7fc8f8b700 (LWP 20008)]
 $1 = (void *) 0xa2f7500
 [Inferior 1 (process 18942) detached]
+warning: Currently logging to gdb.txt.  Turn the logging off and on to make the new setting effective.
+[New LWP 18946]
+[New LWP 18947]
+[New LWP 18948]
+[New LWP 18949]
+[New LWP 18951]
+[New LWP 18972]
+[New LWP 18973]
+[New LWP 18974]
+[New LWP 18976]
+[New LWP 18977]
+[New LWP 18978]
+[New LWP 18979]
+[New LWP 18981]
+[New LWP 18982]
+[New LWP 18983]
+[New LWP 18984]
+[New LWP 18985]
+[New LWP 18986]
+[New LWP 18989]
+[New LWP 18990]
+[New LWP 18991]
+[New LWP 18992]
+[New LWP 18993]
+[New LWP 18994]
+[New LWP 18995]
+[New LWP 19000]
+[New LWP 19001]
+[New LWP 19002]
+[New LWP 19017]
+[New LWP 19018]
+[New LWP 19023]
+[New LWP 19024]
+[New LWP 19539]
+[New LWP 19540]
+[New LWP 19542]
+[New LWP 19548]
+[New LWP 19549]
+[New LWP 19550]
+[New LWP 19551]
+[New LWP 19552]
+[New LWP 23515]
+[New LWP 23516]
+[New LWP 23551]
+[New LWP 23552]
+warning: Could not load shared library symbols for 2 libraries, e.g. bin/linux64/launcher_client.so.
+Use the "info sharedlibrary" command to see the complete listing.
+Do you need "set solib-search-path" or "set sysroot"?
+warning: File "/usr/share/gdb/auto-load/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.28-gdb.py" auto-loading has been declined by your `auto-load safe-path' set to "/usr/share/gdb/auto-load/usr/lib64/:/usr/lib64/".
+To enable execution of this file add
+	add-auto-load-safe-path /usr/share/gdb/auto-load/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.28-gdb.py
+line to your configuration file "/root/.gdbinit".
+To completely disable this security protection add
+	set auto-load safe-path /
+line to your configuration file "/root/.gdbinit".
+For more information about this security protection see the
+"Auto-loading safe path" section in the GDB manual.  E.g., run from the shell:
+	info "(gdb)Auto-loading safe path"
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+0x00007f806252cc2f in __GI___poll (fds=0x7ffc157c1500, nfds=1, timeout=180000) at ../sysdeps/unix/sysv/linux/poll.c:29
+29	../sysdeps/unix/sysv/linux/poll.c: No such file or directory.
+[New Thread 0x7f7fd18d0700 (LWP 23574)]
+$1 = (void *) 0x7f803d7bc500
+[Inferior 1 (process 18942) detached]
+warning: Currently logging to gdb.txt.  Turn the logging off and on to make the new setting effective.
+[New LWP 23611]
+[New LWP 23612]
+[New LWP 23613]
+[New LWP 23614]
+[New LWP 23616]
+[New LWP 23643]
+[New LWP 23645]
+[New LWP 23646]
+[New LWP 23652]
+[New LWP 23653]
+[New LWP 23654]
+[New LWP 23655]
+[New LWP 23657]
+[New LWP 23658]
+[New LWP 23659]
+[New LWP 23660]
+[New LWP 23661]
+[New LWP 23662]
+[New LWP 23663]
+[New LWP 23665]
+[New LWP 23666]
+[New LWP 23667]
+warning: Could not load shared library symbols for bin/linux64/launcher_client.so.
+Do you need "set solib-search-path" or "set sysroot"?
+warning: File "/usr/share/gdb/auto-load/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.28-gdb.py" auto-loading has been declined by your `auto-load safe-path' set to "/usr/share/gdb/auto-load/usr/lib64/:/usr/lib64/".
+To enable execution of this file add
+	add-auto-load-safe-path /usr/share/gdb/auto-load/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.28-gdb.py
+line to your configuration file "/root/.gdbinit".
+To completely disable this security protection add
+	set auto-load safe-path /
+line to your configuration file "/root/.gdbinit".
+For more information about this security protection see the
+"Auto-loading safe path" section in the GDB manual.  E.g., run from the shell:
+	info "(gdb)Auto-loading safe path"
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+0x00007ff22c58aa18 in ?? () from /mnt/entertainment/Games/steamapps/common/Counter-Strike Global Offensive/bin/linux64/libvstdlib_client.so
+[New Thread 0x7ff1ca282700 (LWP 23692)]
+$1 = (void *) 0x2a561500
+[Inferior 1 (process 23608) detached]
