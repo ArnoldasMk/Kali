@@ -280,7 +280,7 @@ struct RagebotWeapon_t
 		 aimStepEnabled,
 		 rcsEnabled,
 		 rcsAlwaysOn,
-		 spreadLimitEnabled,
+		 HitChanceEnabled,
 		 autoPistolEnabled,
 		 autoShootEnabled,
 		 autoScopeEnabled,
@@ -291,11 +291,11 @@ struct RagebotWeapon_t
 		 predEnabled,
 		 scopeControlEnabled;
 	Bone bone = BONE_HEAD;
-	float RagebotautoAimFov = 360.0f,
+	float RagebotautoAimFov = 260.f,
 		  rcsAmountX = 2.0f,
 		  rcsAmountY = 2.0f,
 		  autoWallValue = 10.0f,
-		  spreadLimit = 1.0f;
+		  HitChance = 1.0f;
 	bool desiredBones[31];
 
 	bool operator == (const RagebotWeapon_t& another) const
@@ -321,8 +321,8 @@ struct RagebotWeapon_t
 			this->autoScopeEnabled == another.autoScopeEnabled &&
 			this->ignoreJumpEnabled == another.ignoreJumpEnabled &&
 			this->ignoreEnemyJumpEnabled == another.ignoreEnemyJumpEnabled &&
-			this->spreadLimitEnabled == another.spreadLimitEnabled &&
-			this->spreadLimit == another.spreadLimit &&
+			this->HitChanceEnabled == another.HitChanceEnabled &&
+			this->HitChance == another.HitChance &&
 			this->autoWallEnabled == another.autoWallEnabled &&
 			this->autoWallValue == another.autoWallValue &&
 			this->autoSlow == another.autoSlow &&
@@ -599,33 +599,11 @@ namespace Settings
         inline bool friendly = false;
         inline Bone bone = BONE_HEAD;
         inline ButtonCode_t aimkey = ButtonCode_t::MOUSE_MIDDLE;
-        inline bool aimkeyOnly = false;
-
-		namespace Smooth
-		{
-			inline bool enabled = false;
-            inline float value = 0.5f;
-            inline SmoothType type = SmoothType::SLOW_END;
-
-			namespace Salting
-			{
-				inline bool enabled = false;
-                inline float multiplier = 0.0f;
-			}
-		}
-
-		namespace ErrorMargin
-		{
-			inline bool enabled = false;
-			inline float value = 0.0f;
-		}
 
 		namespace AutoAim
 		{
 			inline bool enabled = false;
-            inline float fov = 360.0f;
-            inline bool realDistance = false;
-            inline bool closestBone = false;
+            inline float fov = 260.0f;
             inline bool desiredBones[] = {true, true, true, true, true, true, true, // center mass
                                           true, true, true, true, true, true, true, // left arm
                                           true, true, true, true, true, true, true, // right arm
@@ -636,23 +614,7 @@ namespace Settings
 
 		namespace AutoWall
 		{
-			inline bool enabled = false;
 			inline float value = 10.0f;
-		}
-
-		namespace AimStep
-		{
-			inline bool enabled = false;
-			inline float min = 25.0f;
-			inline float max = 35.0f;
-		}
-
-		namespace RCS
-		{
-			inline bool enabled = false;
-			inline bool always_on = false;
-			inline float valueX = 2.0f;
-			inline float valueY = 2.0f;
 		}
 
 		namespace AutoPistol
@@ -702,7 +664,7 @@ namespace Settings
 			inline bool enabled = false;
 		}
 
-		namespace SpreadLimit
+		namespace HitChance
 		{
 			inline bool enabled = false;
 			inline float value = 0.1f;

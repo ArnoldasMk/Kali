@@ -643,7 +643,16 @@ const std::map<int, PaintNames_t> itemSkins = {
 		{ 721, { "#PaintKit_cu_r8_survivalist_Tag", "r8_survivalist" } },
 		{ 722, { "#PaintKit_cu_tec9_snake_Tag", "tec9_snake" } },
 		{ 723, { "#PaintKit_cu_famas_owl_orange_Tag", "famas_owl_orange" } },
+		{ 724, { "#PaintKit_cu_wild_lotus", "wild_lotus" } },
+		{ 725, { "#PaintKit_cu_day_lily", "day_lily" } },
+		{ 726, { "#PaintKit_cu_sunset_lily", "sunset_lily" } },
+		{ 727, { "#PaintKit_cu_midnight_lily", "midnight_lily" } },
+		{ 728, { "#PaintKit_cu_teal_blossom", "teal_blossom" } },
+		{ 729, { "#PaintKit_cu_crimson_blossom", "crimson_blossom" } },
+		{ 729, { "#PaintKit_cu_dark_blossom", "dark_blossom" } },
+
 		{ 735, { "#PaintKit_sp_nightstripe_Tag", "camo_tape_strips" } },
+
 		/* Dangerzone case */
 		{ 801, { "#PaintKit_cu_ak47_asiimov_Tag", "cu_ak47_asiimov" } },
 		{ 802, { "#PaintKit_cu_ump_arrows_Tag", "cu_ump_arrows" } },

@@ -14,3 +14,4 @@ namespace Ragebot {
     void FireGameEvent(IGameEvent* event);
 	void UpdateValues();
 }
+

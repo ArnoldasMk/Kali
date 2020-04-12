@@ -45,7 +45,7 @@ static bool HeadMultiPoint(C_BasePlayer *player, Vector points[])
 	// 7 - leftear, 8 - rightear, 9 - nose, 10 - backofhead
 	for( int i = 0; i < headVectors; i++ ) // set all points initially to center mass of head.
 		points[i] = center;
-	points[1].z += bbox->radius * 0.60f; // morph each point.
+	points[1].z += bbox->radius * 0.50f; // morph each point.
 	points[2].z += bbox->radius * 1.25f; // ...
 	points[3].x += bbox->radius * 0.80f;
 	points[3].z += bbox->radius * 0.60f;
@@ -117,7 +117,7 @@ static Vector VelocityExtrapolate(C_BasePlayer* player, Vector aimPos)
 }
 
 /* Original Credits to: https://github.com/goldenguy00 ( study! study! study! :^) ) */
-static Vector GetClosestSpot( CUserCmd* cmd, C_BasePlayer* localPlayer, C_BasePlayer* enemy, AimTargetType aimTargetType = AimTargetType::FOV)
+static Vector GetClosestSpot( CUserCmd* cmd, C_BasePlayer* localPlayer, C_BasePlayer* enemy)
 {
 	QAngle viewAngles;
 	engine->GetViewAngles(viewAngles);
@@ -202,36 +202,30 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, Vector* bestSpot, fl
 	return closestEntity;
 }
 
+
+//Hitchance
+float hitchance()
+{
+	float hitchance = 101;
+	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+	C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
+	if (activeWeapon)
+	{
+		if (Settings::Ragebot::HitChance::value > 0)
+		{
+			float inaccuracy = activeWeapon->GetInaccuracy();
+			if (inaccuracy == 0) inaccuracy = 0.0000001;
+			inaccuracy = 1 / inaccuracy;
+			hitchance = inaccuracy;
+		}
+		return hitchance;
+	}
+}
+
 static void RagebotRCS(QAngle& angle, C_BasePlayer* player, CUserCmd* cmd)
 {
-	if (!Settings::Ragebot::RCS::enabled)
-		return;
 
-	if (!(cmd->buttons & IN_ATTACK))
-		return;
-
-	bool hasTarget = RagebotShouldAim && player;
-
-	if (!Settings::Ragebot::RCS::always_on && !hasTarget)
-		return;
-
-	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
-	QAngle CurrentPunch = *localplayer->GetAimPunchAngle();
-
-	if ( Settings::Ragebot::silent || hasTarget )
-	{
-		angle.x -= CurrentPunch.x * Settings::Ragebot::RCS::valueX;
-		angle.y -= CurrentPunch.y * Settings::Ragebot::RCS::valueY;
-	}
-	else if (localplayer->GetShotsFired() > 1)
-	{
-		QAngle NewPunch = { CurrentPunch.x - RagebotRCSLastPunch.x, CurrentPunch.y - RagebotRCSLastPunch.y, 0 };
-
-		angle.x -= NewPunch.x * Settings::Ragebot::RCS::valueX;
-		angle.y -= NewPunch.y * Settings::Ragebot::RCS::valueY;
-	}
-
-	RagebotRCSLastPunch = CurrentPunch;
+	// this feature coming up soon
 }
 
 static void RagebotAutoCrouch(C_BasePlayer* player, CUserCmd* cmd)
@@ -269,9 +263,10 @@ static void RagebotAutoSlow(C_BasePlayer* player, float& forward, float& sideMov
 	if (!activeWeapon || activeWeapon->GetAmmo() == 0)
 		return;
 
-	if( Settings::Ragebot::SpreadLimit::enabled)
+	if( Settings::Ragebot::HitChance::enabled)
 	{
-		if( (activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) > Settings::Ragebot::SpreadLimit::value )
+		float hc = hitchance();
+		if( hc > Settings::Ragebot::HitChance::value )
 		{
 			cmd->buttons |= IN_WALK;
 			forward = -forward;
@@ -279,7 +274,7 @@ static void RagebotAutoSlow(C_BasePlayer* player, float& forward, float& sideMov
 			cmd->upmove = 0;
 			return;
 		}
-		else if( (active_weapon->GetSpread() + active_weapon->GetInaccuracy()) == Settings::Ragebot::SpreadLimit::value ) {
+		else if( hc == Settings::Ragebot::HitChance::value ) {
 			cmd->buttons |= IN_WALK;
 			forward = 0;
 			sideMove = 0;
@@ -296,7 +291,8 @@ static void RagebotAutoSlow(C_BasePlayer* player, float& forward, float& sideMov
 			sideMove = 0;
 			return;
         }
-		else {
+		else 
+		{
 			cmd->buttons |= IN_RUN;
 			forward = 0;
 			sideMove = 0;
@@ -326,7 +322,8 @@ static void RagebotAutoSlow(C_BasePlayer* player, float& forward, float& sideMov
         return;
     }
 
-	else {
+	else 
+	{
 		cmd->buttons |= IN_RUN;
 		return;
 	}
@@ -402,12 +399,8 @@ static void RagebotAutoShoot(C_BasePlayer* player, C_BaseCombatWeapon* activeWea
 	    cmd->buttons |= IN_ATTACK2;
 	    return; // continue next tick
     }
-
-	if( Settings::Ragebot::AutoShoot::velocityCheck && localplayer->GetVelocity().Length() > (activeWeapon->GetCSWpnData()->GetMaxPlayerSpeed() / 3) )
-	{
-		return;
-	}	
-	if( Settings::Ragebot::SpreadLimit::enabled && ((activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) > Settings::Ragebot::SpreadLimit::value))
+	
+	if( Settings::Ragebot::HitChance::enabled && (hitchance() < Settings::Ragebot::HitChance::value * 1.5))
 	{
 		return;
 	}	
@@ -433,6 +426,7 @@ static void FixMouseDeltas(CUserCmd* cmd, const QAngle &angle, const QAngle &old
 {
     if( !RagebotShouldAim)
         return;
+
     QAngle delta = angle - oldAngle;
     float sens = cvar->FindVar(XORSTR("sensitivity"))->GetFloat();
     float m_pitch = cvar->FindVar(XORSTR("m_pitch"))->GetFloat();
@@ -582,20 +576,13 @@ void Ragebot::UpdateValues()
 	Settings::Ragebot::friendly = currentWeaponSetting.friendly;
 	Settings::Ragebot::bone = currentWeaponSetting.bone;
 	Settings::Ragebot::AutoAim::fov = currentWeaponSetting.RagebotautoAimFov;
-	Settings::Ragebot::AutoAim::closestBone = currentWeaponSetting.closestBone;
-	Settings::Ragebot::AimStep::enabled = currentWeaponSetting.aimStepEnabled;
 	Settings::Ragebot::AutoPistol::enabled = currentWeaponSetting.autoPistolEnabled;
 	Settings::Ragebot::AutoShoot::enabled = currentWeaponSetting.autoShootEnabled;
 	Settings::Ragebot::AutoShoot::autoscope = currentWeaponSetting.autoScopeEnabled;
-	Settings::Ragebot::RCS::enabled = currentWeaponSetting.rcsEnabled;
-	Settings::Ragebot::RCS::always_on = currentWeaponSetting.rcsAlwaysOn;
-	Settings::Ragebot::RCS::valueX = currentWeaponSetting.rcsAmountX;
-	Settings::Ragebot::RCS::valueY = currentWeaponSetting.rcsAmountY;
 	Settings::Ragebot::IgnoreJump::enabled = currentWeaponSetting.ignoreJumpEnabled;
 	Settings::Ragebot::IgnoreEnemyJump::enabled = currentWeaponSetting.ignoreEnemyJumpEnabled;
-	Settings::Ragebot::SpreadLimit::enabled = currentWeaponSetting.spreadLimitEnabled;
-	Settings::Ragebot::SpreadLimit::value = currentWeaponSetting.spreadLimit;
-	Settings::Ragebot::AutoWall::enabled = currentWeaponSetting.autoWallEnabled;
+	Settings::Ragebot::HitChance::enabled = currentWeaponSetting.HitChanceEnabled;
+	Settings::Ragebot::HitChance::value = currentWeaponSetting.HitChance;
 	Settings::Ragebot::AutoWall::value = currentWeaponSetting.autoWallValue;
 	Settings::Ragebot::AutoSlow::enabled = currentWeaponSetting.autoSlow;
 	Settings::Ragebot::ScopeControl::enabled = currentWeaponSetting.scopeControlEnabled;

@@ -21,8 +21,6 @@ static bool desiredBones[] = {true, true, true, true, true, true, true, // cente
 							  true, true, true, true, true  // right leg
 							 };
 static Bone bone = BONE_HEAD;
-static ButtonCode_t aimkey = ButtonCode_t::MOUSE_MIDDLE;
-static bool aimkeyOnly = false;
 static float RagebotautoAimValue = 360.0f;
 static bool aimStepEnabled = false;
 static bool rcsEnabled = false;
@@ -34,8 +32,8 @@ static bool autoShootEnabled = false;
 static bool autoScopeEnabled = false;
 static bool ignoreJumpEnabled = false;
 static bool ignoreEnemyJumpEnabled = false;
-static bool spreadLimitEnabled = false;
-static float spreadLimit = 0.1f;
+static bool HitChanceEnabled = false;
+static float HitChange = 20.f;
 static bool autoWallEnabled = false;
 static float autoWallValue = 10.0f;
 static bool autoSlow = false;
@@ -63,8 +61,8 @@ void UI::ReloadRageWeaponSettings()
 	autoScopeEnabled = Settings::Ragebot::weapons.at(index).autoScopeEnabled;
 	ignoreJumpEnabled = Settings::Ragebot::weapons.at(index).ignoreJumpEnabled;
 	ignoreEnemyJumpEnabled = Settings::Ragebot::weapons.at(index).ignoreEnemyJumpEnabled;
-	spreadLimitEnabled = Settings::Ragebot::weapons.at(index).spreadLimitEnabled;
-	spreadLimit = Settings::Ragebot::weapons.at(index).spreadLimit;
+	HitChanceEnabled = Settings::Ragebot::weapons.at(index).HitChanceEnabled;
+	HitChange = Settings::Ragebot::weapons.at(index).HitChance;
 	autoWallEnabled = Settings::Ragebot::weapons.at(index).autoWallEnabled;
 	autoWallValue = Settings::Ragebot::weapons.at(index).autoWallValue;
 	autoSlow = Settings::Ragebot::weapons.at(index).autoSlow;
@@ -87,7 +85,7 @@ void UI::UpdateRageWeaponSettings()
 			.aimStepEnabled = aimStepEnabled,
 			.rcsEnabled = rcsEnabled,
 			.rcsAlwaysOn = rcsAlwaysOn,
-			.spreadLimitEnabled = spreadLimitEnabled,
+			.HitChanceEnabled = HitChanceEnabled,
 			.autoPistolEnabled = autoPistolEnabled,
 			.autoShootEnabled = autoShootEnabled,
 			.autoScopeEnabled = autoScopeEnabled,
@@ -102,7 +100,7 @@ void UI::UpdateRageWeaponSettings()
 			.rcsAmountX = rcsAmountX,
 			.rcsAmountY = rcsAmountY,
 			.autoWallValue = autoWallValue,
-			.spreadLimit = spreadLimit,
+			.HitChance = HitChange,
 	};
 
 
@@ -277,44 +275,11 @@ void Ragebot::RenderTab()
 			ImGui::Columns(1);
 			{
 				ImGui::PushItemWidth(-1);
-					if (ImGui::SliderFloat(XORSTR("##FOV"), &RagebotautoAimValue, 0, 360))
+					if (ImGui::SliderFloat(XORSTR("##FOV"), &RagebotautoAimValue, 0, 260))
 					{
 						UI::UpdateRageWeaponSettings();
 					}		
 				ImGui::PopItemWidth();		
-			}
-
-			ImGui::Columns(1);
-			ImGui::Separator();
-			ImGui::Text("Recoil Settings");
-			ImGui::Separator();
-			ImGui::Columns(2, nullptr, true);
-			{
-				if (ImGui::Checkbox(XORSTR("Recoil Control"), &rcsEnabled))
-				{
-					UI::UpdateRageWeaponSettings();
-				}
-			}
-			ImGui::NextColumn();
-			{
-				ImGui::PushItemWidth(-1);
-				ImGui::PopItemWidth();
-				if (ImGui::Button(XORSTR("RCS Settings"), ImVec2(-1, 0)))
-					ImGui::OpenPopup(XORSTR("optionRCSAmount"));
-				ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiSetCond_Always);
-				if (ImGui::BeginPopup(XORSTR("optionRCSAmount")))
-				{
-					ImGui::PushItemWidth(-1);
-					if (ImGui::Checkbox(XORSTR("RCS Always on"), &rcsAlwaysOn))
-						UI::UpdateRageWeaponSettings();
-					if (ImGui::SliderFloat(XORSTR("##RCSX"), &rcsAmountX, 0, 2, XORSTR("Pitch: %0.3f")))
-						UI::UpdateRageWeaponSettings();
-					if (ImGui::SliderFloat(XORSTR("##RCSY"), &rcsAmountY, 0, 2, XORSTR("Yaw: %0.3f")))
-						UI::UpdateRageWeaponSettings();
-					ImGui::PopItemWidth();
-
-					ImGui::EndPopup();
-				}
 			}
 			ImGui::Columns(1);
 			ImGui::Separator();
@@ -323,9 +288,9 @@ void Ragebot::RenderTab()
 			if (ImGui::Checkbox(XORSTR("Auto Shoot"), &autoShootEnabled))
 				UI::UpdateRageWeaponSettings();
 			ImGui::Checkbox(XORSTR("Velocity Check"), &Settings::Ragebot::AutoShoot::velocityCheck);
-			if( ImGui::Checkbox(XORSTR("Spread Limit"), &spreadLimitEnabled) )
+			if( ImGui::Checkbox(XORSTR("Hit Chance"), &HitChanceEnabled) )
 				UI::UpdateRageWeaponSettings();
-			if( ImGui::SliderFloat(XORSTR("##SPREADLIMIT"), &spreadLimit, 0, 0.1) )
+			if( ImGui::SliderFloat(XORSTR("##HITCHANCE"), &HitChange, 0.f, 100.f) )
 				UI::UpdateRageWeaponSettings();
 			ImGui::EndChild();
 		}
@@ -387,11 +352,6 @@ void Ragebot::RenderTab()
 						if (ImGui::Checkbox(XORSTR("Scope Control"), &scopeControlEnabled))
 							UI::UpdateRageWeaponSettings();
 				}
-				
-				if (ImGui::Checkbox(XORSTR("Ignore Jump (Self)"), &ignoreJumpEnabled))
-					UI::UpdateRageWeaponSettings();
-				if (ImGui::Checkbox(XORSTR("Ignore Jump (Enemies)"), &ignoreEnemyJumpEnabled))
-					UI::UpdateRageWeaponSettings();
 			}
 
 
@@ -404,99 +364,10 @@ void Ragebot::RenderTab()
 
 			ImGui::Columns(1);
 			ImGui::Separator();
-			ImGui::Text(XORSTR("AutoWall"));
+			ImGui::Text(XORSTR("Damage Ammount"));
 			ImGui::Separator();
-			ImGui::Columns(2, nullptr, true);
-			{
-				if (ImGui::Checkbox(XORSTR("Enabled##AUTOWALL"), &autoWallEnabled))
-					UI::UpdateRageWeaponSettings();
-				if(ImGui::Button(XORSTR("Autowall Bones"), ImVec2(-1, 0)))
-					ImGui::OpenPopup(XORSTR("optionBones"));
-				ImGui::SetNextWindowSize(ImVec2((ImGui::GetWindowWidth()/1.25f),ImGui::GetWindowHeight()), ImGuiSetCond_Always);
-				if( ImGui::BeginPopup(XORSTR("optionBones")) )
-				{
-					ImGui::PushItemWidth(-1);
-					ImGui::Text(XORSTR("Center Mass"));
-					if( ImGui::Checkbox(XORSTR("Head"), &desiredBones[BONE_HEAD]) )
-						UI::UpdateRageWeaponSettings();
-					if( ImGui::Checkbox(XORSTR("Neck"), &desiredBones[BONE_NECK]) )
-						UI::UpdateRageWeaponSettings();
-					if( ImGui::Checkbox(XORSTR("Upper Spine"), &desiredBones[BONE_UPPER_SPINAL_COLUMN]) )
-						UI::UpdateRageWeaponSettings();
-					if( ImGui::Checkbox(XORSTR("Middle Spine"), &desiredBones[BONE_MIDDLE_SPINAL_COLUMN]) )
-						UI::UpdateRageWeaponSettings();
-					if( ImGui::Checkbox(XORSTR("Lower Spine"), &desiredBones[BONE_LOWER_SPINAL_COLUMN]) )
-						UI::UpdateRageWeaponSettings();
-					if( ImGui::Checkbox(XORSTR("Pelvis"), &desiredBones[BONE_PELVIS]) )
-						UI::UpdateRageWeaponSettings();
-					if( ImGui::Checkbox(XORSTR("Hip"), &desiredBones[BONE_HIP]) )
-						UI::UpdateRageWeaponSettings();
-					ImGui::Separator();
-
-					ImGui::Columns(2, nullptr, false);
-					{
-						ImGui::Text(XORSTR("Player's Right Arm"));
-						if( ImGui::Checkbox(XORSTR("Collarbone"), &desiredBones[BONE_RIGHT_COLLARBONE]) )
-							UI::UpdateRageWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Shoulder"), &desiredBones[BONE_RIGHT_SHOULDER]) )
-							UI::UpdateRageWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Armpit"), &desiredBones[BONE_RIGHT_ARMPIT]) )
-							UI::UpdateRageWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Bicep"), &desiredBones[BONE_RIGHT_BICEP]) )
-							UI::UpdateRageWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Elbow"), &desiredBones[BONE_RIGHT_ELBOW]) )
-							UI::UpdateRageWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Forearm"), &desiredBones[BONE_RIGHT_FOREARM]) )
-							UI::UpdateRageWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Wrist"), &desiredBones[BONE_RIGHT_WRIST]) )
-							UI::UpdateRageWeaponSettings();
-						ImGui::Text(XORSTR("Player's Right Leg"));
-						if( ImGui::Checkbox(XORSTR("Buttcheek"), &desiredBones[BONE_RIGHT_BUTTCHEEK]) )
-							UI::UpdateRageWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Thigh"), &desiredBones[BONE_RIGHT_THIGH]) )
-							UI::UpdateRageWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Knee"), &desiredBones[BONE_RIGHT_KNEE]) )
-							UI::UpdateRageWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Ankle"), &desiredBones[BONE_RIGHT_ANKLE]) )
-							UI::UpdateRageWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Sole"), &desiredBones[BONE_RIGHT_SOLE]) )
-							UI::UpdateRageWeaponSettings();
-					}
-					ImGui::NextColumn();
-					{
-						ImGui::Text(XORSTR("Player's Left Arm"));
-						if( ImGui::Checkbox(XORSTR("Collarbone "), &desiredBones[BONE_LEFT_COLLARBONE]) )
-							UI::UpdateRageWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Shoulder "), &desiredBones[BONE_LEFT_SHOULDER]) )
-							UI::UpdateRageWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Armpit "), &desiredBones[BONE_LEFT_ARMPIT]) )
-							UI::UpdateRageWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Bicep "), &desiredBones[BONE_LEFT_BICEP]) )
-							UI::UpdateRageWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Elbow "), &desiredBones[BONE_LEFT_ELBOW]) )
-							UI::UpdateRageWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Forearm "), &desiredBones[BONE_LEFT_FOREARM]) )
-							UI::UpdateRageWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Wrist "), &desiredBones[BONE_LEFT_WRIST]) )
-							UI::UpdateRageWeaponSettings();
-
-						ImGui::Text(XORSTR("Player's Left Leg"));
-						if( ImGui::Checkbox(XORSTR("Buttcheek "), &desiredBones[BONE_LEFT_BUTTCHEEK]) )
-							UI::UpdateRageWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Thigh "), &desiredBones[BONE_LEFT_THIGH]) )
-							UI::UpdateRageWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Knee "), &desiredBones[BONE_LEFT_KNEE]) )
-							UI::UpdateRageWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Ankle "), &desiredBones[BONE_LEFT_ANKLE]) )
-							UI::UpdateRageWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Sole "), &desiredBones[BONE_LEFT_SOLE]) )
-							UI::UpdateRageWeaponSettings();
-					}
-					ImGui::PopItemWidth();
-					ImGui::EndPopup();
-				}
-			}
-			ImGui::NextColumn();
+			
+			ImGui::Columns(1);
 			{
 				ImGui::PushItemWidth(-1);
 				if (ImGui::SliderFloat(XORSTR("##AUTOWALLDMG"), &autoWallValue, 0, 100, XORSTR("Min Damage: %f")))
