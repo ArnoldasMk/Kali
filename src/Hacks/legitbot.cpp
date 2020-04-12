@@ -712,7 +712,7 @@ static void NoShoot(C_BaseCombatWeapon* activeWeapon, C_BasePlayer* player, CUse
 
 static void FixMouseDeltas(CUserCmd* cmd, const QAngle &angle, const QAngle &oldAngle)
 {
-    if( !shouldAim || Settings::Legitbot::AimAssist::enabled)
+    if( !shouldAim || Settings::Legitbot::ShootAssist::enabled)
         return;
     QAngle delta = angle - oldAngle;
     float sens = cvar->FindVar(XORSTR("sensitivity"))->GetFloat();
@@ -846,7 +846,7 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 		}
 
 		// Help Player stay focus in desired position
-		if (Settings::Legitbot::AimAssist::enabled)
+		if (Settings::Legitbot::ShootAssist::enabled)
 		{
 			//Do not shoot if player is in air or in ladder 
             if (Settings::Legitbot::IgnoreEnemyJump::enabled && (!(player->GetFlags() & FL_ONGROUND) && player->GetMoveType() != MOVETYPE_LADDER))
@@ -952,7 +952,7 @@ void Legitbot::UpdateValues()
 	Settings::Legitbot::ErrorMargin::enabled = currentWeaponSetting.errorMarginEnabled;
 	Settings::Legitbot::ErrorMargin::value = currentWeaponSetting.errorMarginValue;
 	Settings::Legitbot::AutoAim::enabled = currentWeaponSetting.autoAimEnabled;
-	Settings::Legitbot::AimAssist::enabled = currentWeaponSetting.aimAssistEnable;
+	Settings::Legitbot::ShootAssist::enabled = currentWeaponSetting.shootassist;
 	Settings::Legitbot::AutoAim::fov = currentWeaponSetting.LegitautoAimFov;
 	Settings::Legitbot::AutoAim::closestBone = currentWeaponSetting.closestBone;
 	Settings::Legitbot::AutoAim::engageLock = currentWeaponSetting.engageLock;

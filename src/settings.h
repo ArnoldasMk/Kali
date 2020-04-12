@@ -185,7 +185,7 @@ struct AimbotWeapon_t
 		 smoothSaltEnabled,
 		 errorMarginEnabled,
 		 autoAimEnabled,
-		 aimAssistEnable,
+		 shootassist,
 		 aimStepEnabled,
 		 rcsEnabled,
 		 rcsAlwaysOn,
@@ -244,7 +244,7 @@ struct AimbotWeapon_t
 			this->errorMarginEnabled == another.errorMarginEnabled &&
 			this->errorMarginValue == another.errorMarginValue &&
 			this->autoAimEnabled == another.autoAimEnabled &&
-			this->aimAssistEnable == another.aimAssistEnable &&
+			this->shootassist == another.shootassist &&
 			this->LegitautoAimFov == another.LegitautoAimFov &&
 			this->aimStepEnabled == another.aimStepEnabled &&
 			this->aimStepMin == another.aimStepMin &&
@@ -498,7 +498,7 @@ namespace Settings
             inline int engageLockTTR = 700; // Time to Target Reacquisition in ms
 		}
 
-		namespace AimAssist
+		namespace ShootAssist
 		{
 			inline bool enabled = false;
 		}

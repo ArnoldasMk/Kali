@@ -767,7 +767,7 @@ const std::map<int, PaintNames_t> itemSkins = {
 		{ 721, { "#PaintKit_cu_r8_survivalist_Tag", "r8_survivalist" } },
 		{ 722, { "#PaintKit_cu_tec9_snake_Tag", "tec9_snake" } },
 		{ 723, { "#PaintKit_cu_famas_owl_orange_Tag", "famas_owl_orange" } },
-<<<<<<< HEAD
+// <<<<<<< HEAD
 		{ 724, { "#PaintKit_cu_wild_lotus", "wild_lotus" } },
 		{ 725, { "#PaintKit_cu_day_lily", "day_lily" } },
 		{ 726, { "#PaintKit_cu_sunset_lily", "sunset_lily" } },
@@ -778,7 +778,7 @@ const std::map<int, PaintNames_t> itemSkins = {
 
 		{ 735, { "#PaintKit_sp_nightstripe_Tag", "camo_tape_strips" } },
 
-=======
+// =======
 
 		/* StMark Collections */
 		{ 724, { "#PaintKit_cu_ak_island_floral_Tag", "ak47_island_floral" } },
@@ -818,7 +818,7 @@ const std::map<int, PaintNames_t> itemSkins = {
 		{ 762, { "#PaintKit_so_rune_stone_Tag", "rune_stone" } },
 		{ 763, { "#PaintKit_gs_negev_thor_Tag", "negev_thor" } },
 
->>>>>>> f579132a641d893ee46e8ad6da3036b60e162ac9
+// >>>>>>> f579132a641d893ee46e8ad6da3036b60e162ac9
 		/* Dangerzone case */
 		{ 801, { "#PaintKit_cu_ak47_asiimov_Tag", "ak47_asiimov" } },
 		{ 802, { "#PaintKit_cu_ump_arrows_Tag", "ump45_arrows" } },

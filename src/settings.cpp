@@ -184,7 +184,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
 		weaponSetting[XORSTR("ErrorMargin")][XORSTR("Enabled")] = i.second.errorMarginEnabled;
 		weaponSetting[XORSTR("ErrorMargin")][XORSTR("Value")] = i.second.errorMarginValue;
 		weaponSetting[XORSTR("AutoAim")][XORSTR("Enabled")] = i.second.autoAimEnabled;
-		weaponSetting[XORSTR("AimAssist")][XORSTR("Enable")] = i.second.aimAssistEnable;
+		weaponSetting[XORSTR("ShootAssist")][XORSTR("Enable")] = i.second.shootassist;
 		weaponSetting[XORSTR("AutoAim")][XORSTR("LegitFOV")] = i.second.LegitautoAimFov;
 		weaponSetting[XORSTR("AimStep")][XORSTR("Enabled")] = i.second.aimStepEnabled;
 		weaponSetting[XORSTR("AimStep")][XORSTR("min")] = i.second.aimStepMin;
@@ -743,7 +743,7 @@ void Settings::LoadConfig(std::string path)
 				.smoothSaltEnabled = weaponSetting[XORSTR( "Smooth" )][XORSTR( "Salting" )][XORSTR( "Enabled" )].asBool(),
 				.errorMarginEnabled = weaponSetting[XORSTR( "ErrorMargin" )][XORSTR( "Enabled" )].asBool(),
 				.autoAimEnabled = weaponSetting[XORSTR( "AutoAim" )][XORSTR( "Enabled" )].asBool(),
-				.aimAssistEnable = weaponSetting[XORSTR("AimAssist")][XORSTR("Enable")].asBool(),
+				.shootassist = weaponSetting[XORSTR("ShootAssist")][XORSTR("Enable")].asBool(),
 				.aimStepEnabled = weaponSetting[XORSTR( "AimStep" )][XORSTR( "Enabled" )].asBool(),
 				.rcsEnabled = weaponSetting[XORSTR( "RCS" )][XORSTR( "Enabled" )].asBool(),
 				.rcsAlwaysOn = weaponSetting[XORSTR( "RCS" )][XORSTR( "AlwaysOn" )].asBool(),

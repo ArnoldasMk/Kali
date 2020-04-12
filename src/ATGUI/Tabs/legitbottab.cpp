@@ -34,7 +34,7 @@ static float smoothSaltMultiplier = 0.0f;
 static bool errorMarginEnabled = false;
 static float errorMarginValue = 0.0f;
 static bool autoAimEnabled = false;
-static bool aimAssistEnable = false;
+static bool shootassist = false;
 static float LegitautoAimValue = 15.0f;
 static bool aimStepEnabled = false;
 static float aimStepMin = 25.0f;
@@ -83,7 +83,7 @@ void UI::ReloadWeaponSettings()
 	errorMarginEnabled = Settings::Legitbot::weapons.at(index).errorMarginEnabled;
 	errorMarginValue = Settings::Legitbot::weapons.at(index).errorMarginValue;
 	autoAimEnabled = Settings::Legitbot::weapons.at(index).autoAimEnabled;
-	aimAssistEnable = Settings::Legitbot::weapons.at(index).aimAssistEnable;
+	shootassist = Settings::Legitbot::weapons.at(index).shootassist;
 	LegitautoAimValue = Settings::Legitbot::weapons.at(index).LegitautoAimFov;
 	aimStepEnabled = Settings::Legitbot::weapons.at(index).aimStepEnabled;
 	aimStepMin = Settings::Legitbot::weapons.at(index).aimStepMin;
@@ -129,7 +129,7 @@ void UI::UpdateWeaponSettings()
 			.smoothSaltEnabled = smoothSaltEnabled,
 			.errorMarginEnabled = errorMarginEnabled,
 			.autoAimEnabled = autoAimEnabled,
-			.aimAssistEnable = aimAssistEnable,
+			.shootassist = shootassist,
 			.aimStepEnabled = aimStepEnabled,
 			.rcsEnabled = rcsEnabled,
 			.rcsAlwaysOn = rcsAlwaysOn,
@@ -367,11 +367,10 @@ void Legitbot::RenderTab()
 			{
 				if (ImGui::Checkbox(XORSTR("Auto Aim"), &autoAimEnabled))
 				{
-					aimAssistEnable = false;
 					UI::UpdateWeaponSettings();
 				}
 
-				if (ImGui::Checkbox(XORSTR("Aim Assist //under Progress"), &aimAssistEnable))
+				if (ImGui::Checkbox(XORSTR("Shoot Assist //under Progress"), &shootassist))
 				{
 					autoAimEnabled = false;
 					aimkeyOnly = false;
