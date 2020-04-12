@@ -384,9 +384,9 @@ void Legitbot::RenderTab()
 					ImGui::Checkbox((XORSTR("No Aim Punch")), &Settings::View::NoAimPunch::enabled);
 					ToolTip::Show("Suggested features with Auto Shoot\n But turn it on\n only when your legitBot perfectly configured\n Otherwise you can caught in overwathc", ImGui::IsItemHoveredRect());
 
-					if( ImGui::Checkbox(XORSTR("Silent Aim"), &Settings::Legitbot::silent) )
-						UI::UpdateWeaponSettings();
+					ImGui::Checkbox(XORSTR("Silent Aim"), &silent);
 					ToolTip::Show("Suggested features with Auto Shoot\n But turn it on\n only when your legitBot perfectly configured\n Otherwise you can caught in overwathc", ImGui::IsItemHoveredRect());
+					
 				}
 			}
 
