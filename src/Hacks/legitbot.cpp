@@ -18,7 +18,7 @@ std::vector<long> killTimes = { 0 }; // the Epoch time from when we kill someone
 
 bool shouldAim;
 QAngle AimStepLastAngle;
-QAngle RCSLastPunch;
+QAngle RCSLastPunch = {0,0,0};
 
 int Legitbot::targetAimbot = -1;
 const int headVectors = 11;
@@ -648,54 +648,6 @@ static void AutoPistol(C_BaseCombatWeapon* activeWeapon, CUserCmd* cmd)
         cmd->buttons &= ~IN_ATTACK;
 }
 
-static void AutoShoot(C_BasePlayer* player, C_BaseCombatWeapon* activeWeapon, CUserCmd* cmd)
-{
-	if (!Settings::Legitbot::AutoShoot::enabled)
-		return;
-
-	if (Settings::Legitbot::AimStep::enabled && Legitbot::aimStepInProgress)
-		return;
-
-	if (!player || activeWeapon->GetAmmo() == 0)
-		return;
-
-	CSWeaponType weaponType = activeWeapon->GetCSWpnData()->GetWeaponType();
-	if (weaponType == CSWeaponType::WEAPONTYPE_KNIFE || weaponType == CSWeaponType::WEAPONTYPE_C4 || weaponType == CSWeaponType::WEAPONTYPE_GRENADE)
-		return;
-
-	if (cmd->buttons & IN_USE)
-		return;
-
-	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
-
-	if (Settings::Legitbot::AutoShoot::autoscope && Util::Items::IsScopeable(*activeWeapon->GetItemDefinitionIndex()) && !localplayer->IsScoped())
-    {
-	    cmd->buttons |= IN_ATTACK2;
-	    return; // continue next tick
-    }
-
-	if( Settings::Legitbot::AutoShoot::velocityCheck && localplayer->GetVelocity().Length() > (activeWeapon->GetCSWpnData()->GetMaxPlayerSpeed() / 3) )
-		return;
-	if( Settings::Legitbot::SpreadLimit::enabled && ((activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) > Settings::Legitbot::SpreadLimit::value))
-		return;
-
-	float nextPrimaryAttack = activeWeapon->GetNextPrimaryAttack();
-
-    if (!(*activeWeapon->GetItemDefinitionIndex() == ItemDefinitionIndex::WEAPON_REVOLVER))
-    {
-        if (nextPrimaryAttack > globalVars->curtime)
-        {    
-            cmd->buttons &= ~IN_ATTACK;
-            return;
-        }
-        else
-        {
-            cmd->buttons |= IN_ATTACK;
-            return;
-        }
-    }
-}
-
 static void NoShoot(C_BaseCombatWeapon* activeWeapon, C_BasePlayer* player, CUserCmd* cmd)
 {
 	if (player && Settings::Legitbot::NoShoot::enabled)
@@ -712,7 +664,7 @@ static void NoShoot(C_BaseCombatWeapon* activeWeapon, C_BasePlayer* player, CUse
 
 static void FixMouseDeltas(CUserCmd* cmd, const QAngle &angle, const QAngle &oldAngle)
 {
-    if( !shouldAim || Settings::Legitbot::ShootAssist::enabled)
+    if( !shouldAim)
         return;
     QAngle delta = angle - oldAngle;
     float sens = cvar->FindVar(XORSTR("sensitivity"))->GetFloat();
@@ -751,11 +703,22 @@ bool AimKeyOnly (CUserCmd* cmd)
     }
 }
 
+// void ShootAssist(CUserCmd* cmd, C_BasePlayer* localplayer, C_BasePlayer* player) 
+// {
+// 	if (!Settings::Legitbot::ShootAssist::enabled)
+// 		return;
+// 	/*cheking the player is near my cross hair or not
+// 	// if it is then it will reduce the mouse sencitivity
+// 	*/
+// 	if ( GetClosestSpot(cmd, localplayer, player).IsZero())
+// 		return; 
+	
+// 	cmd->buttons |= IN_ATTACK;
+// 	shouldAim = true;
+// }
 void Legitbot::CreateMove(CUserCmd* cmd)
 {
-	if(!Settings::Legitbot::enabled)
-		return;
-		
+			
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 	
 	if (!localplayer || !localplayer->GetAlive())
@@ -823,8 +786,17 @@ void Legitbot::CreateMove(CUserCmd* cmd)
             }
 
 			Settings::Debug::AutoAim::target = bestSpot; // For Debug showing aimspot.
+
+			// Feature of shoot assist bot
+			if ( ( Settings::Legitbot::ShootAssist::enabled && !(GetClosestSpot(cmd, localplayer, player).IsZero()) ) || !newTarget)
+			{
+				cmd->buttons |= IN_ATTACK; 
+				shouldAim = true;
+			}
+
 			if (shouldAim)
 			{
+				
 				if (Settings::Legitbot::Prediction::enabled)
 				{
 					localEye = VelocityExtrapolate(localplayer, localEye); // get eye pos next tick
@@ -844,34 +816,9 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 				newTarget = false;
 			}
 		}
-
-		// Help Player stay focus in desired position
-		if (Settings::Legitbot::ShootAssist::enabled)
+		else 
 		{
-			//Do not shoot if player is in air or in ladder 
-            if (Settings::Legitbot::IgnoreEnemyJump::enabled && (!(player->GetFlags() & FL_ONGROUND) && player->GetMoveType() != MOVETYPE_LADDER))
-		    	return;
-
-            //Auto Scop Controll system to controll auto scoping every time
-            if (Settings::Legitbot::ScopeControl::enabled)
-	        {
-                //cheking if the weapon scopable and not scop then it will scop and go back to the next tick
-		        if (Util::Items::IsScopeable(*activeWeapon->GetItemDefinitionIndex()) && !localplayer->IsScoped())
-                {
-                    cmd->buttons |= IN_ATTACK2;
-                    return; // will go to the next tick
-                }
-			}
-
-			Settings::Debug::AutoAim::target = bestSpot; // For Debug showing aimspot.
-
-			/*cheking the player is near my cross hair or not
-			// if it is then it will reduce the mouse sencitivity
-			*/
-			if ( !(GetClosestSpot(cmd, localplayer, player).IsZero())) 
-			{
-				//under proress
-			}
+			Settings::Legitbot::ShootAssist::enabled = false;
 		}
 	}
 	else // No player to Shoot
@@ -885,6 +832,7 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 	AutoCrouch(player, cmd);
 	AutoSlow(player, oldForward, oldSideMove, bestDamage, activeWeapon, cmd);
 	AutoPistol(activeWeapon, cmd);
+	// ShootAssist(cmd, localplayer, player);
 	//AutoShoot(player, activeWeapon, cmd);
 	AutoCock(player, activeWeapon, cmd);
 	RCS(angle, player, cmd);
@@ -895,6 +843,7 @@ void Legitbot::CreateMove(CUserCmd* cmd)
     Math::ClampAngles(angle);
 
 	FixMouseDeltas(cmd, angle, oldAngle);
+	
 	cmd->viewangles = angle;
 
     Math::CorrectMovement(oldAngle, cmd, oldForward, oldSideMove);

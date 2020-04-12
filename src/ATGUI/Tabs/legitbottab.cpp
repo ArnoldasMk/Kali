@@ -15,10 +15,10 @@ static bool silent = false;
 static bool friendly = false;
 static bool closestBone = false;
 static bool desiredBones[] = {true, true, true, true, true, true, true, // center mass
-							  false, false, false, false, false, false, false, // left arm
-							  false, false, false, false, false, false, false, // right arm
-							  false, false, false, false, false, // left leg
-							  false, false, false, false, false  // right leg
+							  true, true, true, true, true, true, true, // left arm
+							  true, true, true, true, true, true, true, // right arm
+							  true, true, true, true, true, // left leg
+							  true, true, true, true, true  // right leg
 							 };
 static bool engageLock = false;
 static bool engageLockTR = false; // Target Reacquisition
@@ -370,12 +370,8 @@ void Legitbot::RenderTab()
 					UI::UpdateWeaponSettings();
 				}
 
-				if (ImGui::Checkbox(XORSTR("Shoot Assist //under Progress"), &shootassist))
+				if (ImGui::Checkbox(XORSTR("Shoot Assist(Experimental)"), &shootassist))
 				{
-					autoAimEnabled = false;
-					aimkeyOnly = false;
-					predEnabled = false;
-					errorMarginEnabled = false;
 					UI::UpdateWeaponSettings();
 				}
 			}
