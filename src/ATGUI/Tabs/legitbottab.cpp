@@ -362,17 +362,31 @@ void Legitbot::RenderTab()
 			}
 			ImGui::Separator();
 
-			//Legitbot Settings
+			//Aim Options
 			ImGui::Columns(2, nullptr, true);
 			{
 				if (ImGui::Checkbox(XORSTR("Auto Aim"), &autoAimEnabled))
 				{
 					UI::UpdateWeaponSettings();
 				}
+				if(!autoAimEnabled)
+					shootassist = false;
 
 				if (ImGui::Checkbox(XORSTR("Shoot Assist(Experimental)"), &shootassist))
 				{
+					autoAimEnabled = true;
 					UI::UpdateWeaponSettings();
+				}
+				ToolTip::Show("Automatically Aim aim and shoot when \n when player in Under Your fov area", ImGui::IsItemHoveredRect());
+
+				if(shootassist) // suggested options with shoot assist
+				{
+					ImGui::Checkbox((XORSTR("No Aim Punch")), &Settings::View::NoAimPunch::enabled);
+					ToolTip::Show("Suggested features with Auto Shoot\n But turn it on\n only when your legitBot perfectly configured\n Otherwise you can caught in overwathc", ImGui::IsItemHoveredRect());
+
+					if( ImGui::Checkbox(XORSTR("Silent Aim"), &Settings::Legitbot::silent) )
+						UI::UpdateWeaponSettings();
+					ToolTip::Show("Suggested features with Auto Shoot\n But turn it on\n only when your legitBot perfectly configured\n Otherwise you can caught in overwathc", ImGui::IsItemHoveredRect());
 				}
 			}
 
@@ -380,7 +394,7 @@ void Legitbot::RenderTab()
 			ImGui::NextColumn();
 			{
 				ImGui::PushItemWidth(-1);
-				if (ImGui::SliderFloat(XORSTR("##FOV"), &LegitautoAimValue, 0, 15))
+				if (ImGui::SliderFloat(XORSTR("##FOV"), &LegitautoAimValue, 0.f, 15.f))
 				{
 					UI::UpdateWeaponSettings();
 				}

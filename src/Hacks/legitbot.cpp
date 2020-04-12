@@ -778,9 +778,16 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 				shouldAim = AimKeyOnly(cmd);
                 
             }
-            else if (cmd->buttons & IN_ATTACK || Settings::Legitbot::AutoShoot::enabled){
+            else if ( cmd->buttons & IN_ATTACK && !Settings::Legitbot::ShootAssist::enabled && Settings::Legitbot::AutoShoot::enabled){
                 shouldAim = true;
             }
+			else if (Settings::Legitbot::ShootAssist::enabled) {
+				if (!(GetClosestSpot(cmd, localplayer, player).IsZero()) || !newTarget )
+				{
+					cmd->buttons |= IN_ATTACK;
+					shouldAim = true;
+				}
+			}
             else {
                 shouldAim = false;
             }
@@ -788,11 +795,7 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 			Settings::Debug::AutoAim::target = bestSpot; // For Debug showing aimspot.
 
 			// Feature of shoot assist bot
-			if ( ( Settings::Legitbot::ShootAssist::enabled && !(GetClosestSpot(cmd, localplayer, player).IsZero()) ) || !newTarget)
-			{
-				cmd->buttons |= IN_ATTACK; 
-				shouldAim = true;
-			}
+			
 
 			if (shouldAim)
 			{

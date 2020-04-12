@@ -35,7 +35,7 @@ void Main::RenderWindow()
 
 	static int page = 0;
 
-	if (ImGui::Begin(XORSTR("AmarHack"), &Main::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_ShowBorders))
+	if (ImGui::Begin(XORSTR("MissedIt"), &Main::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_ShowBorders))
 	{
 		Settings::UI::Windows::Main::open = true;
 		ImVec2 temp = ImGui::GetWindowSize();
