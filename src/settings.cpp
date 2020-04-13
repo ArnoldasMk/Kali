@@ -203,6 +203,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
 		weaponSetting[XORSTR("FlashCheck")][XORSTR("Enabled")] = i.second.flashCheck;
 		weaponSetting[XORSTR("hitchance")][XORSTR("Enabled")] = i.second.hitchanceEnaled;
 		weaponSetting[XORSTR("hitchance")][XORSTR("Value")] = i.second.hitchance;
+		weaponSetting[XORSTR("shotDelay")][XORSTR("value")] = i.second.shotDelay;
 		weaponSetting[XORSTR("AutoWall")][XORSTR("Enabled")] = i.second.autoWallEnabled;
 		weaponSetting[XORSTR("AutoWall")][XORSTR("Value")] = i.second.autoWallValue;
 		weaponSetting[XORSTR("AutoSlow")][XORSTR("enabled")] = i.second.autoSlow;
@@ -776,6 +777,7 @@ void Settings::LoadConfig(std::string path)
 				.rcsAmountY = weaponSetting[XORSTR( "RCS" )][XORSTR( "AmountY" )].asFloat(),
 				.autoWallValue = weaponSetting[XORSTR( "AutoWall" )][XORSTR( "Value" )].asFloat(),
 				.hitchance = weaponSetting[XORSTR( "hitchance" )][XORSTR( "Value" )].asFloat(),
+				.shotDelay = weaponSetting[XORSTR("shotDelay")][XORSTR("value")].asInt(),
 		};
 
 		for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)

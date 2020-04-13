@@ -52,7 +52,8 @@ static bool ignoreEnemyJumpEnabled = false;
 static bool smokeCheck = false;
 static bool flashCheck = false;
 static bool hitchanceEnaled = false;
-static float hitchance = 0.1f;
+static float hitchance = 100.f;
+static int shotDelay = 200;
 static bool autoWallEnabled = false;
 static float autoWallValue = 10.0f;
 static bool autoAimRealDistance = false;
@@ -102,6 +103,7 @@ void UI::ReloadWeaponSettings()
 	flashCheck = Settings::Legitbot::weapons.at(index).flashCheck;
 	hitchanceEnaled = Settings::Legitbot::weapons.at(index).hitchanceEnaled;
 	hitchance = Settings::Legitbot::weapons.at(index).hitchance;
+	shotDelay = Settings::Legitbot::weapons.at(index).shotDelay;
 	autoWallEnabled = Settings::Legitbot::weapons.at(index).autoWallEnabled;
 	autoWallValue = Settings::Legitbot::weapons.at(index).autoWallValue;
 	autoAimRealDistance = Settings::Legitbot::weapons.at(index).autoAimRealDistance;
@@ -162,6 +164,7 @@ void UI::UpdateWeaponSettings()
 			.rcsAmountY = rcsAmountY,
 			.autoWallValue = autoWallValue,
 			.hitchance = hitchance,
+			.shotDelay = shotDelay,
 	};
 
 
@@ -351,28 +354,40 @@ void Legitbot::RenderTab()
 				}
 				ImGui::PopItemWidth();
 			}
-			ImGui::Columns(2);
+			ImGui::Columns(1, nullptr, true);
 			ImGui::Separator();
-			ImGui::Text(XORSTR("Legitbot"));
-			
-			//Fov Settings Text
-			ImGui::NextColumn();
-			{
-				ImGui::Text("FOV Settings");
-			}
+			ImGui::Text(XORSTR("Auto Aim"));
 			ImGui::Separator();
-
 			//Aim Options
-			ImGui::Columns(2, nullptr, true);
-			{
-				if (ImGui::Checkbox(XORSTR("Auto Aim"), &autoAimEnabled))
+				if (ImGui::Checkbox(XORSTR("Enable"), &autoAimEnabled))
 				{
 					UI::UpdateWeaponSettings();
 				}
-				if(!autoAimEnabled)
+				if(autoAimEnabled)
+				{
+					ImGui::SameLine();
+					if (ImGui::SliderFloat(XORSTR("##Fov"), &LegitautoAimValue, 0.f, 15.f, XORSTR("View Angle : %.0f")))
+					{
+						UI::UpdateWeaponSettings();
+					}
+				}else
+				{
 					shootassist = false;
+				}
+				
+			ImGui::Columns(2);
+			{
+				ImGui::Separator();
+				ImGui::Text("Shoot Assist");
+				ImGui::NextColumn();
+				{
+					ImGui::Text("Suggested Settings");
+				}
+				
+				ImGui::Separator();
 
-				if (ImGui::Checkbox(XORSTR("Shoot Assist(Experimental)"), &shootassist))
+				ImGui::Columns(2);
+				if (ImGui::Checkbox(XORSTR("Enable(Experimental)"), &shootassist))
 				{
 					autoAimEnabled = true;
 					UI::UpdateWeaponSettings();
@@ -381,32 +396,43 @@ void Legitbot::RenderTab()
 
 				if(shootassist) // suggested options with shoot assist
 				{
-					ImGui::Checkbox((XORSTR("No Aim Punch")), &Settings::View::NoAimPunch::enabled);
-					ToolTip::Show("Suggested features with Auto Shoot\n But turn it on\n only when your legitBot perfectly configured\n Otherwise you can caught in overwathc", ImGui::IsItemHoveredRect());
-
-					if(ImGui::Checkbox(XORSTR("Silent Aim"), &silent))
+					ImGui::NextColumn();
 					{
-						UI::UpdateWeaponSettings();
+						ImGui::Checkbox((XORSTR("No Aim Punch")), &Settings::View::NoAimPunch::enabled);
+						ToolTip::Show("Suggested features with Auto Shoot\n But turn it on\n only when your legitBot perfectly configured\n Otherwise you can caught in overwathc", ImGui::IsItemHoveredRect());
+
+						if(ImGui::Checkbox(XORSTR("Silent Aim"), &silent))
+						{
+							UI::UpdateWeaponSettings();
+						}
+						ToolTip::Show("Suggested features with Auto Shoot\n But turn it on\n only when your legitBot perfectly configured\n Otherwise you can caught in overwathc", ImGui::IsItemHoveredRect());
+						if (ImGui::Checkbox(XORSTR("Distance-Based FOV"), &autoAimRealDistance))
+						{
+							UI::UpdateWeaponSettings();
+						}
 					}
-					ToolTip::Show("Suggested features with Auto Shoot\n But turn it on\n only when your legitBot perfectly configured\n Otherwise you can caught in overwathc", ImGui::IsItemHoveredRect());
-					
+					ImGui::Columns(1);
+					{
+						ImGui::Separator();
+						ImGui::Checkbox(XORSTR("Hitchance Enable"), &hitchanceEnaled); 
+						ImGui::SameLine();
+						if( ImGui::SliderFloat(XORSTR("##HitChance"), &hitchance, 0.f, 100.f ,XORSTR("HitChance value : %d ")))
+						{
+							UI::UpdateWeaponSettings();
+						}
+
+						ImGui::Separator();
+						ImGui::PushItemWidth(-1);
+						if(ImGui::SliderInt(XORSTR("##Shot Delay"), &shotDelay, 0, 200, XORSTR("Shot Delay : %.0f ms")))
+						{
+							UI::UpdateWeaponSettings();
+						}
+						ImGui::PopItemWidth();
+					}
+							
 				}
 			}
 
-			//FOV settings values
-			ImGui::NextColumn();
-			{
-				ImGui::PushItemWidth(-1);
-				if (ImGui::SliderFloat(XORSTR("##FOV"), &LegitautoAimValue, 0.f, 15.f))
-				{
-					UI::UpdateWeaponSettings();
-				}
-				if (ImGui::Checkbox(XORSTR("Distance-Based FOV"), &autoAimRealDistance))
-				{
-					UI::UpdateWeaponSettings();
-				}		
-				ImGui::PopItemWidth();		
-			}
 
 			ImGui::Columns(1);
 			ImGui::Separator();
@@ -471,25 +497,6 @@ void Legitbot::RenderTab()
 			
 			// ImGui::Text(XORSTR("Autoshoot"));
 			// ImGui::Separator();
-			{
-				if(shootassist)
-				{
-					ImGui::Columns(1);
-					{
-						ImGui::Separator();
-						
-						ImGui::Checkbox(XORSTR("##HitchanceEnabled"), &hitchanceEnaled); 
-						ImGui::SameLine();
-						ImGui::Text(XORSTR("Hitchance"));
-						if( ImGui::SliderFloat(XORSTR("##HitChance"), &hitchance, 0, 100) ,XORSTR("HitChance value : %f %"))
-						{
-							UI::UpdateWeaponSettings();
-						}
-							
-					}
-					
-				}
-			}
 			
 			ImGui::EndChild();
 		}

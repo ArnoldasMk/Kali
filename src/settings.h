@@ -216,7 +216,8 @@ struct AimbotWeapon_t
 		  rcsAmountX = 2.0f,
 		  rcsAmountY = 2.0f,
 		  autoWallValue = 10.0f,
-		  hitchance = 20.f;
+		  hitchance = 20;
+	int	shotDelay = 200;
 	bool desiredBones[31];
 
 	bool operator == (const AimbotWeapon_t& another) const
@@ -263,6 +264,7 @@ struct AimbotWeapon_t
 			this->flashCheck == another.flashCheck &&
 			this->hitchanceEnaled == another.hitchanceEnaled &&
 			this->hitchance == another.hitchance &&
+			this->shotDelay == another.shotDelay &&
 			this->autoWallEnabled == another.autoWallEnabled &&
 			this->autoWallValue == another.autoWallValue &&
 			this->autoSlow == another.autoSlow &&
@@ -571,10 +573,14 @@ namespace Settings
 			inline bool enabled = false;
 		}
 
+		namespace ShotDelay
+		{
+			inline int value = 200;
+		}
 		namespace Hitchance
 		{
 			inline bool enabled = false;
-			inline float value = 20.f;
+			inline float value = 20;
 		}
 
 		namespace Prediction

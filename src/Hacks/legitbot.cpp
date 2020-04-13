@@ -17,6 +17,8 @@ std::vector<int64_t> Legitbot::friends = { };
 std::vector<long> killTimes = { 0 }; // the Epoch time from when we kill someone
 
 bool shouldAim;
+inline int delay = 0;
+inline bool _delayed = false; // to determaine all ready delayed or not
 QAngle AimStepLastAngle;
 QAngle RCSLastPunch = {0,0,0};
 
@@ -805,9 +807,14 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 				shouldAim = AimKeyOnly(cmd);
                 
             }
-            else if ( cmd->buttons & IN_ATTACK && !Settings::Legitbot::ShootAssist::enabled && Settings::Legitbot::AutoShoot::enabled){
-                shouldAim = true;
-            }
+			else if( cmd->buttons & IN_ATTACK && !Settings::Legitbot::ShootAssist::enabled && Settings::Legitbot::AutoAim::enabled)
+			{
+				shouldAim = true;
+			}
+			else if (cmd->buttons & IN_ATTACK && Settings::Legitbot::ShootAssist::enabled)
+			{
+				shouldAim = true;
+			}
 			else if (Settings::Legitbot::ShootAssist::enabled) {
 				if (!(GetClosestSpot(cmd, localplayer, player).IsZero()) || !newTarget )
 				{
@@ -815,21 +822,54 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 					{
 						if(hitchance() > Settings::Legitbot::Hitchance::value * 1.5)
 						{
-							cmd->buttons |= IN_ATTACK;
-							shouldAim = true;
+							if(delay >= (Settings::Legitbot::ShotDelay::value / 10.f) && _delayed == false)
+							{
+								_delayed = true;
+							}
+							if (_delayed)
+							{
+								cmd->buttons |= IN_ATTACK;
+								shouldAim = true;
+							}
+							else
+							{
+								shouldAim = false;
+							}
+							
+							delay++;
 						}
+					}	
+					else 
+					{
+						if(delay >= (Settings::Legitbot::ShotDelay::value / 10.f) && _delayed == false)
+							{
+								_delayed = true;
+							}
+							if (_delayed)
+							{
+								cmd->buttons |= IN_ATTACK;
+								shouldAim = true;
+							}
+							else 
+							{
+								shouldAim = false;
+							}
+							delay++;
 					}
-					
 				}
+				// else
+				// {
+				// 	delay = 0;
+				// 	_delayed = false;
+				// 	shouldAim = false;
+				// }
+				
 			}
             else {
                 shouldAim = false;
             }
 
 			Settings::Debug::AutoAim::target = bestSpot; // For Debug showing aimspot.
-
-			// Feature of shoot assist bot
-			
 
 			if (shouldAim)
 			{
@@ -863,6 +903,8 @@ void Legitbot::CreateMove(CUserCmd* cmd)
         Settings::Debug::AutoAim::target = {0,0,0};
         newTarget = true;
         lastRandom = {0,0,0};
+		delay = 0;
+		_delayed = false;
     }
 
 	AimStep(player, angle, cmd);
@@ -948,7 +990,6 @@ void Legitbot::UpdateValues()
 	Settings::Legitbot::AimStep::min = currentWeaponSetting.aimStepMin;
 	Settings::Legitbot::AimStep::max = currentWeaponSetting.aimStepMax;
 	Settings::Legitbot::AutoPistol::enabled = currentWeaponSetting.autoPistolEnabled;
-	//Settings::Legitbot::AutoShoot::enabled = currentWeaponSetting.autoShootEnabled;
 	Settings::Legitbot::AutoShoot::autoscope = currentWeaponSetting.autoScopeEnabled;
 	Settings::Legitbot::RCS::enabled = currentWeaponSetting.rcsEnabled;
 	Settings::Legitbot::RCS::always_on = currentWeaponSetting.rcsAlwaysOn;
@@ -963,6 +1004,7 @@ void Legitbot::UpdateValues()
 	Settings::Legitbot::FlashCheck::enabled = currentWeaponSetting.flashCheck;
 	Settings::Legitbot::Hitchance::enabled = currentWeaponSetting.hitchanceEnaled;
 	Settings::Legitbot::Hitchance::value = currentWeaponSetting.hitchance;
+	Settings::Legitbot::ShotDelay::value = currentWeaponSetting.shotDelay;
 	Settings::Legitbot::AutoWall::enabled = currentWeaponSetting.autoWallEnabled;
 	Settings::Legitbot::AutoWall::value = currentWeaponSetting.autoWallValue;
 	Settings::Legitbot::AutoSlow::enabled = currentWeaponSetting.autoSlow;
