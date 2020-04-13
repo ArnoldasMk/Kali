@@ -17,7 +17,7 @@ std::vector<int64_t> Legitbot::friends = { };
 std::vector<long> killTimes = { 0 }; // the Epoch time from when we kill someone
 
 bool shouldAim;
-inline int delay = 0;
+inline int delay = 0, shotFIred = 0;
 inline bool _delayed = false; // to determaine all ready delayed or not
 QAngle AimStepLastAngle;
 QAngle RCSLastPunch = {0,0,0};
@@ -837,6 +837,7 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 							}
 							
 							delay++;
+							shotFIred++;
 						}
 					}	
 					else 
@@ -855,6 +856,7 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 								shouldAim = false;
 							}
 							delay++;
+							shotFIred++;
 					}
 				}				
 			}
@@ -898,20 +900,26 @@ void Legitbot::CreateMove(CUserCmd* cmd)
         lastRandom = {0,0,0};
 		delay = 0;
 		// _delayed = false;
+		shotFIred = localplayer->GetShotsFired();
 		if(_delayed)
 		{
-			// if( !(cmd->buttons & IN_ATTACK) ) 
-			// {
-				if(player->GetShotsFired() <= 10)
+			if( !(cmd->buttons & IN_ATTACK) ) 
+			{
+				if(shotFIred <= Settings::Legitbot::ShootAssist::minShotFired)
 				{
 					cmd->buttons |= IN_ATTACK;
 				}
 				else
 				{
+					shotFIred = 0;
 					_delayed = false;
-				}
-				
-			// }
+				}	
+			}
+			else 
+			{
+				shotFIred = 0;
+				_delayed = false;
+			}
 		}
 		else
 		{
