@@ -366,10 +366,13 @@ void Legitbot::RenderTab()
 				if(autoAimEnabled)
 				{
 					ImGui::SameLine();
+					ImGui::PushItemWidth(-1);
 					if (ImGui::SliderFloat(XORSTR("##Fov"), &LegitautoAimValue, 0.f, 15.f, XORSTR("View Angle : %.0f")))
 					{
 						UI::UpdateWeaponSettings();
 					}
+					ImGui
+					::PopItemWidth();
 				}else
 				{
 					shootassist = false;
@@ -416,10 +419,12 @@ void Legitbot::RenderTab()
 						ImGui::Separator();
 						ImGui::Checkbox(XORSTR("Hitchance Enable"), &hitchanceEnaled); 
 						ImGui::SameLine();
-						if( ImGui::SliderFloat(XORSTR("##HitChance"), &hitchance, 0.f, 100.f ,XORSTR("HitChance value : %d ")))
+						ImGui::PushItemWidth(-1);
+						if( ImGui::SliderFloat(XORSTR("##HitChance"), &hitchance, 0.f, 100.f ,XORSTR("HitChance value : %.0f deg ")))
 						{
 							UI::UpdateWeaponSettings();
 						}
+						ImGui::PopItemWidth();
 
 						ImGui::Separator();
 						ImGui::PushItemWidth(-1);
