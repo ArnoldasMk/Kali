@@ -403,18 +403,29 @@ void Legitbot::RenderTab()
 				if(shootassist) // suggested options with shoot assist
 				{
 					ImGui::PushItemWidth(-1);
-					ImGui::SliderInt(XORSTR("##MinShotFire"), &minShotFire, 0, 20, XORSTR("Min Shot To fire : %.0f"));
+					if( ImGui::SliderInt(XORSTR("##MinShotFire"), &minShotFire, 0, 20, XORSTR("Min Shot To fire : %.0f")) )
+					{
+						UI::UpdateWeaponSettings();
+					}
+					ToolTip::Show("Min shot that will gun shoot after the enemy killed to make sure that it is not looking fishy", ImGui::IsItemHoveredRect());
 					ImGui::PopItemWidth();
+
+					if (ImGui::Checkbox(XORSTR("Smoke Check"), &smokeCheck))
+						UI::UpdateWeaponSettings();
+					
+					if (ImGui::Checkbox(XORSTR("Flash Check"), &flashCheck))
+						UI::UpdateWeaponSettings();
+						
 					ImGui::NextColumn();
 					{
 						ImGui::Checkbox((XORSTR("No Aim Punch")), &Settings::View::NoAimPunch::enabled);
-						ToolTip::Show("Suggested features with Auto Shoot\n But turn it on\n only when your legitBot perfectly configured\n Otherwise you can caught in overwathc", ImGui::IsItemHoveredRect());
+						ToolTip::Show("Suggested features with Auto Shoot But turn it on only when your legitBot perfectly configured\n Otherwise you can caught in overwathc", ImGui::IsItemHoveredRect());
 
 						if(ImGui::Checkbox(XORSTR("Silent Aim"), &silent))
 						{
 							UI::UpdateWeaponSettings();
 						}
-						ToolTip::Show("Suggested features with Auto Shoot\n But turn it on\n only when your legitBot perfectly configured\n Otherwise you can caught in overwathc", ImGui::IsItemHoveredRect());
+						ToolTip::Show("Suggested features with Auto Shoot But turn it on only when your legitBot perfectly configured\n Otherwise you can caught in overwathc", ImGui::IsItemHoveredRect());
 						if (ImGui::Checkbox(XORSTR("Distance-Based FOV"), &autoAimRealDistance))
 						{
 							UI::UpdateWeaponSettings();
@@ -426,7 +437,7 @@ void Legitbot::RenderTab()
 						ImGui::Checkbox(XORSTR("Hitchance Enable"), &hitchanceEnaled); 
 						ImGui::SameLine();
 						ImGui::PushItemWidth(-1);
-						if( ImGui::SliderFloat(XORSTR("##HitChance"), &hitchance, 0.f, 100.f ,XORSTR("HitChance value : %.0f deg ")))
+						if( ImGui::SliderFloat(XORSTR("##HitChance"), &hitchance, 0.f, 100.f ,XORSTR("HitChance value : %.0f ")))
 						{
 							UI::UpdateWeaponSettings();
 						}
@@ -576,8 +587,6 @@ void Legitbot::RenderTab()
 
 				if (ImGui::Checkbox(XORSTR("Silent Aim"), &silent))
 					UI::UpdateWeaponSettings();
-				if (ImGui::Checkbox(XORSTR("Smoke Check"), &smokeCheck))
-					UI::UpdateWeaponSettings();
 				if (ImGui::Checkbox(XORSTR("Prediction"), &predEnabled))
 					UI::UpdateWeaponSettings();
 			}
@@ -606,8 +615,6 @@ void Legitbot::RenderTab()
 							UI::UpdateWeaponSettings();
 				}
 
-				if (ImGui::Checkbox(XORSTR("Flash Check"), &flashCheck))
-					UI::UpdateWeaponSettings();
 				if (ImGui::Checkbox(XORSTR("Ignore Jump (Self)"), &ignoreJumpEnabled))
 					UI::UpdateWeaponSettings();
 				if (ImGui::Checkbox(XORSTR("Ignore Jump (Enemies)"), &ignoreEnemyJumpEnabled))

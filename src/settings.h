@@ -266,12 +266,12 @@ struct AimbotWeapon_t
 			this->hitchanceEnaled == another.hitchanceEnaled &&
 			this->hitchance == another.hitchance &&
 			this->shotDelay == another.shotDelay &&
+			this->minShotFire == another.minShotFire &&
 			this->autoWallEnabled == another.autoWallEnabled &&
 			this->autoWallValue == another.autoWallValue &&
 			this->autoSlow == another.autoSlow &&
 			this->predEnabled == another.predEnabled &&
 			this->autoAimRealDistance == another.autoAimRealDistance &&
-			this->minShotFire == another.minShotFire &&
 			this->scopeControlEnabled == another.scopeControlEnabled;
 	}
 } const defaultSettings{};
@@ -488,7 +488,7 @@ namespace Settings
 		namespace AutoAim
 		{
 			inline bool enabled = false;
-            inline float fov = 15.0f;
+            inline float fov = 15.f;
             inline bool realDistance = false;
             inline bool closestBone = false;
             inline bool desiredBones[] = {true, true, true, true, true, true, true, // center mass
@@ -505,7 +505,6 @@ namespace Settings
 		namespace ShootAssist
 		{
 			inline bool enabled = false;
-			inline int minShotFired = 6;
 		}
 
 		namespace AutoWall
@@ -580,6 +579,12 @@ namespace Settings
 		{
 			inline int value = 200;
 		}
+
+		namespace MinShotFire
+		{
+			inline int value = 6;
+		} // namespace MinShotDealay
+		
 		namespace Hitchance
 		{
 			inline bool enabled = false;

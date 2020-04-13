@@ -837,7 +837,6 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 							}
 							
 							delay++;
-							shotFIred++;
 						}
 					}	
 					else 
@@ -856,7 +855,6 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 								shouldAim = false;
 							}
 							delay++;
-							shotFIred++;
 					}
 				}				
 			}
@@ -903,27 +901,15 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 		shotFIred = localplayer->GetShotsFired();
 		if(_delayed)
 		{
-			if( !(cmd->buttons & IN_ATTACK) ) 
+			if(shotFIred <= Settings::Legitbot::MinShotFire::value && shotFIred > 0)
 			{
-				if(shotFIred <= Settings::Legitbot::ShootAssist::minShotFired)
-				{
-					cmd->buttons |= IN_ATTACK;
-				}
-				else
-				{
-					shotFIred = 0;
-					_delayed = false;
-				}	
+				cmd->buttons |= IN_ATTACK;
 			}
-			else 
+			else
 			{
 				shotFIred = 0;
 				_delayed = false;
-			}
-		}
-		else
-		{
-			_delayed = false;
+			}	
 		}
 			
     }
@@ -1026,11 +1012,11 @@ void Legitbot::UpdateValues()
 	Settings::Legitbot::Hitchance::enabled = currentWeaponSetting.hitchanceEnaled;
 	Settings::Legitbot::Hitchance::value = currentWeaponSetting.hitchance;
 	Settings::Legitbot::ShotDelay::value = currentWeaponSetting.shotDelay;
+	Settings::Legitbot::MinShotFire::value = currentWeaponSetting.minShotFire;
 	Settings::Legitbot::AutoWall::enabled = currentWeaponSetting.autoWallEnabled;
 	Settings::Legitbot::AutoWall::value = currentWeaponSetting.autoWallValue;
 	Settings::Legitbot::AutoSlow::enabled = currentWeaponSetting.autoSlow;
 	Settings::Legitbot::ScopeControl::enabled = currentWeaponSetting.scopeControlEnabled;
-	Settings::Legitbot::ShootAssist::minShotFired = currentWeaponSetting.minShotFire;
 
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 		Settings::Legitbot::AutoAim::desiredBones[bone] = currentWeaponSetting.desiredBones[bone];
