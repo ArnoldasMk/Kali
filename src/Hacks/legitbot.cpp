@@ -816,7 +816,7 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 				shouldAim = true;
 			}
 			else if (Settings::Legitbot::ShootAssist::enabled) {
-				if (!(GetClosestSpot(cmd, localplayer, player).IsZero()) || !newTarget )
+				if (!(GetClosestSpot(cmd, localplayer, player).IsZero()) || !newTarget)
 				{
 					if(Settings::Legitbot::Hitchance::enabled)
 					{
@@ -856,14 +856,7 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 							}
 							delay++;
 					}
-				}
-				// else
-				// {
-				// 	delay = 0;
-				// 	_delayed = false;
-				// 	shouldAim = false;
-				// }
-				
+				}				
 			}
             else {
                 shouldAim = false;
@@ -904,7 +897,27 @@ void Legitbot::CreateMove(CUserCmd* cmd)
         newTarget = true;
         lastRandom = {0,0,0};
 		delay = 0;
-		_delayed = false;
+		// _delayed = false;
+		if(_delayed)
+		{
+			// if( !(cmd->buttons & IN_ATTACK) ) 
+			// {
+				if(player->GetShotsFired() <= 10)
+				{
+					cmd->buttons |= IN_ATTACK;
+				}
+				else
+				{
+					_delayed = false;
+				}
+				
+			// }
+		}
+		else
+		{
+			_delayed = false;
+		}
+			
     }
 
 	AimStep(player, angle, cmd);
@@ -1009,6 +1022,7 @@ void Legitbot::UpdateValues()
 	Settings::Legitbot::AutoWall::value = currentWeaponSetting.autoWallValue;
 	Settings::Legitbot::AutoSlow::enabled = currentWeaponSetting.autoSlow;
 	Settings::Legitbot::ScopeControl::enabled = currentWeaponSetting.scopeControlEnabled;
+	Settings::Legitbot::ShootAssist::minShotFired = currentWeaponSetting.minShotFire;
 
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 		Settings::Legitbot::AutoAim::desiredBones[bone] = currentWeaponSetting.desiredBones[bone];

@@ -54,6 +54,7 @@ static bool flashCheck = false;
 static bool hitchanceEnaled = false;
 static float hitchance = 100.f;
 static int shotDelay = 200;
+static int minShotFire = 6;
 static bool autoWallEnabled = false;
 static float autoWallValue = 10.0f;
 static bool autoAimRealDistance = false;
@@ -104,6 +105,7 @@ void UI::ReloadWeaponSettings()
 	hitchanceEnaled = Settings::Legitbot::weapons.at(index).hitchanceEnaled;
 	hitchance = Settings::Legitbot::weapons.at(index).hitchance;
 	shotDelay = Settings::Legitbot::weapons.at(index).shotDelay;
+	minShotFire = Settings::Legitbot::weapons.at(index).minShotFire;
 	autoWallEnabled = Settings::Legitbot::weapons.at(index).autoWallEnabled;
 	autoWallValue = Settings::Legitbot::weapons.at(index).autoWallValue;
 	autoAimRealDistance = Settings::Legitbot::weapons.at(index).autoAimRealDistance;
@@ -165,6 +167,7 @@ void UI::UpdateWeaponSettings()
 			.autoWallValue = autoWallValue,
 			.hitchance = hitchance,
 			.shotDelay = shotDelay,
+			.minShotFire = minShotFire,
 	};
 
 
@@ -367,7 +370,7 @@ void Legitbot::RenderTab()
 				{
 					ImGui::SameLine();
 					ImGui::PushItemWidth(-1);
-					if (ImGui::SliderFloat(XORSTR("##Fov"), &LegitautoAimValue, 0.f, 15.f, XORSTR("View Angle : %.0f")))
+					if (ImGui::SliderFloat(XORSTR("##Fov"), &LegitautoAimValue, 0.f, 15.f, XORSTR("View Angle : %f")))
 					{
 						UI::UpdateWeaponSettings();
 					}
@@ -399,6 +402,9 @@ void Legitbot::RenderTab()
 
 				if(shootassist) // suggested options with shoot assist
 				{
+					ImGui::PushItemWidth(-1);
+					ImGui::SliderInt(XORSTR("##MinShotFire"), &minShotFire, 0, 20, XORSTR("Min Shot To fire : %.0f"));
+					ImGui::PopItemWidth();
 					ImGui::NextColumn();
 					{
 						ImGui::Checkbox((XORSTR("No Aim Punch")), &Settings::View::NoAimPunch::enabled);

@@ -217,7 +217,8 @@ struct AimbotWeapon_t
 		  rcsAmountY = 2.0f,
 		  autoWallValue = 10.0f,
 		  hitchance = 20;
-	int	shotDelay = 200;
+	int	shotDelay = 200,
+		minShotFire = 6;
 	bool desiredBones[31];
 
 	bool operator == (const AimbotWeapon_t& another) const
@@ -270,6 +271,7 @@ struct AimbotWeapon_t
 			this->autoSlow == another.autoSlow &&
 			this->predEnabled == another.predEnabled &&
 			this->autoAimRealDistance == another.autoAimRealDistance &&
+			this->minShotFire == another.minShotFire &&
 			this->scopeControlEnabled == another.scopeControlEnabled;
 	}
 } const defaultSettings{};
@@ -503,6 +505,7 @@ namespace Settings
 		namespace ShootAssist
 		{
 			inline bool enabled = false;
+			inline int minShotFired = 6;
 		}
 
 		namespace AutoWall
