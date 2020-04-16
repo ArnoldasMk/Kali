@@ -160,7 +160,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("UI")][XORSTR("Fonts")][XORSTR("ESP")][XORSTR("size")] = Settings::UI::Fonts::ESP::size;
 	settings[XORSTR("UI")][XORSTR("Fonts")][XORSTR("ESP")][XORSTR("flags")] = Settings::UI::Fonts::ESP::flags;
 
-	if(Settings::Legitbot::enabled) {
 		for (auto i : Settings::Legitbot::weapons)
 		{
 		// TODO this is kind of a hack and i'm too tired to find a better way to do this
@@ -219,11 +218,9 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
 		#undef weaponSetting
 		}
-	}
 	
 
-	if(Settings::Ragebot::enabled)
-	{
+	
 		for (auto i : Settings::Ragebot::weapons)
 	{
 		// TODO this is kind of a hack and i'm too tired to find a better way to do this
@@ -258,7 +255,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
 			weaponSetting[XORSTR("DesiredBones")][XORSTR("Bones")][bone] = i.second.desiredBones[bone];
 
 		#undef weaponSetting
-	}
 	}
 	
 
@@ -804,6 +800,7 @@ void Settings::LoadConfig(std::string path)
 			weaponID = Util::Items::GetItemIndex(weaponDataKey);
 		}
 
+		// loading ragebot tab
 		if (Settings::Ragebot::weapons.find(weaponID) == Settings::Ragebot::weapons.end())
 			Settings::Ragebot::weapons[weaponID] = RagebotWeapon_t();
 

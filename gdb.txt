@@ -41185,3 +41185,37 @@ Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
 [New Thread 0x7feeb915d700 (LWP 8296)]
 $1 = (void *) 0x2dc08000
 [Inferior 1 (process 4810) detached]
+warning: Currently logging to gdb.txt.  Turn the logging off and on to make the new setting effective.
+[New LWP 5435]
+[New LWP 5436]
+[New LWP 5437]
+[New LWP 5438]
+[New LWP 5440]
+[New LWP 5460]
+[New LWP 5470]
+[New LWP 5471]
+[New LWP 5474]
+[New LWP 5475]
+[New LWP 5476]
+[New LWP 5477]
+[New LWP 5482]
+[New LWP 5483]
+warning: Could not load shared library symbols for bin/linux64/launcher_client.so.
+Do you need "set solib-search-path" or "set sysroot"?
+warning: File "/usr/share/gdb/auto-load/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.28-gdb.py" auto-loading has been declined by your `auto-load safe-path' set to "/usr/share/gdb/auto-load/usr/lib64/:/usr/lib64/".
+To enable execution of this file add
+	add-auto-load-safe-path /usr/share/gdb/auto-load/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.28-gdb.py
+line to your configuration file "/root/.gdbinit".
+To completely disable this security protection add
+	set auto-load safe-path /
+line to your configuration file "/root/.gdbinit".
+For more information about this security protection see the
+"Auto-loading safe path" section in the GDB manual.  E.g., run from the shell:
+	info "(gdb)Auto-loading safe path"
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+__memmove_sse2_unaligned_erms () at ../sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S:414
+414	../sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S: No such file or directory.
+[New Thread 0x7fca37a70700 (LWP 5506)]
+$1 = (void *) 0x22c84500
+[Inferior 1 (process 5430) detached]
