@@ -12,6 +12,8 @@ function echo_red {
 	echo -e "\\e[31m$*\\e[0m"
 }
 
+
+
 csgo_pid=$(pidof csgo_linux64)
 if [ -z "$csgo_pid" ]; then
     echo_red "CS:GO needs to be open before you can inject, exiting..."
@@ -21,6 +23,8 @@ fi
 if [ ! -d ".git" ]; then
     echo "We have detected that you have downloaded Fuzion-master.zip from GitHub.com. This is the WRONG way to download! Please download Fuzion by cloning the Git repository: 'git clone --recursive https://github.com/LWSS/Fuzion.git'"
 fi
+
+./update
 
 # pBypass for crash dumps being sent
 # You may also want to consider using -nobreakpad in your launch options.
