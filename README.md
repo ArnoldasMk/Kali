@@ -4,14 +4,13 @@
 ===================
 
 # It looks like we are starting to get detected. Use public forks at your own Risk! 
-[![Join the Fuzion chat at https://gitter.im/Aimtux-Fuzion/Lobby](https://img.shields.io/gitter/room/TechnologyAdvice/Stardust.svg?style=flat-square)](https://gitter.im/Aimtux-Fuzion/Lobby#)
 
-Want to chat or play with other MissedIT users? Join us on Gitter!
+<b>Want to chat or play with other MissedIT users? Join us on Discord</b> :- <a href = https://discord.gg/YWcDTA>Link</a>
 
 
 ## What is MissedIT?
 
-A fully featured internal hack for *CounterStrike : Global Offensive* written in C++. Which is a Fork if Aimtux-MissedIT
+A fully featured internal hack for *CounterStrike : Global Offensive* written in C++. Which is a Fork if Aimtux-Fuzion
 
 ## AUR Installation
 
