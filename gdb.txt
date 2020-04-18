@@ -41429,3 +41429,60 @@ Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
 [New Thread 0x7fca0340a700 (LWP 8626)]
 $1 = (void *) 0xa051500
 [Inferior 1 (process 5430) detached]
+warning: Currently logging to gdb.txt.  Turn the logging off and on to make the new setting effective.
+[New LWP 16030]
+[New LWP 16031]
+[New LWP 16032]
+[New LWP 16033]
+[New LWP 16035]
+[New LWP 16053]
+[New LWP 16092]
+[New LWP 16093]
+[New LWP 16095]
+[New LWP 16096]
+[New LWP 16097]
+[New LWP 16098]
+[New LWP 16100]
+[New LWP 16108]
+[New LWP 16114]
+[New LWP 16115]
+[New LWP 16116]
+[New LWP 16117]
+[New LWP 16121]
+[New LWP 16122]
+[New LWP 16123]
+[New LWP 16124]
+[New LWP 16138]
+[New LWP 16139]
+[New LWP 16140]
+[New LWP 16141]
+[New LWP 16146]
+[New LWP 16147]
+[New LWP 16148]
+[New LWP 16149]
+[New LWP 16150]
+[New LWP 16177]
+[New LWP 16187]
+[New LWP 17084]
+[New LWP 17085]
+[New LWP 17100]
+[New LWP 17101]
+warning: Could not load shared library symbols for bin/linux64/launcher_client.so.
+Do you need "set solib-search-path" or "set sysroot"?
+warning: File "/usr/share/gdb/auto-load/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.28-gdb.py" auto-loading has been declined by your `auto-load safe-path' set to "/usr/share/gdb/auto-load/usr/lib64/:/usr/lib64/".
+To enable execution of this file add
+	add-auto-load-safe-path /usr/share/gdb/auto-load/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.28-gdb.py
+line to your configuration file "/root/.gdbinit".
+To completely disable this security protection add
+	set auto-load safe-path /
+line to your configuration file "/root/.gdbinit".
+For more information about this security protection see the
+"Auto-loading safe path" section in the GDB manual.  E.g., run from the shell:
+	info "(gdb)Auto-loading safe path"
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+0x00007fae69db1c2f in __GI___poll (fds=0x7ffcca46c960, nfds=1, timeout=180000) at ../sysdeps/unix/sysv/linux/poll.c:29
+29	../sysdeps/unix/sysv/linux/poll.c: No such file or directory.
+[New Thread 0x7fae0620e700 (LWP 17161)]
+$1 = (void *) 0x166f1a00
+[Inferior 1 (process 16027) detached]
