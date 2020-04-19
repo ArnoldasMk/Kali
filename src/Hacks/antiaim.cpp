@@ -189,8 +189,6 @@ void AntiAim::CreateMove(CUserCmd* cmd)
     static bool bSend = true;
     bSend = !bSend;
 
-    bool should_clamp = true;
-
     bool needToFlick = false;
     static bool lbyBreak = false;
     static float lastCheck;

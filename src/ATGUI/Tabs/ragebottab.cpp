@@ -21,12 +21,9 @@ static bool desiredBones[] = {true, true, true, true, true, true, true, // cente
 							  true, true, true, true, true  // right leg
 							 };
 static float RagebotautoAimValue = 263.0f;
-static bool aimStepEnabled = false;
 static bool autoPistolEnabled = false;
 static bool autoShootEnabled = false;
 static bool autoScopeEnabled = false;
-static bool ignoreJumpEnabled = false;
-static bool ignoreEnemyJumpEnabled = false;
 static bool HitChanceEnabled = false;
 static float HitChange = 20.f;
 static bool autoWallEnabled = false;

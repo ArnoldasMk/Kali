@@ -707,15 +707,6 @@ static void FixMouseDeltas(CUserCmd* cmd, const QAngle &angle, const QAngle &old
     cmd->mousedy = delta.x / ( m_pitch * sens * zoomMultiplier );
 }
 
-static QAngle GetMouseDeltas(CUserCmd* cmd) 
-{
-	QAngle deltas;
-	deltas.x = cmd->mousedx;
-	deltas.y = cmd->mousedy;
-
-	return deltas;
-}
-
 bool AimKeyOnly (CUserCmd* cmd)
 {
 	if (cmd->buttons & IN_ATTACK)
