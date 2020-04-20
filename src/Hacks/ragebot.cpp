@@ -242,8 +242,8 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, Vector* bestSpot, fl
 
 		float damage = GetClosestDamage(cmd, localplayer, player);
 		Vector tempSpot = GetClosestSpot(cmd, localplayer, player);
-		if( tempSpot.IsZero() || !Entity::IsSpotVisibleThroughEnemies(player, tempSpot) )
-			continue;
+		// if( tempSpot.IsZero() || !Entity::IsSpotVisibleThroughEnemies(player, tempSpot) )
+		// 	continue;
 		Vector eVecTarget = tempSpot;
 
 		Vector pVecTarget = localplayer->GetEyePosition();
@@ -256,19 +256,13 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, Vector* bestSpot, fl
 		QAngle viewAngles;
 		engine->GetViewAngles(viewAngles);
 
-		float fov = Math::GetFov(viewAngles, Math::CalcAngle(pVecTarget, eVecTarget));
-
-		if (fov > bestFov)
-			continue;
-
 		Vector wallBangSpot = {0,0,0};
 		float damageAutoWall = AutoWallBestSpot(player, wallBangSpot); // sets Vector Angle, returns damage of hitting that spot.
 
-		if(damage > damageAutoWall >= Settings::Ragebot::AutoWall::value && ( damageAutoWall > 0.f ))
+		if(damage > damageAutoWall)
 		{
 			closestEntity = player;
 			*bestSpot = eVecTarget;
-			bestFov = fov;
 			return closestEntity;
 		}
 		else if (damageAutoWall >= Settings::Ragebot::AutoWall::value && ( damageAutoWall > 0.f ))
@@ -308,15 +302,19 @@ float Ragebothitchance()
 	C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
 	if (activeWeapon)
 	{
-		if (Settings::Ragebot::HitChance::value > 0)
-		{
+		activeWeapon->UpdateAccuracyPenalty();
+		float AuccuracyPenalty = activeWeapon->GetAccuracyPenalty();
 			float inaccuracy = activeWeapon->GetInaccuracy();
-			if (inaccuracy == 0) inaccuracy = 0.0000001;
-			inaccuracy = 1 / inaccuracy;
-			hitchance = inaccuracy;
-		}
-		return hitchance;
+			
+			if (inaccuracy == 0) 
+				inaccuracy = 0.0000001;
+			if(AuccuracyPenalty == 0)
+				AuccuracyPenalty = 0.0000001;
+
+			hitchance = 1/ inaccuracy + AuccuracyPenalty;
+			return hitchance;
 	}
+	
 }
 
 static void RagebotRCS(QAngle& angle, C_BasePlayer* player, CUserCmd* cmd, C_BasePlayer* localplayer)
@@ -326,7 +324,8 @@ static void RagebotRCS(QAngle& angle, C_BasePlayer* player, CUserCmd* cmd, C_Bas
 		return;
 
 	bool hasTarget = RagebotShouldAim && player;
-
+	
+	float aimpunch = cvar->FindVar("weapon_recoil_scale")->GetFloat();
 	QAngle CurrentPunch = *localplayer->GetAimPunchAngle();
 
 	if ( Settings::Ragebot::silent || hasTarget )
@@ -334,7 +333,7 @@ static void RagebotRCS(QAngle& angle, C_BasePlayer* player, CUserCmd* cmd, C_Bas
 		angle.x -= CurrentPunch.x * 2.0f;
 		angle.y -= CurrentPunch.y * 2.0f;
 	}
-	else if (localplayer->GetShotsFired() > 1)
+	else if (aimpunch)
 	{
 		QAngle NewPunch = { CurrentPunch.x - RagebotRCSLastPunch.x, CurrentPunch.y - RagebotRCSLastPunch.y, 0 };
 
@@ -383,7 +382,7 @@ static void RagebotAutoSlow(C_BasePlayer* player, float& forward, float& sideMov
 	if( Settings::Ragebot::HitChance::enabled)
 	{
 		float hc = Ragebothitchance();
-		if( hc > Settings::Ragebot::HitChance::value )
+		if( hc < Settings::Ragebot::HitChance::value )
 		{
 			cmd->buttons |= IN_WALK;
 			forward = -forward;
@@ -391,7 +390,7 @@ static void RagebotAutoSlow(C_BasePlayer* player, float& forward, float& sideMov
 			cmd->upmove = 0;
 			return;
 		}
-		else if( hc == Settings::Ragebot::HitChance::value ) {
+		else if( hc >= Settings::Ragebot::HitChance::value ) {
 			cmd->buttons |= IN_WALK;
 			forward = 0;
 			sideMove = 0;
@@ -404,15 +403,12 @@ static void RagebotAutoSlow(C_BasePlayer* player, float& forward, float& sideMov
         }
         else if (cmd->buttons & IN_ATTACK) 
         {
-            forward = 0;
-			sideMove = 0;
+            cmd->buttons |= IN_WALK;
 			return;
         }
 		else 
 		{
 			cmd->buttons |= IN_RUN;
-			forward = 0;
-			sideMove = 0;
 			return;
 		}
 	}
