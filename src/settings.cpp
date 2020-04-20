@@ -231,7 +231,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	RageweaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")] = i.second.autoScopeEnabled;
 	RageweaponSetting[XORSTR("HitChance")][XORSTR("Enabled")] = i.second.HitChanceEnabled;
 	RageweaponSetting[XORSTR("HitChance")][XORSTR("Value")] = i.second.HitChance;
-	RageweaponSetting[XORSTR("AutoWall")][XORSTR("Enabled")] = i.second.autoWallEnabled;
 	RageweaponSetting[XORSTR("AutoWall")][XORSTR("Value")] = i.second.autoWallValue;
 	RageweaponSetting[XORSTR("AutoSlow")][XORSTR("Enabled")] = i.second.autoSlow;
 	RageweaponSetting[XORSTR("Prediction")][XORSTR("Enabled")] = i.second.predEnabled;
@@ -795,7 +794,6 @@ void Settings::LoadConfig(std::string path)
 	    .autoPistolEnabled = RageweaponSetting[XORSTR("AutoPistol")][XORSTR("Enabled")].asBool(),
 	    .autoShootEnabled = RageweaponSetting[XORSTR("AutoShoot")][XORSTR("Enabled")].asBool(),
 	    .autoScopeEnabled = RageweaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")].asBool(),
-	    .autoWallEnabled = RageweaponSetting[XORSTR("AutoWall")][XORSTR("Enabled")].asBool(),
 	    .autoSlow = RageweaponSetting[XORSTR("AutoSlow")][XORSTR("Enabled")].asBool(),
 	    .predEnabled = RageweaponSetting[XORSTR("Prediction")][XORSTR("Enabled")].asBool(),
 	    .scopeControlEnabled = RageweaponSetting[XORSTR("ScopeControl")][XORSTR("Enabled")].asBool(),

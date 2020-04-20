@@ -26,7 +26,6 @@ static bool autoShootEnabled = false;
 static bool autoScopeEnabled = false;
 static bool HitChanceEnabled = false;
 static float HitChange = 20.f;
-static bool autoWallEnabled = false;
 static float autoWallValue = 10.0f;
 static bool autoSlow = false;
 static bool predEnabled = false;
@@ -47,7 +46,6 @@ void UI::ReloadRageWeaponSettings()
 	autoScopeEnabled = Settings::Ragebot::weapons.at(index).autoScopeEnabled;
 	HitChanceEnabled = Settings::Ragebot::weapons.at(index).HitChanceEnabled;
 	HitChange = Settings::Ragebot::weapons.at(index).HitChance;
-	autoWallEnabled = Settings::Ragebot::weapons.at(index).autoWallEnabled;
 	autoWallValue = Settings::Ragebot::weapons.at(index).autoWallValue;
 	autoSlow = Settings::Ragebot::weapons.at(index).autoSlow;
 	predEnabled = Settings::Ragebot::weapons.at(index).predEnabled;
@@ -73,7 +71,6 @@ void UI::UpdateRageWeaponSettings()
 			.autoPistolEnabled = autoPistolEnabled,
 			.autoShootEnabled = autoShootEnabled,
 			.autoScopeEnabled = autoScopeEnabled,
-			.autoWallEnabled = autoWallEnabled,
 			.autoSlow = autoSlow,
 			.predEnabled = predEnabled,
 			.scopeControlEnabled = scopeControlEnabled,

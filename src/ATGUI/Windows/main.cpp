@@ -46,7 +46,7 @@ void Main::RenderWindow()
 		Settings::UI::Windows::Main::posY = (int)temp.y;
 		const char* tabs[] = {
 				"Legit Bot",
-				"Rage Bot",
+				"Rage Bot(Beta)",
 				"Trigger Bot",
 				"Visuals",
 				"Anti Aim",

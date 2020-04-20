@@ -285,7 +285,6 @@ struct RagebotWeapon_t
 		 autoPistolEnabled,
 		 autoShootEnabled,
 		 autoScopeEnabled,
-		 autoWallEnabled,
 		 autoSlow,
 		 predEnabled,
 		 scopeControlEnabled;
@@ -310,7 +309,6 @@ struct RagebotWeapon_t
 			this->autoShootEnabled == Ragebotanother.autoShootEnabled &&
 			this->autoScopeEnabled == Ragebotanother.autoScopeEnabled &&
 			this->HitChanceEnabled == Ragebotanother.HitChanceEnabled &&
-			this->autoWallEnabled == Ragebotanother.autoWallEnabled &&
 			this->autoWallValue == Ragebotanother.autoWallValue &&
 			this->autoSlow == Ragebotanother.autoSlow &&
 			this->predEnabled == Ragebotanother.predEnabled &&
