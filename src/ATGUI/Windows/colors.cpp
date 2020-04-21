@@ -7,8 +7,6 @@
 
 #pragma GCC diagnostic ignored "-Wformat-security"
 
-bool Colors::showWindow = false;
-
 void Colors::RenderWindow()
 {
 	if( Settings::UI::Windows::Colors::reload )

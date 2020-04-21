@@ -10,8 +10,6 @@
 #include "../imgui.h"
 #include "../atgui.h"
 
-bool Configs::showWindow = false;
-
 void Configs::RenderWindow()
 {
 	if( Settings::UI::Windows::Config::reload )

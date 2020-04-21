@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+cmake -DCMAKE_BUILD_TYPE="DEBUG"
+make -j"$(grep -c "^processor" /proc/cpuinfo)"
+mv libMissedIT.so "$(cat build_id)"

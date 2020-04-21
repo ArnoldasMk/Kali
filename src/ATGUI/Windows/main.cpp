@@ -10,6 +10,11 @@
 #include "../Tabs/misctab.h"
 #include "../Tabs/triggerbottab.h"
 #include "../Tabs/visualstab.h"
+#include "../Tabs/skinstab.h"
+#include "../Tabs/modelstab.h"
+
+#include "colors.h"
+#include "configs.h"
 
 bool Main::showWindow = true;
 
@@ -35,8 +40,15 @@ void Main::RenderWindow()
 
 	static int page = 0;
 
+	
+
 	if (ImGui::Begin(XORSTR("MissedIt"), &Main::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_ShowBorders))
 	{
+		if (ImGui::Button(XORSTR("Config"), ImVec2( (ImGui::GetWindowSize().x / 2) - 9.f, 0) ) )
+			Configs::showWindow = !Configs::showWindow;
+		ImGui::SameLine();
+		if (ImGui::Button(XORSTR("COLOR PICKER"), ImVec2( (ImGui::GetWindowSize().x /2) - 9, 0) ) )
+			Colors::showWindow = !Colors::showWindow;
 		Settings::UI::Windows::Main::open = true;
 		ImVec2 temp = ImGui::GetWindowSize();
 		Settings::UI::Windows::Main::sizeX = (int)temp.x;
@@ -47,10 +59,12 @@ void Main::RenderWindow()
 		const char* tabs[] = {
 				"Legit Bot",
 				"Rage Bot(Beta)",
-				"Trigger Bot",
-				"Visuals",
 				"Anti Aim",
+				"Visuals",
+				"Skin Changer",
+				"Model Changer",
 				"Misc",
+				
 		};
 
 		for (int i = 0; i < IM_ARRAYSIZE(tabs); i++)
@@ -73,8 +87,6 @@ void Main::RenderWindow()
 				ImGui::SameLine();
 		}
 
-		ImGui::Separator();
-
 		switch (page)
 		{
 			case 0:
@@ -84,15 +96,18 @@ void Main::RenderWindow()
 				Ragebot::RenderTab();
 				break;
 			case 2:
-				Triggerbot::RenderTab();
+				AntiAim::RenderTab();
 				break;
 			case 3:
 				Visuals::RenderTab();
 				break;
 			case 4:
-				AntiAim::RenderTab();
+				Skins::RenderTab();
 				break;
 			case 5:
+				Models::RenderTab();
+				break;
+			case 6:
 				Misc::RenderTab();
 				break;
 		}
