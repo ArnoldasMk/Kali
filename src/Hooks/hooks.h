@@ -3,6 +3,7 @@
 #include "../SDK/SDK.h"
 
 #include <queue>
+#include <future>
 
 namespace Hooks
 {

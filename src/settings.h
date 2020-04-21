@@ -288,8 +288,9 @@ struct RagebotWeapon_t
 		 autoSlow,
 		 predEnabled,
 		 scopeControlEnabled;
-	float RagebotautoAimFov = 260.f,
-		  autoWallValue = 15.0f,
+	float RagebotautoAimFov = 180.f,
+		  autoWallValue = 10.0f,
+		  visibleDamage = 50.f,
 		  HitChance = 20.f;
 	bool desiredBones[31];
 
@@ -310,6 +311,7 @@ struct RagebotWeapon_t
 			this->autoScopeEnabled == Ragebotanother.autoScopeEnabled &&
 			this->HitChanceEnabled == Ragebotanother.HitChanceEnabled &&
 			this->autoWallValue == Ragebotanother.autoWallValue &&
+			this->visibleDamage == Ragebotanother.visibleDamage &&
 			this->autoSlow == Ragebotanother.autoSlow &&
 			this->predEnabled == Ragebotanother.predEnabled &&
 			this->scopeControlEnabled == Ragebotanother.scopeControlEnabled && 
@@ -590,6 +592,7 @@ namespace Settings
 
 	namespace Ragebot
 	{
+		inline float visibleDamage = 50.f;
 		inline bool enabled = false;
         inline bool silent = false;
         inline bool friendly = false;
@@ -597,7 +600,7 @@ namespace Settings
 		namespace AutoAim
 		{
 			inline bool enabled = false;
-            inline float fov = 260.0f;
+            inline float fov = 180.0f;
             inline bool desiredBones[] = {true, true, true, true, true, true, true, // center mass
                                           true, true, true, true, true, true, true, // left arm
                                           true, true, true, true, true, true, true, // right arm

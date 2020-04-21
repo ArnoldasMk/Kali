@@ -26,7 +26,8 @@ static bool autoShootEnabled = false;
 static bool autoScopeEnabled = false;
 static bool HitChanceEnabled = false;
 static float HitChange = 20.f;
-static float autoWallValue = 10.0f;
+static float autoWallValue = 10.f;
+static float visibleDamage = 50.f;
 static bool autoSlow = false;
 static bool predEnabled = false;
 static bool scopeControlEnabled = false;
@@ -47,6 +48,7 @@ void UI::ReloadRageWeaponSettings()
 	HitChanceEnabled = Settings::Ragebot::weapons.at(index).HitChanceEnabled;
 	HitChange = Settings::Ragebot::weapons.at(index).HitChance;
 	autoWallValue = Settings::Ragebot::weapons.at(index).autoWallValue;
+	visibleDamage = Settings::Ragebot::weapons.at(index).visibleDamage;
 	autoSlow = Settings::Ragebot::weapons.at(index).autoSlow;
 	predEnabled = Settings::Ragebot::weapons.at(index).predEnabled;
 	scopeControlEnabled = Settings::Ragebot::weapons.at(index).scopeControlEnabled;
@@ -76,6 +78,7 @@ void UI::UpdateRageWeaponSettings()
 			.scopeControlEnabled = scopeControlEnabled,
 			.RagebotautoAimFov = RagebotautoAimValue,
 			.autoWallValue = autoWallValue,
+			.visibleDamage = visibleDamage,
 			.HitChance = HitChange,	
 	};
 
@@ -251,7 +254,7 @@ void Ragebot::RenderTab()
 			ImGui::Columns(1);
 			{
 				ImGui::PushItemWidth(-1);
-					if (ImGui::SliderFloat(XORSTR("##FOV"), &RagebotautoAimValue, 0, 263))
+					if (ImGui::SliderFloat(XORSTR("##FOV"), &RagebotautoAimValue, 0.f, 180.f))
 					{
 						UI::UpdateRageWeaponSettings();
 					}		
@@ -339,13 +342,15 @@ void Ragebot::RenderTab()
 
 			ImGui::Columns(1);
 			ImGui::Separator();
-			ImGui::Text(XORSTR("Damage Ammount"));
+			ImGui::Text(XORSTR("Damage"));
 			ImGui::Separator();
 			
 			ImGui::Columns(1);
 			{
 				ImGui::PushItemWidth(-1);
-				if (ImGui::SliderFloat(XORSTR("##AUTOWALLDMG"), &autoWallValue, 0, 100, XORSTR("Min Damage: %f")))
+				if (ImGui::SliderFloat(XORSTR("##VISIBLEDMG"), &visibleDamage, 0, 100, XORSTR("Min Visible Damage: %f")))
+					UI::UpdateRageWeaponSettings();
+				if (ImGui::SliderFloat(XORSTR("##AUTOWALLDMG"), &autoWallValue, 0, 100, XORSTR("Min Behind Wall Damage: %f")))
 					UI::UpdateRageWeaponSettings();
 				ImGui::PopItemWidth();
 			}

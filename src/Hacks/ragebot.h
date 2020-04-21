@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <cstdint>
+#include <thread>
 #include "../SDK/IInputSystem.h"
 #include "../SDK/IGameEvent.h"
 

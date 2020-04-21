@@ -15,7 +15,7 @@ bool RagebotShouldAim;
 int prevWeaponIndex = 0;
 static QAngle RagebotRCSLastPunch = {0,0,0};
 float spotDamage;
-static float prevSpotDamage = 0;
+static float prevSpotDamage = 0.f;
 int Ragebot::targetAimbot = -1;
 const int headVectors = 11;
 
@@ -81,19 +81,17 @@ static float AutoWallBestSpot(C_BasePlayer *player, Vector &bestSpot)
 			Vector headPoints[headVectors];
 			if( !HeadMultiPoint(player, headPoints) )
 				continue;
-			int j;
 			
 			// cheaking for all head vectors
-			for( j = 0; j < headVectors; j++ )
+			for( int j = 0; j < headVectors; j++ )
 			{
 				Autowall::FireBulletData data;
 				spotDamage = Autowall::GetDamage(headPoints[j], !Settings::Ragebot::friendly, data);
-				if (prevSpotDamage == 0 )
+				if(spotDamage < prevSpotDamage || spotDamage == 0.f || spotDamage < Settings::Ragebot::AutoWall::value)
 				{
-					prevSpotDamage = spotDamage;
-					bestSpot = headPoints[j];
+					continue;
 				}
-				else if (spotDamage > prevSpotDamage)
+				else if (spotDamage >= prevSpotDamage)
 				{
 					prevSpotDamage = bestDamage = spotDamage;
 					bestSpot = headPoints[j];
@@ -117,20 +115,22 @@ static float AutoWallBestSpot(C_BasePlayer *player, Vector &bestSpot)
 
 		Autowall::FireBulletData data;
 		float boneDamage = Autowall::GetDamage(bone3D, !Settings::Ragebot::friendly, data);
-			bestSpot = bone3D;
-			if( boneDamage >= player->GetHealth() )
-			{
-				prevSpotDamage = 0;
-				return boneDamage;
-			}
-
+			
 			if(prevSpotDamage == 0) 
 			{
 				prevSpotDamage = boneDamage;
 			}
-			if( boneDamage >= prevSpotDamage) 
+
+			if( boneDamage >= player->GetHealth() || boneDamage >= 100.f)
+			{
+				prevSpotDamage = 0;
+				bestSpot = bone3D;
+				return boneDamage;
+			}
+			else if( boneDamage >= prevSpotDamage) 
 			{
 				prevSpotDamage = boneDamage;
+				bestSpot = bone3D;
 				bestDamage = boneDamage;
 			}
 			
@@ -144,93 +144,49 @@ static Vector VelocityExtrapolate(C_BasePlayer* player, Vector aimPos)
 	return aimPos + (player->GetVelocity() * globalVars->interval_per_tick);
 }
 
-/* Original Credits to: https://github.com/goldenguy00 ( study! study! study! :^) ) */
-/*static float GetClosestDamage(CUserCmd* cmd, C_BasePlayer* localPlayer, C_BasePlayer* enemy)
+
+static float GetClosestDamageSpot(CUserCmd* cmd, C_BasePlayer* localPlayer, C_BasePlayer* enemy, Vector& tempSpot)
 {
-	QAngle viewAngles;
-	engine->GetViewAngles(viewAngles);
+	float bestDamage = Settings::Ragebot::visibleDamage, tempDamage = 0.f;
+	const std::unordered_map<int, int> *modelType = BoneMaps::GetModelTypeBoneMap(enemy);
+	static int len = sizeof(Settings::Ragebot::AutoAim::desiredBones) / sizeof(Settings::Ragebot::AutoAim::desiredBones[0]);
 
-	float bestDamage = 0.1f;
-
-	float tempFov = Settings::Ragebot::AutoAim::fov;
+	float Fov = Settings::Ragebot::AutoAim::fov;
 
 	Vector pVecTarget = localPlayer->GetEyePosition();
 
-	Vector tempSpot = {0,0,0};
-
-	const std::unordered_map<int, int> *modelType = BoneMaps::GetModelTypeBoneMap(enemy);
-
-	static int len = sizeof(Settings::Ragebot::AutoAim::desiredBones) / sizeof(Settings::Ragebot::AutoAim::desiredBones[0]);
 	for( int i = 0; i < len; i++ )
 	{
 		if( !Settings::Ragebot::AutoAim::desiredBones[i] )
 			continue;
-
 		int boneID = (*modelType).at(i);
 		if( boneID == BONE_INVALID )
 			continue;
-		
-		Vector cbVecTarget = enemy->GetBonePosition(boneID);
-			float cbFov = Math::GetFov(viewAngles, Math::CalcAngle(pVecTarget, cbVecTarget));
-
-			if( cbFov < tempFov )
-			{
-				if( Entity::IsVisibleThroughEnemies(enemy, boneID) )
-				{
-					tempFov = cbFov;
-					tempSpot = cbVecTarget;
-				}
-			}
 		Autowall::FireBulletData dataVisible;
-		Vector bone3D = enemy->GetBonePosition(boneID);
-		bestDamage = Autowall::GetDamage(bone3D, !Settings::Ragebot::friendly, dataVisible);
-	}
-	
-	
-	return bestDamage;
-}*/
-
-static Vector GetClosestSpot( CUserCmd* cmd, C_BasePlayer* localPlayer, C_BasePlayer* enemy, AimTargetType aimTargetType = AimTargetType::FOV)
-{
-	QAngle viewAngles;
-	engine->GetViewAngles(viewAngles);
-
-	float tempFov = Settings::Ragebot::AutoAim::fov;
-	// float tempDistance = Settings::Ragebot::AutoAim::fov * 5.f;
-
-	Vector pVecTarget = localPlayer->GetEyePosition();
-
-	Vector tempSpot = {0,0,0};
-
-	const std::unordered_map<int, int> *modelType = BoneMaps::GetModelTypeBoneMap(enemy);
-
-	static int len = sizeof(Settings::Ragebot::AutoAim::desiredBones) / sizeof(Settings::Ragebot::AutoAim::desiredBones[0]);
-	for( int i = 0; i < len; i++ )
-	{
-		if( !Settings::Ragebot::AutoAim::desiredBones[i] )
-			continue;
-
-		int boneID = (*modelType).at(i);
-		if( boneID == BONE_INVALID )
-			continue;
-
 		Vector cbVecTarget = enemy->GetBonePosition(boneID);
-
-		if( aimTargetType == AimTargetType::FOV )
+		if (Entity::IsVisible(enemy, boneID, Fov, false))
 		{
-			float cbFov = Math::GetFov(viewAngles, Math::CalcAngle(pVecTarget, cbVecTarget));
-
-			if( cbFov < tempFov )
+			tempDamage = Autowall::GetDamage(enemy->GetBonePosition(boneID), !Settings::Ragebot::friendly, dataVisible);
+			if (tempDamage >= enemy->GetHealth() || tempDamage >= 100.f)
 			{
-				if( Entity::IsVisibleThroughEnemies(enemy, boneID) )
-				{
-					tempFov = cbFov;
-					tempSpot = cbVecTarget;
-				}
+				prevSpotDamage = 0.f;
+				tempSpot = cbVecTarget;
+				return tempDamage;
+			}
+			else if (tempDamage >= prevSpotDamage && tempDamage >= bestDamage )
+			{
+				tempSpot = cbVecTarget;
+				bestDamage = tempDamage;
+			}
+			else if(tempDamage < prevSpotDamage)
+			{
+				continue;
 			}
 		}
 	}
-	return tempSpot;
+	
+	prevSpotDamage = 0.f;
+	return tempDamage;
 }
 
 static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, Vector* bestSpot, float* bestDamage, AimTargetType aimTargetType = AimTargetType::FOV)
@@ -241,8 +197,8 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, Vector* bestSpot, fl
 	C_BasePlayer* closestEntity = nullptr;
 
 	float bestFov = Settings::Ragebot::AutoAim::fov;
-	/*
-	if( lockedOn )
+	
+	/*if( lockedOn )
 	{
 		if( !lockedOn->GetAlive() )
 		{
@@ -256,10 +212,9 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, Vector* bestSpot, fl
 		}
 			*bestSpot = tempSpot;
 			return lockedOn;
-	}
-	*/
+	}*/
 
-	for (int i = 1; i < engine->GetMaxClients(); ++i)
+	for (int i = 1; i < engine->GetMaxClients() / 2; ++i)
 	{
 		C_BasePlayer* player = (C_BasePlayer*) entityList->GetClientEntity(i);
 
@@ -284,19 +239,62 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, Vector* bestSpot, fl
 
 		Ragebot::targetAimbot = i;
 
-		Vector wallBangSpot = {0,0,0};
-		float damage = AutoWallBestSpot(player, wallBangSpot); // sets Vector Angle, returns damage of hitting that spot.
+		Vector wallBangSpot = {0,0,0},
+				VisibleSpot = {0,0,0};
 
-		if( !wallBangSpot.IsZero() && damage > 0.f)
+		/*std::thread wallBestSpotThread([&](){
+			damage = AutoWallBestSpot(player, wallBangSpot); // sets Vector Angle, returns damage of hitting that spot.
+		});
+		std::thread VisibleDamageThread([&](){
+			VisibleDamage = GetClosestDamage(cmd, localplayer, player);
+		});
+		std::thread GetClosestSpotThread([&](){
+			tempSpot = GetClosestSpot(cmd, localplayer, player);
+		});
+		if (wallBestSpotThread.joinable())
 		{
-			if (prevSpotDamage == 0)
-			{
-				prevSpotDamage = damage;
-			}
+			wallBestSpotThread.join();
+		}
+		else
+		{
+			damage = AutoWallBestSpot(player, wallBangSpot);
+		}
+		if(VisibleDamageThread.joinable())
+		{
+			VisibleDamageThread.join();
+		}
+		else
+		{
+			VisibleDamage = GetClosestDamage(cmd, localplayer, player);
+		}
+		if(GetClosestSpotThread.joinable())
+		{
+			GetClosestSpotThread.join();
+		}
+		else 
+		{
+			tempSpot = GetClosestSpot(cmd, localplayer, player);
+		}*/
+		 
+		float damage = AutoWallBestSpot(player, wallBangSpot);
+		float VisibleDamage = GetClosestDamageSpot(cmd, localplayer, player, VisibleSpot);
+		//Vector tempSpot = GetClosestSpot(cmd, localplayer, player);
 
-			if (damage >= 100.f || damage >= player->GetHealth())
+		if( (!wallBangSpot.IsZero() && damage > 0.f) || !VisibleSpot.IsZero())
+		{
+
+			if(VisibleDamage >= 100.f || VisibleDamage >= player->GetHealth())
 			{
-				cvar->ConsoleDPrintf(XORSTR("damage in going to kill the enemy\n"));
+				*bestDamage = VisibleDamage;
+				*bestSpot = VisibleSpot;
+				closestEntity = player;
+				lastRayEnd = VisibleSpot;
+				prevSpotDamage = 0;
+				return closestEntity;
+			}
+			else if (damage >= 100.f || damage >= player->GetHealth())
+			{
+				//cvar->ConsoleDPrintf(XORSTR("damage in going to kill the enemy\n"));
 				*bestDamage = damage;
 				*bestSpot = wallBangSpot;
 				closestEntity = player;
@@ -305,21 +303,27 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, Vector* bestSpot, fl
 				return closestEntity;
 			}
 
-			if (damage >= Settings::Ragebot::AutoWall::value &&  damage >= prevSpotDamage)
+			if( !VisibleSpot.IsZero() && VisibleDamage >= Settings::Ragebot::visibleDamage && VisibleDamage > damage)
 			{
-				cvar->ConsoleDPrintf(XORSTR("in wall bang not enmply \n"));
-				*bestDamage = damage;
+				*bestDamage = VisibleDamage;
+				*bestSpot = VisibleSpot;
+				closestEntity = player;
+				lastRayEnd = VisibleSpot;				
+			}
+			else if (damage >= Settings::Ragebot::AutoWall::value && damage >= prevSpotDamage)
+			{
+				//cvar->ConsoleDPrintf(XORSTR("in wall bang not enmply \n"));
+				prevSpotDamage = *bestDamage = damage;
 				*bestSpot = wallBangSpot;
 				closestEntity = player;
 				lastRayEnd = wallBangSpot;
-				prevSpotDamage = damage;
 			}
 				
 		}
 	}
 	if( bestSpot->IsZero() )
 	{
-		prevSpotDamage = 0;
+		prevSpotDamage = 0.f;
 		return nullptr;
 	}
 		
@@ -332,7 +336,7 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, Vector* bestSpot, fl
 		cvar->ConsoleDPrintf("%s is Closest.\n", playerInfo.name);
 	}
 	*/
-	prevSpotDamage = 0;
+	prevSpotDamage = 0.f;
 	return closestEntity;
 }
 
@@ -731,6 +735,7 @@ void Ragebot::UpdateValues()
 	Settings::Ragebot::HitChance::enabled = currentWeaponSetting.HitChanceEnabled;
 	Settings::Ragebot::HitChance::value = currentWeaponSetting.HitChance;
 	Settings::Ragebot::AutoWall::value = currentWeaponSetting.autoWallValue;
+	Settings::Ragebot::visibleDamage = currentWeaponSetting.visibleDamage;
 	Settings::Ragebot::AutoSlow::enabled = currentWeaponSetting.autoSlow;
 	Settings::Ragebot::ScopeControl::enabled = currentWeaponSetting.scopeControlEnabled;
 

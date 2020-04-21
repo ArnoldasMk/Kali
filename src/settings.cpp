@@ -232,6 +232,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	RageweaponSetting[XORSTR("HitChance")][XORSTR("Enabled")] = i.second.HitChanceEnabled;
 	RageweaponSetting[XORSTR("HitChance")][XORSTR("Value")] = i.second.HitChance;
 	RageweaponSetting[XORSTR("AutoWall")][XORSTR("Value")] = i.second.autoWallValue;
+    RageweaponSetting[XORSTR("visibleDamage")] = i.second.visibleDamage;
 	RageweaponSetting[XORSTR("AutoSlow")][XORSTR("Enabled")] = i.second.autoSlow;
 	RageweaponSetting[XORSTR("Prediction")][XORSTR("Enabled")] = i.second.predEnabled;
 	RageweaponSetting[XORSTR("ScopeControl")][XORSTR("Enabled")] = i.second.scopeControlEnabled;
@@ -800,6 +801,7 @@ void Settings::LoadConfig(std::string path)
 		
 	    .RagebotautoAimFov = RageweaponSetting[XORSTR("AutoAim")][XORSTR("RageFOV")].asFloat(),
 	    .autoWallValue = RageweaponSetting[XORSTR("AutoWall")][XORSTR("Value")].asFloat(),
+        .visibleDamage = RageweaponSetting[XORSTR("visibleDamage")].asFloat(),
 	    .HitChance = RageweaponSetting[XORSTR("HitChance")][XORSTR("Value")].asFloat(),
 	};
 
