@@ -158,9 +158,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("UI")][XORSTR("Fonts")][XORSTR("ESP")][XORSTR("family")] = Settings::UI::Fonts::ESP::family;
     settings[XORSTR("UI")][XORSTR("Fonts")][XORSTR("ESP")][XORSTR("size")] = Settings::UI::Fonts::ESP::size;
     settings[XORSTR("UI")][XORSTR("Fonts")][XORSTR("ESP")][XORSTR("flags")] = Settings::UI::Fonts::ESP::flags;
-if (Settings::Ragebot::enabled)
-{
-for (auto i : Settings::Legitbot::weapons)
+
+    for (auto i : Settings::Legitbot::weapons)
     {
 // TODO this is kind of a hack and i'm too tired to find a better way to do this
 // yes i tried defining a variable, skinSetting, and giving it the same value but woooooo operator overloading
@@ -216,11 +215,8 @@ for (auto i : Settings::Legitbot::weapons)
 
 #undef weaponSetting
     }
-}
-    
-    if (Settings::Ragebot::enabled)
-    {
-        for (auto i : Settings::Ragebot::weapons)
+
+    for (auto i : Settings::Ragebot::weapons)
     {
 // TODO this is kind of a hack and i'm too tired to find a better way to do this
 // yes i tried defining a variable, skinSetting, and giving it the same value but woooooo operator overloading
@@ -246,9 +242,6 @@ for (auto i : Settings::Legitbot::weapons)
 
 #undef RageweaponSetting
     }
-    }
-
-    
 
     settings[XORSTR("Legitbot")][XORSTR("AutoCrouch")][XORSTR("enabled")] = Settings::Legitbot::AutoCrouch::enabled;
     //settings[XORSTR("Legitbot")][XORSTR("AutoShoot")][XORSTR("velocityCheck")] = Settings::Legitbot::AutoShoot::velocityCheck;

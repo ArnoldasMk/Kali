@@ -369,9 +369,9 @@ namespace Settings
 	namespace UI
 	{
 		inline ColorVar mainColor = ImColor(25, 25, 25, 255 );
-		inline ColorVar bodyColor = ImColor( 5, 5, 5, 255 );
-		inline ColorVar fontColor = ImColor( 255, 255, 255, 255 );
-		inline ColorVar accentColor = ImColor( 39, 106, 219, 255 );
+		inline ColorVar bodyColor = ImColor( 5, 5, 5, 223 );
+		inline ColorVar fontColor = ImColor( 192, 218, 217, 255 );
+		inline ColorVar accentColor = ImColor( 82, 255, 24, 106 );
 
         /* Window Position/Size Defaults */
         namespace Windows
