@@ -65,7 +65,7 @@ static bool HeadMultiPoint(C_BasePlayer *player, Vector points[])
 }
 static float AutoWallBestSpot(C_BasePlayer *player, Vector &bestSpot)
 {
-	float bestDamage = Settings::Ragebot::AutoWall::value;
+	float minDamage = Settings::Ragebot::AutoWall::value;
 	const std::unordered_map<int, int> *modelType = BoneMaps::GetModelTypeBoneMap(player);
 
 	static int len = sizeof(Settings::Ragebot::AutoAim::desiredBones) / sizeof(Settings::Ragebot::AutoAim::desiredBones[0]);
@@ -87,24 +87,23 @@ static float AutoWallBestSpot(C_BasePlayer *player, Vector &bestSpot)
 			{
 				Autowall::FireBulletData data;
 				spotDamage = Autowall::GetDamage(headPoints[j], !Settings::Ragebot::friendly, data);
-				if(spotDamage < prevSpotDamage || spotDamage == 0.f || spotDamage < Settings::Ragebot::AutoWall::value)
-				{
-					continue;
-				}
-				else if (spotDamage >= prevSpotDamage)
-				{
-					prevSpotDamage = bestDamage = spotDamage;
-					bestSpot = headPoints[j];
-				}
 				if( spotDamage >= player->GetHealth() || spotDamage >= 100.f)
 				{
 					bestSpot = headPoints[j];
 					prevSpotDamage = 0;
 					return spotDamage;
-				}	
+				}
+				
+				if(spotDamage == 0.f || spotDamage < Settings::Ragebot::AutoWall::value)
+				{
+					continue;
+				}
+				else if (spotDamage >= prevSpotDamage)
+				{
+					prevSpotDamage = spotDamage;
+					bestSpot = headPoints[j];
+				}		
 			}
-			prevSpotDamage = 0;
-			return spotDamage;
 			
 		}
 		int boneID = (*modelType).at(i);
@@ -115,11 +114,6 @@ static float AutoWallBestSpot(C_BasePlayer *player, Vector &bestSpot)
 
 		Autowall::FireBulletData data;
 		float boneDamage = Autowall::GetDamage(bone3D, !Settings::Ragebot::friendly, data);
-			
-			if(prevSpotDamage == 0) 
-			{
-				prevSpotDamage = boneDamage;
-			}
 
 			if( boneDamage >= player->GetHealth() || boneDamage >= 100.f)
 			{
@@ -127,16 +121,16 @@ static float AutoWallBestSpot(C_BasePlayer *player, Vector &bestSpot)
 				bestSpot = bone3D;
 				return boneDamage;
 			}
-			else if( boneDamage >= prevSpotDamage) 
+			if( boneDamage >= prevSpotDamage && boneDamage >= minDamage) 
 			{
 				prevSpotDamage = boneDamage;
 				bestSpot = bone3D;
-				bestDamage = boneDamage;
+				minDamage = boneDamage;
 			}
 			
 	}
 	prevSpotDamage = 0;
-	return bestDamage;
+	return minDamage;
 }
 
 static Vector VelocityExtrapolate(C_BasePlayer* player, Vector aimPos)
@@ -241,40 +235,6 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, Vector* bestSpot, fl
 
 		Vector wallBangSpot = {0,0,0},
 				VisibleSpot = {0,0,0};
-
-		/*std::thread wallBestSpotThread([&](){
-			damage = AutoWallBestSpot(player, wallBangSpot); // sets Vector Angle, returns damage of hitting that spot.
-		});
-		std::thread VisibleDamageThread([&](){
-			VisibleDamage = GetClosestDamage(cmd, localplayer, player);
-		});
-		std::thread GetClosestSpotThread([&](){
-			tempSpot = GetClosestSpot(cmd, localplayer, player);
-		});
-		if (wallBestSpotThread.joinable())
-		{
-			wallBestSpotThread.join();
-		}
-		else
-		{
-			damage = AutoWallBestSpot(player, wallBangSpot);
-		}
-		if(VisibleDamageThread.joinable())
-		{
-			VisibleDamageThread.join();
-		}
-		else
-		{
-			VisibleDamage = GetClosestDamage(cmd, localplayer, player);
-		}
-		if(GetClosestSpotThread.joinable())
-		{
-			GetClosestSpotThread.join();
-		}
-		else 
-		{
-			tempSpot = GetClosestSpot(cmd, localplayer, player);
-		}*/
 		 
 		float damage = AutoWallBestSpot(player, wallBangSpot);
 		float VisibleDamage = GetClosestDamageSpot(cmd, localplayer, player, VisibleSpot);
@@ -310,7 +270,7 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, Vector* bestSpot, fl
 				closestEntity = player;
 				lastRayEnd = VisibleSpot;				
 			}
-			else if (damage >= Settings::Ragebot::AutoWall::value && damage >= prevSpotDamage)
+			else if (damage >= Settings::Ragebot::AutoWall::value)
 			{
 				//cvar->ConsoleDPrintf(XORSTR("in wall bang not enmply \n"));
 				prevSpotDamage = *bestDamage = damage;
@@ -323,7 +283,6 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, Vector* bestSpot, fl
 	}
 	if( bestSpot->IsZero() )
 	{
-		prevSpotDamage = 0.f;
 		return nullptr;
 	}
 		
@@ -336,7 +295,6 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, Vector* bestSpot, fl
 		cvar->ConsoleDPrintf("%s is Closest.\n", playerInfo.name);
 	}
 	*/
-	prevSpotDamage = 0.f;
 	return closestEntity;
 }
 
@@ -358,7 +316,7 @@ float Ragebothitchance()
 			if(AuccuracyPenalty == 0)
 				AuccuracyPenalty = 0.0000001;
 
-			hitchance = 1/ inaccuracy + AuccuracyPenalty;
+			hitchance = 1/ inaccuracy - AuccuracyPenalty;
 			return hitchance;
 	}
 	
