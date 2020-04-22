@@ -5,7 +5,7 @@
 
 # It looks like we are starting to get detected. Use public forks at your own Risk! 
 
-Want to chat or play with other MissedIT users? Join us on Discord :- <a href = https://discord.gg/FSsMxB> Hacker.Police Discord</a>
+Want to chat or play with other MissedIT users? Join us on Discord :- <a href = https://discord.gg/PDtg8hd> Hacker.Police Discord</a>
 
 
 ## What is MissedIT?
