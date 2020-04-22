@@ -1,6 +1,7 @@
 #include "EventListener.h"
 
 #include "Hacks/legitbot.h"
+#include "Hacks/ragebot.h"
 #include "Hacks/eventlog.h"
 #include "Hacks/hitmarkers.h"
 #include "Hacks/namestealer.h"
@@ -25,6 +26,7 @@ EventListener::~EventListener()
 void EventListener::FireGameEvent(IGameEvent* event)
 {
     Legitbot::FireGameEvent(event);
+    Ragebot::FireGameEvent(event);
     Hitmarkers::FireGameEvent(event);
     Eventlog::FireGameEvent(event);
     NameStealer::FireGameEvent(event);

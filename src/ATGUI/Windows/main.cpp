@@ -63,8 +63,7 @@ void Main::RenderWindow()
 				"Visuals",
 				"Skin Changer",
 				"Model Changer",
-				"Misc",
-				
+				"Misc",	
 		};
 
 		for (int i = 0; i < IM_ARRAYSIZE(tabs); i++)
