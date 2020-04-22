@@ -62,7 +62,7 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
 		NoFall::PrePredictionCreateMove(cmd);
 
 		PredictionSystem::StartPrediction(cmd);
-			std::async(std::launch::async, Legitbot::CreateMove, cmd);
+			/*std::async(std::launch::async, Legitbot::CreateMove, cmd);
 			// Legitbot::CreateMove(cmd);
 			std::async(std::launch::async, Ragebot::CreateMove, cmd);
 			std::async(std::launch::async, Triggerbot::CreateMove, cmd);
@@ -71,14 +71,16 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
 			std::async(std::launch::async, Airstuck::CreateMove, cmd);
 			std::async(std::launch::async, FakeLag::CreateMove, cmd);
 			std::async(std::launch::async, ESP::CreateMove, cmd);
-			std::async(std::launch::async, TracerEffect::CreateMove, cmd);
-			/*Triggerbot::CreateMove(cmd);
+			std::async(std::launch::async, TracerEffect::CreateMove, cmd);*/
+			Legitbot::CreateMove(cmd);
+			Ragebot::CreateMove(cmd);
+			Triggerbot::CreateMove(cmd);
 			AutoKnife::CreateMove(cmd);
             AntiAim::CreateMove(cmd);
 			Airstuck::CreateMove(cmd);
 			FakeLag::CreateMove(cmd);
 			ESP::CreateMove(cmd);
-			TracerEffect::CreateMove(cmd);*/
+			TracerEffect::CreateMove(cmd);
 		PredictionSystem::EndPrediction();
 
 		EdgeJump::PostPredictionCreateMove(cmd);
