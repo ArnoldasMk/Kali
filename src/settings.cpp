@@ -192,7 +192,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	weaponSetting[XORSTR("RCS")][XORSTR("AmountX")] = i.second.rcsAmountX;
 	weaponSetting[XORSTR("RCS")][XORSTR("AmountY")] = i.second.rcsAmountY;
 	weaponSetting[XORSTR("AutoPistol")][XORSTR("Enabled")] = i.second.autoPistolEnabled;
-	//weaponSetting[XORSTR("AutoShoot")][XORSTR("Enabled")] = i.second.autoShootEnabled;
 	weaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")] = i.second.autoScopeEnabled;
 	weaponSetting[XORSTR("NoShoot")][XORSTR("Enabled")] = i.second.noShootEnabled;
 	weaponSetting[XORSTR("IgnoreJump")][XORSTR("Enabled")] = i.second.ignoreJumpEnabled;
@@ -204,7 +203,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	weaponSetting[XORSTR("shotDelay")][XORSTR("value")] = i.second.shotDelay;
 	weaponSetting[XORSTR("minShotFire")][XORSTR("value")] = i.second.minShotFire;
 	weaponSetting[XORSTR("AutoWall")][XORSTR("Enabled")] = i.second.autoWallEnabled;
-	weaponSetting[XORSTR("AutoWall")][XORSTR("Value")] = i.second.autoWallValue;
+	weaponSetting[XORSTR("MinDamage")][XORSTR("Value")] = i.second.MinDamage;
 	weaponSetting[XORSTR("AutoSlow")][XORSTR("enabled")] = i.second.autoSlow;
 	weaponSetting[XORSTR("Prediction")][XORSTR("enabled")] = i.second.predEnabled;
 	weaponSetting[XORSTR("ScopeControl")][XORSTR("Enabled")] = i.second.scopeControlEnabled;
@@ -231,6 +230,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	RageweaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")] = i.second.autoScopeEnabled;
 	RageweaponSetting[XORSTR("HitChance")][XORSTR("Enabled")] = i.second.HitChanceEnabled;
 	RageweaponSetting[XORSTR("HitChance")][XORSTR("Value")] = i.second.HitChance;
+    RageweaponSetting[XORSTR("HitChanceOverwrride")][XORSTR("Enable")] = i.second.HitChanceOverwrriteEnable;
+    RageweaponSetting[XORSTR("HitChanceOverwrride")][XORSTR("Value")] = i.second.HitchanceOverwrriteValue;
 	RageweaponSetting[XORSTR("AutoWall")][XORSTR("Value")] = i.second.autoWallValue;
     RageweaponSetting[XORSTR("visibleDamage")] = i.second.visibleDamage;
 	RageweaponSetting[XORSTR("AutoSlow")][XORSTR("Enabled")] = i.second.autoSlow;
@@ -627,7 +628,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
     LoadColor(settings[XORSTR("Eventlog")][XORSTR("color")], Settings::Eventlog::color);
 
     settings[XORSTR("ThirdPerson")][XORSTR("enabled")] = Settings::ThirdPerson::enabled;
-    settings[XORSTR("ThirdPerson")][XORSTR("InThirdPerson")] = Settings::ThirdPerson::inTherdPersonView;
+    settings[XORSTR("ThirdPerson")][XORSTR("toggled")] = Settings::ThirdPerson::toggled;
     settings[XORSTR("ThirdPerson")][XORSTR("distance")] = Settings::ThirdPerson::distance;
     settings[XORSTR("ThirdPerson")][XORSTR("togglekey")] = Util::GetButtonName(Settings::ThirdPerson::toggleThirdPerson);
     settings[XORSTR("ThirdPerson")][XORSTR("type")] = (int)Settings::ThirdPerson::type;
@@ -726,7 +727,6 @@ void Settings::LoadConfig(std::string path)
 	    .rcsAlwaysOn = weaponSetting[XORSTR("RCS")][XORSTR("AlwaysOn")].asBool(),
 	    .hitchanceEnaled = weaponSetting[XORSTR("HitChance")][XORSTR("Enabled")].asBool(),
 	    .autoPistolEnabled = weaponSetting[XORSTR("AutoPistol")][XORSTR("Enabled")].asBool(),
-	    //.autoShootEnabled = weaponSetting[XORSTR( "AutoShoot" )][XORSTR( "Enabled" )].asBool(),
 	    .autoScopeEnabled = weaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")].asBool(),
 	    .noShootEnabled = weaponSetting[XORSTR("NoShoot")][XORSTR("Enabled")].asBool(),
 	    .ignoreJumpEnabled = weaponSetting[XORSTR("IgnoreJump")][XORSTR("Enabled")].asBool(),
@@ -751,7 +751,7 @@ void Settings::LoadConfig(std::string path)
 	    .aimStepMax = weaponSetting[XORSTR("AimStep")][XORSTR("max")].asFloat(),
 	    .rcsAmountX = weaponSetting[XORSTR("RCS")][XORSTR("AmountX")].asFloat(),
 	    .rcsAmountY = weaponSetting[XORSTR("RCS")][XORSTR("AmountY")].asFloat(),
-	    .autoWallValue = weaponSetting[XORSTR("AutoWall")][XORSTR("Value")].asFloat(),
+	    .MinDamage = weaponSetting[XORSTR("MinDamage")][XORSTR("Value")].asFloat(),
 	    .hitchance = weaponSetting[XORSTR("HitChance")][XORSTR("Value")].asFloat(),
 	    .shotDelay = weaponSetting[XORSTR("shotDelay")][XORSTR("value")].asInt(),
 	    .minShotFire = weaponSetting[XORSTR("minShotFire")][XORSTR("value")].asInt(),
@@ -798,11 +798,12 @@ void Settings::LoadConfig(std::string path)
 	    .autoSlow = RageweaponSetting[XORSTR("AutoSlow")][XORSTR("Enabled")].asBool(),
 	    .predEnabled = RageweaponSetting[XORSTR("Prediction")][XORSTR("Enabled")].asBool(),
 	    .scopeControlEnabled = RageweaponSetting[XORSTR("ScopeControl")][XORSTR("Enabled")].asBool(),
-		
+		.HitChanceOverwrriteEnable = RageweaponSetting[XORSTR("HitChanceOverwrride")][XORSTR("Enable")].asBool(),
 	    .RagebotautoAimFov = RageweaponSetting[XORSTR("AutoAim")][XORSTR("RageFOV")].asFloat(),
 	    .autoWallValue = RageweaponSetting[XORSTR("AutoWall")][XORSTR("Value")].asFloat(),
         .visibleDamage = RageweaponSetting[XORSTR("visibleDamage")].asFloat(),
 	    .HitChance = RageweaponSetting[XORSTR("HitChance")][XORSTR("Value")].asFloat(),
+        .HitchanceOverwrriteValue = RageweaponSetting[XORSTR("HitChanceOverwrride")][XORSTR("Value")].asFloat(),
 	};
 
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
@@ -1252,7 +1253,7 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("Eventlog")][XORSTR("color")], &Settings::Eventlog::color);
 
     GetVal(settings[XORSTR("ThirdPerson")][XORSTR("enabled")], &Settings::ThirdPerson::enabled);
-    GetVal(settings[XORSTR("ThirdPerson")][XORSTR("InThirdPerson")], &Settings::ThirdPerson::inTherdPersonView);
+    GetVal(settings[XORSTR("ThirdPerson")][XORSTR("toggled")], &Settings::ThirdPerson::toggled);
     GetVal(settings[XORSTR("ThirdPerson")][XORSTR("distance")], &Settings::ThirdPerson::distance);
     GetButtonCode(settings[XORSTR("ThirdPerson")][XORSTR("togglekey")], &Settings::ThirdPerson::toggleThirdPerson);
     GetVal(settings[XORSTR("ThirdPerson")][XORSTR("type")], (int*)&Settings::ThirdPerson::type);

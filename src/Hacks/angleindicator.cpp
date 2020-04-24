@@ -31,9 +31,15 @@ void AngleIndicator::Paint( ) {
     int leftDesyncMaxY = centerY - ( radius * sin( DEG2RAD( 90 + maxDesync ) ) );
     int rightDesyncMaxX = radius * cos( DEG2RAD( 90 - maxDesync ) ) + centerX;
     int rightDesyncMaxY = centerY - ( radius * sin( DEG2RAD( 90 - maxDesync ) ) );
+    int realX = radius * cos( DEG2RAD( 90 - realDiff ) ) + centerX;
+    int realY = centerY - ( radius * sin( DEG2RAD( 90 - realDiff ) ) );
+    int lbyX = radius * cos( DEG2RAD( 90 - lbyDiff ) ) + centerX;
+    int lbyY = centerY - ( radius * sin( DEG2RAD( 90 - lbyDiff ) ) );
 
     static ImColor basicColor = ImColor( 0, 0, 0 );
     static ImColor fakeColor = ImColor( 5, 200, 5 );
+    static ImColor realColor = ImColor( 225, 5, 5 );
+    static ImColor lbyColor = ImColor( 135, 235, 169 );
 
     Draw::AddCircle( centerX, centerY, radius, basicColor, 32 );
 
@@ -44,7 +50,7 @@ void AngleIndicator::Paint( ) {
     // if( Settings::AntiAim::Yaw::enabled && ( Settings::AntiAim::Yaw::typeFake != Settings::AntiAim::Yaw::type)  ){
     //     Draw::AddLine( centerX, centerY, realX, realY, realColor ); // Real Line
     // }
-    // if( Settings::AntiAim::LBYBreaker::enabled ){
-    //     Draw::AddLine( centerX, centerY, lbyX, lbyY, lbyColor ); // LBY Line
-    // }
+    if( Settings::AntiAim::LBYBreaker::enabled ){
+        Draw::AddLine( centerX, centerY, lbyX, lbyY, lbyColor ); // LBY Line
+    }
 }

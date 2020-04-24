@@ -8,6 +8,7 @@ namespace UI
 	extern bool isVisible;
 
 	void SetVisible(bool visible);
+	void DrawImWatermark();
 	void SwapWindow();
 	void SetupColors();
 	void SetupWindows();

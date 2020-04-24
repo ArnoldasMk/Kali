@@ -185,7 +185,7 @@ static void TraceLine(Vector vecAbsStart, Vector vecAbsEnd, unsigned int mask, C
 	trace->TraceRay(ray, mask, &filter, ptr);
 }
 
-static bool SimulateFireBullet(C_BaseCombatWeapon* pWeapon, bool teamCheck, Autowall::FireBulletData& data)
+static bool Autowall::SimulateFireBullet(C_BaseCombatWeapon* pWeapon, bool teamCheck, Autowall::FireBulletData& data)
 {
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 	CCSWeaponInfo* weaponInfo = pWeapon->GetCSWpnData();
@@ -253,7 +253,7 @@ float Autowall::GetDamage(const Vector& point, bool teamCheck, FireBulletData& f
 	if (!activeWeapon)
 		return -1.0f;
 
-	if (SimulateFireBullet(activeWeapon, teamCheck, data))
+	if (Autowall::SimulateFireBullet(activeWeapon, teamCheck, data))
 		damage = data.current_damage;
 
 	fData = data;

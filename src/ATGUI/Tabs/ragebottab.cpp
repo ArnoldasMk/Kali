@@ -6,6 +6,7 @@
 #include "../../Utils/xorstring.h"
 #include "../../ImGUI/imgui_internal.h"
 #include "../atgui.h"
+#include "../../Hacks/ragebot.h"
 
 #pragma GCC diagnostic ignored "-Wformat-security"
 
@@ -14,17 +15,19 @@ static ItemDefinitionIndex currentWeapon = ItemDefinitionIndex::INVALID;
 static bool silent = false;
 static bool friendly = false;
 static bool closestBone = false;
-static bool desiredBones[] = {true, true, true, true, true, true, true, // center mass
+static bool desiredBones[] = {true, false, true, true, true, true, true, // center mass
 							  true, true, true, true, true, true, true, // left arm
 							  true, true, true, true, true, true, true, // right arm
 							  true, true, true, true, true, // left leg
 							  true, true, true, true, true  // right leg
 							 };
-static float RagebotautoAimValue = 263.0f;
+static float RagebotautoAimValue = 180.0f;
 static bool autoPistolEnabled = false;
 static bool autoShootEnabled = false;
 static bool autoScopeEnabled = false;
 static bool HitChanceEnabled = false;
+static bool HitChanceOverwrrideEnable = false;
+static float HitchanceOverwriteValue = 1.f;
 static float HitChange = 20.f;
 static float autoWallValue = 10.f;
 static float visibleDamage = 50.f;
@@ -47,6 +50,8 @@ void UI::ReloadRageWeaponSettings()
 	autoScopeEnabled = Settings::Ragebot::weapons.at(index).autoScopeEnabled;
 	HitChanceEnabled = Settings::Ragebot::weapons.at(index).HitChanceEnabled;
 	HitChange = Settings::Ragebot::weapons.at(index).HitChance;
+	HitChanceOverwrrideEnable = Settings::Ragebot::weapons.at(index).HitChanceOverwrriteEnable;
+	HitchanceOverwriteValue = Settings::Ragebot::weapons.at(index).HitchanceOverwrriteValue;
 	autoWallValue = Settings::Ragebot::weapons.at(index).autoWallValue;
 	visibleDamage = Settings::Ragebot::weapons.at(index).visibleDamage;
 	autoSlow = Settings::Ragebot::weapons.at(index).autoSlow;
@@ -64,7 +69,6 @@ void UI::UpdateRageWeaponSettings()
 			Settings::Ragebot::weapons[currentWeapon] = RagebotWeapon_t();
 		}
 
-
 	RagebotWeapon_t settings = {
 			.silent = silent,
 			.friendly = friendly,
@@ -76,10 +80,12 @@ void UI::UpdateRageWeaponSettings()
 			.autoSlow = autoSlow,
 			.predEnabled = predEnabled,
 			.scopeControlEnabled = scopeControlEnabled,
+			.HitChanceOverwrriteEnable = HitChanceOverwrrideEnable,
 			.RagebotautoAimFov = RagebotautoAimValue,
 			.autoWallValue = autoWallValue,
 			.visibleDamage = visibleDamage,
 			.HitChance = HitChange,	
+			.HitchanceOverwrriteValue = HitchanceOverwriteValue,
 	};
 
 
@@ -95,6 +101,10 @@ void UI::UpdateRageWeaponSettings()
 		Settings::Ragebot::weapons.erase(currentWeapon);
 		UI::ReloadRageWeaponSettings();
 	}
+	// else 
+	// {
+	// 	Ragebot::UpdateValues();
+	// }
 }
 
 void Ragebot::RenderTab()
@@ -271,6 +281,16 @@ void Ragebot::RenderTab()
 				UI::UpdateRageWeaponSettings();
 			if( ImGui::SliderFloat(XORSTR("##HITCHANCE"), &HitChange, 1.f, 100.f) )
 				UI::UpdateRageWeaponSettings();
+
+			ImGui::PushItemWidth(-1);
+			if( ImGui::Checkbox(XORSTR("HitChance OverWrite"), &HitChanceOverwrrideEnable) )
+				UI::UpdateRageWeaponSettings();
+			ImGui::PopItemWidth();
+
+			ImGui::PushItemWidth(-1);
+			if( ImGui::SliderFloat(XORSTR("##HCOVERWRITE"), &HitchanceOverwriteValue, 1.f, 5.f) )
+				UI::UpdateRageWeaponSettings();
+			ImGui::PopItemWidth();
 			ImGui::EndChild();
 		}
 	}
@@ -348,9 +368,9 @@ void Ragebot::RenderTab()
 			ImGui::Columns(1);
 			{
 				ImGui::PushItemWidth(-1);
-				if (ImGui::SliderFloat(XORSTR("##VISIBLEDMG"), &visibleDamage, 0, 100, XORSTR("Min Visible Damage: %f")))
+				if (ImGui::SliderFloat(XORSTR("##VISIBLEDMG"), &visibleDamage, 0, 150, XORSTR("Min Visible Damage: %f")))
 					UI::UpdateRageWeaponSettings();
-				if (ImGui::SliderFloat(XORSTR("##AUTOWALLDMG"), &autoWallValue, 0, 100, XORSTR("Min Behind Wall Damage: %f")))
+				if (ImGui::SliderFloat(XORSTR("##AUTOWALLDMG"), &autoWallValue, 0, 150, XORSTR("Min Behind Wall Damage: %f")))
 					UI::UpdateRageWeaponSettings();
 				ImGui::PopItemWidth();
 			}

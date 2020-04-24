@@ -64,15 +64,27 @@ void UI::SetVisible(bool visible)
 	cvar->FindVar(XORSTR("cl_mouseenable"))->SetValue(!UI::isVisible);
 }
 
+void UI::DrawImWatermark()
+{
+	if (UI::isVisible)
+		return;
+
+	if (engine->IsInGame())
+		return;
+
+    Draw::ImText( ImVec2( 4.f, 4.f ), ImColor( 255, 255, 255, 255 ), XORSTR( "MissedIT" ), nullptr, 0.0f, nullptr,
+                  ImFontFlags_Shadow );
+}
+
 void UI::SetupWindows()
 {
 	if (UI::isVisible)
 	{
 		// SetupMainMenuBar();
 
-		//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(960, 645));
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(960, 645));
 			Main::RenderWindow();
-		//ImGui::PopStyleVar();
+		ImGui::PopStyleVar();
 
 		// ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(1050, 645));
 		// 	SkinModelChanger::RenderWindow();

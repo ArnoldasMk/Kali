@@ -19,7 +19,8 @@ void AntiAim::RenderTab()
             {
                 ImGui::Columns(1);
                 
-                if (ImGui::Checkbox(XORSTR("Rage AntiAim"), &Settings::AntiAim::RageAntiAim::enable)) 
+                ImGui::Checkbox(XORSTR("Rage AntiAim"), &Settings::AntiAim::RageAntiAim::enable);
+                if(Settings::AntiAim::RageAntiAim::enable) 
                 { 
                     Settings::AntiAim::LegitAntiAim::enable = false; 
                     ImGui::Checkbox(XORSTR("Auto AntiAIm"), &Settings::AntiAim::HeadEdge::enabled);

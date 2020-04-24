@@ -501,6 +501,19 @@ enum class EClassIds : int
 
 typedef int Bone;
 
+// These bones are the same on all CSGO models.
+enum
+{
+    CONST_BONE_HIP = 3,
+    CONST_BONE_LOWER_SPINE = 4,
+    CONST_BONE_MIDDLE_SPINE = 5,
+    CONST_BONE_UPPER_SPINE = 6,
+    CONST_BONE_NECK = 7,
+    CONST_BONE_HEAD = 8,
+};
+
+// This is a custom enum for the desired bones.
+// Does not match the csgo models, use the bonemaps instead.
 enum
 {
 	BONE_INVALID = -1,
@@ -1756,10 +1769,6 @@ const std::map<ItemDefinitionIndex, DefItem_t> ItemDefinitionIndexMap = {
 		{ ItemDefinitionIndex::WEAPON_KNIFE_CSS,			{ "#SFUI_WPNHUD_KnifeCSS", "weapon_knife_css", "models/weapons/v_knife_css.mdl", "knife_css" } },
 		{ ItemDefinitionIndex::WEAPON_KNIFE_GHOST,			{ "#SFUI_WPNHUD_knife_ghost", "weapon_knife_ghost", "models/weapons/v_knife_ghost.mdl", "knife_ghost" } },
 		{ ItemDefinitionIndex::WEAPON_KNIFEGG,				{ "#SFUI_WPNHUD_Knife_GG", "weapon_knifegg", "models/weapons/v_knife_gg.mdl", "knifegg" } },
-		{ ItemDefinitionIndex::WEAPON_KNIFE_CORD,           { "#SFUI_WPNHUD_knife_cord", "weapon_knife_cord", "models/weapons/v_knife_cord.mdl", "knife_cord" } },
-		{ ItemDefinitionIndex::WEAPON_KNIFE_CANIS,          { "#SFUI_WPNHUD_knife_canis", "weapon_knife_canis", "models/weapons/v_knife_canis.mdl", "knife_canis" } },
-		{ ItemDefinitionIndex::WEAPON_KNIFE_OUTDOOR,        { "#SFUI_WPNHUD_knife_outdoor", "weapon_knife_outdoor", "models/weapons/v_knife_outdoor.mdl", "knife_outdoor" } },
-		{ ItemDefinitionIndex::WEAPON_KNIFE_SKELETON,       { "#SFUI_WPNHUD_knife_skeleton", "weapon_knife_skeleton", "models/weapons/v_knife_skeleton.mdl", "knife_skeleton" } },
 		{ ItemDefinitionIndex::GLOVE_STUDDED_BLOODHOUND,	{ "#CSGO_Wearable_t_studdedgloves", "studded_bloodhound_gloves", "models/weapons/v_models/arms/glove_bloodhound/v_glove_bloodhound.mdl" } },
 		{ ItemDefinitionIndex::GLOVE_T_SIDE,				{ "#CSGO_Wearable_t_defaultgloves", "t_gloves", "models/weapons/v_models/arms/glove_fingerless/v_glove_fingerless.mdl" } },
 		{ ItemDefinitionIndex::GLOVE_CT_SIDE,				{ "#CSGO_Wearable_ct_defaultgloves", "ct_gloves", "models/weapons/v_models/arms/glove_hardknuckle/v_glove_hardknuckle.mdl" } },

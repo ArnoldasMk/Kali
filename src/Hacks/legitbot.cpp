@@ -61,7 +61,8 @@ static bool HeadMultiPoint(C_BasePlayer *player, Vector points[])
 	// 7 - leftear, 8 - rightear, 9 - nose, 10 - backofhead
 	for( int i = 0; i < headVectors; i++ ) // set all points initially to center mass of head.
 		points[i] = center;
-	points[1].z += bbox->radius * 0.60f; // morph each point.
+	points[0].y += bbox->radius * 0.80f;
+	points[1].y += bbox->radius * 0.80f;// morph each point.
 	points[2].z += bbox->radius * 1.25f; // ...
 	points[3].x += bbox->radius * 0.80f;
 	points[3].z += bbox->radius * 0.60f;
@@ -73,7 +74,7 @@ static bool HeadMultiPoint(C_BasePlayer *player, Vector points[])
 	points[6].z += bbox->radius * 0.90f;
 	points[7].x += bbox->radius * 0.80f;
 	points[8].x -= bbox->radius * 0.80f;
-	points[9].y += bbox->radius * 0.80f;
+	points[9].z += bbox->radius * 0.60f;
 	points[10].y -= bbox->radius * 0.80f;
 
 	return true;
@@ -187,6 +188,11 @@ static Vector GetClosestSpot( CUserCmd* cmd, C_BasePlayer* localPlayer, C_BasePl
 		if( boneID == BONE_INVALID )
 			continue;
 
+		Vector bone3D = enemy->GetBonePosition(boneID);
+
+		Autowall::FireBulletData data;
+		float boneDamage = Autowall::GetDamage(bone3D, !Settings::Legitbot::friendly, data);
+
 		Vector cbVecTarget = enemy->GetBonePosition(boneID);
 
 		if( aimTargetType == AimTargetType::FOV )
@@ -195,7 +201,7 @@ static Vector GetClosestSpot( CUserCmd* cmd, C_BasePlayer* localPlayer, C_BasePl
 
 			if( cbFov < tempFov )
 			{
-				if( Entity::IsVisibleThroughEnemies(enemy, boneID) )
+				if( Entity::IsVisibleThroughEnemies(enemy, boneID) && boneDamage >= Settings::Legitbot::minDamage )
 				{
 					tempFov = cbFov;
 					tempSpot = cbVecTarget;
@@ -209,7 +215,7 @@ static Vector GetClosestSpot( CUserCmd* cmd, C_BasePlayer* localPlayer, C_BasePl
 
 			if( cbRealDistance < tempDistance )
 			{
-				if( Entity::IsVisibleThroughEnemies(enemy, boneID) )
+				if( Entity::IsVisibleThroughEnemies(enemy, boneID) && boneDamage >= Settings::Legitbot::minDamage)
 				{
 					tempDistance = cbRealDistance;
 					tempSpot = cbVecTarget;
@@ -245,18 +251,6 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, bool visibleCheck, V
 		}
 		else
 		{
-			if( !lockedOn->GetAlive() )
-			{
-				if( Settings::Legitbot::AutoAim::engageLockTR )
-				{
-					if(Util::GetEpochTime() - killTimes.back() > Settings::Legitbot::AutoAim::engageLockTTR) // if we got the kill over the TTR time, engage another foe.
-					{
-						lockedOn = nullptr;
-					}
-				}
-				return nullptr;
-			}
-
 			if( Settings::Legitbot::AutoAim::closestBone )
 			{
 				Vector tempSpot = GetClosestSpot(cmd, localplayer, lockedOn, aimTargetType);
@@ -297,16 +291,21 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, bool visibleCheck, V
 			if (std::find(Legitbot::friends.begin(), Legitbot::friends.end(), entityInformation.xuid) != Legitbot::friends.end())
 				continue;
 		}
-
+		Vector eVecTarget = {0,0,0};
 		Legitbot::targetAimbot = i;
-		Vector eVecTarget = player->GetBonePosition((int) Settings::Legitbot::bone);
-		if( Settings::Legitbot::AutoAim::closestBone )
+		if( !Settings::Legitbot::AutoAim::closestBone )
+		{
+			eVecTarget = player->GetBonePosition((int) Settings::Legitbot::bone);
+			
+		}
+		else
 		{
 			Vector tempSpot = GetClosestSpot(cmd, localplayer, player, aimTargetType);
 			if( tempSpot.IsZero() || !Entity::IsSpotVisibleThroughEnemies(player, tempSpot) )
 				continue;
 			eVecTarget = tempSpot;
 		}
+		
 
 		Vector pVecTarget = localplayer->GetEyePosition();
         lastRayStart = pVecTarget;
@@ -332,44 +331,13 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, bool visibleCheck, V
 		if ( Settings::Legitbot::FlashCheck::enabled && localplayer->IsFlashed() )
 			continue;
 
-		if (Settings::Legitbot::AutoWall::enabled)
-		{
-			Vector wallBangSpot = {0,0,0};
-			float damage = AutoWallBestSpot(player, wallBangSpot); // sets Vector Angle, returns damage of hitting that spot.
 
-			if( !wallBangSpot.IsZero() )
-			{
-				*bestDamage = damage;
-				*bestSpot = wallBangSpot;
-				closestEntity = player;
-				lastRayEnd = wallBangSpot;
-			}
-		}
-		else
-		{
-			closestEntity = player;
-			*bestSpot = eVecTarget;
-			bestFov = fov;
-			bestRealDistance = realDistance;
-		}
+		closestEntity = player;
+		*bestSpot = eVecTarget;
+		bestFov = fov;
+		bestRealDistance = realDistance;
 	}
-	if( Settings::Legitbot::AutoAim::engageLock )
-	{
-		if( !lockedOn )
-		{
-			if( (cmd->buttons & IN_ATTACK) || inputSystem->IsButtonDown(Settings::Legitbot::aimkey) )
-			{
-				if( Util::GetEpochTime() - killTimes.back() > 100 ) // if we haven't gotten a kill in under 100ms.
-				{
-					lockedOn = closestEntity; // This is to prevent a Rare condition when you one-tap someone without the Legitbot, it will lock on to another target.
-				}
-			}
-			else
-			{
-				return nullptr;
-			}
-		}
-	}
+
 	if( bestSpot->IsZero() )
 		return nullptr;
 
@@ -819,6 +787,7 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 							if(delay >= (Settings::Legitbot::ShotDelay::value / 10.f) && _delayed == false)
 							{
 								_delayed = true;
+								shouldAim = false;
 							}
 							if (_delayed)
 							{
@@ -838,6 +807,7 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 						if(delay >= (Settings::Legitbot::ShotDelay::value / 10.f) && _delayed == false)
 							{
 								_delayed = true;
+								shouldAim = false;
 							}
 							if (_delayed)
 							{
@@ -1008,7 +978,7 @@ void Legitbot::UpdateValues()
 	Settings::Legitbot::ShotDelay::value = currentWeaponSetting.shotDelay;
 	Settings::Legitbot::MinShotFire::value = currentWeaponSetting.minShotFire;
 	Settings::Legitbot::AutoWall::enabled = currentWeaponSetting.autoWallEnabled;
-	Settings::Legitbot::AutoWall::value = currentWeaponSetting.autoWallValue;
+	Settings::Legitbot::minDamage = currentWeaponSetting.MinDamage;
 	Settings::Legitbot::AutoSlow::enabled = currentWeaponSetting.autoSlow;
 	Settings::Legitbot::ScopeControl::enabled = currentWeaponSetting.scopeControlEnabled;
 

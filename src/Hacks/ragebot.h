@@ -10,6 +10,7 @@ namespace Ragebot {
 
     extern std::vector<int64_t> friends;
     extern int targetAimbot;
+    inline int TotalShoots, ShotHitted;
 
     void CreateMove(CUserCmd*);
     void FireGameEvent(IGameEvent* event);

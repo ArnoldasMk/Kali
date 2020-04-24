@@ -19,7 +19,7 @@ if [ -z "$csgo_pid" ]; then
 fi
 
 if [ ! -d ".git" ]; then
-    echo "We have detected that you have downloaded MissedIT-master.zip from GitHub.com. This is the WRONG way to download! Please download Fuzion by cloning the Git repository: 'git clone --recursive https://github.com/LWSS/Fuzion.git'"
+    echo "We have detected that you have downloaded Fuzion-master.zip from GitHub.com. This is the WRONG way to download! Please download Fuzion by cloning the Git repository: 'git clone --recursive https://github.com/LWSS/Fuzion.git'"
 fi
 
 # pBypass for crash dumps being sent
@@ -36,7 +36,7 @@ filename=$(cat build_id)
 
 # Credit: Aixxe @ aixxe.net
 if grep -q "$filename" /proc/"$csgo_pid"/maps; then
-    echo_orange "MissedIT is already injected, aborting..."
+    echo_orange "Fuzion is already injected, aborting..."
     exit
 fi
 echo "Injecting Build ID: $filename"

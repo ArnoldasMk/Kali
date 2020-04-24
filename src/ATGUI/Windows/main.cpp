@@ -42,7 +42,7 @@ void Main::RenderWindow()
 
 	
 
-	if (ImGui::Begin(XORSTR("MissedIt"), &Main::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_ShowBorders))
+	if (ImGui::Begin(XORSTR("MissedIt"), &Main::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiItemFlags_AllowKeyboardFocus | ImGuiWindowFlags_NoScrollbar | ImGuiComboFlags_NoArrowButton))
 	{
 		if (ImGui::Button(XORSTR("Config"), ImVec2( (ImGui::GetWindowSize().x / 2) - 9.f, 0) ) )
 			Configs::showWindow = !Configs::showWindow;

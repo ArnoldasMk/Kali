@@ -13,6 +13,7 @@ static ItemDefinitionIndex currentWeapon = ItemDefinitionIndex::INVALID;
 //static bool enabled = false;
 static bool silent = false;
 static bool friendly = false;
+
 static bool closestBone = false;
 static bool desiredBones[] = {true, true, true, true, true, true, true, // center mass
 							  true, true, true, true, true, true, true, // left arm
@@ -56,7 +57,7 @@ static float hitchance = 100.f;
 static int shotDelay = 200;
 static int minShotFire = 6;
 static bool autoWallEnabled = false;
-static float autoWallValue = 10.0f;
+static float MinDamage = 10.f;
 static bool autoAimRealDistance = false;
 static bool autoSlow = false;
 static bool predEnabled = false;
@@ -97,7 +98,6 @@ void UI::ReloadWeaponSettings()
 	rcsAmountX = Settings::Legitbot::weapons.at(index).rcsAmountX;
 	rcsAmountY = Settings::Legitbot::weapons.at(index).rcsAmountY;
 	autoPistolEnabled = Settings::Legitbot::weapons.at(index).autoPistolEnabled;
-	//autoShootEnabled = Settings::Legitbot::weapons.at(index).autoShootEnabled;
 	autoScopeEnabled = Settings::Legitbot::weapons.at(index).autoScopeEnabled;
 	noShootEnabled = Settings::Legitbot::weapons.at(index).noShootEnabled;
 	ignoreJumpEnabled = Settings::Legitbot::weapons.at(index).ignoreJumpEnabled;
@@ -109,7 +109,7 @@ void UI::ReloadWeaponSettings()
 	shotDelay = Settings::Legitbot::weapons.at(index).shotDelay;
 	minShotFire = Settings::Legitbot::weapons.at(index).minShotFire;
 	autoWallEnabled = Settings::Legitbot::weapons.at(index).autoWallEnabled;
-	autoWallValue = Settings::Legitbot::weapons.at(index).autoWallValue;
+	MinDamage = Settings::Legitbot::weapons.at(index).MinDamage;
 	autoAimRealDistance = Settings::Legitbot::weapons.at(index).autoAimRealDistance;
 	autoSlow = Settings::Legitbot::weapons.at(index).autoSlow;
 	predEnabled = Settings::Legitbot::weapons.at(index).predEnabled;
@@ -143,7 +143,6 @@ void UI::UpdateWeaponSettings()
 			.rcsAlwaysOn = rcsAlwaysOn,
 			.hitchanceEnaled = hitchanceEnaled,
 			.autoPistolEnabled = autoPistolEnabled,
-			//.autoShootEnabled = autoShootEnabled,
 			.autoScopeEnabled = autoScopeEnabled,
 			.noShootEnabled = noShootEnabled,
 			.ignoreJumpEnabled = ignoreJumpEnabled,
@@ -168,7 +167,7 @@ void UI::UpdateWeaponSettings()
 			.aimStepMax = aimStepMax,
 			.rcsAmountX = rcsAmountX,
 			.rcsAmountY = rcsAmountY,
-			.autoWallValue = autoWallValue,
+			.MinDamage = MinDamage,
 			.hitchance = hitchance,
 			.shotDelay = shotDelay,
 			.minShotFire = minShotFire,
@@ -386,55 +385,51 @@ void Legitbot::RenderTab()
 				}
 				
 			ImGui::Columns(2);
-			{
 				ImGui::Separator();
 				ImGui::Text("Shoot Assist");
+			ImGui::NextColumn();
+				ImGui::Text("Suggested Settings");
+			ImGui::EndColumns();
+			ImGui::Separator();
+				
+			ImGui::Columns(2, nullptr, true);
+			if (ImGui::Checkbox(XORSTR("Enable(Beta)"), &shootassist))
+			{
+				autoAimEnabled = true;
+				UI::UpdateWeaponSettings();
+			}
+			if(shootassist) // suggested options with shoot assist
+			{
+				ImGui::PushItemWidth(-1);
+				if( ImGui::SliderInt(XORSTR("##MinShotFire"), &minShotFire, 0, 20, XORSTR("Min Shot To fire : %.0f")) )
+				{
+						UI::UpdateWeaponSettings();
+				}
+				ToolTip::Show("Min shot that will gun shoot after the enemy killed to make sure that it is not looking fishy", ImGui::IsItemHoveredRect());
+				ImGui::PopItemWidth();
+
+				if (ImGui::Checkbox(XORSTR("Smoke Check"), &smokeCheck))
+					UI::UpdateWeaponSettings();
+					
+				if (ImGui::Checkbox(XORSTR("Flash Check"), &flashCheck))
+					UI::UpdateWeaponSettings();
+						
 				ImGui::NextColumn();
 				{
-					ImGui::Text("Suggested Settings");
-				}
-				
-				ImGui::Separator();
+					ImGui::Checkbox((XORSTR("No Aim Punch")), &Settings::View::NoAimPunch::enabled);
+					ToolTip::Show("Suggested features with Auto Shoot But turn it on only when your legitBot perfectly configured\n Otherwise you can caught in overwathc", ImGui::IsItemHoveredRect());
 
-				ImGui::Columns(2);
-				if (ImGui::Checkbox(XORSTR("Enable(Experimental)"), &shootassist))
-				{
-					autoAimEnabled = true;
-					UI::UpdateWeaponSettings();
-				}
-				ToolTip::Show("Automatically Aim aim and shoot when \n when player in Under Your fov area", ImGui::IsItemHoveredRect());
-
-				if(shootassist) // suggested options with shoot assist
-				{
-					ImGui::PushItemWidth(-1);
-					if( ImGui::SliderInt(XORSTR("##MinShotFire"), &minShotFire, 0, 20, XORSTR("Min Shot To fire : %.0f")) )
+					if(ImGui::Checkbox(XORSTR("Silent Aim"), &silent))
 					{
 						UI::UpdateWeaponSettings();
 					}
-					ToolTip::Show("Min shot that will gun shoot after the enemy killed to make sure that it is not looking fishy", ImGui::IsItemHoveredRect());
-					ImGui::PopItemWidth();
-
-					if (ImGui::Checkbox(XORSTR("Smoke Check"), &smokeCheck))
-						UI::UpdateWeaponSettings();
-					
-					if (ImGui::Checkbox(XORSTR("Flash Check"), &flashCheck))
-						UI::UpdateWeaponSettings();
-						
-					ImGui::NextColumn();
+					ToolTip::Show("Suggested features with Auto Shoot But turn it on only when your legitBot perfectly configured\n Otherwise you can caught in overwathc", ImGui::IsItemHoveredRect());
+					if (ImGui::Checkbox(XORSTR("Distance-Based FOV"), &autoAimRealDistance))
 					{
-						ImGui::Checkbox((XORSTR("No Aim Punch")), &Settings::View::NoAimPunch::enabled);
-						ToolTip::Show("Suggested features with Auto Shoot But turn it on only when your legitBot perfectly configured\n Otherwise you can caught in overwathc", ImGui::IsItemHoveredRect());
-
-						if(ImGui::Checkbox(XORSTR("Silent Aim"), &silent))
-						{
-							UI::UpdateWeaponSettings();
-						}
-						ToolTip::Show("Suggested features with Auto Shoot But turn it on only when your legitBot perfectly configured\n Otherwise you can caught in overwathc", ImGui::IsItemHoveredRect());
-						if (ImGui::Checkbox(XORSTR("Distance-Based FOV"), &autoAimRealDistance))
-						{
-							UI::UpdateWeaponSettings();
-						}
+						UI::UpdateWeaponSettings();
 					}
+				}
+				ImGui::EndColumns();
 					ImGui::Columns(1);
 					{
 						ImGui::Separator();
@@ -457,7 +452,7 @@ void Legitbot::RenderTab()
 					}
 							
 				}
-			}
+				ToolTip::Show("Automatically Aim aim and shoot when \n when player in Under Your fov area", ImGui::IsItemHoveredRect());
 
 
 			ImGui::Columns(1);
@@ -631,106 +626,15 @@ void Legitbot::RenderTab()
 			ImGui::Text(XORSTR("AutoSlow"));
 			ImGui::Separator();
 			if (ImGui::Checkbox(XORSTR("Enabled##AUTOSLOW"), &autoSlow))
-				UI::UpdateWeaponSettings();
-
-			ImGui::Columns(1);
-			ImGui::Separator();
-			ImGui::Text(XORSTR("AutoWall"));
-			ImGui::Separator();
-			ImGui::Columns(2, nullptr, true);
 			{
-				if (ImGui::Checkbox(XORSTR("Enabled##AUTOWALL"), &autoWallEnabled))
-					UI::UpdateWeaponSettings();
-				if(ImGui::Button(XORSTR("Autowall Bones"), ImVec2(-1, 0)))
-					ImGui::OpenPopup(XORSTR("optionBones"));
-				ImGui::SetNextWindowSize(ImVec2((ImGui::GetWindowWidth()/1.25f),ImGui::GetWindowHeight()), ImGuiSetCond_Always);
-				if( ImGui::BeginPopup(XORSTR("optionBones")) )
-				{
-					ImGui::PushItemWidth(-1);
-					ImGui::Text(XORSTR("Center Mass"));
-					if( ImGui::Checkbox(XORSTR("Head"), &desiredBones[BONE_HEAD]) )
-						UI::UpdateWeaponSettings();
-					if( ImGui::Checkbox(XORSTR("Neck"), &desiredBones[BONE_NECK]) )
-						UI::UpdateWeaponSettings();
-					if( ImGui::Checkbox(XORSTR("Upper Spine"), &desiredBones[BONE_UPPER_SPINAL_COLUMN]) )
-						UI::UpdateWeaponSettings();
-					if( ImGui::Checkbox(XORSTR("Middle Spine"), &desiredBones[BONE_MIDDLE_SPINAL_COLUMN]) )
-						UI::UpdateWeaponSettings();
-					if( ImGui::Checkbox(XORSTR("Lower Spine"), &desiredBones[BONE_LOWER_SPINAL_COLUMN]) )
-						UI::UpdateWeaponSettings();
-					if( ImGui::Checkbox(XORSTR("Pelvis"), &desiredBones[BONE_PELVIS]) )
-						UI::UpdateWeaponSettings();
-					if( ImGui::Checkbox(XORSTR("Hip"), &desiredBones[BONE_HIP]) )
-						UI::UpdateWeaponSettings();
-					ImGui::Separator();
-
-					ImGui::Columns(2, nullptr, false);
-					{
-						ImGui::Text(XORSTR("Player's Right Arm"));
-						if( ImGui::Checkbox(XORSTR("Collarbone"), &desiredBones[BONE_RIGHT_COLLARBONE]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Shoulder"), &desiredBones[BONE_RIGHT_SHOULDER]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Armpit"), &desiredBones[BONE_RIGHT_ARMPIT]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Bicep"), &desiredBones[BONE_RIGHT_BICEP]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Elbow"), &desiredBones[BONE_RIGHT_ELBOW]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Forearm"), &desiredBones[BONE_RIGHT_FOREARM]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Wrist"), &desiredBones[BONE_RIGHT_WRIST]) )
-							UI::UpdateWeaponSettings();
-						ImGui::Text(XORSTR("Player's Right Leg"));
-						if( ImGui::Checkbox(XORSTR("Buttcheek"), &desiredBones[BONE_RIGHT_BUTTCHEEK]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Thigh"), &desiredBones[BONE_RIGHT_THIGH]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Knee"), &desiredBones[BONE_RIGHT_KNEE]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Ankle"), &desiredBones[BONE_RIGHT_ANKLE]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Sole"), &desiredBones[BONE_RIGHT_SOLE]) )
-							UI::UpdateWeaponSettings();
-					}
-					ImGui::NextColumn();
-					{
-						ImGui::Text(XORSTR("Player's Left Arm"));
-						if( ImGui::Checkbox(XORSTR("Collarbone "), &desiredBones[BONE_LEFT_COLLARBONE]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Shoulder "), &desiredBones[BONE_LEFT_SHOULDER]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Armpit "), &desiredBones[BONE_LEFT_ARMPIT]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Bicep "), &desiredBones[BONE_LEFT_BICEP]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Elbow "), &desiredBones[BONE_LEFT_ELBOW]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Forearm "), &desiredBones[BONE_LEFT_FOREARM]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Wrist "), &desiredBones[BONE_LEFT_WRIST]) )
-							UI::UpdateWeaponSettings();
-
-						ImGui::Text(XORSTR("Player's Left Leg"));
-						if( ImGui::Checkbox(XORSTR("Buttcheek "), &desiredBones[BONE_LEFT_BUTTCHEEK]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Thigh "), &desiredBones[BONE_LEFT_THIGH]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Knee "), &desiredBones[BONE_LEFT_KNEE]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Ankle "), &desiredBones[BONE_LEFT_ANKLE]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Sole "), &desiredBones[BONE_LEFT_SOLE]) )
-							UI::UpdateWeaponSettings();
-					}
-					ImGui::PopItemWidth();
-					ImGui::EndPopup();
-				}
+				UI::UpdateWeaponSettings();
 			}
-			ImGui::NextColumn();
+				
+			ImGui::Separator();
+			ImGui::Columns(1);
 			{
 				ImGui::PushItemWidth(-1);
-				if (ImGui::SliderFloat(XORSTR("##AUTOWALLDMG"), &autoWallValue, 0, 100, XORSTR("Min Damage: %f")))
+				if (ImGui::SliderFloat(XORSTR("##AUTOWALLDMG"), &MinDamage, 0, 100, XORSTR("Min Damage: %f")))
 					UI::UpdateWeaponSettings();
 				ImGui::PopItemWidth();
 			}

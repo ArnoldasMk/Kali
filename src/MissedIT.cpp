@@ -1,11 +1,11 @@
 #include <thread>
-
+#include <future>
 #include "hooker.h"
 #include "interfaces.h"
 #include "Utils/util.h"
 #include "fonts.h"
 #include "Hooks/hooks.h"
-#include "glhook.h"
+#include "sdlhook.h"
 
 #include "EventListener.h"
 #include "Utils/xorstring.h"
@@ -23,6 +23,9 @@ static EventListener* eventListener = nullptr;
 const char *Util::logFileName = "/tmp/MissedIT.log";
 std::vector<VMT*> createdVMTs;
 
+//char buildID[NAME_MAX] = {
+//#include "../build_id_hex" // Made by ./build script.
+//};
 
 void MainThread()
 {
@@ -51,14 +54,15 @@ void MainThread()
 	Hooker::FindLoadFromBuffer();
 	//Hooker::FindVstdlibFunctions();
 	Hooker::FindOverridePostProcessingDisable();
-	Hooker::HookSwapWindow();
-	Hooker::HookPollEvent();
     Hooker::FindPanelArrayOffset();
     Hooker::FindPlayerAnimStateOffset();
     Hooker::FindPlayerAnimOverlayOffset();
 	Hooker::FindSequenceActivity();
     Hooker::FindAbsFunctions();
     Hooker::FindItemSystem();
+
+    SDL2::HookSwapWindow();
+    SDL2::HookPollEvent();
 
     Offsets::GetNetVarOffsets();
     Fonts::SetupFonts();
@@ -139,6 +143,7 @@ void MainThread()
 /* Entrypoint to the Library. Called when loading */
 int __attribute__((constructor)) Startup()
 {
+    //std::async(std::launch::async, MainThread);
 	std::thread mainThread(MainThread);
 	// The root of all suffering is attachment
 	// Therefore our little buddy must detach from this realm.

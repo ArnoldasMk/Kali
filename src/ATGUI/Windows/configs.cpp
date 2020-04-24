@@ -9,6 +9,7 @@
 #include "../../ImGUI/imgui_internal.h"
 #include "../imgui.h"
 #include "../atgui.h"
+#include "../../Hacks/ragebot.h"
 
 void Configs::RenderWindow()
 {
@@ -30,7 +31,7 @@ void Configs::RenderWindow()
 		return;
 	}
 
-	if (ImGui::Begin(XORSTR("Configs"), &Configs::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_NoResize))
+	if (ImGui::Begin(XORSTR("Configs"), &Configs::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize))
 	{
 		Settings::UI::Windows::Config::open = true;
 		ImVec2 temp = ImGui::GetWindowSize();
@@ -103,6 +104,7 @@ void Configs::RenderWindow()
 
 			Settings::LoadConfig(path.str());
 			UI::ReloadWeaponSettings();
+			//Ragebot::UpdateValues();
 		}
 		ImGui::PopItemWidth();
 

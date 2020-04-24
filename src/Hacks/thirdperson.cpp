@@ -5,7 +5,7 @@
 #include "../interfaces.h"
 
 static int frameSkip = 0;
-bool toggleTherdPerson = false;
+
 void ThirdPerson::OverrideView(CViewSetup *pSetup)
 {
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
@@ -20,27 +20,27 @@ void ThirdPerson::OverrideView(CViewSetup *pSetup)
 		input->m_fCameraInThirdPerson = false;
 		return;
 	}
-	
+
 	if(localplayer->GetAlive() && Settings::ThirdPerson::enabled && !engine->IsTakingScreenshot())
 	{
+		QAngle viewAngles;
+		engine->GetViewAngles(viewAngles);
+		trace_t tr;
+		Ray_t traceRay;
+		Vector eyePos = localplayer->GetEyePosition();
+
 		/* toggle on and off the third person dor pressing the toggleThirdPerson key which is by default KEY_LALT*/
 		if (inputSystem->IsButtonDown(Settings::ThirdPerson::toggleThirdPerson) && frameSkip == 0) {
 		
-			Settings::ThirdPerson::inTherdPersonView =  Settings::ThirdPerson::inTherdPersonView ? false : true;
+			Settings::ThirdPerson::toggled =  !Settings::ThirdPerson::toggled;
 			frameSkip = 100;
 
-		}else if(frameSkip > 0){ frameSkip -= 1; }
+		}else if(frameSkip > 0){ frameSkip--; }
 
-		if (Settings::ThirdPerson::inTherdPersonView) {
-
-			QAngle viewAngles;
-			engine->GetViewAngles(viewAngles);
-			trace_t tr;
-			Ray_t traceRay;
-			Vector eyePos = localplayer->GetEyePosition();
-
+		if (Settings::ThirdPerson::toggled)
+		{
 			Vector camOff = Vector(cos(DEG2RAD(viewAngles.y)) * Settings::ThirdPerson::distance,
-							   		sin(DEG2RAD(viewAngles.y)) * Settings::ThirdPerson::distance,
+							  	 	sin(DEG2RAD(viewAngles.y)) * Settings::ThirdPerson::distance,
 							   		sin(DEG2RAD(-viewAngles.x)) * Settings::ThirdPerson::distance);
 
 			traceRay.Init(eyePos, (eyePos - camOff));
@@ -50,7 +50,6 @@ void ThirdPerson::OverrideView(CViewSetup *pSetup)
 
         	input->m_fCameraInThirdPerson = true;
 			input->m_vecCameraOffset = Vector(viewAngles.x, viewAngles.y, Settings::ThirdPerson::distance * ((tr.fraction < 1.0f) ? tr.fraction : 1.0f) );
-		
 		}
 		else if(input->m_fCameraInThirdPerson)
 		{
@@ -58,7 +57,6 @@ void ThirdPerson::OverrideView(CViewSetup *pSetup)
 			input->m_vecCameraOffset = Vector(0.f, 0.f, 0.f);
 		}
 	}
-	
 }
 
 
@@ -68,7 +66,7 @@ void ThirdPerson::FrameStageNotify(ClientFrameStage_t stage)
 	{
 		C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 
-		if (localplayer && localplayer->GetAlive() && Settings::ThirdPerson::enabled && input->m_fCameraInThirdPerson)
+		if (localplayer && localplayer->GetAlive() && Settings::ThirdPerson::toggled && input->m_fCameraInThirdPerson)
 		{
             switch (Settings::ThirdPerson::type)
             {

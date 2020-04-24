@@ -191,7 +191,6 @@ struct AimbotWeapon_t
 		 rcsAlwaysOn,
 		 hitchanceEnaled,
 		 autoPistolEnabled,
-		 //autoShootEnabled,
 		 autoScopeEnabled,
 		 noShootEnabled,
 		 ignoreJumpEnabled,
@@ -215,7 +214,7 @@ struct AimbotWeapon_t
 		  aimStepMax = 35.0f,
 		  rcsAmountX = 2.0f,
 		  rcsAmountY = 2.0f,
-		  autoWallValue = 10.0f,
+		  MinDamage = 10.0f,
 		  hitchance = 20;
 	int	shotDelay = 200,
 		minShotFire = 6;
@@ -268,7 +267,7 @@ struct AimbotWeapon_t
 			this->shotDelay == another.shotDelay &&
 			this->minShotFire == another.minShotFire &&
 			this->autoWallEnabled == another.autoWallEnabled &&
-			this->autoWallValue == another.autoWallValue &&
+			this->MinDamage == another.MinDamage &&
 			this->autoSlow == another.autoSlow &&
 			this->predEnabled == another.predEnabled &&
 			this->autoAimRealDistance == another.autoAimRealDistance &&
@@ -287,11 +286,13 @@ struct RagebotWeapon_t
 		 autoScopeEnabled,
 		 autoSlow,
 		 predEnabled,
-		 scopeControlEnabled;
+		 scopeControlEnabled,
+		 HitChanceOverwrriteEnable;
 	float RagebotautoAimFov = 180.f,
 		  autoWallValue = 10.0f,
 		  visibleDamage = 50.f,
-		  HitChance = 20.f;
+		  HitChance = 20.f,
+		  HitchanceOverwrriteValue = 1.f;
 	bool desiredBones[31];
 
 	bool operator == (const RagebotWeapon_t& Ragebotanother) const
@@ -315,6 +316,8 @@ struct RagebotWeapon_t
 			this->autoSlow == Ragebotanother.autoSlow &&
 			this->predEnabled == Ragebotanother.predEnabled &&
 			this->scopeControlEnabled == Ragebotanother.scopeControlEnabled && 
+			this->HitChanceOverwrriteEnable == Ragebotanother.HitChanceOverwrriteEnable &&
+			this->HitchanceOverwrriteValue == Ragebotanother.HitchanceOverwrriteValue &&
 			this->HitChance == Ragebotanother.HitChance;
 	}
 } const ragedefault{};
@@ -368,8 +371,8 @@ namespace Settings
 {
 	namespace UI
 	{
-		inline ColorVar mainColor = ImColor(25, 25, 25, 255 );
-		inline ColorVar bodyColor = ImColor( 5, 5, 5, 223 );
+		inline ColorVar mainColor = ImColor(32, 32, 23, 255 );
+		inline ColorVar bodyColor = ImColor( 5, 3, 12, 255 );
 		inline ColorVar fontColor = ImColor( 192, 218, 217, 255 );
 		inline ColorVar accentColor = ImColor( 82, 255, 24, 106 );
 
@@ -446,6 +449,7 @@ namespace Settings
 		inline bool enabled = false;
         inline bool silent = false;
         inline bool friendly = false;
+		inline float minDamage = 10.f;
         inline Bone bone = BONE_HEAD;
         inline ButtonCode_t aimkey = ButtonCode_t::MOUSE_MIDDLE;
         inline bool aimkeyOnly = false;
@@ -660,6 +664,12 @@ namespace Settings
 		{
 			inline bool enabled = false;
 			inline float value = 20.f;
+		}
+
+		namespace HitChanceOverwrride 
+		{
+			inline bool enable = false;
+			inline float value = 1.0f;
 		}
 
 		namespace Prediction
@@ -1135,7 +1145,7 @@ namespace Settings
 		namespace Skins
 		{
 			inline bool enabled = false;
-			inline bool perTeam = true;
+			inline bool perTeam = false;
 		}
 
 		namespace Models
@@ -1305,7 +1315,7 @@ namespace Settings
 	namespace ThirdPerson
 	{
 		inline bool enabled = false;
-		inline bool inTherdPersonView = true;
+		inline bool toggled = true;
 		inline ButtonCode_t toggleThirdPerson = ButtonCode_t::KEY_CAPSLOCK;
 		inline float distance = 100.0f;
         inline ShowedAngle type = ShowedAngle::REAL;

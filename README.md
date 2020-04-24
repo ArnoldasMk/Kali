@@ -10,7 +10,14 @@ Want to chat or play with other MissedIT users? Join us on Discord :- <a href = 
 
 ## What is MissedIT?
 
-A fully featured internal hack for *CounterStrike : Global Offensive* written in C++. Which is a Fork if Aimtux - MissedIT
+A fully featured internal hack for *CounterStrike : Global Offensive* written in C++. Which is a Fork of Aimtux-Fuzion
+
+## AUR Installation
+
+
+* Load MissedIT by using the command `./load`
+* Unload using `./unload`
+* As a development package, it will automatically update when you trigger your AUR helper, if a new commit has been pushed
 
 ## Compiling
 
@@ -42,11 +49,11 @@ sudo dnf install cmake gcc-c++ gdb git libstdc++-static mesa-libGL-devel SDL2-de
 #### Download MissedIT:
 
 ```bash
-git clone --recursive https://github.com/HackerPolice/MissedIT-Stable.git
+git clone --recursive https://github.com/HackerPolice/MissedIT-Rolling-Release.git
 ```
 
 ```bash
-cd MissedIT
+cd MissedIT-Fuzion
 ```
 
 ===================
@@ -136,15 +143,18 @@ To add a config, copy the folder containing it to `~/.config/MissedIT/CSGO`
 
 ## Screenshots
 
-![aimbot](Pictures/Screenshot1.png)
-![menu](Pictures/Screenshot2.png)
+![LegitBot](Pictures/Screenshot1.png)
+![RageBot](Pictures/Screenshot2.png)
 ![esp](Pictures/Screenshot3.png)
 
 
 ## Credits
 
 Special thanks to the Original AimTux project: [https://github.com/AimTuxOfficial/AimTux](https://github.com/AimTuxOfficial/AimTux).
-Special thanks to the Fuzion project: [https://github.com/LWSS/Fuzion](https://github.com/LWSS/Fuzion)
+
+Special thanks to the Fuzion project For Panaroma Update And For Good Quality Codes: [https://github.com/LWSS/Fuzion](https://github.com/LWSS/Fuzion).
+
+Special thanks to the Nimbus project For The UI and Resolver: [https://github.com/NimbusProjects/Nimbus](https://github.com/NimbusProjects/Nimbus)
 
 Special thanks to [@aixxe](http://www.github.com/aixxe/) ([aixxe.net](http://www.aixxe.net)) for the skin changer and with the initial project, as well as helping this project with source code (Available on [@aixxe's](http://www.github.com/aixxe/) github page.).
 

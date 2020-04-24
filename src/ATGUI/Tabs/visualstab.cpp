@@ -72,13 +72,18 @@ void Visuals::RenderTab()
 	ImGui::Columns(2, nullptr, false);
 	{
 		ImGui::Checkbox(XORSTR("Enabled"), &Settings::ESP::enabled);
+		ImGui::SameLine();
+		ImGui::PushItemWidth(-1);
         ImGui::Combo( XORSTR( "##BACKENDTYPE" ), (int*)&Settings::ESP::backend, BackendTypes, IM_ARRAYSIZE( BackendTypes ) );
-
+		ImGui::PopItemWidth();
         ImGui::NextColumn();
-		ImGui::Text(XORSTR("Only on Key"));
+		ImGui::PushItemWidth(-1);
+		ImGui::Text(XORSTR("OnKey"));
+		ImGui::SameLine();
 		UI::KeyBindButton(&Settings::ESP::key);
+		ImGui::PopItemWidth();
 	}
-	ImGui::Separator();
+	ImGui::EndColumns();
 
 	ImGui::Columns(2, nullptr, false);
 	{

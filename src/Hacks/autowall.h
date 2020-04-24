@@ -18,4 +18,5 @@ namespace Autowall
 	};
 
 	float GetDamage(const Vector& vecPoint, bool teamCheck, FireBulletData& fData);
+	static bool SimulateFireBullet(C_BaseCombatWeapon*, bool, Autowall::FireBulletData&);
 }
