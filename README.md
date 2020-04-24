@@ -10,14 +10,7 @@ Want to chat or play with other MissedIT users? Join us on Discord :- <a href = 
 
 ## What is MissedIT?
 
-A fully featured internal hack for *CounterStrike : Global Offensive* written in C++. Which is a Fork if Aimtux-MissedIT
-
-## AUR Installation
-
-
-* Load MissedIT by using the command `./load`
-* Unload using `./unload`
-* As a development package, it will automatically update when you trigger your AUR helper, if a new commit has been pushed
+A fully featured internal hack for *CounterStrike : Global Offensive* written in C++. Which is a Fork if Aimtux - MissedIT
 
 ## Compiling
 
@@ -151,7 +144,7 @@ To add a config, copy the folder containing it to `~/.config/MissedIT/CSGO`
 ## Credits
 
 Special thanks to the Original AimTux project: [https://github.com/AimTuxOfficial/AimTux](https://github.com/AimTuxOfficial/AimTux).
-Special thanks to the Original AimTux project: [https://github.com/LWSS/MissedIT](https://github.com/LWSS/MissedIT)
+Special thanks to the Fuzion project: [https://github.com/LWSS/Fuzion](https://github.com/LWSS/Fuzion)
 
 Special thanks to [@aixxe](http://www.github.com/aixxe/) ([aixxe.net](http://www.aixxe.net)) for the skin changer and with the initial project, as well as helping this project with source code (Available on [@aixxe's](http://www.github.com/aixxe/) github page.).
 
