@@ -144,7 +144,7 @@ To add a config, copy the folder containing it to `~/.config/MissedIT/CSGO`
 ## Credits
 
 Special thanks to the Original AimTux project: [https://github.com/AimTuxOfficial/AimTux](https://github.com/AimTuxOfficial/AimTux).
-Special thanks to the Fuzion project: [https://github.com/LWSS/MissedIT](https://github.com/LWSS/Fuzion)
+Special thanks to the Fuzion project: [https://github.com/LWSS/Fuzion](https://github.com/LWSS/Fuzion)
 
 Special thanks to [@aixxe](http://www.github.com/aixxe/) ([aixxe.net](http://www.aixxe.net)) for the skin changer and with the initial project, as well as helping this project with source code (Available on [@aixxe's](http://www.github.com/aixxe/) github page.).
 
