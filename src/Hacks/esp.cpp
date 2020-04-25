@@ -520,7 +520,7 @@ static void DrawTracer( C_BasePlayer* player ) {
 	bool bIsVisible = Entity::IsVisible( player, CONST_BONE_HEAD, 180.f, Settings::ESP::Filters::smokeCheck );
 	Draw::AddLine( ( int ) ( src.x ), ( int ) ( src.y ), x, y, ESP::GetESPPlayerColor( player, bIsVisible ) );
 }
-static void DrawLegitbotSpot( ) {
+static void DrawAimbotSpot( ) {
 	C_BasePlayer* localplayer = ( C_BasePlayer* ) entityList->GetClientEntity( engine->GetLocalPlayer() );
 	if ( !localplayer || !localplayer->GetAlive() ){
 		Settings::Debug::AutoAim::target = {0,0,0};
@@ -933,7 +933,7 @@ static void DrawPlayer(C_BasePlayer* player)
 		DrawBoneMap( player );
 
 	if (Settings::Debug::AutoAim::drawTarget)
-		DrawLegitbotSpot();
+		DrawAimbotSpot();
 
     if (Settings::ESP::Sounds::enabled) {
 		DrawSounds( player, playerColor );
@@ -1433,7 +1433,7 @@ static void DrawSpread()
         }
     }
     if ( Settings::ESP::Spread::spreadLimit ) {
-        float cone = Settings::Legitbot::Hitchance::value / 10;
+        float cone = Settings::Legitbot::Hitchance::value;
         if ( cone > 0.0f ) {
             float radius = ( cone * Paint::engineHeight ) / 1.5f;
             Draw::AddRect( ( ( Paint::engineWidth / 2 ) - radius ), ( Paint::engineHeight / 2 ) - radius + 1,

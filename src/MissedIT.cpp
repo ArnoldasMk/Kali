@@ -1,5 +1,5 @@
 #include <thread>
-#include <future>
+
 #include "hooker.h"
 #include "interfaces.h"
 #include "Utils/util.h"
@@ -22,10 +22,6 @@ static EventListener* eventListener = nullptr;
 
 const char *Util::logFileName = "/tmp/MissedIT.log";
 std::vector<VMT*> createdVMTs;
-
-//char buildID[NAME_MAX] = {
-//#include "../build_id_hex" // Made by ./build script.
-//};
 
 void MainThread()
 {
@@ -52,7 +48,6 @@ void MainThread()
 	Hooker::FindLineGoesThroughSmoke();
 	Hooker::FindInitKeyValues();
 	Hooker::FindLoadFromBuffer();
-	//Hooker::FindVstdlibFunctions();
 	Hooker::FindOverridePostProcessingDisable();
     Hooker::FindPanelArrayOffset();
     Hooker::FindPlayerAnimStateOffset();
@@ -127,10 +122,6 @@ void MainThread()
 	if (Hooker::HookRecvProp(XORSTR("CBaseViewModel"), XORSTR("m_nSequence"), SkinChanger::sequenceHook))
 		SkinChanger::sequenceHook->SetProxyFunction((RecvVarProxyFn) SkinChanger::SetViewModelSequence);
 
-	//NetVarManager::DumpNetvars();
-
-	//Settings::LoadSettings();
-
 	srand(time(nullptr)); // Seed random # Generator so we can call rand() later
 
     // Build bonemaps here if we are already in-game
@@ -143,7 +134,6 @@ void MainThread()
 /* Entrypoint to the Library. Called when loading */
 int __attribute__((constructor)) Startup()
 {
-    //std::async(std::launch::async, MainThread);
 	std::thread mainThread(MainThread);
 	// The root of all suffering is attachment
 	// Therefore our little buddy must detach from this realm.

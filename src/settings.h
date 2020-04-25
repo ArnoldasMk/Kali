@@ -375,6 +375,8 @@ namespace Settings
 		inline ColorVar bodyColor = ImColor( 5, 3, 12, 255 );
 		inline ColorVar fontColor = ImColor( 192, 218, 217, 255 );
 		inline ColorVar accentColor = ImColor( 82, 255, 24, 106 );
+		inline bool imGuiAliasedLines = false;
+		inline bool imGuiAliasedFill = false;
 
         /* Window Position/Size Defaults */
         namespace Windows
@@ -437,7 +439,7 @@ namespace Settings
 		{
 			namespace ESP
 			{
-				inline char* family = (char*)"Segoe UI";
+				inline char* family = (char*)"Georgia";
 				inline int size = 12;
 				inline int flags = (int)FontFlags::FONTFLAG_OUTLINE;
 			}
@@ -734,6 +736,13 @@ namespace Settings
 		{
 			inline bool enable = false;
 		}
+
+        namespace Yaw
+        {
+            inline bool enabled = false;
+            inline AntiAimType_Y type = AntiAimType_Y::NONE;
+            inline AntiAimType_Y typeFake = AntiAimType_Y::NONE;
+        }
 
         namespace Pitch
         {

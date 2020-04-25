@@ -95,7 +95,7 @@ void Main::RenderWindow()
 				Ragebot::RenderTab();
 				break;
 			case 2:
-				AntiAim::RenderTab();
+				HvH::RenderTab();
 				break;
 			case 3:
 				Visuals::RenderTab();

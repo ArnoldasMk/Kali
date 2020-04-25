@@ -1,6 +1,6 @@
 #include "antiaim.h"
 
-#include "legitbot.h"
+#include "../Hacks/legitbot.h"
 #include "../settings.h"
 #include "../Hooks/hooks.h"
 #include "../Utils/math.h"
@@ -99,50 +99,90 @@ static bool HasViableEnemy()
 
     return false;
 }
-static void RageAntiAim(C_BasePlayer *const localplayer, QAngle& angle, bool bSend){
+static void DoAntiAimY(C_BasePlayer *const localplayer, QAngle& angle, bool bSend)
+{
+    AntiAimType_Y aa_type = bSend ? Settings::AntiAim::Yaw::typeFake : Settings::AntiAim::Yaw::type;
 
-    //float maxDelta = AntiAim::GetMaxDelta(localplayer->GetAnimState());
-
-    bSend ? angle.y -= 190.0f : angle.y -= 180.0f ;
-
-    if(bSend) {
-        AntiAim::fakeAngle.y = angle.y;
-        AntiAim::fakeAngle.x = 89.0f;
-    }
-    else
+    float maxDelta = AntiAim::GetMaxDelta(localplayer->GetAnimState());
+    static bool bFlip = false;
+    //float lby = *localplayer->GetLowerBodyYawTarget();
+    switch (aa_type)
     {
+        case AntiAimType_Y::MAX_DELTA_LEFT:
+            angle.y = AntiAim::fakeAngle.y - maxDelta;
+            break;
+        case AntiAimType_Y::MAX_DELTA_RIGHT:
+            angle.y = AntiAim::fakeAngle.y + maxDelta;
+            break;
+        case AntiAimType_Y::MAX_DELTA_FLIPPER:
+            bFlip = !bFlip;
+            angle.y -= bFlip ? maxDelta : -maxDelta;
+            break;
+        case AntiAimType_Y::MAX_DELTA_LBY_AVOID:
+
+            break;
+        default:
+            break;
+    }
+    if( bSend ){
+        AntiAim::fakeAngle.y = angle.y;
+    } else {
         AntiAim::realAngle.y = angle.y;
-        AntiAim::realAngle.x = 89.0f;
     }
 }
 
-static QAngle LegitAntiAim(CUserCmd* cmd ,C_BasePlayer *const localplayer, QAngle angle, bool bSend){
+static void DoAntiAimX(QAngle& angle, bool bFlip, bool& clamp)
+{
+    static float pDance = 0.0f;
+    AntiAimType_X aa_type = Settings::AntiAim::Pitch::type;
 
-    //float maxDelta = AntiAim::GetMaxDelta(localplayer->GetAnimState());
-    //bSend ? angle.y -=  maxDelta/2.0f : angle.y += maxDelta/2.0f ;
-    bSend ? angle.x = angle.x : angle.x = 89.0f ;
-
-    if(bSend) {
-        AntiAim::fakeAngle = CreateMove::lastTickViewAngles;
-        return AntiAim::fakeAngle;
-    }
-    else
+    switch (aa_type)
     {
-        angle.y -= 180.0f;
-        AntiAim::realAngle.y = angle.y; 
-        AntiAim::realAngle.x = angle.x;
-        return AntiAim::realAngle;
-       
+        case AntiAimType_X::STATIC_UP:
+            angle.x = -89.0f;
+            break;
+        case AntiAimType_X::STATIC_DOWN:
+            angle.x = 89.0f;
+            break;
+        case AntiAimType_X::DANCE:
+            pDance += 45.0f;
+            if (pDance > 100)
+                pDance = 0.0f;
+            else if (pDance > 75.f)
+                angle.x = -89.f;
+            else if (pDance < 75.f)
+                angle.x = 89.f;
+            break;
+        case AntiAimType_X::FRONT:
+            angle.x = 0.0f;
+            break;
+        case AntiAimType_X::STATIC_UP_FAKE:
+            angle.x = bFlip ? 89.0f : -89.0f;
+            break;
+        case AntiAimType_X::STATIC_DOWN_FAKE:
+            angle.x = bFlip ? -89.0f : 89.0f;
+            break;
+        case AntiAimType_X::LISP_DOWN:
+            clamp = false;
+            angle.x = 1800089.0f;
+            break;
+        case AntiAimType_X::ANGEL_DOWN:
+            clamp = false;
+            angle.x = 36000088.0f;
+            break;
+        case AntiAimType_X::ANGEL_UP:
+            clamp = false;
+            angle.x = 35999912.0f;
+            break;
+        default:
+            break;
     }
 }
 
 void AntiAim::CreateMove(CUserCmd* cmd)
 {
-    if (!Settings::AntiAim::RageAntiAim::enable && !Settings::AntiAim::LegitAntiAim::enable && !Settings::AntiAim::LBYBreaker::enabled)
-    {    
-        AntiAim::realAngle = AntiAim::fakeAngle = CreateMove::lastTickViewAngles;
+    if (!Settings::AntiAim::Yaw::enabled && !Settings::AntiAim::Pitch::enabled && !Settings::AntiAim::LBYBreaker::enabled)
         return;
-    }
 
     if (Settings::Legitbot::AimStep::enabled && Legitbot::aimStepInProgress)
         return;
@@ -151,6 +191,7 @@ void AntiAim::CreateMove(CUserCmd* cmd)
     float oldForward = cmd->forwardmove;
     float oldSideMove = cmd->sidemove;
     
+    AntiAim::realAngle = AntiAim::fakeAngle = CreateMove::lastTickViewAngles;
 
     QAngle angle = cmd->viewangles;
 
@@ -189,6 +230,8 @@ void AntiAim::CreateMove(CUserCmd* cmd)
     static bool bSend = true;
     bSend = !bSend;
 
+    bool should_clamp = true;
+
     bool needToFlick = false;
     static bool lbyBreak = false;
     static float lastCheck;
@@ -214,22 +257,14 @@ void AntiAim::CreateMove(CUserCmd* cmd)
         }
     }
 
-    /*
-    ** We have to state rage anti aim and legit anti aim 
-    ** legit is for legit configs and rage is desined for hvh moments
-    */
-    if(Settings::AntiAim::LegitAntiAim::enable && !needToFlick) {
-       angle =  LegitAntiAim(cmd, localplayer, angle, bSend);
-        CreateMove::sendPacket = bSend;
-    }
-    else if (Settings::AntiAim::RageAntiAim::enable && !needToFlick)
+    if (Settings::AntiAim::Yaw::enabled && !needToFlick)
     {
-        RageAntiAim(localplayer, angle, bSend);
+        DoAntiAimY(localplayer, angle, bSend);
+
         CreateMove::sendPacket = bSend;
         if (Settings::AntiAim::HeadEdge::enabled && edging_head && !bSend)
-            {angle.y = edge_angle.y;}
+            angle.y = edge_angle.y;
     }
-
 
     if (!ValveDSCheck::forceUT && (*csGameRules) && (*csGameRules)->IsValveDS())
     {
@@ -237,13 +272,13 @@ void AntiAim::CreateMove(CUserCmd* cmd)
             Settings::AntiAim::Pitch::type = AntiAimType_X::STATIC_UP;
     }
 
-    // if (Settings::AntiAim::Pitch::enabled)
-    //     DoAntiAimX(angle, bSend, should_clamp);
+    if (Settings::AntiAim::Pitch::enabled)
+        DoAntiAimX(angle, bSend, should_clamp);
 
-    // if( should_clamp ){
-    //     Math::NormalizeAngles(angle);
-    //     Math::ClampAngles(angle);
-    // }
+    if( should_clamp ){
+        Math::NormalizeAngles(angle);
+        Math::ClampAngles(angle);
+    }
 
     cmd->viewangles = angle;
 

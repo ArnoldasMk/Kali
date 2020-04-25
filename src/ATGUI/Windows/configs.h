@@ -2,7 +2,7 @@
 
 namespace Configs
 {
-	inline bool showWindow = false;
+	extern bool showWindow;
 
 	extern void RenderWindow();
 }

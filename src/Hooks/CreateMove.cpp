@@ -1,6 +1,5 @@
 #include "hooks.h"
-#include <thread>
-#include <future>
+
 #include "../interfaces.h"
 #include "../settings.h"
 
@@ -15,8 +14,8 @@
 #include "../Hacks/edgejump.h"
 #include "../Hacks/autoblock.h"
 #include "../Hacks/predictionsystem.h"
-#include "../Hacks/legitbot.h"
 #include "../Hacks/ragebot.h"
+#include "../Hacks/legitbot.h"
 #include "../Hacks/triggerbot.h"
 #include "../Hacks/autoknife.h"
 #include "../Hacks/antiaim.h"
@@ -25,12 +24,6 @@
 #include "../Hacks/esp.h"
 #include "../Hacks/tracereffect.h"
 #include "../Hacks/nofall.h"
-
-#include <stdio.h>
-#include <string>
-#include <iostream>
-
-using namespace std;
 
 bool CreateMove::sendPacket = true;
 QAngle CreateMove::lastTickViewAngles = QAngle(0, 0, 0);
@@ -63,17 +56,7 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
 		NoFall::PrePredictionCreateMove(cmd);
 
 		PredictionSystem::StartPrediction(cmd);
-			std::async(std::launch::async, Legitbot::CreateMove, cmd);
-			// Legitbot::CreateMove(cmd);
-			std::async(std::launch::async, Ragebot::CreateMove, cmd);
-			std::async(std::launch::async, Triggerbot::CreateMove, cmd);
-			std::async(std::launch::async, AutoKnife::CreateMove, cmd);
-			std::async(std::launch::async, AntiAim::CreateMove, cmd);
-			std::async(std::launch::async, Airstuck::CreateMove, cmd);
-			std::async(std::launch::async, FakeLag::CreateMove, cmd);
-			std::async(std::launch::async, ESP::CreateMove, cmd);
-			std::async(std::launch::async, TracerEffect::CreateMove, cmd);
-			/*Legitbot::CreateMove(cmd);
+			Legitbot::CreateMove(cmd);
 			Ragebot::CreateMove(cmd);
 			Triggerbot::CreateMove(cmd);
 			AutoKnife::CreateMove(cmd);
@@ -81,7 +64,7 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
 			Airstuck::CreateMove(cmd);
 			FakeLag::CreateMove(cmd);
 			ESP::CreateMove(cmd);
-			TracerEffect::CreateMove(cmd);*/
+			TracerEffect::CreateMove(cmd);
 		PredictionSystem::EndPrediction();
 
 		EdgeJump::PostPredictionCreateMove(cmd);

@@ -74,7 +74,6 @@ static void SwapWindow(SDL_Window* window)
 		gl3wInit();
 		ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO();
-
         // Fixup some keycodes for SDL
         io.KeyMap[ImGuiKey_Tab] = SDLK_TAB;
         io.KeyMap[ImGuiKey_LeftArrow] = SDL_SCANCODE_LEFT;

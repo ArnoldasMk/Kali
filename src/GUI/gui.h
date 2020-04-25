@@ -8,7 +8,7 @@ namespace GUI
 	extern panorama::IUIPanel* menuRoot;
 	extern panorama::IUIPanel* hudRoot;
 	/* Custom Panels */
-	extern panorama::IUIPanel* MissedITMain;
+	extern panorama::IUIPanel* fuzionMain;
 
 	void ToggleUI();
 }

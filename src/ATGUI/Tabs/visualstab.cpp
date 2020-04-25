@@ -6,7 +6,7 @@
 #include "../atgui.h"
 #include "../../Hacks/tracereffect.h"
 #include "../../Hacks/materialconfig.h"
-#include "../Windows/playerlist.h"
+
 #pragma GCC diagnostic ignored "-Wformat-security"
 
 void Visuals::RenderTab()
@@ -69,24 +69,14 @@ void Visuals::RenderTab()
 			".50 Cal Low Glow", // 17
 	};
 
-	ImGui::Columns(2, nullptr, false);
+	ImGui::Columns(2, nullptr, true);
 	{
-		ImGui::Checkbox(XORSTR("Enabled"), &Settings::ESP::enabled);
-		ImGui::SameLine();
-		ImGui::PushItemWidth(-1);
+        ImGui::Checkbox(XORSTR("Enabled"), &Settings::ESP::enabled);
         ImGui::Combo( XORSTR( "##BACKENDTYPE" ), (int*)&Settings::ESP::backend, BackendTypes, IM_ARRAYSIZE( BackendTypes ) );
-		ImGui::PopItemWidth();
-        ImGui::NextColumn();
-		ImGui::PushItemWidth(-1);
-		ImGui::Text(XORSTR("OnKey"));
-		ImGui::SameLine();
-		UI::KeyBindButton(&Settings::ESP::key);
-		ImGui::PopItemWidth();
-	}
-	ImGui::EndColumns();
-
-	ImGui::Columns(2, nullptr, false);
-	{
+        if( Settings::ESP::backend == DrawingBackend::IMGUI ){
+            ImGui::Checkbox( XORSTR( "Aliased Lines"), &Settings::UI::imGuiAliasedLines );
+            ImGui::Checkbox( XORSTR( "Aliased Fill"), &Settings::UI::imGuiAliasedFill );
+        }
 		ImGui::BeginChild(XORSTR("COL1"), ImVec2(0, 0), true);
 		{
 			ImGui::Text(XORSTR("ESP"));
@@ -242,6 +232,8 @@ void Visuals::RenderTab()
 
 	ImGui::NextColumn();
 	{
+        ImGui::Text(XORSTR("Only on Key"));
+        UI::KeyBindButton(&Settings::ESP::key);
 		ImGui::BeginChild(XORSTR("Chams"), ImVec2(0, 0), true);
 		{
 			ImGui::Text(XORSTR("Crosshair"));
@@ -268,18 +260,16 @@ void Visuals::RenderTab()
 			ImGui::Separator();
 			ImGui::Text(XORSTR("Other Visual Settings"));
 			ImGui::Separator();
-			ImGui::Columns(2, nullptr, false);
+			ImGui::Columns(2, nullptr, true);
 			{
 				ImGui::Checkbox(XORSTR("Arms"), &Settings::ESP::Chams::Arms::enabled);
 				ImGui::Checkbox(XORSTR("Weapons"), &Settings::ESP::Chams::Weapon::enabled);
 				ImGui::Checkbox(XORSTR("Dlights"), &Settings::Dlights::enabled);
 				ImGui::Checkbox(XORSTR("No Flash"), &Settings::Noflash::enabled);
 				ImGui::Checkbox(XORSTR("No Smoke"), &Settings::NoSmoke::enabled);
-				ImGui::Checkbox(XORSTR("Footsteps"), &Settings::ESP::Sounds::enabled);
+				ImGui::Checkbox(XORSTR("Show Footsteps"), &Settings::ESP::Sounds::enabled);
 				ImGui::Checkbox(XORSTR("No View Punch"), &Settings::View::NoViewPunch::enabled);
 				ImGui::Checkbox(XORSTR("No Sky"), &Settings::NoSky::enabled);
-				ImGui::Checkbox(XORSTR("Player List"), &PlayerList::showWindow);
-				ImGui::Checkbox(XORSTR("Spectate List"), &Settings::ShowSpectators::enabled);
 
 				if ( ImGui::Button( XORSTR( "Material Config" ), ImVec2( -1, 0 ) ) )
 					ImGui::OpenPopup( XORSTR( "##MaterialConfigWindow" ) );

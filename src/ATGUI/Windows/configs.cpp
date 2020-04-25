@@ -9,7 +9,8 @@
 #include "../../ImGUI/imgui_internal.h"
 #include "../imgui.h"
 #include "../atgui.h"
-#include "../../Hacks/ragebot.h"
+
+bool Configs::showWindow = false;
 
 void Configs::RenderWindow()
 {
@@ -104,7 +105,6 @@ void Configs::RenderWindow()
 
 			Settings::LoadConfig(path.str());
 			UI::ReloadWeaponSettings();
-			//Ragebot::UpdateValues();
 		}
 		ImGui::PopItemWidth();
 
