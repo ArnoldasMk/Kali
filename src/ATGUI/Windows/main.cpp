@@ -6,7 +6,7 @@
 
 #include "../Tabs/legitbottab.h"
 #include "../Tabs/ragebottab.h"
-#include "../Tabs/hvhtab.h"
+#include "../Tabs/antiaimtab.h"
 #include "../Tabs/misctab.h"
 #include "../Tabs/triggerbottab.h"
 #include "../Tabs/visualstab.h"
@@ -110,6 +110,7 @@ void Main::RenderWindow()
 				Misc::RenderTab();
 				break;
 		}
+		ImGui::Separator();
 		ImGui::End();
 	}
 }

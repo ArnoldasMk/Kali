@@ -10,7 +10,6 @@
 #pragma GCC diagnostic ignored "-Wformat-security"
 
 static ItemDefinitionIndex currentWeapon = ItemDefinitionIndex::INVALID;
-//static bool enabled = false;
 static bool silent = false;
 static bool friendly = false;
 

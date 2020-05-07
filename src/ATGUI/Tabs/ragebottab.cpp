@@ -374,8 +374,16 @@ void Ragebot::RenderTab()
 					UI::UpdateRageWeaponSettings();
 				ImGui::PopItemWidth();
 			}
+			/*
+			* Resolver Tab whcih is only usefull in hvh moments so .... 
+			* I transfer it to under rafe bot from anti aim tab
+			*/
+			ImGui::Text(XORSTR("Resolver"));
+            ImGui::Separator();
+            ImGui::Checkbox(XORSTR("Resolver(Fuzion Bad As Hell)"), &Settings::Resolver::resolveAll);
+			ImGui::Checkbox(XORSTR("Resolver(Numbus Not Testted)"), &Settings::Resolver::resolverNumbus);
 
-
+			// End of resolver tab
 			ImGui::Columns(1);
 			ImGui::Separator();
 			if (currentWeapon > ItemDefinitionIndex::INVALID && Settings::Ragebot::weapons.find(currentWeapon) != Settings::Ragebot::weapons.end())

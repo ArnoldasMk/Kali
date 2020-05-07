@@ -1253,7 +1253,7 @@ public:
 	// Construction/destruction
 	QAngle(void);
 	QAngle(float X, float Y, float Z);
-	//      QAngle(RadianEuler const &angles);      // evil auto type promotion!!!
+	//QAngle(RadianEuler const &angles);      // evil auto type promotion!!!
 
 	// Allow pass-by-value
 	operator QAngleByValue &()              { return *((QAngleByValue *)(this)); }
@@ -1541,3 +1541,5 @@ inline void QAngleAdd(const QAngle& a, const QAngle& b, QAngle& c)
 	c.y = a.y + b.y;
 	c.z = a.z + b.z;
 }
+
+class RadianEuler;

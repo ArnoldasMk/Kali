@@ -31,6 +31,24 @@ void Math::AngleVectors(const QAngle &angles, Vector& forward)
 	forward.z = -sp;
 }
 
+void Math::VectorRotate(const float *in1, const matrix3x4_t& in2, float *out)
+{
+    out[0] = Math::DotProduct(in1, in2[0]);
+    out[1] = Math::DotProduct(in1, in2[1]);
+    out[2] = Math::DotProduct(in1, in2[2]);
+}
+
+void Math::VectorRotate(const Vector &in1, const Vector &in2, Vector &out)
+{
+    matrix3x4_t matRotate;
+    AngleMatrix(in2, matRotate);
+    Math::VectorRotate(in1, matRotate, out);
+}
+
+void Math::VectorRotate(const Vector& in1, const matrix3x4_t &in2, Vector &out)
+{
+    Math::VectorRotate(&in1.x, in2, &out.x);
+}
 void Math::AngleVectors( const Vector& angles, Vector* forward, Vector* right, Vector* up ) {
 	float sr, sp, sy, cr, cp, cy;
 
@@ -152,6 +170,9 @@ void Math::VectorAngles(const Vector& forward, QAngle &angles)
 
 	angles[2] = 0.0f;
 }
+float Math::DotProduct( const float *v1, const float *v2 ) {
+    return v1 [ 0 ] * v2 [ 0 ] + v1 [ 1 ] * v2 [ 1 ] + v1 [ 2 ] * v2 [ 2 ];
+}
 
 float Math::DotProduct(const Vector &v1, const float* v2)
 {
@@ -176,3 +197,80 @@ QAngle Math::CalcAngle(const Vector &src, const Vector &dst)
 	return angles;
 }
 
+void Math::AngleMatrix(const Vector angles, matrix3x4_t& matrix)
+{
+    float sr, sp, sy, cr, cp, cy;
+    
+    sy = sin(DEG2RAD(angles[1]));
+    cy = cos(DEG2RAD(angles[1]));
+    
+    sp = sin(DEG2RAD(angles[0]));
+    cp = cos(DEG2RAD(angles[0]));
+    
+    sr = sin(DEG2RAD(angles[2]));
+    cr = cos(DEG2RAD(angles[2]));
+    
+    //matrix = (YAW * PITCH) * ROLL
+    matrix[0][0] = cp * cy;
+    matrix[1][0] = cp * sy;
+    matrix[2][0] = -sp;
+    
+    float crcy = cr * cy;
+    float crsy = cr * sy;
+    float srcy = sr * cy;
+    float srsy = sr * sy;
+    
+    matrix[0][1] = sp * srcy - crsy;
+    matrix[1][1] = sp * srsy + crcy;
+    matrix[2][1] = sr * cp;
+    
+    matrix[0][2] = (sp * crcy + srsy);
+    matrix[1][2] = (sp * crsy - srcy);
+    matrix[2][2] = cr * cp;
+    
+    matrix[0][3] = 0.0f;
+    matrix[1][3] = 0.0f;
+    matrix[2][3] = 0.0f;
+}
+/*
+static void Math::AngleMatrix(const QAngle& angles, matrix3x4_t& matrix)
+{
+		float sr, sp, sy, cr, cp, cy;
+
+		SinCos(DEG2RAD(angles[1]), &sy, &cy);
+		SinCos(DEG2RAD(angles[0]), &sp, &cp);
+		SinCos(DEG2RAD(angles[2]), &sr, &cr);
+
+		// matrix = (YAW * PITCH) * ROLL
+		matrix[0][0] = cp * cy;
+		matrix[1][0] = cp * sy;
+		matrix[2][0] = -sp;
+
+		float crcy = cr * cy;
+		float crsy = cr * sy;
+		float srcy = sr * cy;
+		float srsy = sr * sy;
+		matrix[0][1] = sp * srcy - crsy;
+		matrix[1][1] = sp * srsy + crcy;
+		matrix[2][1] = sr * cp;
+
+		matrix[0][2] = (sp * crcy + srsy);
+		matrix[1][2] = (sp * crsy - srcy);
+		matrix[2][2] = cr * cp;
+
+		matrix[0][3] = 0.0f;
+		matrix[1][3] = 0.0f;
+		matrix[2][3] = 0.0f;
+}
+
+void Math::AngleMatrix(const Vector &angles, const Vector &position, matrix3x4_t& matrix_out)
+{
+    AngleMatrix(angles, matrix_out);
+    matrix::MatrixSetColumn(position, 3, matrix_out);
+}
+static void Math::AngleMatrix(const QAngle& angles, Vector& position, matrix3x4_t& matrix)
+{
+		Math::AngleMatrix(angles, matrix);
+		matrix::MatrixGetColumn(matrix, 3, position);
+}
+*/

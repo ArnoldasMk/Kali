@@ -14,6 +14,7 @@
 
 #include "../ATGUI/texture.h"
 #include "../Resources/tux.h"
+#include "antiaim.h"
 
 #include <climits>
 #include <deque>
@@ -454,6 +455,7 @@ static void DrawEntity( C_BaseEntity* entity, const char* string, ImColor color 
 	Vector2D nameSize = Draw::GetTextSize( string, esp_font );
 	Draw::AddText(( int ) ( x + ( w / 2 ) - ( nameSize.x / 2 ) ), y + h + 2, string, color );
 }
+
 static void DrawSkeleton( C_BasePlayer* player, C_BasePlayer* localplayer ) {
 	studiohdr_t* pStudioModel = modelInfo->GetStudioModel( player->GetModel() );
 	if ( !pStudioModel )
@@ -477,8 +479,10 @@ static void DrawSkeleton( C_BasePlayer* player, C_BasePlayer* localplayer ) {
 			continue;
 
 		Draw::AddLine( vBonePos1.x, vBonePos1.y, vBonePos2.x, vBonePos2.y, Entity::IsTeamMate(player, localplayer) ? Settings::ESP::Skeleton::allyColor.Color() : Settings::ESP::Skeleton::enemyColor.Color());
+	
 	}
 }
+
 static void DrawBulletTrace( C_BasePlayer* player ) {
 	Vector src3D, dst3D, forward;
 	Vector src, dst;
@@ -501,6 +505,7 @@ static void DrawBulletTrace( C_BasePlayer* player ) {
 	Draw::AddLine( src.x, src.y, dst.x, dst.y, ESP::GetESPPlayerColor( player, true ) );
 	Draw::AddRectFilled( ( int ) ( dst.x - 3 ), ( int ) ( dst.y - 3 ), 6, 6, ESP::GetESPPlayerColor( player, false ) );
 }
+
 static void DrawTracer( C_BasePlayer* player ) {
 	Vector src3D;
 	Vector src;
@@ -520,6 +525,7 @@ static void DrawTracer( C_BasePlayer* player ) {
 	bool bIsVisible = Entity::IsVisible( player, CONST_BONE_HEAD, 180.f, Settings::ESP::Filters::smokeCheck );
 	Draw::AddLine( ( int ) ( src.x ), ( int ) ( src.y ), x, y, ESP::GetESPPlayerColor( player, bIsVisible ) );
 }
+
 static void DrawAimbotSpot( ) {
 	C_BasePlayer* localplayer = ( C_BasePlayer* ) entityList->GetClientEntity( engine->GetLocalPlayer() );
 	if ( !localplayer || !localplayer->GetAlive() ){
@@ -547,6 +553,7 @@ static void DrawAimbotSpot( ) {
         Draw::AddLine( start2D.x, start2D.y, end2D.x, end2D.y, ImColor( 255, 25, 25, 255 ) );
     }
 }
+
 static void DrawBoneMap( C_BasePlayer* player ) {
 	static Vector bone2D;
 	static Vector bone3D;
@@ -575,6 +582,7 @@ static void DrawBoneMap( C_BasePlayer* player ) {
 	engine->GetPlayerInfo( player->GetIndex(), &entityInformation );
 	cvar->ConsoleDPrintf( XORSTR( "(%s)-ModelName: %s, numBones: %d\n" ), entityInformation.name, pStudioModel->name, pStudioModel->numbones );
 }
+
 static void DrawAutoWall(C_BasePlayer *player) {
 	const std::unordered_map<int, int> *modelType = BoneMaps::GetModelTypeBoneMap(player);
 	for( int i = 0; i < 31; i++ )
@@ -879,6 +887,7 @@ static void DrawPlayerText( C_BasePlayer* player, C_BasePlayer* localplayer, int
 static void DrawPlayer(C_BasePlayer* player)
 {
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+
 	if (!localplayer)
 		return;
 
@@ -916,6 +925,7 @@ static void DrawPlayer(C_BasePlayer* player)
 
 	if (Settings::ESP::Skeleton::enabled)
 		DrawSkeleton(player, localplayer);
+		
 
 	if (Settings::ESP::BulletTracers::enabled)
 		DrawBulletTrace(player);
@@ -1467,6 +1477,7 @@ bool ESP::PrePaintTraverse(VPANEL vgui_panel, bool force_repaint, bool allow_for
 
 	return true;
 }
+
 void ESP::Paint()
 {
 	if (!Settings::ESP::enabled && !inputSystem->IsButtonDown(Settings::ESP::key))

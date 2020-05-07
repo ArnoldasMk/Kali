@@ -735,12 +735,14 @@ namespace Settings
 		namespace LegitAntiAim 
 		{
 			inline bool enable = false;
+			inline ButtonCode_t InvertKey = ButtonCode_t::KEY_T;
+			inline bool inverted = false;
 		}
 
         namespace Yaw
         {
             inline bool enabled = false;
-            inline AntiAimType_Y type = AntiAimType_Y::NONE;
+            inline AntiAimType_Y typeReal = AntiAimType_Y::NONE;
             inline AntiAimType_Y typeFake = AntiAimType_Y::NONE;
         }
 
@@ -765,6 +767,7 @@ namespace Settings
 	namespace Resolver
 	{
 		inline bool resolveAll = false;
+		inline bool resolverNumbus = false;
 	}
 
 	namespace ESP
@@ -908,6 +911,7 @@ namespace Settings
             inline HealthColorVar enemyColor = ImColor(255, 0, 0, 255);
             inline HealthColorVar enemyVisibleColor = ImColor(255, 255, 0, 255);
             inline HealthColorVar localplayerColor = ImColor(0, 255, 255, 255);
+			inline HealthColorVar FakeColor = ImColor(124,145,25,255);
 			inline ChamsType type = ChamsType::CHAMS;
 
 			namespace Arms
@@ -1137,10 +1141,9 @@ namespace Settings
 		inline bool showOnlyWhenShooting = false;
 	}
 
-	namespace Airstuck
+	namespace RagdollGravity
 	{
 		inline bool enabled = false;
-		inline ButtonCode_t key = ButtonCode_t::KEY_F;
 	}
 
 	namespace Autoblock

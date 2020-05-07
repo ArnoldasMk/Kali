@@ -8,4 +8,6 @@ namespace ThirdPerson
 	//Hooks
 	void OverrideView(CViewSetup* pSetup);
 	void FrameStageNotify(ClientFrameStage_t stage);
+
+	inline bool SWITCH = false;
 }

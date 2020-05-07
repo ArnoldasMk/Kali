@@ -8,6 +8,7 @@
 
 namespace Ragebot {
 
+    inline bool coacking = false;
     extern std::vector<int64_t> friends;
     extern int targetAimbot;
     inline int TotalShoots, ShotHitted;

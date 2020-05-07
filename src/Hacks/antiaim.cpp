@@ -7,11 +7,14 @@
 #include "../Utils/entity.h"
 #include "../interfaces.h"
 #include "valvedscheck.h"
+#include "ragebot.h"
 
-QAngle AntiAim::realAngle;
-QAngle AntiAim::fakeAngle;
 
-float AntiAim::GetMaxDelta( CCSGOAnimState *animState ) {
+QAngle AntiAim::LastTickViewAngle;
+static bool bSend = true;
+
+float AntiAim::GetMaxDelta( CCSGOAnimState *animState ) 
+{
 
     float speedFraction = std::max(0.0f, std::min(animState->feetShuffleSpeed, 1.0f));
 
@@ -69,6 +72,7 @@ static bool GetBestHeadAngle(QAngle& angle)
 
     return closest_distance < Settings::AntiAim::HeadEdge::distance;
 }
+
 static bool HasViableEnemy()
 {
     C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
@@ -99,38 +103,67 @@ static bool HasViableEnemy()
 
     return false;
 }
+
+// Funtion for Rage Anti AIm
 static void DoAntiAimY(C_BasePlayer *const localplayer, QAngle& angle, bool bSend)
 {
-    AntiAimType_Y aa_type = bSend ? Settings::AntiAim::Yaw::typeFake : Settings::AntiAim::Yaw::type;
+    AntiAimType_Y Fake_aa_type = Settings::AntiAim::Yaw::typeFake;
+    AntiAimType_Y Real_aa_type = Settings::AntiAim::Yaw::typeReal;
 
     float maxDelta = AntiAim::GetMaxDelta(localplayer->GetAnimState());
     static bool bFlip = false;
     //float lby = *localplayer->GetLowerBodyYawTarget();
-    switch (aa_type)
-    {
-        case AntiAimType_Y::MAX_DELTA_LEFT:
-            angle.y = AntiAim::fakeAngle.y - maxDelta;
-            break;
-        case AntiAimType_Y::MAX_DELTA_RIGHT:
-            angle.y = AntiAim::fakeAngle.y + maxDelta;
-            break;
-        case AntiAimType_Y::MAX_DELTA_FLIPPER:
-            bFlip = !bFlip;
-            angle.y -= bFlip ? maxDelta : -maxDelta;
-            break;
-        case AntiAimType_Y::MAX_DELTA_LBY_AVOID:
-
-            break;
-        default:
-            break;
-    }
+    
     if( bSend ){
+        switch (Fake_aa_type)
+        {
+            case AntiAimType_Y::NONE:
+                AntiAim::fakeAngle.y = AntiAim::realAngle.y;
+                break;
+            case AntiAimType_Y::MAX_DELTA_LEFT:
+                angle.y = AntiAim::realAngle.y - (maxDelta);
+                break;
+            case AntiAimType_Y::MAX_DELTA_RIGHT:
+                angle.y = AntiAim::realAngle.y + (maxDelta);
+                break;
+            case AntiAimType_Y::MAX_DELTA_FLIPPER:
+                bFlip = !bFlip;
+                angle.y = bFlip ? AntiAim::realAngle.y - maxDelta : AntiAim::realAngle.y + maxDelta;
+                break;
+            case AntiAimType_Y::MAX_DELTA_LBY_AVOID:
+                break;
+            default:
+                break;
+        }
+
         AntiAim::fakeAngle.y = angle.y;
     } else {
+        switch (Real_aa_type)
+        {
+            case AntiAimType_Y::NONE:
+                AntiAim::realAngle = angle;
+                break;
+            case AntiAimType_Y::MAX_DELTA_LEFT:
+                angle.y -= 90.f;
+                break;
+            case AntiAimType_Y::MAX_DELTA_RIGHT:
+                angle.y += 90.f;
+                break;
+            case AntiAimType_Y::MAX_DELTA_FLIPPER:
+                bFlip = !bFlip;
+                angle.y = bFlip ? angle.y - maxDelta : angle.y + maxDelta;
+                break;
+            case AntiAimType_Y::MAX_DELTA_LBY_AVOID:
+                angle.y += 180.f;
+                break;
+            default:
+                break;
+        }
         AntiAim::realAngle.y = angle.y;
     }
 }
 
+// Function to set the pitch angle
 static void DoAntiAimX(QAngle& angle, bool bFlip, bool& clamp)
 {
     static float pDance = 0.0f;
@@ -139,49 +172,68 @@ static void DoAntiAimX(QAngle& angle, bool bFlip, bool& clamp)
     switch (aa_type)
     {
         case AntiAimType_X::STATIC_UP:
-            angle.x = -89.0f;
+            AntiAim::fakeAngle.x = AntiAim::realAngle.x = angle.x = -89.0f;
             break;
         case AntiAimType_X::STATIC_DOWN:
-            angle.x = 89.0f;
+            AntiAim::fakeAngle.x = AntiAim::realAngle.x = angle.x = 89.0f;
             break;
         case AntiAimType_X::DANCE:
             pDance += 45.0f;
             if (pDance > 100)
                 pDance = 0.0f;
             else if (pDance > 75.f)
-                angle.x = -89.f;
+                AntiAim::fakeAngle.x = AntiAim::realAngle.x = angle.x = -89.f;
             else if (pDance < 75.f)
-                angle.x = 89.f;
+                AntiAim::fakeAngle.x = AntiAim::realAngle.x = angle.x = 89.f;
             break;
         case AntiAimType_X::FRONT:
-            angle.x = 0.0f;
+            AntiAim::fakeAngle.x = AntiAim::realAngle.x = angle.x = 0.0f;
             break;
         case AntiAimType_X::STATIC_UP_FAKE:
-            angle.x = bFlip ? 89.0f : -89.0f;
+            AntiAim::fakeAngle.x = AntiAim::realAngle.x = angle.x = bFlip ? 89.0f : -89.0f;
             break;
         case AntiAimType_X::STATIC_DOWN_FAKE:
-            angle.x = bFlip ? -89.0f : 89.0f;
+            AntiAim::fakeAngle.x = AntiAim::realAngle.x = angle.x = bFlip ? -89.0f : 89.0f;
             break;
         case AntiAimType_X::LISP_DOWN:
             clamp = false;
-            angle.x = 1800089.0f;
+            AntiAim::fakeAngle.x = AntiAim::realAngle.x = angle.x = 1800089.0f;
             break;
         case AntiAimType_X::ANGEL_DOWN:
             clamp = false;
-            angle.x = 36000088.0f;
+            AntiAim::fakeAngle.x = AntiAim::realAngle.x = angle.x = 36000088.0f;
             break;
         case AntiAimType_X::ANGEL_UP:
             clamp = false;
-            angle.x = 35999912.0f;
+            AntiAim::fakeAngle.x = AntiAim::realAngle.x = angle.x = 35999912.0f;
             break;
         default:
             break;
     }
 }
 
+// Function For Legit AntiAim
+static void DoLegitAntiAim(C_BasePlayer *const localplayer, QAngle& angle, bool &bSend)
+{
+    if (inputSystem->IsButtonDown(Settings::AntiAim::LegitAntiAim::InvertKey))
+        Settings::AntiAim::LegitAntiAim::inverted = !Settings::AntiAim::LegitAntiAim::inverted;
+        
+    float maxDelta = AntiAim::GetMaxDelta(localplayer->GetAnimState());
+
+    /*
+    * Actual area where we are settings the fake and real angle 
+    * area is the variable which is responcible for changing angle so area is the vital variable
+    * AntiAim::realangle and AntiAim::fakeangle is are set to determine the angle in thirdperson mode
+    */
+    if(!Settings::AntiAim::LegitAntiAim::inverted)
+        angle.y = bSend ? AntiAim::fakeAngle.y = angle.y + (maxDelta / 2.f) : AntiAim::realAngle.y = angle.y - (maxDelta / 2.f);        
+    else 
+        angle.y = bSend ? AntiAim::fakeAngle.y = angle.y - (maxDelta / 2.f) : AntiAim::realAngle.y = angle.y + (maxDelta / 2.f);
+}
+
 void AntiAim::CreateMove(CUserCmd* cmd)
 {
-    if (!Settings::AntiAim::Yaw::enabled && !Settings::AntiAim::Pitch::enabled && !Settings::AntiAim::LBYBreaker::enabled)
+    if (!Settings::AntiAim::Yaw::enabled && !Settings::AntiAim::Pitch::enabled && !Settings::AntiAim::LBYBreaker::enabled && !Settings::AntiAim::LegitAntiAim::enable)
         return;
 
     if (Settings::Legitbot::AimStep::enabled && Legitbot::aimStepInProgress)
@@ -191,10 +243,9 @@ void AntiAim::CreateMove(CUserCmd* cmd)
     float oldForward = cmd->forwardmove;
     float oldSideMove = cmd->sidemove;
     
-    AntiAim::realAngle = AntiAim::fakeAngle = CreateMove::lastTickViewAngles;
-
     QAngle angle = cmd->viewangles;
 
+    AntiAim::fakeAngle = CreateMove::lastTickViewAngles;
     C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
     if (!localplayer || !localplayer->GetAlive())
         return;
@@ -208,26 +259,41 @@ void AntiAim::CreateMove(CUserCmd* cmd)
         C_BaseCSGrenade* csGrenade = (C_BaseCSGrenade*) activeWeapon;
 
         if (csGrenade->GetThrowTime() > 0.f)
+        {
+            AntiAim::realAngle = AntiAim::fakeAngle = angle;
             return;
+        }
     }
 
-    if (cmd->buttons & IN_USE || cmd->buttons & IN_ATTACK || (cmd->buttons & IN_ATTACK2 && *activeWeapon->GetItemDefinitionIndex() == ItemDefinitionIndex::WEAPON_REVOLVER))
+    if (cmd->buttons & IN_USE || cmd->buttons & IN_ATTACK || (cmd->buttons & IN_ATTACK2 && *activeWeapon->GetItemDefinitionIndex() == ItemDefinitionIndex::WEAPON_REVOLVER) && !Ragebot::coacking == true)
+    {
+        AntiAim::realAngle = AntiAim::fakeAngle = angle;
         return;
+    }
 
     if (localplayer->GetMoveType() == MOVETYPE_LADDER || localplayer->GetMoveType() == MOVETYPE_NOCLIP)
+    {
+        AntiAim::realAngle = AntiAim::fakeAngle = angle;
         return;
+    }    
 
     // Knife
     if (Settings::AntiAim::AutoDisable::knifeHeld && localplayer->GetAlive() && activeWeapon->GetCSWpnData()->GetWeaponType() == CSWeaponType::WEAPONTYPE_KNIFE)
+    {
+        AntiAim::realAngle = AntiAim::fakeAngle = angle;
         return;
+    }
 
     if (Settings::AntiAim::AutoDisable::noEnemy && localplayer->GetAlive() && !HasViableEnemy())
+    {
+        AntiAim::realAngle = AntiAim::fakeAngle = angle;
         return;
+    }
 
     QAngle edge_angle = angle;
     bool edging_head = Settings::AntiAim::HeadEdge::enabled && GetBestHeadAngle(edge_angle);
 
-    static bool bSend = true;
+    
     bSend = !bSend;
 
     bool should_clamp = true;
@@ -257,14 +323,19 @@ void AntiAim::CreateMove(CUserCmd* cmd)
         }
     }
 
-    if (Settings::AntiAim::Yaw::enabled && !needToFlick)
+    else if (Settings::AntiAim::Yaw::enabled && !needToFlick) // responsible for reage anti aim or varity of anti aims .. 
     {
         DoAntiAimY(localplayer, angle, bSend);
 
         CreateMove::sendPacket = bSend;
         if (Settings::AntiAim::HeadEdge::enabled && edging_head && !bSend)
-            angle.y = edge_angle.y;
+            AntiAim::realAngle.y = angle.y = edge_angle.y;
     }
+    /*else if (Settings::AntiAim::LegitAntiAim::enable && !needToFlick) // Responsible for legit anti aim activated when the legit anti aim is enabled
+    {
+        DoLegitAntiAim(localplayer, angle, bSend);
+        CreateMove::sendPacket = bSend;
+    }*/
 
     if (!ValveDSCheck::forceUT && (*csGameRules) && (*csGameRules)->IsValveDS())
     {

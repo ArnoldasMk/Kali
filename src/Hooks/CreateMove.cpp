@@ -1,4 +1,5 @@
 #include "hooks.h"
+#include <future>
 
 #include "../interfaces.h"
 #include "../settings.h"
@@ -19,11 +20,11 @@
 #include "../Hacks/triggerbot.h"
 #include "../Hacks/autoknife.h"
 #include "../Hacks/antiaim.h"
-#include "../Hacks/airstuck.h"
 #include "../Hacks/fakelag.h"
 #include "../Hacks/esp.h"
 #include "../Hacks/tracereffect.h"
 #include "../Hacks/nofall.h"
+#include "../Hacks/ragdollgravity.h"
 
 bool CreateMove::sendPacket = true;
 QAngle CreateMove::lastTickViewAngles = QAngle(0, 0, 0);
@@ -56,15 +57,20 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
 		NoFall::PrePredictionCreateMove(cmd);
 
 		PredictionSystem::StartPrediction(cmd);
-			Legitbot::CreateMove(cmd);
-			Ragebot::CreateMove(cmd);
-			Triggerbot::CreateMove(cmd);
+			if(Settings::Legitbot::enabled)
+			{
+				Legitbot::CreateMove(cmd);
+			}
+			else if( Settings::Ragebot::enabled)
+			{
+				Ragebot::CreateMove(cmd);
+			}
 			AutoKnife::CreateMove(cmd);
             AntiAim::CreateMove(cmd);
-			Airstuck::CreateMove(cmd);
 			FakeLag::CreateMove(cmd);
 			ESP::CreateMove(cmd);
 			TracerEffect::CreateMove(cmd);
+			RagdollGravity::CreateMove(cvar);
 		PredictionSystem::EndPrediction();
 
 		EdgeJump::PostPredictionCreateMove(cmd);

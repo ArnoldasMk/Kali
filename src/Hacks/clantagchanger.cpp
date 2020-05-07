@@ -101,7 +101,7 @@ void ClanTagChanger::BeginFrame(float frameTime)
 	{
 		std::string ctWithEscapesProcessed = std::string(Settings::ClanTagChanger::value);
 		Util::StdReplaceStr(ctWithEscapesProcessed, "\\n", "\n"); // compute time impact? also, referential so i assume RAII builtin cleans it up...
-		SendClanTag(ctWithEscapesProcessed.c_str(), "");
+		SendClanTag(ctWithEscapesProcessed.c_str(), ctWithEscapesProcessed.c_str());
 	}
 	else
 	{
@@ -113,6 +113,6 @@ void ClanTagChanger::BeginFrame(float frameTime)
 			timeStamp = currentTime_ms;
 			ClanTagChanger::animation->NextFrame();
 		}
-		SendClanTag(Util::WstringToString(ClanTagChanger::animation->GetCurrentFrame().text).c_str(), "");
+		SendClanTag(Util::WstringToString(ClanTagChanger::animation->GetCurrentFrame().text).c_str(), Util::WstringToString(ClanTagChanger::animation->GetCurrentFrame().text).c_str());
 	}
 }
