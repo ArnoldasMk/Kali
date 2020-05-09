@@ -3,9 +3,9 @@
 </p>
 ===================
 
-# This Is Rolling Chanel For MissedIT
-* This repo Is Basically Going to Get Frequent Updates Thogh It can contain some bugs
-* To get Stable Updates and Bug Fixes and Improvements then Go to </a href = https://github.com/HackerPolice/MissedIT-Stable >MissedIT-Stable</a>. 
+# This Is Stable Chanel For MissedIT
+* This repo Is Basically Going to Get Tested Updates Thogh It will be slow Regarding bug fixes and updated codes
+* To get Letest Updates and Bug Fixes and Improvements then Go to </a href = "https://github.com/HackerPolice/MissedIT-Rolling-Release"> MIssedIT-Rolling-Release</a>. 
 
 <b>To Know More Know About Releases Click In</b> <a href = "https://github.com/HackerPolice/MissedIT-Stable/releases">Releases</a>
 
