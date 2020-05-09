@@ -5,9 +5,9 @@
 
 # This Is Stable Chanel For MissedIT
 * This repo Is Basically Going to Get Tested Updates Thogh It will be slow Regarding bug fixes and updated codes
-* To get Letest Updates and Bug Fixes and Improvements then Go to </a href = "https://github.com/HackerPolice/MissedIT-Rolling-Release"> MIssedIT-Rolling-Release</a>. 
+* To get Letest Updates and Bug Fixes and Improvements then Go to <a href="https://github.com/HackerPolice/MissedIT-Rolling-Release"> MIssedIT-Rolling-Release </a> 
 
-<b>To Know More Know About Releases Click In</b> <a href = "https://github.com/HackerPolice/MissedIT-Stable/releases">Releases</a>
+<b>To Know More Know About Releases Click In</b> <a href = "https://github.com/HackerPolice/MissedIT-Stable/releases"> Releases </a>
 
 # It looks like we are starting to get detected. Use public forks at your own Risk! 
 
