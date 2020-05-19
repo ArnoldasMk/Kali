@@ -11,11 +11,14 @@
 #pragma GCC diagnostic ignored "-Wformat-security"
 
 static ItemDefinitionIndex currentWeapon = ItemDefinitionIndex::INVALID;
+static DamagePrediction damagePrediction = DamagePrediction::safety;
+static EnemySelectionType enemySelectionType = EnemySelectionType::CLosestToCrosshair;
+
 //static bool enabled = false;
 static bool silent = false;
 static bool friendly = false;
 static bool closestBone = false;
-static bool desiredBones[] = {true, false, true, true, true, true, true, // center mass
+static bool desiredBones[] = {true, true, true, true, false, true, true, // center mass
 							  true, true, true, true, true, true, true, // left arm
 							  true, true, true, true, true, true, true, // right arm
 							  true, true, true, true, true, // left leg
@@ -32,8 +35,9 @@ static float HitChange = 20.f;
 static float autoWallValue = 10.f;
 static float visibleDamage = 50.f;
 static bool autoSlow = false;
-static bool predEnabled = false;
+static bool doubleFire = false;
 static bool scopeControlEnabled = false;
+
 
 void UI::ReloadRageWeaponSettings()
 {
@@ -55,8 +59,10 @@ void UI::ReloadRageWeaponSettings()
 	autoWallValue = Settings::Ragebot::weapons.at(index).autoWallValue;
 	visibleDamage = Settings::Ragebot::weapons.at(index).visibleDamage;
 	autoSlow = Settings::Ragebot::weapons.at(index).autoSlow;
-	predEnabled = Settings::Ragebot::weapons.at(index).predEnabled;
+	doubleFire = Settings::Ragebot::weapons.at(index).DoubleFire;
 	scopeControlEnabled = Settings::Ragebot::weapons.at(index).scopeControlEnabled;
+	damagePrediction = Settings::Ragebot::weapons.at(index).DmagePredictionType;
+	enemySelectionType = Settings::Ragebot::weapons.at(index).enemySelectionType;
 
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 		desiredBones[bone] = Settings::Ragebot::weapons.at(index).desiredBones[bone];
@@ -78,14 +84,16 @@ void UI::UpdateRageWeaponSettings()
 			.autoShootEnabled = autoShootEnabled,
 			.autoScopeEnabled = autoScopeEnabled,
 			.autoSlow = autoSlow,
-			.predEnabled = predEnabled,
 			.scopeControlEnabled = scopeControlEnabled,
 			.HitChanceOverwrriteEnable = HitChanceOverwrrideEnable,
+			.DoubleFire = doubleFire,
 			.RagebotautoAimFov = RagebotautoAimValue,
 			.autoWallValue = autoWallValue,
 			.visibleDamage = visibleDamage,
-			.HitChance = HitChange,	
+			.HitChance = HitChange,
 			.HitchanceOverwrriteValue = HitchanceOverwriteValue,
+			.DmagePredictionType = damagePrediction,
+			.enemySelectionType = enemySelectionType,	
 	};
 
 
@@ -101,10 +109,6 @@ void UI::UpdateRageWeaponSettings()
 		Settings::Ragebot::weapons.erase(currentWeapon);
 		UI::ReloadRageWeaponSettings();
 	}
-	// else 
-	// {
-	// 	Ragebot::UpdateValues();
-	// }
 }
 
 void Ragebot::RenderTab()
@@ -112,7 +116,11 @@ void Ragebot::RenderTab()
 	static char filterWeapons[32];
 
 	
+	const char *DamagePredictionType[] = {"Safety","Damage",};
+	const char *EnemySelectionType[] = {"Best Damage(Lagacy Old Method)", "Closest To Crosshair( Faster But In alfa)"};
 
+
+	
 	ImGui::Columns(3, nullptr, false);
 	{
 		ImGui::SetColumnOffset(1, 200);
@@ -264,12 +272,14 @@ void Ragebot::RenderTab()
 			ImGui::Columns(1);
 			{
 				ImGui::PushItemWidth(-1);
-					if (ImGui::SliderFloat(XORSTR("##FOV"), &RagebotautoAimValue, 0.f, 180.f))
+					if (ImGui::SliderFloat(XORSTR("##FOV"), &RagebotautoAimValue, 0.f, 180.f), XORSTR("%.0f"))
 					{
 						UI::UpdateRageWeaponSettings();
 					}		
 				ImGui::PopItemWidth();		
 			}
+
+			
 			ImGui::Columns(1);
 			ImGui::Separator();
 			ImGui::Text(XORSTR("Autoshoot"));
@@ -291,7 +301,38 @@ void Ragebot::RenderTab()
 			if( ImGui::SliderFloat(XORSTR("##HCOVERWRITE"), &HitchanceOverwriteValue, 1.f, 5.f) )
 				UI::UpdateRageWeaponSettings();
 			ImGui::PopItemWidth();
+
+			// Damage Prediction type
+			ImGui::Separator();
+			ImGui::Text(XORSTR("Damage Prediction Type"));
+			ImGui::Separator();
+
+			ImGui::Columns(1);
+			{
+				ImGui::PushItemWidth(-1);
+				if(ImGui::Combo(XORSTR("##PredictionSystem"), (int*)&damagePrediction, DamagePredictionType, IM_ARRAYSIZE(DamagePredictionType) ) )
+					UI::UpdateRageWeaponSettings();
+				ImGui::PopItemWidth();
+			}			
+			// END
+
+			// Enemy Selection type
+			ImGui::Separator();
+			ImGui::Text(XORSTR("Enemy Selection Type"));
+			ImGui::Separator();
+
+			ImGui::Columns(1);
+			{
+				ImGui::PushItemWidth(-1);
+				if(ImGui::Combo(XORSTR("##SelectionSystem"), (int*)&enemySelectionType, EnemySelectionType, IM_ARRAYSIZE(EnemySelectionType) ) )
+					UI::UpdateRageWeaponSettings();
+				ImGui::PopItemWidth();
+			}			
+			// END
+			
 			ImGui::EndChild();
+
+			
 		}
 	}
 	ImGui::NextColumn();
@@ -326,7 +367,7 @@ void Ragebot::RenderTab()
 
 				if (ImGui::Checkbox(XORSTR("Silent Aim"), &silent))
 					UI::UpdateRageWeaponSettings();
-				if (ImGui::Checkbox(XORSTR("Prediction"), &predEnabled))
+				if (ImGui::Checkbox(XORSTR("Double Fire"), &doubleFire))
 					UI::UpdateRageWeaponSettings();
 			}
 			ImGui::NextColumn();
@@ -368,9 +409,9 @@ void Ragebot::RenderTab()
 			ImGui::Columns(1);
 			{
 				ImGui::PushItemWidth(-1);
-				if (ImGui::SliderFloat(XORSTR("##VISIBLEDMG"), &visibleDamage, 0, 150, XORSTR("Min Visible Damage: %f")))
+				if (ImGui::SliderFloat(XORSTR("##VISIBLEDMG"), &visibleDamage, 0, 150, XORSTR("Min Visible Damage: %.0f")))
 					UI::UpdateRageWeaponSettings();
-				if (ImGui::SliderFloat(XORSTR("##AUTOWALLDMG"), &autoWallValue, 0, 150, XORSTR("Min Behind Wall Damage: %f")))
+				if (ImGui::SliderFloat(XORSTR("##AUTOWALLDMG"), &autoWallValue, 0, 150, XORSTR("Min Behind Wall Damage: %.0f")))
 					UI::UpdateRageWeaponSettings();
 				ImGui::PopItemWidth();
 			}
@@ -384,6 +425,7 @@ void Ragebot::RenderTab()
 			ImGui::Checkbox(XORSTR("Resolver(Numbus Not Testted)"), &Settings::Resolver::resolverNumbus);
 
 			// End of resolver tab
+
 			ImGui::Columns(1);
 			ImGui::Separator();
 			if (currentWeapon > ItemDefinitionIndex::INVALID && Settings::Ragebot::weapons.find(currentWeapon) != Settings::Ragebot::weapons.end())

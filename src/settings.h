@@ -13,6 +13,17 @@
 #include "SDK/definitions.h"
 #include "SDK/Materialsystem_config.h"
 
+enum class DamagePrediction : int {
+	safety = 0,
+	damage,
+
+};
+
+enum class EnemySelectionType : int {
+	BestDamage = 0,
+	CLosestToCrosshair,
+};
+
 enum class DrawingBackend : int {
     SURFACE = 0,
     IMGUI,
@@ -255,7 +266,6 @@ struct AimbotWeapon_t
 			this->rcsAmountX == another.rcsAmountX &&
 			this->rcsAmountY == another.rcsAmountY &&
 			this->autoPistolEnabled == another.autoPistolEnabled &&
-			//this->autoShootEnabled == another.autoShootEnabled &&
 			this->autoScopeEnabled == another.autoScopeEnabled &&
 			this->noShootEnabled == another.noShootEnabled &&
 			this->ignoreJumpEnabled == another.ignoreJumpEnabled &&
@@ -285,15 +295,18 @@ struct RagebotWeapon_t
 		 autoShootEnabled,
 		 autoScopeEnabled,
 		 autoSlow,
-		 predEnabled,
 		 scopeControlEnabled,
-		 HitChanceOverwrriteEnable;
+		 HitChanceOverwrriteEnable,
+		 DoubleFire;
 	float RagebotautoAimFov = 180.f,
 		  autoWallValue = 10.0f,
 		  visibleDamage = 50.f,
 		  HitChance = 20.f,
 		  HitchanceOverwrriteValue = 1.f;
+	DamagePrediction DmagePredictionType = DamagePrediction::safety;
+	EnemySelectionType enemySelectionType = EnemySelectionType::CLosestToCrosshair;
 	bool desiredBones[31];
+	
 
 	bool operator == (const RagebotWeapon_t& Ragebotanother) const
 	{
@@ -314,13 +327,18 @@ struct RagebotWeapon_t
 			this->autoWallValue == Ragebotanother.autoWallValue &&
 			this->visibleDamage == Ragebotanother.visibleDamage &&
 			this->autoSlow == Ragebotanother.autoSlow &&
-			this->predEnabled == Ragebotanother.predEnabled &&
 			this->scopeControlEnabled == Ragebotanother.scopeControlEnabled && 
 			this->HitChanceOverwrriteEnable == Ragebotanother.HitChanceOverwrriteEnable &&
 			this->HitchanceOverwrriteValue == Ragebotanother.HitchanceOverwrriteValue &&
-			this->HitChance == Ragebotanother.HitChance;
+			this->HitChance == Ragebotanother.HitChance && 
+			this->DmagePredictionType == Ragebotanother.DmagePredictionType && 
+			this->enemySelectionType == Ragebotanother.enemySelectionType && 
+			this->DoubleFire == Ragebotanother.DoubleFire;
 	}
+
 } const ragedefault{};
+
+
 
 class ColorVar
 {
@@ -371,10 +389,10 @@ namespace Settings
 {
 	namespace UI
 	{
-		inline ColorVar mainColor = ImColor(32, 32, 23, 255 );
-		inline ColorVar bodyColor = ImColor( 5, 3, 12, 255 );
-		inline ColorVar fontColor = ImColor( 192, 218, 217, 255 );
-		inline ColorVar accentColor = ImColor( 82, 255, 24, 106 );
+		inline ColorVar mainColor = ImColor(17, 73, 40, 255 );
+		inline ColorVar bodyColor = ImColor( 30, 24, 38, 232 );
+		inline ColorVar fontColor = ImColor( 153, 199, 70, 187 );
+		inline ColorVar accentColor = ImColor( 21, 127, 176, 106 );
 		inline bool imGuiAliasedLines = false;
 		inline bool imGuiAliasedFill = false;
 
@@ -602,6 +620,10 @@ namespace Settings
 		inline bool enabled = false;
         inline bool silent = false;
         inline bool friendly = false;
+		inline bool DoubleFire = false;
+
+		inline DamagePrediction damagePrediction = DamagePrediction::safety;
+		inline EnemySelectionType enemySelectionType = EnemySelectionType::CLosestToCrosshair;
 
 		namespace AutoAim
 		{
@@ -632,32 +654,7 @@ namespace Settings
 			inline bool autoscope = false;
 		}
 
-		namespace AutoCrouch
-		{
-			inline bool enabled = false;
-		}
-
 		namespace AutoSlow
-		{
-			inline bool enabled = false;
-		}
-
-		namespace IgnoreJump
-		{
-			inline bool enabled = false;
-		}
-
-		namespace IgnoreEnemyJump
-		{
-			inline bool enabled = false;
-		}
-
-		namespace SmokeCheck
-		{
-			inline bool enabled = false;
-		}
-
-		namespace FlashCheck
 		{
 			inline bool enabled = false;
 		}
@@ -672,11 +669,6 @@ namespace Settings
 		{
 			inline bool enable = false;
 			inline float value = 1.0f;
-		}
-
-		namespace Prediction
-		{
-			inline bool enabled = false;
 		}
 
 		namespace ScopeControl
@@ -738,12 +730,19 @@ namespace Settings
 			inline ButtonCode_t InvertKey = ButtonCode_t::KEY_T;
 			inline bool inverted = false;
 		}
-
+		
+		namespace ManualAntiAim
+		{
+			inline bool Enable = false;
+			inline ButtonCode_t backButton = ButtonCode_t::KEY_X;
+			inline ButtonCode_t RightButton = ButtonCode_t::KEY_C;
+			inline ButtonCode_t LeftButton = ButtonCode_t::KEY_Z;
+		}
         namespace Yaw
         {
             inline bool enabled = false;
             inline AntiAimType_Y typeReal = AntiAimType_Y::NONE;
-            inline AntiAimType_Y typeFake = AntiAimType_Y::NONE;
+            inline AntiAimType_Y typeFake = AntiAimType_Y::MAX_DELTA_LBY_AVOID;
         }
 
         namespace Pitch
@@ -1328,7 +1327,7 @@ namespace Settings
 	{
 		inline bool enabled = false;
 		inline bool toggled = true;
-		inline ButtonCode_t toggleThirdPerson = ButtonCode_t::KEY_CAPSLOCK;
+		inline ButtonCode_t toggleThirdPerson = ButtonCode_t::KEY_LALT;
 		inline float distance = 100.0f;
         inline ShowedAngle type = ShowedAngle::REAL;
 	}

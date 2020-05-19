@@ -26,5 +26,8 @@ namespace Math {
 	// static void AngleMatrix(const QAngle& angles, Vector& position, matrix3x4_t& matrix);
 	// static void AngleMatrix(const QAngle& angles, matrix3x4_t& matrix);
 	void AngleMatrix(const Vector angles, matrix3x4_t& matrix);
+	float CalMaxDistance(const Vector &src, const Vector &dest);
+	float CalMaxDistance(const QAngle &src, const Vector &dest);
+	float SquareRoot(const float &x);
 	// static void AngleMatrix(const Vector &angles, const Vector &position, matrix3x4_t& matrix_out);
 }

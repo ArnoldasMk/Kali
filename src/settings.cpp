@@ -235,8 +235,10 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	RageweaponSetting[XORSTR("AutoWall")][XORSTR("Value")] = i.second.autoWallValue;
     RageweaponSetting[XORSTR("visibleDamage")] = i.second.visibleDamage;
 	RageweaponSetting[XORSTR("AutoSlow")][XORSTR("Enabled")] = i.second.autoSlow;
-	RageweaponSetting[XORSTR("Prediction")][XORSTR("Enabled")] = i.second.predEnabled;
+	RageweaponSetting[XORSTR("DoubleFire")][XORSTR("Enabled")] = i.second.DoubleFire;
 	RageweaponSetting[XORSTR("ScopeControl")][XORSTR("Enabled")] = i.second.scopeControlEnabled;
+    RageweaponSetting[XORSTR("DamagePrediction")][XORSTR("Type")] = (int)i.second.DmagePredictionType;
+    RageweaponSetting[XORSTR("EnemySelectionType")][XORSTR("Type")] = (int)i.second.enemySelectionType;
 
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 	    RageweaponSetting[XORSTR("DesiredBones")][XORSTR("Bones")][bone] = i.second.desiredBones[bone];
@@ -251,6 +253,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("no_enemy")] = Settings::AntiAim::AutoDisable::noEnemy;
     settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("knife_held")] = Settings::AntiAim::AutoDisable::knifeHeld;
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("enabled")] = Settings::AntiAim::RageAntiAim::enable;
+    settings[XORSTR("AntiAim")][XORSTR("ManualAntiAim")][XORSTR("Enable")] = Settings::AntiAim::ManualAntiAim::Enable;
     
     /*
     * legit anti aim settings 
@@ -624,7 +627,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("ThirdPerson")][XORSTR("toggled")] = Settings::ThirdPerson::toggled;
     settings[XORSTR("ThirdPerson")][XORSTR("distance")] = Settings::ThirdPerson::distance;
     settings[XORSTR("ThirdPerson")][XORSTR("togglekey")] = Util::GetButtonName(Settings::ThirdPerson::toggleThirdPerson);
-    settings[XORSTR("ThirdPerson")][XORSTR("type")] = (int)Settings::ThirdPerson::type;
 
     settings[XORSTR("JumpThrow")][XORSTR("enabled")] = Settings::JumpThrow::enabled;
     settings[XORSTR("JumpThrow")][XORSTR("key")] = Util::GetButtonName(Settings::JumpThrow::key);
@@ -686,69 +688,69 @@ void Settings::LoadConfig(std::string path)
 
     for (Json::ValueIterator itr = settings[XORSTR("Legitbot")][XORSTR("weapons")].begin(); itr != settings[XORSTR("Legitbot")][XORSTR("weapons")].end(); itr++)
     {
-	std::string weaponDataKey = itr.key().asString();
-	auto weaponSetting = settings[XORSTR("Legitbot")][XORSTR("weapons")][weaponDataKey];
+	    std::string weaponDataKey = itr.key().asString();
+	    auto weaponSetting = settings[XORSTR("Legitbot")][XORSTR("weapons")][weaponDataKey];
 
-	// XXX Using exception handling to deal with this is stupid, but I don't care to find a better solution
-	// XXX We can't use GetOrdinal() since the key type is a string...
-	ItemDefinitionIndex weaponID;
-	try
-	{
-	    weaponID = (ItemDefinitionIndex)std::stoi(weaponDataKey);
-	}
-	catch (std::invalid_argument&) // Not a number
-	{
-	    weaponID = Util::Items::GetItemIndex(weaponDataKey);
-	}
+	    // XXX Using exception handling to deal with this is stupid, but I don't care to find a better solution
+	    // XXX We can't use GetOrdinal() since the key type is a string...
+	    ItemDefinitionIndex weaponID;
+	    try
+	    {
+	        weaponID = (ItemDefinitionIndex)std::stoi(weaponDataKey);
+	    }
+	    catch (std::invalid_argument&) // Not a number
+	    {
+	        weaponID = Util::Items::GetItemIndex(weaponDataKey);
+	    }
 
-	if (Settings::Legitbot::weapons.find(weaponID) == Settings::Legitbot::weapons.end())
-	    Settings::Legitbot::weapons[weaponID] = AimbotWeapon_t();
+	    if (Settings::Legitbot::weapons.find(weaponID) == Settings::Legitbot::weapons.end())
+	        Settings::Legitbot::weapons[weaponID] = AimbotWeapon_t();
 
-	AimbotWeapon_t weapon = {
-	    .silent = weaponSetting[XORSTR("Silent")].asBool(),
-	    .friendly = weaponSetting[XORSTR("Friendly")].asBool(),
-	    .closestBone = weaponSetting[XORSTR("ClosestBone")].asBool(),
-	    .engageLock = weaponSetting[XORSTR("engageLock")].asBool(),
-	    .engageLockTR = weaponSetting[XORSTR("engageLockTR")].asBool(),
-	    .aimkeyOnly = weaponSetting[XORSTR("AimKeyOnly")].asBool(),
-	    .smoothEnabled = weaponSetting[XORSTR("Smooth")][XORSTR("Enabled")].asBool(),
-	    .smoothSaltEnabled = weaponSetting[XORSTR("Smooth")][XORSTR("Salting")][XORSTR("Enabled")].asBool(),
-	    .errorMarginEnabled = weaponSetting[XORSTR("ErrorMargin")][XORSTR("Enabled")].asBool(),
-	    .autoAimEnabled = weaponSetting[XORSTR("AutoAim")][XORSTR("Enabled")].asBool(),
-	    .shootassist = weaponSetting[XORSTR("ShootAssist")][XORSTR("Enable")].asBool(),
-	    .aimStepEnabled = weaponSetting[XORSTR("AimStep")][XORSTR("Enabled")].asBool(),
-	    .rcsEnabled = weaponSetting[XORSTR("RCS")][XORSTR("Enabled")].asBool(),
-	    .rcsAlwaysOn = weaponSetting[XORSTR("RCS")][XORSTR("AlwaysOn")].asBool(),
-	    .hitchanceEnaled = weaponSetting[XORSTR("HitChance")][XORSTR("Enabled")].asBool(),
-	    .autoPistolEnabled = weaponSetting[XORSTR("AutoPistol")][XORSTR("Enabled")].asBool(),
-	    .autoScopeEnabled = weaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")].asBool(),
-	    .noShootEnabled = weaponSetting[XORSTR("NoShoot")][XORSTR("Enabled")].asBool(),
-	    .ignoreJumpEnabled = weaponSetting[XORSTR("IgnoreJump")][XORSTR("Enabled")].asBool(),
-	    .ignoreEnemyJumpEnabled = weaponSetting[XORSTR("IgnoreEnemyJump")][XORSTR("Enabled")].asBool(),
-	    .smokeCheck = weaponSetting[XORSTR("SmokeCheck")][XORSTR("Enabled")].asBool(),
-	    .flashCheck = weaponSetting[XORSTR("FlashCheck")][XORSTR("Enabled")].asBool(),
-	    .autoWallEnabled = weaponSetting[XORSTR("AutoWall")][XORSTR("Enabled")].asBool(),
-	    .autoAimRealDistance = weaponSetting[XORSTR("AutoAim")][XORSTR("RealDistance")].asBool(),
-	    .autoSlow = weaponSetting[XORSTR("AutoSlow")][XORSTR("enabled")].asBool(),
-	    .predEnabled = weaponSetting[XORSTR("Prediction")][XORSTR("enabled")].asBool(),
-	    .scopeControlEnabled = weaponSetting[XORSTR("ScopeControl")][XORSTR("Enabled")].asBool(),
+	    AimbotWeapon_t weapon = {
+	        .silent = weaponSetting[XORSTR("Silent")].asBool(),
+	        .friendly = weaponSetting[XORSTR("Friendly")].asBool(),
+	        .closestBone = weaponSetting[XORSTR("ClosestBone")].asBool(),
+	        .engageLock = weaponSetting[XORSTR("engageLock")].asBool(),
+	        .engageLockTR = weaponSetting[XORSTR("engageLockTR")].asBool(),
+	        .aimkeyOnly = weaponSetting[XORSTR("AimKeyOnly")].asBool(),
+	        .smoothEnabled = weaponSetting[XORSTR("Smooth")][XORSTR("Enabled")].asBool(),
+	        .smoothSaltEnabled = weaponSetting[XORSTR("Smooth")][XORSTR("Salting")][XORSTR("Enabled")].asBool(),
+	        .errorMarginEnabled = weaponSetting[XORSTR("ErrorMargin")][XORSTR("Enabled")].asBool(),
+	        .autoAimEnabled = weaponSetting[XORSTR("AutoAim")][XORSTR("Enabled")].asBool(),
+	        .shootassist = weaponSetting[XORSTR("ShootAssist")][XORSTR("Enable")].asBool(),
+	        .aimStepEnabled = weaponSetting[XORSTR("AimStep")][XORSTR("Enabled")].asBool(),
+	        .rcsEnabled = weaponSetting[XORSTR("RCS")][XORSTR("Enabled")].asBool(),
+	        .rcsAlwaysOn = weaponSetting[XORSTR("RCS")][XORSTR("AlwaysOn")].asBool(),
+	        .hitchanceEnaled = weaponSetting[XORSTR("HitChance")][XORSTR("Enabled")].asBool(),
+	        .autoPistolEnabled = weaponSetting[XORSTR("AutoPistol")][XORSTR("Enabled")].asBool(),
+	        .autoScopeEnabled = weaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")].asBool(),
+	        .noShootEnabled = weaponSetting[XORSTR("NoShoot")][XORSTR("Enabled")].asBool(),
+	        .ignoreJumpEnabled = weaponSetting[XORSTR("IgnoreJump")][XORSTR("Enabled")].asBool(),
+	        .ignoreEnemyJumpEnabled = weaponSetting[XORSTR("IgnoreEnemyJump")][XORSTR("Enabled")].asBool(),
+	        .smokeCheck = weaponSetting[XORSTR("SmokeCheck")][XORSTR("Enabled")].asBool(),
+	        .flashCheck = weaponSetting[XORSTR("FlashCheck")][XORSTR("Enabled")].asBool(),
+	        .autoWallEnabled = weaponSetting[XORSTR("AutoWall")][XORSTR("Enabled")].asBool(),
+	        .autoAimRealDistance = weaponSetting[XORSTR("AutoAim")][XORSTR("RealDistance")].asBool(),
+	        .autoSlow = weaponSetting[XORSTR("AutoSlow")][XORSTR("enabled")].asBool(),
+	        .predEnabled = weaponSetting[XORSTR("Prediction")][XORSTR("enabled")].asBool(),
+	        .scopeControlEnabled = weaponSetting[XORSTR("ScopeControl")][XORSTR("Enabled")].asBool(),
 
-	    .engageLockTTR = weaponSetting[XORSTR("engageLockTTR")].asInt(),
-	    .bone = weaponSetting[XORSTR("TargetBone")].asInt(),
-	    .smoothType = (SmoothType)weaponSetting[XORSTR("Smooth")][XORSTR("Type")].asInt(),
-	    .aimkey = Util::GetButtonCode(weaponSetting[XORSTR("AimKey")].asCString()),
-	    .smoothAmount = weaponSetting[XORSTR("Smooth")][XORSTR("Amount")].asFloat(),
-	    .smoothSaltMultiplier = weaponSetting[XORSTR("Smooth")][XORSTR("Salting")][XORSTR("Multiplier")].asFloat(),
-	    .errorMarginValue = weaponSetting[XORSTR("ErrorMargin")][XORSTR("Value")].asFloat(),
-	    .LegitautoAimFov = weaponSetting[XORSTR("AutoAim")][XORSTR("LegitFOV")].asFloat(),
-	    .aimStepMin = weaponSetting[XORSTR("AimStep")][XORSTR("min")].asFloat(),
-	    .aimStepMax = weaponSetting[XORSTR("AimStep")][XORSTR("max")].asFloat(),
-	    .rcsAmountX = weaponSetting[XORSTR("RCS")][XORSTR("AmountX")].asFloat(),
-	    .rcsAmountY = weaponSetting[XORSTR("RCS")][XORSTR("AmountY")].asFloat(),
-	    .MinDamage = weaponSetting[XORSTR("MinDamage")][XORSTR("Value")].asFloat(),
-	    .hitchance = weaponSetting[XORSTR("HitChance")][XORSTR("Value")].asFloat(),
-	    .shotDelay = weaponSetting[XORSTR("shotDelay")][XORSTR("value")].asInt(),
-	    .minShotFire = weaponSetting[XORSTR("minShotFire")][XORSTR("value")].asInt(),
+	        .engageLockTTR = weaponSetting[XORSTR("engageLockTTR")].asInt(),
+	        .bone = weaponSetting[XORSTR("TargetBone")].asInt(),
+	        .smoothType = (SmoothType)weaponSetting[XORSTR("Smooth")][XORSTR("Type")].asInt(),
+	        .aimkey = Util::GetButtonCode(weaponSetting[XORSTR("AimKey")].asCString()),
+	        .smoothAmount = weaponSetting[XORSTR("Smooth")][XORSTR("Amount")].asFloat(),
+	        .smoothSaltMultiplier = weaponSetting[XORSTR("Smooth")][XORSTR("Salting")][XORSTR("Multiplier")].asFloat(),
+	        .errorMarginValue = weaponSetting[XORSTR("ErrorMargin")][XORSTR("Value")].asFloat(),
+	        .LegitautoAimFov = weaponSetting[XORSTR("AutoAim")][XORSTR("LegitFOV")].asFloat(),
+	        .aimStepMin = weaponSetting[XORSTR("AimStep")][XORSTR("min")].asFloat(),
+	        .aimStepMax = weaponSetting[XORSTR("AimStep")][XORSTR("max")].asFloat(),
+	        .rcsAmountX = weaponSetting[XORSTR("RCS")][XORSTR("AmountX")].asFloat(),
+	        .rcsAmountY = weaponSetting[XORSTR("RCS")][XORSTR("AmountY")].asFloat(),
+	        .MinDamage = weaponSetting[XORSTR("MinDamage")][XORSTR("Value")].asFloat(),
+	        .hitchance = weaponSetting[XORSTR("HitChance")][XORSTR("Value")].asFloat(),
+	        .shotDelay = weaponSetting[XORSTR("shotDelay")][XORSTR("value")].asInt(),
+	        .minShotFire = weaponSetting[XORSTR("minShotFire")][XORSTR("value")].asInt(),
 	};
 
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
@@ -790,15 +792,18 @@ void Settings::LoadConfig(std::string path)
 	    .autoShootEnabled = RageweaponSetting[XORSTR("AutoShoot")][XORSTR("Enabled")].asBool(),
 	    .autoScopeEnabled = RageweaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")].asBool(),
 	    .autoSlow = RageweaponSetting[XORSTR("AutoSlow")][XORSTR("Enabled")].asBool(),
-	    .predEnabled = RageweaponSetting[XORSTR("Prediction")][XORSTR("Enabled")].asBool(),
 	    .scopeControlEnabled = RageweaponSetting[XORSTR("ScopeControl")][XORSTR("Enabled")].asBool(),
 		.HitChanceOverwrriteEnable = RageweaponSetting[XORSTR("HitChanceOverwrride")][XORSTR("Enable")].asBool(),
+        .DoubleFire = RageweaponSetting[XORSTR("Prediction")][XORSTR("Enabled")].asBool(),
 	    .RagebotautoAimFov = RageweaponSetting[XORSTR("AutoAim")][XORSTR("RageFOV")].asFloat(),
 	    .autoWallValue = RageweaponSetting[XORSTR("AutoWall")][XORSTR("Value")].asFloat(),
         .visibleDamage = RageweaponSetting[XORSTR("visibleDamage")].asFloat(),
 	    .HitChance = RageweaponSetting[XORSTR("HitChance")][XORSTR("Value")].asFloat(),
         .HitchanceOverwrriteValue = RageweaponSetting[XORSTR("HitChanceOverwrride")][XORSTR("Value")].asFloat(),
 	};
+    // Getting value like this because can't find anyother way convert value from json to enum
+    GetVal(RageweaponSetting[XORSTR("DamagePrediction")][XORSTR("Type")], (int*)&weapon.DmagePredictionType);
+     GetVal(RageweaponSetting[XORSTR("EnemySelectionType")][XORSTR("Type")], (int*)&weapon.enemySelectionType);
 
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 	    weapon.desiredBones[bone] = RageweaponSetting[XORSTR("DesiredBones")][XORSTR("Bones")][bone].asBool();
@@ -811,6 +816,7 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("no_enemy")], &Settings::AntiAim::AutoDisable::noEnemy);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("knife_held")], &Settings::AntiAim::AutoDisable::knifeHeld);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("enabled")], &Settings::AntiAim::RageAntiAim::enable);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("ManualAntiAim")][XORSTR("Enable")], &Settings::AntiAim::ManualAntiAim::Enable);
     
     /* 
     *Legit Anti AIm Settings Saving
@@ -1242,7 +1248,6 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("ThirdPerson")][XORSTR("toggled")], &Settings::ThirdPerson::toggled);
     GetVal(settings[XORSTR("ThirdPerson")][XORSTR("distance")], &Settings::ThirdPerson::distance);
     GetButtonCode(settings[XORSTR("ThirdPerson")][XORSTR("togglekey")], &Settings::ThirdPerson::toggleThirdPerson);
-    GetVal(settings[XORSTR("ThirdPerson")][XORSTR("type")], (int*)&Settings::ThirdPerson::type);
 
     GetVal(settings[XORSTR("JumpThrow")][XORSTR("enabled")], &Settings::JumpThrow::enabled);
     GetButtonCode(settings[XORSTR("JumpThrow")][XORSTR("key")], &Settings::JumpThrow::key);

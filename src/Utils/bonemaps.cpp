@@ -18,29 +18,29 @@ static const std::unordered_map<int,int> boneMapGeneric =
     { BONE_NECK, 7 },
     { BONE_HEAD, 8 },
     { BONE_LEFT_COLLARBONE, BONE_INVALID },
-    { BONE_LEFT_SHOULDER, 10 },
+    { BONE_LEFT_SHOULDER, BONE_INVALID },
     { BONE_LEFT_ARMPIT, BONE_INVALID },
     { BONE_LEFT_BICEP, BONE_INVALID },
-    { BONE_LEFT_ELBOW, 11 },
+    { BONE_LEFT_ELBOW, BONE_INVALID },
     { BONE_LEFT_FOREARM, BONE_INVALID },
-    { BONE_LEFT_WRIST, 12 },
+    { BONE_LEFT_WRIST, BONE_INVALID },
     { BONE_RIGHT_COLLARBONE, BONE_INVALID },
-    { BONE_RIGHT_SHOULDER, 38 },
+    { BONE_RIGHT_SHOULDER, BONE_INVALID },
     { BONE_RIGHT_ARMPIT, BONE_INVALID },
     { BONE_RIGHT_BICEP, BONE_INVALID },
-    { BONE_RIGHT_ELBOW, 39 },
+    { BONE_RIGHT_ELBOW, BONE_INVALID },
     { BONE_RIGHT_FOREARM, BONE_INVALID },
-    { BONE_RIGHT_WRIST, 40 },
+    { BONE_RIGHT_WRIST, BONE_INVALID },
     { BONE_LEFT_BUTTCHEEK, BONE_INVALID },
     { BONE_LEFT_THIGH, BONE_INVALID },
-    { BONE_LEFT_KNEE, 66 },
+    { BONE_LEFT_KNEE, BONE_INVALID },
     { BONE_LEFT_ANKLE, BONE_INVALID },
-    { BONE_LEFT_SOLE, 67 },
+    { BONE_LEFT_SOLE, BONE_INVALID },
     { BONE_RIGHT_BUTTCHEEK, BONE_INVALID },
     { BONE_RIGHT_THIGH, BONE_INVALID },
-    { BONE_RIGHT_KNEE, 73 },
+    { BONE_RIGHT_KNEE, BONE_INVALID },
     { BONE_RIGHT_ANKLE, BONE_INVALID },
-    { BONE_RIGHT_SOLE, 74 }
+    { BONE_RIGHT_SOLE, BONE_INVALID }
 };
 
 bool BoneMaps::BuildAllBonemaps( ) {
@@ -159,7 +159,8 @@ const std::unordered_map<int,int> * BoneMaps::GetModelTypeBoneMap(C_BasePlayer* 
     }
 
     studioModel = modelInfo->GetStudioModel( model );
-    if( !studioModel ){
+    if( !studioModel )
+    {
         return &boneMapGeneric;
     }
 

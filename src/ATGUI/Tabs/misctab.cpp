@@ -230,7 +230,6 @@ void Misc::RenderTab()
 				{
 			    	ImGui::PushItemWidth(-1);
 					ImGui::SliderFloat(XORSTR("Camera Offset"), &Settings::ThirdPerson::distance, 0.f, 500.f, XORSTR("Camera Offset: %0.f"));
-                	ImGui::Combo(XORSTR("Showed Angle"), (int*)& Settings::ThirdPerson::type, angleTypes, IM_ARRAYSIZE(angleTypes));
 					UI::KeyBindButton(&Settings::ThirdPerson::toggleThirdPerson);
 					ImGui::PopItemWidth();	
 				}
@@ -448,6 +447,7 @@ void Misc::RenderTab()
 				UI::KeyBindButton(&Settings::JumpThrow::key);
 				ImGui::Checkbox(XORSTR("Attempt NoFall"), &Settings::NoFall::enabled);
 				ImGui::Checkbox(XORSTR("Ragdoll Gravity"), &Settings::RagdollGravity::enabled);
+				ImGui::Checkbox(XORSTR("Show Spectator list"), &Settings::ShowSpectators::enabled);
 			}
 			ImGui::Columns(1);
 			ImGui::Separator();

@@ -79,6 +79,7 @@ static bool HeadMultiPoint(C_BasePlayer *player, Vector points[])
 
 	return true;
 }
+
 static float AutoWallBestSpot(C_BasePlayer *player, Vector &bestSpot)
 {
 	float bestDamage = Settings::Legitbot::AutoWall::value;

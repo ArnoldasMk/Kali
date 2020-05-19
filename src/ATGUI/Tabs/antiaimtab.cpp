@@ -55,7 +55,7 @@ void HvH::RenderTab()
                 ImGui::NextColumn();
                 {
                     ImGui::PushItemWidth(-1);
-                    ImGui::Combo(XORSTR("##YFAKETYPE"), (int*)& Settings::AntiAim::Yaw::typeFake, yTypes, IM_ARRAYSIZE(yTypes));
+                    ImGui::Combo(XORSTR("##YFAKETYPE"), (int*)&Settings::AntiAim::Yaw::typeFake, yTypes, IM_ARRAYSIZE(yTypes));
 
                     ImGui::Combo(XORSTR("##YACTUALTYPE"), (int*)& Settings::AntiAim::Yaw::typeReal, yTypes, IM_ARRAYSIZE(yTypes));
                     ImGui::PopItemWidth();
@@ -91,9 +91,9 @@ void HvH::RenderTab()
 
                 ImGui::Columns(1);
                 ImGui::Separator();
-                ImGui::Text(XORSTR("Edging"));
+                ImGui::Text(XORSTR("Edging(Alfa)"));
                 ImGui::Separator();
-                ImGui::Columns(2, nullptr, true);
+                ImGui::Columns(2);
                 {
                     ImGui::Checkbox(XORSTR("Enabled"), &Settings::AntiAim::HeadEdge::enabled);
                 }
@@ -103,6 +103,43 @@ void HvH::RenderTab()
                     ImGui::SliderFloat(XORSTR("##EDGEDISTANCE"), &Settings::AntiAim::HeadEdge::distance, 20, 30, "Distance: %0.f");
                     ImGui::PopItemWidth();
                 }
+
+                ImGui::Columns(1);
+                /*
+                ** Starting of Manual anti aim
+                */
+                ImGui::Separator();
+                ImGui::Checkbox(XORSTR("##Manual Anti Aim"), &Settings::AntiAim::ManualAntiAim::Enable);
+                ImGui::SameLine();
+                ImGui::Text(XORSTR("Manuan AntiAim"));                
+                ImGui::Separator();
+
+                //For player to move right
+                ImGui::Text("Align Right");
+                ImGui::SameLine();
+                ImGui::PushItemWidth(-1);
+                UI::KeyBindButton(&Settings::AntiAim::ManualAntiAim::RightButton);
+                ImGui::PopItemWidth();
+
+                // For player Move back
+                ImGui::Text("Align Back");
+                ImGui::SameLine();
+                ImGui::PushItemWidth(-1);
+                UI::KeyBindButton(&Settings::AntiAim::ManualAntiAim::backButton);
+                ImGui::PopItemWidth();
+
+                //For player to move left
+                ImGui::Text("Align Left");
+                ImGui::SameLine();
+                ImGui::PushItemWidth(-1);
+                UI::KeyBindButton(&Settings::AntiAim::ManualAntiAim::LeftButton);
+                ImGui::PopItemWidth();
+
+                // END
+
+                /*
+                ** Implementiong The secondary features with AntiAim
+                */
                 ImGui::Columns(1);
                 ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(210, 85));
                 if (ImGui::BeginPopupModal(XORSTR("Error###UNTRUSTED_AA")))

@@ -1,5 +1,8 @@
 #include "math.h"
 
+#define square(x) ( x =  x * x )
+
+
 bool Math::Cmpf( float f1, float f2, float epsilon ) {
 	return ( fabs( f1 - f2 ) < epsilon );
 }
@@ -170,6 +173,7 @@ void Math::VectorAngles(const Vector& forward, QAngle &angles)
 
 	angles[2] = 0.0f;
 }
+
 float Math::DotProduct( const float *v1, const float *v2 ) {
     return v1 [ 0 ] * v2 [ 0 ] + v1 [ 1 ] * v2 [ 1 ] + v1 [ 2 ] * v2 [ 2 ];
 }
@@ -178,6 +182,7 @@ float Math::DotProduct(const Vector &v1, const float* v2)
 {
 	return v1.x*v2[0] + v1.y*v2[1] + v1.z*v2[2];
 }
+
 void Math::VectorTransform (const Vector &in1, const matrix3x4_t& in2, Vector &out)
 {
 	out.x = DotProduct(in1, in2[0]) + in2[0][3];
@@ -197,6 +202,51 @@ QAngle Math::CalcAngle(const Vector &src, const Vector &dst)
 	return angles;
 }
 
+float Math::SquareRoot(const float &x)
+{
+	if ( x == 0 || x ==1)
+		return x;
+		
+	int i = 1, result = 1; 
+    while (result <= x) 
+    { 
+      i++; 
+      result = i * i; 
+    } 
+    return i - 1;
+}
+
+float Math::CalMaxDistance(const Vector &src, const Vector &dest)
+{
+	float height,
+			Ydistance,
+			ZDistance;
+
+	// Getting Y axis distance
+	if (src.y > dest.y)
+		Ydistance = src.y - dest.y;
+	else if (src.y < dest.y)
+		Ydistance = dest.y - src.y;
+
+	// Calculate the z distance
+	if (src.z > dest.z)
+		ZDistance = src.z - dest.z;
+	else if (src.z < dest.z)
+		ZDistance = dest.z - src.z;	
+
+	return Math::SquareRoot( square(Ydistance) + square(ZDistance) );
+}
+
+float Math::CalMaxDistance(const QAngle &src, const Vector &dest)
+{
+	float Ydistance = src.y - dest.y,
+			ZDistance =src.z - dest.z,
+			XDistance = src.x - dest.x, 
+			tempdistance;
+
+	return tempdistance = Math::SquareRoot( square(Ydistance) + square(ZDistance) );
+	return Math::SquareRoot( square(tempdistance) + square(XDistance) );
+}
 void Math::AngleMatrix(const Vector angles, matrix3x4_t& matrix)
 {
     float sr, sp, sy, cr, cp, cy;

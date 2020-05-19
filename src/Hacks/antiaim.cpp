@@ -11,7 +11,11 @@
 
 
 QAngle AntiAim::LastTickViewAngle;
+
 static bool bSend = true;
+static bool alignBack = false, 
+            alignRight = false, 
+            alignLeft = false;
 
 float AntiAim::GetMaxDelta( CCSGOAnimState *animState ) 
 {
@@ -118,7 +122,7 @@ static void DoAntiAimY(C_BasePlayer *const localplayer, QAngle& angle, bool bSen
         switch (Fake_aa_type)
         {
             case AntiAimType_Y::NONE:
-                AntiAim::fakeAngle.y = AntiAim::realAngle.y;
+                AntiAim::fakeAngle = AntiAim::realAngle;
                 break;
             case AntiAimType_Y::MAX_DELTA_LEFT:
                 angle.y = AntiAim::realAngle.y - (maxDelta);
@@ -144,10 +148,10 @@ static void DoAntiAimY(C_BasePlayer *const localplayer, QAngle& angle, bool bSen
                 AntiAim::realAngle = angle;
                 break;
             case AntiAimType_Y::MAX_DELTA_LEFT:
-                angle.y -= 90.f;
+                angle.y += 90.f;
                 break;
             case AntiAimType_Y::MAX_DELTA_RIGHT:
-                angle.y += 90.f;
+                angle.y -= 90.f;
                 break;
             case AntiAimType_Y::MAX_DELTA_FLIPPER:
                 bFlip = !bFlip;
@@ -231,9 +235,70 @@ static void DoLegitAntiAim(C_BasePlayer *const localplayer, QAngle& angle, bool 
         angle.y = bSend ? AntiAim::fakeAngle.y = angle.y - (maxDelta / 2.f) : AntiAim::realAngle.y = angle.y + (maxDelta / 2.f);
 }
 
+
+/*
+** Settings Manual Anti AIm 
+** Simply What we do is change the value of YAxis for in Settings::AntiAIm::Yaw::real
+** Basically THis si work as toggle
+*/
+static void DoManuaAntiAim()
+{
+
+    if (!Settings::AntiAim::ManualAntiAim::Enable)
+        return;
+    // Manual anti aim set to back
+    if ( inputSystem->IsButtonDown(Settings::AntiAim::ManualAntiAim::backButton) && alignBack == false )
+	{
+		alignBack = true;
+		alignRight = false;
+        alignLeft = false;
+        Settings::AntiAim::Yaw::typeReal = AntiAimType_Y::MAX_DELTA_LBY_AVOID;
+        return;
+	}
+	else if ( !inputSystem->IsButtonDown(Settings::ThirdPerson::toggleThirdPerson ) && alignBack == true)
+	{
+        alignBack = false;
+        return;
+    }		
+
+    //END BACK MANUAL
+
+    //SETTING MANUAL FOR RIGHT
+    if ( inputSystem->IsButtonDown(Settings::AntiAim::ManualAntiAim::RightButton) && alignRight == false )
+	{
+		alignBack = false;
+		alignRight = true;
+        alignLeft = false;
+        Settings::AntiAim::Yaw::typeReal = AntiAimType_Y::MAX_DELTA_RIGHT;
+        return;
+	}
+	else if ( !inputSystem->IsButtonDown(Settings::ThirdPerson::toggleThirdPerson ) && alignRight == true)
+	{
+        alignRight = false;
+        return;
+    }		
+
+    //END MANUAL RIGHT
+
+    // SETTINGS MANUAL ANTIAIM FOR LEFT
+    if ( inputSystem->IsButtonDown(Settings::AntiAim::ManualAntiAim::LeftButton) && alignLeft == false )
+	{
+		alignBack = false;
+		alignRight = false;
+        alignLeft = true;
+        Settings::AntiAim::Yaw::typeReal = AntiAimType_Y::MAX_DELTA_LEFT;
+        return;
+	}
+	else if ( !inputSystem->IsButtonDown(Settings::ThirdPerson::toggleThirdPerson ) && alignBack == true)
+	{  
+        alignBack = false;
+        return;
+    }		
+    
+}
 void AntiAim::CreateMove(CUserCmd* cmd)
 {
-    if (!Settings::AntiAim::Yaw::enabled && !Settings::AntiAim::Pitch::enabled && !Settings::AntiAim::LBYBreaker::enabled && !Settings::AntiAim::LegitAntiAim::enable)
+    if (!Settings::AntiAim::Yaw::enabled && !Settings::AntiAim::Pitch::enabled && !Settings::AntiAim::LBYBreaker::enabled && !Settings::AntiAim::LegitAntiAim::enable && !Settings::AntiAim::ManualAntiAim::Enable)
         return;
 
     if (Settings::Legitbot::AimStep::enabled && Legitbot::aimStepInProgress)
@@ -245,7 +310,6 @@ void AntiAim::CreateMove(CUserCmd* cmd)
     
     QAngle angle = cmd->viewangles;
 
-    AntiAim::fakeAngle = CreateMove::lastTickViewAngles;
     C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
     if (!localplayer || !localplayer->GetAlive())
         return;
@@ -265,7 +329,7 @@ void AntiAim::CreateMove(CUserCmd* cmd)
         }
     }
 
-    if (cmd->buttons & IN_USE || cmd->buttons & IN_ATTACK || (cmd->buttons & IN_ATTACK2 && *activeWeapon->GetItemDefinitionIndex() == ItemDefinitionIndex::WEAPON_REVOLVER) && !Ragebot::coacking == true)
+    if (cmd->buttons & IN_USE || cmd->buttons & IN_ATTACK || (cmd->buttons & IN_ATTACK2 && *activeWeapon->GetItemDefinitionIndex() == ItemDefinitionIndex::WEAPON_REVOLVER || *activeWeapon->GetItemDefinitionIndex() == ItemDefinitionIndex::WEAPON_KNIFE ) && !Ragebot::coacking == true)
     {
         AntiAim::realAngle = AntiAim::fakeAngle = angle;
         return;
@@ -291,7 +355,7 @@ void AntiAim::CreateMove(CUserCmd* cmd)
     }
 
     QAngle edge_angle = angle;
-    bool edging_head = Settings::AntiAim::HeadEdge::enabled && GetBestHeadAngle(edge_angle);
+    bool edging_head = Settings::AntiAim::HeadEdge::enabled && GetBestHeadAngle(edge_angle) && (!alignLeft || !alignRight || !alignBack);
 
     
     bSend = !bSend;
@@ -302,6 +366,9 @@ void AntiAim::CreateMove(CUserCmd* cmd)
     static bool lbyBreak = false;
     static float lastCheck;
     float vel2D = localplayer->GetVelocity().Length2D();//localplayer->GetAnimState()->verticalVelocity + localplayer->GetAnimState()->horizontalVelocity;
+
+    // Check for manual antiaim
+    DoManuaAntiAim();
 
     if( Settings::AntiAim::LBYBreaker::enabled ){
 
