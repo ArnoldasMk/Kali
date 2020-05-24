@@ -55,7 +55,7 @@ sudo dnf install cmake gcc-c++ gdb git libstdc++-static mesa-libGL-devel SDL2-de
 #### Download MissedIT:
 
 ```bash
-git clone --recursive https://github.com/HackerPolice/MissedIT-Rolling-Release.git
+git clone --recursive https://github.com/HackerPolice/MissedIT-Stable.git
 ```
 
 ```bash
