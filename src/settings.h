@@ -162,13 +162,18 @@ enum class ShowedAngle : int
     FAKE,
 };
 
-enum class AntiAimType_Y : int
+enum class AntiAimRealType_Y : int
 {
 	NONE,
-    MAX_DELTA_LEFT,
-	MAX_DELTA_RIGHT,
-    MAX_DELTA_FLIPPER,
-    MAX_DELTA_LBY_AVOID,
+	Static,
+	Jitter,
+};
+
+enum class AntiAimFakeType_y : int
+{
+	NONE,
+	Static,
+	Jitter,
 };
 
 enum class AntiAimType_X : int
@@ -182,6 +187,13 @@ enum class AntiAimType_X : int
     LISP_DOWN,
     ANGEL_DOWN,
     ANGEL_UP,
+};
+
+enum class AntiAimType : int
+{
+	LegitAntiAim,
+	RageAntiAim,
+	Lagacy,
 };
 
 struct AimbotWeapon_t
@@ -389,10 +401,10 @@ namespace Settings
 {
 	namespace UI
 	{
-		inline ColorVar mainColor = ImColor(17, 73, 40, 255 );
-		inline ColorVar bodyColor = ImColor( 30, 24, 38, 232 );
-		inline ColorVar fontColor = ImColor( 153, 199, 70, 187 );
-		inline ColorVar accentColor = ImColor( 21, 127, 176, 106 );
+		inline ColorVar mainColor = ImColor(1, 1, 1, 255 );
+		inline ColorVar bodyColor = ImColor( 4, 4, 4, 232 );
+		inline ColorVar fontColor = ImColor( 162, 214, 187, 187 );
+		inline ColorVar accentColor = ImColor( 99, 78, 5, 255 );
 		inline bool imGuiAliasedLines = false;
 		inline bool imGuiAliasedFill = false;
 
@@ -676,6 +688,11 @@ namespace Settings
 			inline bool enabled = false;
 		}
 
+		namespace AutoCrouch
+		{
+			inline bool enable = false;
+		}
+
 		inline std::unordered_map<ItemDefinitionIndex, RagebotWeapon_t, Util::IntHash<ItemDefinitionIndex>> weapons = {
                 { ItemDefinitionIndex::INVALID, ragedefault },
         };
@@ -713,6 +730,10 @@ namespace Settings
 
     namespace AntiAim
     {
+		namespace Type
+		{
+			inline AntiAimType antiaimType = AntiAimType::LegitAntiAim;
+		}
         namespace AutoDisable
         {
             inline bool noEnemy = false;
@@ -722,6 +743,11 @@ namespace Settings
         namespace RageAntiAim
         {
             inline bool enable = false;
+			inline ButtonCode_t InvertKey = ButtonCode_t::KEY_T;
+			inline bool inverted = false;
+			inline float FakePercent = 100.f;
+			inline float RealJitterPercent = 30.f;
+			inline bool atTheTarget = false;
         }
 
 		namespace LegitAntiAim 
@@ -740,15 +766,8 @@ namespace Settings
 		}
         namespace Yaw
         {
-            inline bool enabled = false;
-            inline AntiAimType_Y typeReal = AntiAimType_Y::NONE;
-            inline AntiAimType_Y typeFake = AntiAimType_Y::MAX_DELTA_LBY_AVOID;
-        }
-
-        namespace Pitch
-        {
-            inline bool enabled = false;
-            inline AntiAimType_X type = AntiAimType_X::STATIC_DOWN;
+            inline AntiAimRealType_Y typeReal = AntiAimRealType_Y::Static;
+            inline AntiAimFakeType_y typeFake = AntiAimFakeType_y::Static;
         }
 
         namespace HeadEdge

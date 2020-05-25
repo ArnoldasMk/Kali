@@ -42,15 +42,19 @@ void Main::RenderWindow()
 
 	
 
-	if (ImGui::Begin(XORSTR("MissedIt"), &Main::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiItemFlags_AllowKeyboardFocus | ImGuiWindowFlags_NoScrollbar | ImGuiComboFlags_NoArrowButton))
+	if (ImGui::Begin(XORSTR("MissedIt"), &Main::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize  ) )
 	{
-		if (ImGui::Button(XORSTR("Config"), ImVec2( (ImGui::GetWindowSize().x / 2) - 9.f, 0) ) )
+		ImVec2 temp = ImGui::GetWindowSize();
+		
+		ImGui::Columns(1);
+		if (ImGui::Button(XORSTR("Config"), ImVec2( (temp.x / 2) - 9.f, 0) ) )
 			Configs::showWindow = !Configs::showWindow;
 		ImGui::SameLine();
-		if (ImGui::Button(XORSTR("COLOR PICKER"), ImVec2( (ImGui::GetWindowSize().x /2) - 9, 0) ) )
+		if (ImGui::Button(XORSTR("COLOR PICKER"), ImVec2( (temp.x /2) - 9, 0) ) )
 			Colors::showWindow = !Colors::showWindow;
+			
 		Settings::UI::Windows::Main::open = true;
-		ImVec2 temp = ImGui::GetWindowSize();
+		
 		Settings::UI::Windows::Main::sizeX = (int)temp.x;
 		Settings::UI::Windows::Main::sizeY = (int)temp.y;
 		temp = ImGui::GetWindowPos();

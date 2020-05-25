@@ -207,7 +207,7 @@ void Hooker::FindSendClanTag()
                                                                                "????"
                                                                                "xxx" ));
 
-	SendClanTag = reinterpret_cast<SendClanTagFn>(func_address);
+	SendClanTag = reinterpret_cast<SendClanTagFn>(func_address, func_address);
 }
 
 // "PrecacheCSViewScene"

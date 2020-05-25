@@ -1,6 +1,8 @@
 #include "sdlhook.h"
 
 #include "interfaces.h"
+#include "Utils/xorstring.h"
+#include "settings.h"
 #include "shortcuts.h"
 #include "ATGUI/atgui.h"
 #include "Hooks/hooks.h"
@@ -34,24 +36,24 @@ static void HandleSDLEvent(SDL_Event * event)
                 io.MouseWheel = 1;
             if( event->wheel.y < 0 )
                 io.MouseWheel = -1;
-
             return;
+
         case SDL_MOUSEBUTTONDOWN:
             if (event->button.button == SDL_BUTTON_LEFT) io.MouseDown[0] = true;
             if (event->button.button == SDL_BUTTON_RIGHT) io.MouseDown[1] = true;
             if (event->button.button == SDL_BUTTON_MIDDLE) io.MouseDown[2] = true;
-
             return;
+
         case SDL_MOUSEBUTTONUP:
             if (event->button.button == SDL_BUTTON_LEFT) io.MouseDown[0] = false;
             if (event->button.button == SDL_BUTTON_RIGHT) io.MouseDown[1] = false;
             if (event->button.button == SDL_BUTTON_MIDDLE) io.MouseDown[2] = false;
-
             return;
+
         case SDL_TEXTINPUT:
             io.AddInputCharactersUTF8( event->text.text );
-
             return;
+
         case SDL_KEYDOWN:
         case SDL_KEYUP:
             int key = event->key.keysym.sym & ~SDLK_SCANCODE_MASK;
@@ -60,8 +62,8 @@ static void HandleSDLEvent(SDL_Event * event)
             io.KeyCtrl = ((SDL_GetModState() & KMOD_CTRL) != 0);
             io.KeyAlt = ((SDL_GetModState() & KMOD_ALT) != 0);
             io.KeySuper = ((SDL_GetModState() & KMOD_GUI) != 0);
-
             return;
+
     }
 }
 
@@ -135,27 +137,35 @@ static void SwapWindow(SDL_Window* window)
         }
     }
 
-    if( io.WantCaptureMouse ){
+    if( io.WantCaptureMouse )
+    {
         int mx, my;
         SDL_GetMouseState(&mx, &my);
 
         io.MousePos = ImVec2((float)mx, (float)my);
 
-        SDL_ShowCursor(io.MouseDrawCursor ? 0: 1);
+        
     }
+    SDL_ShowCursor(io.MouseDrawCursor ? 0: 1);
 
-    ImGui::NewFrame();
-        ImGui::SetNextWindowPos( ImVec2( 0, 0 ), ImGuiCond_Always );
-        ImGui::SetNextWindowSize( ImVec2( w, h ), ImGuiCond_Always );
-        ImGui::SetNextWindowBgAlpha( 0.0f );
-        ImGui::Begin( "", (bool*)true, /*ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove |*/ ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoInputs /*| ImGuiComboFlags_NoArrowButton*/ | ImGuiColumnsFlags_NoBorder);
-            UI::SetupColors();
-            UI::SetupWindows();
-            UI::DrawImWatermark();
-            Hooks::PaintImGui(); // Process ImGui Draw Commands
-        ImGui::End();
-	ImGui::EndFrame();
 
+    if (!UI::DrawImWatermark())
+    {
+        ImGui::NewFrame();
+            ImGui::SetNextWindowPos( ImVec2( 0, 0 ), ImGuiCond_Always );
+            ImGui::SetNextWindowSize( ImVec2( w , h), ImGuiCond_Always );
+            ImGui::SetNextWindowBgAlpha( 0.0f );
+            ImGuiStyle& style = ImGui::GetStyle();
+            style.WindowBorderSize = 0.0f;
+            ImGui::Begin( XORSTR("##mainFrame"), (bool*)true, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiColumnsFlags_NoBorder | ImGuiWindowFlags_NoResize);
+                UI::SetupColors();
+                UI::SetupWindows();
+                // UI::DrawImWatermark();
+                Hooks::PaintImGui(); // Process ImGui Draw Commands
+            ImGui::End();
+        
+	    ImGui::EndFrame();
+    }
 	ImGui::GetCurrentContext()->Font->DisplayOffset = ImVec2(0.f, 0.f);
 	ImGui::GetCurrentContext()->Font->DisplayOffset = ImVec2(0.0f, 0.0f);
 

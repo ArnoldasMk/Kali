@@ -10,6 +10,14 @@ namespace AntiAim
     extern QAngle LastTickViewAngle;
 
     float GetMaxDelta( CCSGOAnimState *animState );
+    
+    namespace ManualAntiAim
+    {
+        inline bool alignBack = false, 
+                    alignRight = false, 
+                    alignLeft = false;
+    }
+    
 
     //Hooks
     void CreateMove(CUserCmd* cmd);

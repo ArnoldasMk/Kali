@@ -71,9 +71,9 @@ void UI::ReloadRageWeaponSettings()
 void UI::UpdateRageWeaponSettings()
 {
 	if (Settings::Ragebot::weapons.find(currentWeapon) == Settings::Ragebot::weapons.end() && Settings::Ragebot::enabled)
-		{
-			Settings::Ragebot::weapons[currentWeapon] = RagebotWeapon_t();
-		}
+	{
+		Settings::Ragebot::weapons[currentWeapon] = RagebotWeapon_t();
+	}
 
 	RagebotWeapon_t settings = {
 			.silent = silent,

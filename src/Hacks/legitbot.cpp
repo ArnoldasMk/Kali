@@ -34,100 +34,6 @@ static QAngle ApplyErrorToAngle(QAngle* angles, float margin)
 	return error;
 }
 
-/* Fills points Vector. True if successful. False if not.  Credits for Original method - ReactiioN */
-static bool HeadMultiPoint(C_BasePlayer *player, Vector points[])
-{
-	matrix3x4_t matrix[128];
-
-	if( !player->SetupBones(matrix, 128, 0x100, 0.f) )
-		return false;
-	model_t *pModel = player->GetModel();
-	if( !pModel )
-		return false;
-
-	studiohdr_t *hdr = modelInfo->GetStudioModel(pModel);
-	if( !hdr )
-		return false;
-	mstudiobbox_t *bbox = hdr->pHitbox((int)Hitbox::HITBOX_HEAD, 0);
-	if( !bbox )
-		return false;
-
-	Vector mins, maxs;
-	Math::VectorTransform(bbox->bbmin, matrix[bbox->bone], mins);
-	Math::VectorTransform(bbox->bbmax, matrix[bbox->bone], maxs);
-
-	Vector center = ( mins + maxs ) * 0.5f;
-	// 0 - center, 1 - forehead, 2 - skullcap, 3 - upperleftear, 4 - upperrightear, 5 - uppernose, 6 - upperbackofhead
-	// 7 - leftear, 8 - rightear, 9 - nose, 10 - backofhead
-	for( int i = 0; i < headVectors; i++ ) // set all points initially to center mass of head.
-		points[i] = center;
-	points[0].y += bbox->radius * 0.80f;
-	points[1].y += bbox->radius * 0.80f;// morph each point.
-	points[2].z += bbox->radius * 1.25f; // ...
-	points[3].x += bbox->radius * 0.80f;
-	points[3].z += bbox->radius * 0.60f;
-	points[4].x -= bbox->radius * 0.80f;
-	points[4].z += bbox->radius * 0.90f;
-	points[5].y += bbox->radius * 0.80f;
-	points[5].z += bbox->radius * 0.90f;
-	points[6].y -= bbox->radius * 0.80f;
-	points[6].z += bbox->radius * 0.90f;
-	points[7].x += bbox->radius * 0.80f;
-	points[8].x -= bbox->radius * 0.80f;
-	points[9].z += bbox->radius * 0.60f;
-	points[10].y -= bbox->radius * 0.80f;
-
-	return true;
-}
-
-static float AutoWallBestSpot(C_BasePlayer *player, Vector &bestSpot)
-{
-	float bestDamage = Settings::Legitbot::AutoWall::value;
-	const std::unordered_map<int, int> *modelType = BoneMaps::GetModelTypeBoneMap(player);
-
-	static int len = sizeof(Settings::Legitbot::AutoAim::desiredBones) / sizeof(Settings::Legitbot::AutoAim::desiredBones[0]);
-
-	for( int i = 0; i < len; i++ )
-	{
-		if( !Settings::Legitbot::AutoAim::desiredBones[i] )
-			continue;
-		if( i == BONE_HEAD ) // head multipoint
-		{
-			Vector headPoints[headVectors];
-			if( !HeadMultiPoint(player, headPoints) )
-				continue;
-			for( int j = 0; j < headVectors; j++ )
-			{
-				Autowall::FireBulletData data;
-				float spotDamage = Autowall::GetDamage(headPoints[j], !Settings::Legitbot::friendly, data);
-				if( spotDamage > bestDamage )
-				{
-					bestSpot = headPoints[j];
-					if( spotDamage > player->GetHealth() )
-						return spotDamage;
-					bestDamage = spotDamage;
-				}
-			}
-		}
-		int boneID = (*modelType).at(i);
-		if( boneID == BONE_INVALID ) // bone not available on this modeltype.
-			continue;
-
-		Vector bone3D = player->GetBonePosition(boneID);
-
-		Autowall::FireBulletData data;
-		float boneDamage = Autowall::GetDamage(bone3D, !Settings::Legitbot::friendly, data);
-		if( boneDamage > bestDamage )
-		{
-			bestSpot = bone3D;
-			if( boneDamage > player->GetHealth() )
-				return boneDamage;
-
-			bestDamage = boneDamage;
-		}
-	}
-	return bestDamage;
-}
 
 static float GetRealDistanceFOV(float distance, QAngle angle, CUserCmd* cmd)
 {
@@ -162,6 +68,92 @@ static float GetRealDistanceFOV(float distance, QAngle angle, CUserCmd* cmd)
 static Vector VelocityExtrapolate(C_BasePlayer* player, Vector aimPos)
 {
 	return aimPos + (player->GetVelocity() * globalVars->interval_per_tick);
+}
+
+static bool IsIzFov(C_BasePlayer* player, CUserCmd *cmd, const Vector& pVecTarget, const Vector& cbVecTarget, AimTargetType aimTargetType = AimTargetType::FOV)
+{
+	using namespace Settings::Legitbot::AutoAim;
+	float cbFov = 0.0;
+	QAngle viewAngles;
+	engine->GetViewAngles(viewAngles);
+	float realDistance = 0.f;
+	if (Settings::Legitbot::AutoAim::realDistance)
+	{
+		aimTargetType = AimTargetType::REAL_DISTANCE;
+		float distance = pVecTarget.DistTo(cbVecTarget);
+		realDistance = GetRealDistanceFOV(distance, Math::CalcAngle(pVecTarget, cbVecTarget), cmd);	
+	}
+		
+	cbFov = Math::GetFov( viewAngles, Math::CalcAngle(pVecTarget, cbVecTarget) );
+	if (cbFov > 0 && cbFov <= fov && aimTargetType == AimTargetType::FOV)
+	{
+		if ( !Entity::IsVisible(player, (int) Settings::Legitbot::bone, cbFov, true) )
+			return false;
+		return true;
+	}
+	else if (cbFov > 0 && cbFov <= realDistance && aimTargetType == AimTargetType::REAL_DISTANCE)
+	{
+		if ( !Entity::IsVisible(player, (int) Settings::Legitbot::bone, cbFov, true) )
+			return false;
+		return true;
+	}
+
+	return false;
+	
+}
+/* Original Credits to: https://github.com/goldenguy00 ( study! study! study! :^) ) */
+static C_BasePlayer* GetClosestEnemy (C_BasePlayer *localplayer, CUserCmd* cmd, AimTargetType aimTargetType = AimTargetType::FOV)
+{
+	C_BasePlayer* closenstEntity = nullptr;
+	float bestFov = Settings::Legitbot::AutoAim::fov;
+	float bestRealDistance = Settings::Legitbot::AutoAim::fov * 5.0f;
+
+	float prevDistance = 0.f,
+	  		cbFov = 0.f;
+	Vector pVecTarget = localplayer->GetEyePosition();
+	QAngle viewAngles;
+	engine->GetViewAngles(viewAngles);
+
+	if (Settings::Legitbot::AutoAim::realDistance)
+		aimTargetType = AimTargetType::REAL_DISTANCE;
+
+	
+	for (int i = 1; i < engine->GetMaxClients(); ++i)
+	{
+		C_BasePlayer* player = (C_BasePlayer*)entityList->GetClientEntity(i);
+
+		if (!player
+	    	|| player == localplayer
+	    	|| player->GetDormant()
+	    	|| !player->GetAlive()
+	    	|| player->GetImmune())
+	    	continue;
+
+		if (!Settings::Ragebot::friendly && Entity::IsTeamMate(player, localplayer))
+	   	 	continue;
+
+		Vector cbVecTarget = player->GetAbsOrigin();
+		cbFov = Math::GetFov( viewAngles, Math::CalcAngle(pVecTarget, cbVecTarget) );
+		float distance = pVecTarget.DistTo(cbVecTarget);
+		float realDistance = GetRealDistanceFOV(distance, Math::CalcAngle(pVecTarget, cbVecTarget), cmd);
+		
+		if (aimTargetType == AimTargetType::FOV && cbFov > bestFov)
+			continue;
+		if (aimTargetType == AimTargetType::REAL_DISTANCE && realDistance > bestRealDistance)
+			continue;
+
+		if (prevDistance == 0 && cbFov != 0)
+		{
+			prevDistance = cbFov;
+			closenstEntity = player;
+		}
+		else if ( cbFov < prevDistance )
+		{
+			prevDistance = cbFov;
+			closenstEntity = player;
+		}
+	}
+	return closenstEntity;
 }
 
 /* Original Credits to: https://github.com/goldenguy00 ( study! study! study! :^) ) */
@@ -229,130 +221,46 @@ static Vector GetClosestSpot( CUserCmd* cmd, C_BasePlayer* localPlayer, C_BasePl
 
 static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, bool visibleCheck, Vector* bestSpot, float* bestDamage, AimTargetType aimTargetType = AimTargetType::FOV)
 {
-	if (Settings::Legitbot::AutoAim::realDistance)
-		aimTargetType = AimTargetType::REAL_DISTANCE;
-
-	static C_BasePlayer* lockedOn = nullptr;
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 	C_BasePlayer* closestEntity = nullptr;
 
-	float bestFov = Settings::Legitbot::AutoAim::fov;
-	float bestRealDistance = Settings::Legitbot::AutoAim::fov * 5.0f;
+	C_BasePlayer *player = GetClosestEnemy(localplayer, cmd); // getting the closest enemy to the crosshair
 
-	if( lockedOn )
+	if (player == nullptr)
+		return nullptr;
+
+	Vector eVecTarget = {0,0,0};
+	auto IsPriorityBoneINFov = IsIzFov( player, cmd, localplayer->GetEyePosition(), player->GetAbsOrigin() );
+	if ( !IsPriorityBoneINFov )
 	{
-		if( lockedOn->GetAlive() && !Settings::Legitbot::AutoAim::closestBone && !Entity::IsSpotVisibleThroughEnemies(lockedOn, lockedOn->GetBonePosition((int)Settings::Legitbot::bone)) )
-		{
-			lockedOn = nullptr;
+		Vector tempSpot = GetClosestSpot(cmd, localplayer, player, aimTargetType);
+		if( tempSpot.IsZero() || !Entity::IsSpotVisibleThroughEnemies(player, tempSpot) )
 			return nullptr;
-		}
-		if (!(cmd->buttons & IN_ATTACK || inputSystem->IsButtonDown(Settings::Legitbot::aimkey)) || lockedOn->GetDormant())//|| !Entity::IsVisible(lockedOn, bestBone, 180.f, Settings::ESP::Filters::smokeCheck))
-		{
-			lockedOn = nullptr;
-		}
-		else
-		{
-			if( Settings::Legitbot::AutoAim::closestBone )
-			{
-				Vector tempSpot = GetClosestSpot(cmd, localplayer, lockedOn, aimTargetType);
-				if( tempSpot.IsZero() )
-				{
-					return nullptr;
-				}
-				*bestSpot = tempSpot;
-			}
-			else
-			{
-				*bestSpot = lockedOn->GetBonePosition((int)Settings::Legitbot::bone);
-			}
-
-			return lockedOn;
-		}
+		eVecTarget = tempSpot;
 	}
-
-	for (int i = 1; i < engine->GetMaxClients(); ++i)
+	else if (IsPriorityBoneINFov)
 	{
-		C_BasePlayer* player = (C_BasePlayer*) entityList->GetClientEntity(i);
-
-		if (!player
-			|| player == localplayer
-			|| player->GetDormant()
-			|| !player->GetAlive()
-			|| player->GetImmune())
-			continue;
-
-		if (!Settings::Legitbot::friendly && Entity::IsTeamMate(player, localplayer))
-			continue;
-
-		if( !Legitbot::friends.empty() ) // check for friends, if any
-		{
-			IEngineClient::player_info_t entityInformation;
-			engine->GetPlayerInfo(i, &entityInformation);
-
-			if (std::find(Legitbot::friends.begin(), Legitbot::friends.end(), entityInformation.xuid) != Legitbot::friends.end())
-				continue;
-		}
-		Vector eVecTarget = {0,0,0};
-		Legitbot::targetAimbot = i;
-		if( !Settings::Legitbot::AutoAim::closestBone )
-		{
-			eVecTarget = player->GetBonePosition((int) Settings::Legitbot::bone);
-			
-		}
-		else
-		{
-			Vector tempSpot = GetClosestSpot(cmd, localplayer, player, aimTargetType);
-			if( tempSpot.IsZero() || !Entity::IsSpotVisibleThroughEnemies(player, tempSpot) )
-				continue;
-			eVecTarget = tempSpot;
-		}
-		
-
-		Vector pVecTarget = localplayer->GetEyePosition();
-        lastRayStart = pVecTarget;
-        lastRayEnd = eVecTarget;
-
-		QAngle viewAngles;
-		engine->GetViewAngles(viewAngles);
-
-		float distance = pVecTarget.DistTo(eVecTarget);
-		float fov = Math::GetFov(viewAngles, Math::CalcAngle(pVecTarget, eVecTarget));
-
-		if (aimTargetType == AimTargetType::FOV && fov > bestFov)
-			continue;
-
-		float realDistance = GetRealDistanceFOV(distance, Math::CalcAngle(pVecTarget, eVecTarget), cmd);
-
-		if (aimTargetType == AimTargetType::REAL_DISTANCE && realDistance > bestRealDistance)
-			continue;
-		if (visibleCheck && !Settings::Legitbot::AutoWall::enabled && !Entity::IsSpotVisible(player, eVecTarget))
-			continue;
-		if ( Settings::Legitbot::SmokeCheck::enabled && LineGoesThroughSmoke( localplayer->GetEyePosition( ), eVecTarget, true ) )
-			continue;
-		if ( Settings::Legitbot::FlashCheck::enabled && localplayer->IsFlashed() )
-			continue;
-
-
-		closestEntity = player;
-		*bestSpot = eVecTarget;
-		bestFov = fov;
-		bestRealDistance = realDistance;
+		eVecTarget = player->GetBonePosition((int) Settings::Legitbot::bone);
 	}
+	
+	if (visibleCheck && !Entity::IsSpotVisible(player, eVecTarget))
+		return nullptr;
+	if ( Settings::Legitbot::SmokeCheck::enabled && LineGoesThroughSmoke( localplayer->GetEyePosition( ), eVecTarget, true ) )
+		return nullptr;
+	if ( Settings::Legitbot::FlashCheck::enabled && localplayer->IsFlashed() )
+		return nullptr;
+
+
+	closestEntity = player;
+	*bestSpot = eVecTarget;
 
 	if( bestSpot->IsZero() )
 		return nullptr;
 
-	/*
-	if( closestEntity )
-	{
-		IEngineClient::player_info_t playerInfo;
-		engine->GetPlayerInfo(closestEntity->GetIndex(), &playerInfo);
-		cvar->ConsoleDPrintf("%s is Closest.\n", playerInfo.name);
-	}
-	*/
-
 	return closestEntity;
 }
+
+
 
 static void RCS(QAngle& angle, C_BasePlayer* player, CUserCmd* cmd)
 {

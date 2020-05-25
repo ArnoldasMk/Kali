@@ -31,7 +31,6 @@ void Misc::RenderTab()
 	const char* teams[] = { "Allies", "Enemies", "Both" };
 	const char* grenadeTypes[] = { "FLASH", "SMOKE", "MOLOTOV", "HEGRENADE" };
 	const char* throwTypes[] = { "NORMAL", "RUN", "JUMP", "WALK" };
-	const char* angleTypes[] = { "Real", "Fake" };
 
 	ImGui::Columns(2, nullptr, true);
 	{

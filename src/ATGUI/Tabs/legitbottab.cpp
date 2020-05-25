@@ -245,19 +245,13 @@ void Legitbot::RenderTab()
 			ImGui::Columns(1, nullptr, false);
 			{
 				ImGui::PushItemWidth(-1);
-				if(ImGui::Checkbox(XORSTR("ClosestBone"), &closestBone))
+				
+				ImGui::Text(XORSTR("Priority"));
+				ImGui::SameLine(0.0f, -1.0f);	
+				if (ImGui::Combo(XORSTR("##AIMTARGET"), (int*)&bone, targets, IM_ARRAYSIZE(targets)))
 					UI::UpdateWeaponSettings();
-				
-				
-				ImGui::SameLine(0.0f, -1.0f);
-				{
-					if(!closestBone)
-					{
-						if (ImGui::Combo(XORSTR("##AIMTARGET"), (int*)&bone, targets, IM_ARRAYSIZE(targets)))
-							UI::UpdateWeaponSettings();
-					}
-				if( closestBone )
-				{
+
+				ImGui::Columns(1);
 					if(ImGui::Button(XORSTR("Bones"), ImVec2(-1, 0)))
 						ImGui::OpenPopup(XORSTR("optionBones"));
 					ImGui::SetNextWindowSize(ImVec2((ImGui::GetWindowWidth()/1.25f),ImGui::GetWindowHeight()), ImGuiSetCond_Always);
@@ -343,20 +337,7 @@ void Legitbot::RenderTab()
 						ImGui::PopItemWidth();
 						ImGui::EndPopup();
 					}
-				}
-				}
-				
-
-				if(engageLock)
-				{
-					if(ImGui::Checkbox(XORSTR("Target Reacquisition"), &engageLockTR))
-						UI::UpdateWeaponSettings();
-					if( engageLockTR )
-					{
-						if(ImGui::SliderInt(XORSTR("##TTR"), &engageLockTTR, 0, 1000))
-							UI::UpdateWeaponSettings();
-					}
-				}
+			
 				ImGui::PopItemWidth();
 			}
 			ImGui::Columns(1, nullptr, true);

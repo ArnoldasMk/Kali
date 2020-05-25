@@ -1,3 +1,5 @@
+#pragma GCC diagnostic ignored "-Wcomment"
+
 #include "ragebot.h"
 #include "autowall.h"
 
@@ -11,29 +13,22 @@
 #include <future>
 
 #define absolute(x) ( x = x < 0 ? x * -1 : x)
+
 std::vector<int64_t> Ragebot::friends = {};
 std::vector<long> RagebotkillTimes = { 0 }; // the Epoch time from when we kill someone
 
-inline bool RagebotShouldAim = false, 
+inline bool RagebotShouldAim = false,
 			EnemyPresent = false,
 			doubleFire = false,
 			deathDamage = false;
 
-inline int prevWeaponIndex = NULL,
-			DeathBoneIndex = NULL;
+inline int DeathBoneIndex = 0;
 
 const int MultiVectors = 7, HeadMultiVectors = 11;
 
-static float prevSpotDamage = NULL;
+static float prevSpotDamage = 0.f;
 
-static Vector DoubleTapSpot = Vector{NULL,NULL,NULL};
-
-struct Enemy
-{
-	C_BasePlayer* player = nullptr;
-	int Index = 0;
-	int size = 0;
-};
+static Vector DoubleTapSpot = Vector{0.f,0.f,0.f};
 
 
 /* Fills points Vector. True if successful. False if not.  Credits for Original method - ReactiioN */
@@ -193,7 +188,7 @@ static bool LowerChestMultiPoint(C_BasePlayer* player, Vector points[], matrix3x
 ** Method for safety damage prediction where 
 ** It will just look for required Damage Not for the best damage
 */
-static void safetyPrediction(C_BasePlayer* player, Vector *wallbangspot, float* wallbangdamage, Vector *visibleSpot, float* VisibleDamage, int *i, float *playerHelth)
+static void safetyPrediction(C_BasePlayer* player, Vector *wallbangspot, float* wallbangdamage, Vector *visibleSpot, float* VisibleDamage, int i, float *playerHelth)
 {
 	// cvar->ConsoleDPrintf("In Safety Prediction Function\n");
 	static float minDamage = Settings::Ragebot::AutoWall::value;
@@ -204,16 +199,16 @@ static void safetyPrediction(C_BasePlayer* player, Vector *wallbangspot, float* 
 
     float FOV = Settings::Ragebot::AutoAim::fov;
 
-	matrix3x4_t boneMatrix[128];
+	matrix3x4_t boneMatrix[256];
 
-	if ( !player->SetupBones(boneMatrix, 128, 0x100, 0) )
+	if ( !player->SetupBones(boneMatrix, 256, 0x100, 0) )
 		return;
 
 
-	if (!Settings::Ragebot::AutoAim::desiredBones[*i])
+	if (!Settings::Ragebot::AutoAim::desiredBones[i])
 	    return;
 
-	int boneID = (*modelType).at(*i);
+	int boneID = (*modelType).at(i);
 
 	if (boneID == BONE_INVALID) // bone not available on this modeltype.
 	   	return;
@@ -222,7 +217,7 @@ static void safetyPrediction(C_BasePlayer* player, Vector *wallbangspot, float* 
 		
 
 	// If we found head here
-	if (boneID == CONST_BONE_HEAD) // head multipoint
+	if (boneID == BONE_HEAD) // head multipoint
 	{
 	    Vector headPoints[HeadMultiVectors];
 	    if (!HeadMultiPoint(player, headPoints, boneMatrix))
@@ -251,7 +246,7 @@ static void safetyPrediction(C_BasePlayer* player, Vector *wallbangspot, float* 
 					*VisibleDamage = spotDamage;
 		    		*visibleSpot = headPoints[j];
 					deathDamage = true;
-					DeathBoneIndex = *i;
+					DeathBoneIndex = i;
 					return;
 				}
 		    	*VisibleDamage = spotDamage;
@@ -264,7 +259,7 @@ static void safetyPrediction(C_BasePlayer* player, Vector *wallbangspot, float* 
 					*wallbangdamage = spotDamage;
 		    		*wallbangspot = headPoints[j];
 					deathDamage = true;
-					DeathBoneIndex = *i;
+					DeathBoneIndex = i;
 					return;
 				}
 		    	*wallbangdamage = spotDamage;
@@ -273,7 +268,7 @@ static void safetyPrediction(C_BasePlayer* player, Vector *wallbangspot, float* 
 	    }
 	}
 	
-	else if (boneID == CONST_BONE_UPPER_SPINE) // upper chest MultiPoint
+	else if (boneID == BONE_UPPER_SPINAL_COLUMN) // upper chest MultiPoint
 	{
 	    Vector upperChest[MultiVectors];
 	    if (!UpperChestMultiPoint(player, upperChest, boneMatrix))
@@ -301,7 +296,7 @@ static void safetyPrediction(C_BasePlayer* player, Vector *wallbangspot, float* 
 					*VisibleDamage = spotDamage;
 		    		*visibleSpot = upperChest[j];
 					deathDamage = true;
-					DeathBoneIndex = *i;
+					DeathBoneIndex = i;
 					return;
 				}
 		    	*VisibleDamage = spotDamage;
@@ -314,7 +309,7 @@ static void safetyPrediction(C_BasePlayer* player, Vector *wallbangspot, float* 
 					*wallbangdamage = spotDamage;
 		    		*wallbangspot = upperChest[j];
 					deathDamage = true;
-					DeathBoneIndex = *i;
+					DeathBoneIndex = i;
 					return;
 				}
 		    	*wallbangdamage = spotDamage;
@@ -324,7 +319,7 @@ static void safetyPrediction(C_BasePlayer* player, Vector *wallbangspot, float* 
 	    }
 	}
 	
-	else if (boneID == CONST_BONE_MIDDLE_SPINE) // Chest Multipoint
+	else if (boneID == BONE_MIDDLE_SPINAL_COLUMN) // Chest Multipoint
 	{
 	    Vector MiddleChest[MultiVectors];
 	    if (!ChestMultiPoint(player, MiddleChest, boneMatrix))
@@ -352,7 +347,7 @@ static void safetyPrediction(C_BasePlayer* player, Vector *wallbangspot, float* 
 					*VisibleDamage = spotDamage;
 		    		*visibleSpot = MiddleChest[j];
 					deathDamage = true;
-					DeathBoneIndex = *i;
+					DeathBoneIndex = i;
 					return;
 				}
 		    	*VisibleDamage = spotDamage;
@@ -365,7 +360,7 @@ static void safetyPrediction(C_BasePlayer* player, Vector *wallbangspot, float* 
 					*wallbangdamage = spotDamage;
 		    		*wallbangspot = MiddleChest[j];
 					deathDamage = true;
-					DeathBoneIndex = *i;
+					DeathBoneIndex = i;
 					return;
 				}
 		    	*wallbangdamage = spotDamage;
@@ -374,17 +369,17 @@ static void safetyPrediction(C_BasePlayer* player, Vector *wallbangspot, float* 
 	    }
 	}
 	
-	else if (boneID == CONST_BONE_LOWER_SPINE) // Lower multipoint
+	else if (boneID == BONE_LOWER_SPINAL_COLUMN) // Lower multipoint
 	{
-	    Vector LowerChest[MultiVectors];
-	    if (!LowerChestMultiPoint(player, LowerChest, boneMatrix))
+	    Vector LowerChestVec[MultiVectors];
+	    if (!LowerChestMultiPoint(player, LowerChestVec, boneMatrix))
 			return;
 
 	   //cvar->ConsoleDPrintf(XORSTR("Found the lowerChest\n"));
 	    for (int j = 0; j < MultiVectors; j++)
 	    {
 			Autowall::FireBulletData data;
-			float spotDamage = Autowall::GetDamage(LowerChest[j], true, data);
+			float spotDamage = Autowall::GetDamage(LowerChestVec[j], true, data);
 
 
 			if (spotDamage <= 0.f )
@@ -401,32 +396,33 @@ static void safetyPrediction(C_BasePlayer* player, Vector *wallbangspot, float* 
 				if (spotDamage >= *playerHelth + 9 )
 				{
 					*VisibleDamage = spotDamage;
-		    		*visibleSpot = LowerChest[j];
+		    		*visibleSpot = LowerChestVec[j];
 					deathDamage = true;
-					DeathBoneIndex = *i;
+					DeathBoneIndex = i;
 					return;
 				}
 		    	*VisibleDamage = spotDamage;
-		    	*visibleSpot = LowerChest[j];
+		    	*visibleSpot = LowerChestVec[j];
 			}
 			else 
 			{
 				if ( spotDamage >= *playerHelth + 9 )
 				{
 					*wallbangdamage = spotDamage;
-		    		*wallbangspot = LowerChest[j];
+		    		*wallbangspot = LowerChestVec[j];
 					deathDamage = true;
-					DeathBoneIndex = *i;
+					DeathBoneIndex = i;
 					return;
 				}
 		    	*wallbangdamage = spotDamage;
-		    	*wallbangspot = LowerChest[j];
+		    	*wallbangspot = LowerChestVec[j];
 			}
 			
 	    }
 	}
 
 	else {
+
 		Vector bone3D = player->GetBonePosition(boneID);
 
 		//cvar->ConsoleDPrintf(XORSTR("bone ID : %d \n"), boneID);
@@ -449,7 +445,7 @@ static void safetyPrediction(C_BasePlayer* player, Vector *wallbangspot, float* 
 				*VisibleDamage = spotDamage;
 		    	*visibleSpot = bone3D;
 				deathDamage = true;
-				DeathBoneIndex = *i;
+				DeathBoneIndex = i;
 				return;
 			}
 		    *VisibleDamage = spotDamage;
@@ -462,7 +458,7 @@ static void safetyPrediction(C_BasePlayer* player, Vector *wallbangspot, float* 
 				*wallbangdamage = spotDamage;
 				*wallbangspot = bone3D;
 				deathDamage = true;
-				DeathBoneIndex = *i;
+				DeathBoneIndex = i;
 				return;
 			}
 		   	*wallbangdamage = spotDamage;
@@ -519,8 +515,8 @@ static void BestDamagePrediction(C_BasePlayer* player, Vector *wallbangspot, flo
 
 			if (spotDamage <= 0.f )
 				continue;
-
-			if ( (spotDamage < minDamage && spotDamage < minDamageVisible) )
+			
+			if ( ( spotDamage < minDamage && spotDamage < minDamageVisible ) )
 				continue;
 
 			if ( !EnemyPresent ) 
@@ -809,7 +805,7 @@ static void GetBestSpotAndDamage(C_BasePlayer* player, Vector& wallBangSpot, flo
 {
 	
 	int len = sizeof(Settings::Ragebot::AutoAim::desiredBones) / sizeof(Settings::Ragebot::AutoAim::desiredBones[0]);
-	//cvar->ConsoleDPrintf(XORSTR("lenth : %d"), len);
+
 	Vector WallBangSpot[len],
 			VisibleSpot[len];
 
@@ -826,7 +822,7 @@ static void GetBestSpotAndDamage(C_BasePlayer* player, Vector& wallBangSpot, flo
 		{
 				WallBangDamage[i] = VisibleDamage[i] = 0;
 				WallBangSpot[i] = VisibleSpot[i] = Vector{0,0,0};
-				auto temp = std::async(std::launch::async, safetyPrediction, player, &WallBangSpot[i], &WallBangDamage[i], &VisibleSpot[i], &VisibleDamage[i], &i, &playerHelth);
+				auto temp = std::async(std::launch::async, safetyPrediction, player, &WallBangSpot[i], &WallBangDamage[i], &VisibleSpot[i], &VisibleDamage[i], i, &playerHelth);
 				
 		}
 
@@ -839,13 +835,14 @@ static void GetBestSpotAndDamage(C_BasePlayer* player, Vector& wallBangSpot, flo
 				visibleSpot = VisibleSpot[DeathBoneIndex];
 				wallBangSpot = WallBangSpot[DeathBoneIndex];
 				wallBangDamage = WallBangDamage[DeathBoneIndex];
-				DeathBoneIndex = NULL;
+				DeathBoneIndex = 0;
 				return;
 			}
 
 			if ( VisibleDamage[i] <= 0.f && WallBangDamage[i] <= 0.f)
 				continue;
 
+			
 			if ( VisibleDamage[i] >= playerHelth)
 			{
 				visibleDamage = VisibleDamage[i];
@@ -917,13 +914,13 @@ static void GetBestSpotAndDamage(C_BasePlayer* player, Vector& wallBangSpot, flo
 				visibleSpot = VisibleSpot[DeathBoneIndex];
 				wallBangSpot = WallBangSpot[DeathBoneIndex];
 				wallBangDamage = WallBangDamage[DeathBoneIndex];
-				DeathBoneIndex = NULL;
+				DeathBoneIndex = 0.f;
 				return;
 			}
 
 			if ( VisibleDamage[i] <= 0.f && WallBangDamage[i] <= 0.f)
 				continue;
-				
+	
 			if (VisibleDamage[i] >= playerHelth / 2)
 			{
 				visibleSpot = VisibleSpot[i];
@@ -942,13 +939,13 @@ static void GetBestSpotAndDamage(C_BasePlayer* player, Vector& wallBangSpot, flo
 			}
 			else
 			{
-				if (VisibleDamage[i] >= WallBangDamage[i] >= prevSpotDamage )
+				if (VisibleDamage[i] >= WallBangDamage[i] && VisibleDamage[i] >= prevSpotDamage )
 				{
 					visibleSpot = VisibleSpot[i];
 					prevSpotDamage = visibleDamage = VisibleDamage[i];
 				}
 						
-				else if ( WallBangDamage[i] > VisibleDamage[i] >= prevSpotDamage)
+				else if ( WallBangDamage[i] > VisibleDamage[i] && WallBangDamage[i]>= prevSpotDamage)
 				{
 					wallBangSpot = WallBangSpot[i];
 					prevSpotDamage = wallBangDamage = WallBangDamage[i];
@@ -960,12 +957,6 @@ static void GetBestSpotAndDamage(C_BasePlayer* player, Vector& wallBangSpot, flo
 	
 	prevSpotDamage = 0.f;
 	return;
-}
-
-
-static Vector VelocityExtrapolate(C_BasePlayer* player, Vector aimPos)
-{
-    return aimPos + (player->GetVelocity() * globalVars->interval_per_tick);
 }
 
 
@@ -1000,8 +991,6 @@ static C_BasePlayer* GetClosestEnemy (C_BasePlayer *localplayer, CUserCmd* cmd)
 		Vector cbVecTarget = player->GetAbsOrigin();
 		
 		cbFov = Math::GetFov(viewAngles, Math::CalcAngle(pVecTarget, cbVecTarget));
-		Vector enemyPos = player->GetAbsOrigin();
-		QAngle viewAngles = cmd->viewangles;
 		
 		//float distance = Math::CalMaxDistance(viewAngles, enemyPos);
 
@@ -1011,12 +1000,13 @@ static C_BasePlayer* GetClosestEnemy (C_BasePlayer *localplayer, CUserCmd* cmd)
 			prevDistance = cbFov;
 			closenstEntity = player;
 		}
-		else if ( cbFov < prevDistance /*&& view > prevViewAngle &&*/ /*viewDirection < prevViewOffset*/)
+		else if ( cbFov < prevDistance )
 		{
 			prevDistance = cbFov;
 			closenstEntity = player;
 		}
 	}
+	Ragebot::LockedEnemy = closenstEntity;
 	return closenstEntity;
 }
 
@@ -1036,15 +1026,15 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, Vector* bestSpot, fl
     if ( doubleFire && Settings::Ragebot::DoubleFire)
 	{
 		*bestSpot = DoubleTapSpot;
-		DoubleTapSpot = Vector{NULL,NULL,NULL};
+		DoubleTapSpot = Vector{0.f,0.f,0.f};
 		doubleFire = false;
 		return localplayer;
 	}
 	else
 	{
 		doubleFire = false;
-		*bestSpot = Vector{NULL, NULL, NULL};
-		DoubleTapSpot = Vector{NULL,NULL,NULL};
+		*bestSpot = Vector{0.f, 0.f, 0.f};
+		DoubleTapSpot = Vector{0.f,0.f,0.f};
 	}
 
 	Vector wallBangSpot,
@@ -1052,22 +1042,20 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, Vector* bestSpot, fl
 	float WallBangdamage, 
 			VisibleDamage;
 			
-			wallBangSpot = Vector{ NULL, NULL, NULL },
-	       	VisibleSpot = Vector{ NULL, NULL, NULL };
-			WallBangdamage = NULL, 
-			VisibleDamage = NULL;
+	wallBangSpot = Vector{ 0.f, 0.f, 0.f },
+	VisibleSpot = Vector{ 0.f, 0.f, 0.f };
+	WallBangdamage = 0.f, 
+	VisibleDamage = 0.f;
 
 		C_BasePlayer* player = GetClosestEnemy(localplayer, cmd);
 	
 		if ( player == nullptr )
 		{
-			cvar->ConsoleDPrintf(XORSTR("returning null mean no enemy \n"));
+			// cvar->ConsoleDPrintf(XORSTR("returning null mean no enemy \n"));
 			return player;
 		}
 
 		GetBestSpotAndDamage(player, wallBangSpot, WallBangdamage, VisibleSpot, VisibleDamage);
-
-		C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*)entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
 
 		float playerHelth = player->GetHealth();
 
@@ -1189,21 +1177,20 @@ static C_BasePlayer* GetBestEnemyAndSpot(CUserCmd* cmd, Vector* bestSpot, float*
     C_BasePlayer* closestEntity = nullptr;
 
 	if (!localplayer->GetAlive())
-	{
 		return nullptr;
-	}
-    if ( doubleFire && Settings::Ragebot::DoubleFire)
+    
+	if ( doubleFire && Settings::Ragebot::DoubleFire)
 	{
 		*bestSpot = DoubleTapSpot;
-		DoubleTapSpot = Vector{NULL,NULL,NULL};
+		DoubleTapSpot = Vector{0.f,0.f,0.f};
 		doubleFire = false;
 		return localplayer;
 	}
 	else
 	{
 		doubleFire = false;
-		*bestSpot = Vector{NULL, NULL, NULL};
-		DoubleTapSpot = Vector{NULL,NULL,NULL};
+		*bestSpot = Vector{0.f, 0.f, 0.f};
+		DoubleTapSpot = Vector{0.f,0.f,0.f};
 	}
 
 	Vector wallBangSpot,
@@ -1211,12 +1198,12 @@ static C_BasePlayer* GetBestEnemyAndSpot(CUserCmd* cmd, Vector* bestSpot, float*
 	float WallBangdamage, 
 			VisibleDamage;
 			
-			wallBangSpot = Vector{ NULL, NULL, NULL },
-	       	VisibleSpot = Vector{ NULL, NULL, NULL };
-			WallBangdamage = NULL, 
-			VisibleDamage = NULL;
+			wallBangSpot = Vector{ 0.f, 0.f, 0.f },
+	       	VisibleSpot = Vector{ 0.f, 0.f, 0.f };
+			WallBangdamage = 0.f, 
+			VisibleDamage = 0.f;
 
-	cvar->ConsoleDPrintf(XORSTR("in best damage function"));
+	// cvar->ConsoleDPrintf(XORSTR("in best damage function"));
 	for (int i = 1; i < engine->GetMaxClients(); ++i)
 	{
 		C_BasePlayer* player = (C_BasePlayer*) entityList->GetClientEntity(i);
@@ -1240,9 +1227,8 @@ static C_BasePlayer* GetBestEnemyAndSpot(CUserCmd* cmd, Vector* bestSpot, float*
 				continue;
 
 		}
-			GetBestSpotAndDamage(player, wallBangSpot, WallBangdamage, VisibleSpot, VisibleDamage);
-
-		C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*)entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
+		
+		GetBestSpotAndDamage(player, wallBangSpot, WallBangdamage, VisibleSpot, VisibleDamage);
 
 		float playerHelth = player->GetHealth();
 
@@ -1361,7 +1347,6 @@ static bool Ragebothitchance(C_BasePlayer* localplayer, C_BaseCombatWeapon* acti
     {
 		activeWeapon->UpdateAccuracyPenalty();
 		float inaccuracy = activeWeapon->GetInaccuracy();
-		float weaponspread = activeWeapon->GetSpread();
 
 		if (inaccuracy == 0)
 	    	inaccuracy = 0.0000001;
@@ -1392,33 +1377,45 @@ static void RagebotRCS(QAngle& angle, C_BasePlayer* player, CUserCmd* cmd, C_Bas
 
     if (Settings::Ragebot::silent || hasTarget)
     {
-	angle.x -= CurrentPunch.x * 2.0f;
-	angle.y -= CurrentPunch.y * 2.0f;
+		angle.x -= CurrentPunch.x * 2.0f;
+		angle.y -= CurrentPunch.y * 2.0f;
     }
     else if (aimpunch)
     {
-	QAngle NewPunch = { CurrentPunch.x - RagebotRCSLastPunch.x, CurrentPunch.y - RagebotRCSLastPunch.y, 0 };
+		QAngle NewPunch = { CurrentPunch.x - RagebotRCSLastPunch.x, CurrentPunch.y - RagebotRCSLastPunch.y, 0 };
 
-	angle.x -= NewPunch.x * 2.0f;
-	angle.y -= NewPunch.y * 2.0f;
+		angle.x -= NewPunch.x * 2.0f;
+		angle.y -= NewPunch.y * 2.0f;
     }
 
     RagebotRCSLastPunch = CurrentPunch;
 }
 
-/*
-** AutoCroutch is a bad idea in hvh instant death if you miss
+
+// AutoCroutch is a bad idea in hvh instant death if you miss
 static void RagebotAutoCrouch(C_BasePlayer* player, CUserCmd* cmd)
 {
-    if (!Settings::Ragebot::AutoCrouch::enabled)
-	return;
+    if (!Settings::Ragebot::AutoCrouch::enable)
+		return;
 
     if (!player)
-	return;
+		return;
 
     cmd->buttons |= IN_BULLRUSH | IN_DUCK;
 }
-*/
+
+
+static bool IsMoving(C_BasePlayer* enemy)
+{
+	MoveType_t Movetype = enemy->GetMoveType();
+	return Movetype == MoveType_t::MOVETYPE_STEP || Movetype == MoveType_t::MOVETYPE_WALK;
+}
+
+static Vector VelocityExtrapolate(C_BasePlayer* player, Vector aimPos)
+{
+	return aimPos + (player->GetVelocity() * globalVars->interval_per_tick);
+}
+
 static void RagebotAutoSlow(C_BasePlayer* player, float& forward, float& sideMove, float& bestDamage, C_BaseCombatWeapon* active_weapon, CUserCmd* cmd)
 {
 
@@ -1572,7 +1569,7 @@ static void RagebotAutoShoot(C_BasePlayer* player, C_BaseCombatWeapon* activeWea
     if (!Settings::Ragebot::AutoShoot::enabled)
 		return;
 
-    if (!player || activeWeapon->GetAmmo() == 0)
+    if ( !player || activeWeapon->GetAmmo() == 0)
 		return;
 
     //C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
@@ -1593,32 +1590,30 @@ static void RagebotAutoShoot(C_BasePlayer* player, C_BaseCombatWeapon* activeWea
     }
 
     if (Settings::Ragebot::HitChance::enabled && !Ragebothitchance(localplayer, activeWeapon))
-    {
 		return;
-    }
 
 	//cvar->ConsoleDPrintf(XORSTR("WE are now applying auto shoot"));
     float nextPrimaryAttack = activeWeapon->GetNextPrimaryAttack();
 
     if (!(*activeWeapon->GetItemDefinitionIndex() == ItemDefinitionIndex::WEAPON_REVOLVER))
     {
-	if (nextPrimaryAttack > globalVars->curtime)
-	{
-	    cmd->buttons &= ~IN_ATTACK;
-	    return;
-	}
-	else
-	{
-	    cmd->buttons |= IN_ATTACK;
-	    return;
-	}
+		if (nextPrimaryAttack > globalVars->curtime)
+		{
+	    	cmd->buttons &= ~IN_ATTACK;
+	    	return;
+		}
+		else
+		{
+	    	cmd->buttons |= IN_ATTACK;
+	    	return;
+		}
     }
 }
 
 static void FixMouseDeltas(CUserCmd* cmd, const QAngle& angle, const QAngle& oldAngle)
 {
     if (!RagebotShouldAim)
-	return;
+		return;
 
     QAngle delta = angle - oldAngle;
     float sens = cvar->FindVar(XORSTR("sensitivity"))->GetFloat();
@@ -1663,19 +1658,22 @@ void Ragebot::CreateMove(CUserCmd* cmd)
 
     Vector bestSpot;
 	float bestDamage;
-	bestSpot = { NULL, NULL, NULL };
-	bestDamage = NULL;
+	bestSpot = { 0.f, 0.f, 0.f };
+	bestDamage = 0.f;
 
 	C_BasePlayer* player = nullptr;
 	if ( Settings::Ragebot::enemySelectionType == EnemySelectionType::CLosestToCrosshair)
     	player = GetClosestPlayerAndSpot(cmd, &bestSpot, &bestDamage);
 	else if ( Settings :: Ragebot::enemySelectionType == EnemySelectionType::BestDamage )
+	{
 		player = GetBestEnemyAndSpot(cmd, &bestSpot, &bestDamage);
+	}
+		
+
+	
 
     if (player)
     {
-		//cvar->ConsoleDPrintf(XORSTR("find a player \n"));
-		
 		//Auto Scop Controll system to controll auto scoping every time
 		if (Settings::Ragebot::ScopeControl::enabled)
 		{
@@ -1696,6 +1694,7 @@ void Ragebot::CreateMove(CUserCmd* cmd)
 		}
 
 		Settings::Debug::AutoAim::target = bestSpot; // For Debug showing aimspot.
+		
 		if (RagebotShouldAim)
 		{
 	   		angle = Math::CalcAngle(localEye, bestSpot);
@@ -1711,6 +1710,7 @@ void Ragebot::CreateMove(CUserCmd* cmd)
 		}
 		Settings::Debug::AutoAim::target = { 0, 0, 0 };
 		RagebotShouldAim = false;
+		angle = Math::CalcAngle(localEye, bestSpot);
     }
     else // No player to Shoot
     {
@@ -1740,26 +1740,26 @@ void Ragebot::CreateMove(CUserCmd* cmd)
 void Ragebot::FireGameEvent(IGameEvent* event)
 {
     if (!event)
-	return;
+		return;
 
     if (strcmp(event->GetName(), XORSTR("player_connect_full")) == 0 || strcmp(event->GetName(), XORSTR("cs_game_disconnected")) == 0)
     {
-	if (event->GetInt(XORSTR("userid")) && engine->GetPlayerForUserID(event->GetInt(XORSTR("userid"))) != engine->GetLocalPlayer())
-	    return;
-	Ragebot::friends.clear();
+		if (event->GetInt(XORSTR("userid")) && engine->GetPlayerForUserID(event->GetInt(XORSTR("userid"))) != engine->GetLocalPlayer())
+	    	return;
+		Ragebot::friends.clear();
     }
     if (strcmp(event->GetName(), XORSTR("player_death")) == 0)
     {
-	int attacker_id = engine->GetPlayerForUserID(event->GetInt(XORSTR("attacker")));
-	int deadPlayer_id = engine->GetPlayerForUserID(event->GetInt(XORSTR("userid")));
+		int attacker_id = engine->GetPlayerForUserID(event->GetInt(XORSTR("attacker")));
+		int deadPlayer_id = engine->GetPlayerForUserID(event->GetInt(XORSTR("userid")));
 
-	if (attacker_id == deadPlayer_id) // suicide
-	    return;
+		if (attacker_id == deadPlayer_id) // suicide
+	    	return;
 
-	if (attacker_id != engine->GetLocalPlayer())
-	    return;
+		if (attacker_id != engine->GetLocalPlayer())
+	    	return;
 
-	RagebotkillTimes.push_back(Util::GetEpochTime());
+		RagebotkillTimes.push_back(Util::GetEpochTime());
     }
 }
 
@@ -1768,11 +1768,11 @@ void Ragebot::UpdateValues()
     C_BasePlayer* localplayer = (C_BasePlayer*)entityList->GetClientEntity(engine->GetLocalPlayer());
     C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*)entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
     if (!activeWeapon)
-	return;
+		return;
 
     ItemDefinitionIndex index = ItemDefinitionIndex::INVALID;
     if (Settings::Ragebot::weapons.find(*activeWeapon->GetItemDefinitionIndex()) != Settings::Ragebot::weapons.end())
-	index = *activeWeapon->GetItemDefinitionIndex();
+		index = *activeWeapon->GetItemDefinitionIndex();
 
     const RagebotWeapon_t& currentWeaponSetting = Settings::Ragebot::weapons.at(index);
 
@@ -1795,5 +1795,5 @@ void Ragebot::UpdateValues()
 	Settings::Ragebot::DoubleFire = currentWeaponSetting.DoubleFire;
 
     for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
-	Settings::Ragebot::AutoAim::desiredBones[bone] = currentWeaponSetting.desiredBones[bone];
+		Settings::Ragebot::AutoAim::desiredBones[bone] = currentWeaponSetting.desiredBones[bone];
 }
