@@ -671,18 +671,13 @@ void Legitbot::CreateMove(CUserCmd* cmd)
                 }
 			
 	        }
-
             // Conditions if AimKeyOnly enabled
             if (Settings::Legitbot::aimkeyOnly)
             {
 				shouldAim = AimKeyOnly(cmd);
                 
             }
-			else if( cmd->buttons & IN_ATTACK && !Settings::Legitbot::ShootAssist::enabled && Settings::Legitbot::AutoAim::enabled)
-			{
-				shouldAim = true;
-			}
-			else if (cmd->buttons & IN_ATTACK && Settings::Legitbot::ShootAssist::enabled)
+			else if( cmd->buttons & IN_ATTACK)
 			{
 				shouldAim = true;
 			}
