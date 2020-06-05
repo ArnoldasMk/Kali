@@ -148,7 +148,7 @@ static void SwapWindow(SDL_Window* window)
     }
     SDL_ShowCursor(io.MouseDrawCursor ? 0: 1);
 
-
+    UI::SetupColors();
     if (!UI::DrawImWatermark())
     {
         ImGui::NewFrame();
@@ -158,9 +158,8 @@ static void SwapWindow(SDL_Window* window)
             ImGuiStyle& style = ImGui::GetStyle();
             style.WindowBorderSize = 0.0f;
             ImGui::Begin( XORSTR("##mainFrame"), (bool*)true, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiColumnsFlags_NoBorder | ImGuiWindowFlags_NoResize);
-                UI::SetupColors();
                 UI::SetupWindows();
-                // UI::DrawImWatermark();
+                //UI::DrawImWatermark();
                 Hooks::PaintImGui(); // Process ImGui Draw Commands
             ImGui::End();
         
