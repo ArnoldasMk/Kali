@@ -539,11 +539,15 @@ void Ragebot::CreateMove(CUserCmd* cmd)
 
     C_BasePlayer* localplayer = (C_BasePlayer*)entityList->GetClientEntity(engine->GetLocalPlayer());
 
-    if (!localplayer || !localplayer->GetAlive())
+    if (!localplayer)
+		return;
+	if (!localplayer->GetAlive())
 		return;
 
     C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*)entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
-    if (!activeWeapon || activeWeapon->GetInReload())
+    if (!activeWeapon)
+		return;
+	if (activeWeapon->GetInReload())
 		return;
 
     CSWeaponType weaponType = activeWeapon->GetCSWpnData()->GetWeaponType();
