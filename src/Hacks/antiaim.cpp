@@ -232,6 +232,8 @@ static void FakeArroundRealAntiAim(C_BasePlayer *const localplayer, QAngle& angl
     {
         switch (Settings::AntiAim::Yaw::typeFake)
         {
+            case AntiAimFakeType_y::NONE :
+                break;
             case AntiAimFakeType_y::Static:
                 *localplayer->GetLowerBodyYawTarget() = angle.y;
                 angle.y = inverted ? AntiAim::realAngle.y + GetPercentVal(maxDelta, AntiAImPercent) : AntiAim::realAngle.y - GetPercentVal(maxDelta, AntiAImPercent);
@@ -245,9 +247,6 @@ static void FakeArroundRealAntiAim(C_BasePlayer *const localplayer, QAngle& angl
                 else
                     angle.y = AntiAim::realAngle.y + static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX/maxDelta);
                 break;
-
-            default:
-                break;
         }
         AntiAim::fakeAngle.y = angle.y;
     } 
@@ -256,17 +255,17 @@ static void FakeArroundRealAntiAim(C_BasePlayer *const localplayer, QAngle& angl
     {     
         switch (Settings::AntiAim::Yaw::typeReal)
         {
+            case AntiAimRealType_Y::NONE :
+                break;
             case AntiAimRealType_Y::Static :
                 angle.y -= 180.f;
                 break;
-            case AntiAimRealType_Y::Jitter:
+            case AntiAimRealType_Y::Jitter :
                 angle.y = bFlip ? (ViewAngle.y-180.f) + GetPercentVal(180.f, JitterPercent) : (ViewAngle.y-180.f) - GetPercentVal(180.f, JitterPercent);
                 break;
-            case AntiAimRealType_Y::Randome: 
-                static float percent  = GetPercentVal(180.f, JitterPercent);
+            case AntiAimRealType_Y::Randome : 
+                float percent  = GetPercentVal(180.f, JitterPercent);
                 angle.y = (ViewAngle.y-180.f) + static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX/percent);
-                break;
-            default:
                 break;
         }
         LBYBreak(angle.y + 45.f, angle, localplayer);
