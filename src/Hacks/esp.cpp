@@ -282,8 +282,9 @@ bool ESP::WorldToScreen( const Vector &origin, ImVec2 * const screen ) {
 	return true;
 }
 
-static void DrawBox( ImColor color, int x, int y, int w, int h, C_BaseEntity* entity ) {
-	if ( Settings::ESP::Boxes::type == BoxType::FRAME_2D ) {
+static void DrawBox( ImColor color, int x, int y, int w, int h, C_BaseEntity* entity, BoxType& boxtype ) {
+ 
+	if ( boxtype == BoxType::FRAME_2D ) {
 		int VertLine = w / 3;
 		int HorzLine = h / 3;
 		int squareLine = std::min( VertLine, HorzLine );
@@ -329,7 +330,7 @@ static void DrawBox( ImColor color, int x, int y, int w, int h, C_BaseEntity* en
 		// bottom-right corner / missing edges
 		Draw::AddRect( x + w - squareLine, y + h - 2, x + w - squareLine + 1, y + h + 1, ImColor( 10, 10, 10, 190 ) );
 		Draw::AddRect( x + w - 2, y + h - squareLine - 1, x + w + 1, y + h - squareLine, ImColor( 10, 10, 10, 190 ) );
-	} else if ( Settings::ESP::Boxes::type == BoxType::FLAT_2D ) {
+	} else if ( boxtype == BoxType::FLAT_2D ) {
 		int VertLine = ( int ) ( w * 0.33f );
 		int HorzLine = ( int ) ( h * 0.33f );
 		int squareLine = std::min( VertLine, HorzLine );
@@ -370,7 +371,7 @@ static void DrawBox( ImColor color, int x, int y, int w, int h, C_BaseEntity* en
 		Draw::AddRect( x + w - 2, y + h - squareLine - 1, x + w + 1, y + h - squareLine, ImColor( 10, 10, 10, 190 ) );
 
 		Draw::AddRectFilled( x, y, x + w, y + h, ImColor( color.Value.x, color.Value.y, color.Value.z, 21 * (1.0f/255.0f) ) );
-	} else if ( Settings::ESP::Boxes::type == BoxType::BOX_3D ) {
+	} else if ( boxtype == BoxType::BOX_3D ) {
 		Vector vOrigin = entity->GetVecOrigin();
 		Vector min = entity->GetCollideable()->OBBMins() + vOrigin;
 		Vector max = entity->GetCollideable()->OBBMaxs() + vOrigin;
@@ -405,7 +406,8 @@ static void DrawBox( ImColor color, int x, int y, int w, int h, C_BaseEntity* en
 				return;
 			Draw::AddLine( p1.x, p1.y, p2.x, p2.y, color );
 		}
-	} /*else if ( Settings::ESP::Boxes::type == BoxType::HITBOXES )  credits to 1337floesen - https://www.unknowncheats.me/forum/counterstrike-global-offensive/157557-drawing-hitboxes.html */ //{
+	} 
+	/*else if ( Settings::ESP::Boxes::type == BoxType::HITBOXES )  credits to 1337floesen - https://www.unknowncheats.me/forum/counterstrike-global-offensive/157557-drawing-hitboxes.html */ //{
 	/*static std::map<int, long> playerDrawTimes;
     if ( playerDrawTimes.find( entity->GetIndex() ) == playerDrawTimes.end() ) { // haven't drawn this player yet
         playerDrawTimes[entity->GetIndex()] = Util::GetEpochTime();
@@ -437,6 +439,7 @@ static void DrawBox( ImColor color, int x, int y, int w, int h, C_BaseEntity* en
 }*/
 }
 
+/* Not using anymore
 static void DrawSprite( int x, int y, int w, int h, C_BaseEntity* entity ){
 	if ( Settings::ESP::Sprite::type == SpriteType::SPRITE_TUX ) {
 		static Texture sprite(tux_rgba, tux_width, tux_height);
@@ -445,13 +448,14 @@ static void DrawSprite( int x, int y, int w, int h, C_BaseEntity* entity ){
 	}
 	// TODO: Handle other sprites
 }
+*/
 
 static void DrawEntity( C_BaseEntity* entity, const char* string, ImColor color ) {
 	int x, y, w, h;
 	if ( !GetBox( entity, x, y, w, h ) )
 		return;
 
-	DrawBox( color, x, y, w, h, entity );
+	DrawBox( color, x, y, w, h, entity , Settings::ESP::Boxes::type);
 	Vector2D nameSize = Draw::GetTextSize( string, esp_font );
 	Draw::AddText(( int ) ( x + ( w / 2 ) - ( nameSize.x / 2 ) ), y + h + 2, string, color );
 }
@@ -506,7 +510,7 @@ static void DrawBulletTrace( C_BasePlayer* player ) {
 	Draw::AddRectFilled( ( int ) ( dst.x - 3 ), ( int ) ( dst.y - 3 ), 6, 6, ESP::GetESPPlayerColor( player, false ) );
 }
 
-static void DrawTracer( C_BasePlayer* player ) {
+static void DrawTracer( C_BasePlayer* player, TracerType& tracerType ) {
 	Vector src3D;
 	Vector src;
 	src3D = player->GetVecOrigin() - Vector( 0, 0, 0 );
@@ -517,9 +521,9 @@ static void DrawTracer( C_BasePlayer* player ) {
 	int x = Paint::engineWidth / 2;
 	int y = 0;
 
-	if ( Settings::ESP::Tracers::type == TracerType::CURSOR )
+	if ( tracerType == TracerType::CURSOR )
 		y = Paint::engineHeight / 2;
-	else if ( Settings::ESP::Tracers::type == TracerType::BOTTOM )
+	else if ( tracerType == TracerType::BOTTOM )
 		y = Paint::engineHeight;
 
 	bool bIsVisible = Entity::IsVisible( player, CONST_BONE_HEAD, 180.f, Settings::ESP::Filters::smokeCheck );
@@ -595,8 +599,8 @@ static void DrawAutoWall(C_BasePlayer *player) {
 		if ( debugOverlay->ScreenPosition( bone3D, bone2D ) )
 			continue;
 
-		Autowall::FireBulletData data;
-		int damage = (int)Autowall::GetDamage( bone3D, !Settings::Legitbot::friendly, data );
+		AutoWall::FireBulletData data;
+		int damage = (int)AutoWall::GetDamage( bone3D, !Settings::Legitbot::friendly, data );
 		char buffer[4];
 		snprintf(buffer, sizeof(buffer), "%d", damage);
 		Draw::AddText( bone2D.x, bone2D.y, buffer, ImColor( 255, 0, 255, 255 ) );
@@ -643,9 +647,9 @@ static void DrawAutoWall(C_BasePlayer *player) {
 	headPoints[10].y -= bbox->radius * 0.80f;
 
 
-	Autowall::FireBulletData data;
+	AutoWall::FireBulletData data;
 	for ( int i = 0; i < 11; i++ ) {
-		int damage = (int)Autowall::GetDamage( headPoints[i], !Settings::Legitbot::friendly, data );
+		int damage = (int)AutoWall::GetDamage( headPoints[i], !Settings::Legitbot::friendly, data );
 		char buffer[4];
 		snprintf(buffer, sizeof(buffer), "%d", damage);
 
@@ -698,8 +702,9 @@ static void DrawSounds( C_BasePlayer *player, ImColor playerColor ) {
     }
 }
 
-static void DrawPlayerHealthBars( C_BasePlayer* player, int x, int y, int w, int h, ImColor color ) {
-	int boxSpacing = Settings::ESP::Boxes::enabled ? 3 : 0;
+static void DrawPlayerHealthBars( C_BasePlayer* player, int x, int y, int w, int h, ImColor color, BarType& bartype ) {
+	
+	int boxSpacing = 3;
 	ImColor barColor;
 
 	// clamp it to 100
@@ -711,17 +716,12 @@ static void DrawPlayerHealthBars( C_BasePlayer* player, int x, int y, int w, int
 	int barw = w;
 	int barh = h;
 
-	if ( Settings::ESP::Bars::colorType == BarColorType::HEALTH_BASED )
-		barColor = ImColor(
+	barColor = ImColor(
 				std::min( 510 * ( 100 - healthValue ) / 100, 255 ),
 				std::min( 510 * healthValue / 100, 255 ),
 				25,
-				255
-		);
-	else if ( Settings::ESP::Bars::colorType == BarColorType::STATIC_COLOR )
-		barColor = color ;
-
-	if ( Settings::ESP::Bars::type == BarType::VERTICAL ) {
+				255);
+	if ( bartype == BarType::VERTICAL ) {
 		barw = 4; // outline(1px) + bar(2px) + outline(1px) = 6px;
 		barx -= barw + boxSpacing; // spacing(1px) + outline(1px) + bar(2px) + outline (1px) = 8 px
 		Draw::AddRectFilled( barx, bary, barx + barw, bary + barh, ImColor( 10, 10, 10, 255 ) );
@@ -731,7 +731,8 @@ static void DrawPlayerHealthBars( C_BasePlayer* player, int x, int y, int w, int
 									 barx + barw - 1, bary + barh - 1, barColor);
 
 		barsSpacing.x += barw;
-	} else if ( Settings::ESP::Bars::type == BarType::VERTICAL_RIGHT ) {
+	} 
+	else if ( bartype == BarType::VERTICAL_RIGHT ) {
 		barx += barw + boxSpacing; // spacing(1px) + outline(1px) + bar(2px) + outline (1px) = 8 px
 		barw = 4; // outline(1px) + bar(2px) + outline(1px) = 6px;
 
@@ -742,7 +743,8 @@ static void DrawPlayerHealthBars( C_BasePlayer* player, int x, int y, int w, int
 									 bary + barh - 1, barColor );
 
 		barsSpacing.x += barw;
-	} else if ( Settings::ESP::Bars::type == BarType::HORIZONTAL ) {
+	} 
+	else if ( bartype == BarType::HORIZONTAL ) {
 		bary += barh + boxSpacing; // player box(?px) + spacing(1px) + outline(1px) + bar(2px) + outline (1px) = 5 px
 		barh = 4; // outline(1px) + bar(2px) + outline(1px) = 4px;
 
@@ -753,7 +755,8 @@ static void DrawPlayerHealthBars( C_BasePlayer* player, int x, int y, int w, int
 			Draw::AddRect( barx + 1, bary + 1, barx + barw - 1, bary + barh - 1, barColor );
 		}
 		barsSpacing.y += barh;
-	} else if ( Settings::ESP::Bars::type == BarType::HORIZONTAL_UP ) {
+	} 
+	else if ( bartype == BarType::HORIZONTAL_UP) {
 		barh = 4; // outline(1px) + bar(2px) + outline(1px) = 4px;
 		bary -= barh + boxSpacing; // spacing(1px) + outline(1px) + bar(2px) + outline (1px) = 5 px
 
@@ -883,21 +886,11 @@ static void DrawPlayerText( C_BasePlayer* player, C_BasePlayer* localplayer, int
 	}
 }
 
-
 static void DrawPlayer(C_BasePlayer* player)
 {
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 
-	if (!localplayer)
-		return;
-
-	if (player == localplayer && !Settings::ESP::Filters::localplayer)
-		return;
-
-	if (!Entity::IsTeamMate(player, localplayer) && !Settings::ESP::Filters::enemies)
-		return;
-
-	if (player != localplayer && Entity::IsTeamMate(player, localplayer) && !Settings::ESP::Filters::allies)
+	if (!localplayer || !player)
 		return;
 
 	bool bIsVisible = false;
@@ -914,28 +907,77 @@ static void DrawPlayer(C_BasePlayer* player)
 	if (!GetBox(player, x, y, w, h))
 		return;
 
-	if (Settings::ESP::Boxes::enabled)
-		DrawBox(playerColor, x, y, w, h, player);
-
-	if (Settings::ESP::Sprite::enabled)
-        DrawSprite(x, y, w, h, player);
-
-	if (Settings::ESP::Bars::enabled)
-		DrawPlayerHealthBars( player, x, y, w, h, playerColor );
-
-	if (Settings::ESP::Skeleton::enabled)
-		DrawSkeleton(player, localplayer);
+	if ( !Entity::IsTeamMate(player, localplayer) ) // mean the entity is enemy
+	{
+		if (Settings::ESP::FilterEnemy::Boxes::enabled ) // Drawing the box arround player
+			DrawBox(playerColor, x, y, w, h, player, Settings::ESP::FilterEnemy::Boxes::type);
 		
-
-	if (Settings::ESP::BulletTracers::enabled)
-		DrawBulletTrace(player);
-
-	if (Settings::ESP::Tracers::enabled && player != localplayer)
-		DrawTracer(player);
-
-	if (Settings::ESP::HeadDot::enabled)
-		DrawHeaddot(player);
-
+		if (Settings::ESP::FilterEnemy::HelthBar::enabled) // Drawing the helth bar
+			DrawPlayerHealthBars(player, x, y, w, h, playerColor, Settings::ESP::FilterEnemy::HelthBar::type);
+		
+		if ( Settings::ESP::FilterEnemy::Tracers::enabled ) // Drawing tracers
+			DrawTracer(player, Settings::ESP::FilterEnemy::Tracers::type);
+		
+		if ( Settings::ESP::FilterEnemy::Skeleton::enabled ) // Drawing Skeliton Bitch Fuzion is god
+			DrawSkeleton(player, localplayer);
+		
+		if (Settings::ESP::FilterEnemy::HeadDot::enabled) // Draw the head dot white indicate to kneck sry :P
+			DrawHeaddot(player);
+		
+		/* Checks various Text Settings */
+		if (Settings::ESP::FilterEnemy::playerInfo::enabled)
+			DrawPlayerText( player, localplayer, x, y, w, h );
+	}
+	else if ( player != localplayer ) // then it means it is our friend nigga
+	{
+		if (Settings::ESP::FilterAlise::Boxes::enabled)
+			DrawBox(playerColor, x, y, w, h, player, Settings::ESP::FilterAlise::Boxes::type);
+		
+		if (Settings::ESP::FilterAlise::HelthBar::enabled) // Drawing the helth bar
+			DrawPlayerHealthBars(player, x, y, w, h, playerColor, Settings::ESP::FilterAlise::HelthBar::type);
+		
+		if ( Settings::ESP::FilterAlise::Tracers::enabled ) // Drawing tracers
+			DrawTracer(player, Settings::ESP::FilterAlise::Tracers::type);
+		
+		if ( Settings::ESP::FilterAlise::Skeleton::enabled ) // Drawing Skeliton Bitch Fuzion is god
+			DrawSkeleton(player, localplayer);
+		
+		if (Settings::ESP::FilterAlise::HeadDot::enabled) // Draw the head dot white indicate to kneck sry :P
+			DrawHeaddot(player);
+		
+		/* Checks various Text Settings */
+		if (Settings::ESP::FilterAlise::playerInfo::enabled)
+			DrawPlayerText( player, localplayer, x, y, w, h );
+	}
+	else if ( player == localplayer && Settings::ThirdPerson::toggled) // There is no need to check this must I try to be secure xd
+	{
+		if (Settings::ESP::FilterLocalPlayer::Boxes::enabled )
+			DrawBox(playerColor, x, y, w, h, player, Settings::ESP::FilterLocalPlayer::Boxes::type);
+		
+		if (Settings::ESP::FilterLocalPlayer::HelthBar::enabled) // Drawing the helth bar
+			DrawPlayerHealthBars(player, x, y, w, h, playerColor, Settings::ESP::FilterLocalPlayer::HelthBar::type);
+		
+		if ( Settings::ESP::FilterLocalPlayer::Tracers::enabled ) // Drawing tracers
+			DrawTracer(player, Settings::ESP::FilterLocalPlayer::Tracers::type);
+		
+		if ( Settings::ESP::FilterLocalPlayer::Skeleton::enabled ) // Drawing Skeliton Bitch Fuzion is god
+			DrawSkeleton(player, localplayer);
+		
+		if (Settings::ESP::FilterLocalPlayer::HeadDot::enabled) // Draw the head dot white indicate to kneck sry :P
+			DrawHeaddot(player);
+		
+		/* Checks various Text Settings */
+		if (Settings::ESP::FilterLocalPlayer::playerInfo::enabled && Settings::ThirdPerson::toggled)
+			DrawPlayerText( player, localplayer, x, y, w, h );
+		
+	}
+	// if (Settings::ESP::Sprite::enabled)
+    //     DrawSprite(x, y, w, h, player);
+	// This is brocken xd
+	// if (Settings::ESP::BulletTracers::enabled)
+	// 	DrawBulletTrace(player);
+	// else if (!Entity::IsTeamMate(player, localplayer) && Settings::ESP::FilterEnemy::BulletTracers::enabled);
+	// 	DrawBulletTrace(player);
 	if (Settings::Debug::AutoWall::debugView)
 		DrawAutoWall(player);
 
@@ -948,10 +990,7 @@ static void DrawPlayer(C_BasePlayer* player)
     if (Settings::ESP::Sounds::enabled) {
 		DrawSounds( player, playerColor );
 	}
-
-
-	/* Checks various Text Settings */
-	DrawPlayerText( player, localplayer, x, y, w, h );
+	
 }
 
 static void DrawBomb(C_BaseCombatWeapon* bomb, C_BasePlayer* localplayer)
@@ -1362,7 +1401,7 @@ static void DrawGlow()
 		glow_object.m_flGlowAlpha = shouldGlow ? color.Value.w : 1.0f;
 		glow_object.m_flBloomAmount = 1.0f;
 		glow_object.m_bRenderWhenOccluded = shouldGlow;
-		glow_object.m_bRenderWhenUnoccluded = false;
+		glow_object.m_bRenderWhenUnoccluded = true;
 	}
 }
 
@@ -1443,7 +1482,7 @@ static void DrawSpread()
         }
     }
     if ( Settings::ESP::Spread::spreadLimit ) {
-        float cone = Settings::Legitbot::Hitchance::value;
+        float cone = Settings::Legitbot::ShootAssist::Hitchance::value;
         if ( cone > 0.0f ) {
             float radius = ( cone * Paint::engineHeight ) / 1.5f;
             Draw::AddRect( ( ( Paint::engineWidth / 2 ) - radius ), ( Paint::engineHeight / 2 ) - radius + 1,
@@ -1498,7 +1537,7 @@ void ESP::Paint()
 
 		ClientClass* client = entity->GetClientClass();
 
-		if (client->m_ClassID == EClassIds::CCSPlayer && (Settings::ESP::Filters::enemies || Settings::ESP::Filters::allies || (Settings::ESP::Filters::localplayer && Settings::ThirdPerson::enabled)))
+		if (client->m_ClassID == EClassIds::CCSPlayer)
 		{
 			C_BasePlayer* player = (C_BasePlayer*) entity;
 

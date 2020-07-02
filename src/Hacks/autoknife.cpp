@@ -68,7 +68,7 @@ void AutoKnife::CreateMove(CUserCmd *cmd)
 	if (!engine->IsInGame())
 		return;
 
-	if (!Settings::AutoKnife::enabled)
+	if (!Settings::AutoKnife::enabled && !Settings::Ragebot::enabled)
 		return;
 
 	if (!inputSystem->IsButtonDown(Settings::Triggerbot::key) && Settings::AutoKnife::onKey)

@@ -3,27 +3,21 @@
 </p>
 ===================
 
-# This Is Stable Chanel For MissedIT
-* This repo Is Basically Going to Get Tested Updates Thogh It will be slow Regarding bug fixes and updated codes
-* To get Letest Updates and Bug Fixes and Improvements then Go to <a href="https://github.com/HackerPolice/MissedIT-Rolling-Release"> MIssedIT-Rolling-Release </a> 
-
-<b>To Know More Know About Releases Click In</b> <a href = "https://github.com/HackerPolice/MissedIT-Stable/releases"> Releases </a>
+# MissedIT
+* To get Stable Updates with Bug Fixes Use Master Branch<a href = https://github.com/HackerPolice/MissedIT >MissedIT</a>. 
 
 # It looks like we are starting to get detected. Use public forks at your own Risk! 
 
-Want to chat or play with other MissedIT users? Join us on Discord :- <a href = https://discord.gg/PDtg8hd> Hacker.Police Discord</a>
+Want to chat or play with other MissedIT users? Join us on Discord :- <a href = https://discord.gg/PDtg8hd><b>Hacker.Police Discord</b></a>
 
 
 ## What is MissedIT?
 
-A fully featured internal hack for *CounterStrike : Global Offensive* written in C++. Which is a Fork of Aimtux-Fuzion
+A fully featured internal hack for *CounterStrike : Global Offensive* written in C++. Which is a Fork of <a href = ""><b>Aimtux-Fuzion</b></a>
 
 ## AUR Installation
-
-
 * Load MissedIT by using the command `./load`
 * Unload using `./unload`
-* As a development package, it will automatically update when you trigger your AUR helper, if a new commit has been pushed
 
 ## Compiling
 
@@ -33,13 +27,11 @@ A fully featured internal hack for *CounterStrike : Global Offensive* written in
 
 If you are having problems compiling make sure you've got the latest version of `g++`.
 
-[How to update g++](https://github.com/AimTuxOfficial/AimTux/wiki/Updating-your-compiler)
-
 ==================
 
 __Ubuntu-Based / Debian:__
 ```bash
-sudo apt-get install cmake g++ gdb git libsdl2-dev zlib1g-dev patchelf
+sudo apt install cmake g++ gdb git libsdl2-dev zlib1g-dev patchelf
 ```
 __Arch:__
 ```bash
@@ -55,11 +47,11 @@ sudo dnf install cmake gcc-c++ gdb git libstdc++-static mesa-libGL-devel SDL2-de
 #### Download MissedIT:
 
 ```bash
-git clone --recursive https://github.com/HackerPolice/MissedIT-Stable.git
+git clone --recursive https://github.com/HackerPolice/MissedIT.git
 ```
 
 ```bash
-cd MissedIT-Fuzion
+cd MissedIT
 ```
 
 ===================
@@ -79,7 +71,7 @@ You can later update with
 
 ## Injecting using the load script
 
-First of all, make sure CS:GO is open, it does not matter whether you are in game or not. However, it is not recommended to inject while CS:GO is loading into a map. 
+First of all, make sure CS:GO is open, and you are not in any official valve server. However, it is not recommended to inject while CS:GO is loading into a map. 
 
 Navigate to the directory where MissedIT was built if you have not ready.
 ```bash
@@ -152,13 +144,14 @@ To add a config, copy the folder containing it to `~/.config/MissedIT/CSGO`
 ![LegitBot](Pictures/Screenshot1.png)
 ![RageBot](Pictures/Screenshot2.png)
 ![esp](Pictures/Screenshot3.png)
+![Misc](Pictures/Screenshot4.png)
 
 
 ## Credits
 
 Special thanks to the Original AimTux project: [https://github.com/AimTuxOfficial/AimTux](https://github.com/AimTuxOfficial/AimTux).
 
-Special thanks to the Fuzion project For Panaroma Update And For Good Quality Codes: [https://github.com/LWSS/Fuzion](https://github.com/LWSS/Fuzion).
+Special thanks to the Fuzion For Panaroma Update And For Good Quality Codes: [https://github.com/LWSS/Fuzion](https://github.com/LWSS/Fuzion).
 
 Special thanks to the Nimbus project For The UI and Resolver: [https://github.com/NimbusProjects/Nimbus](https://github.com/NimbusProjects/Nimbus)
 
@@ -166,4 +159,4 @@ Special thanks to [@aixxe](http://www.github.com/aixxe/) ([aixxe.net](http://www
 
 This project was also originally based upon Atex's [Linux Basehook](http://unknowncheats.me/forum/counterstrike-global-offensive/181878-linux-basehook.html).
 
-[telans](https://github.com/telans) for the AUR package [MissedIT-git](https://aur.archlinux.org/packages/MissedIT-git/)
+[telans](https://github.com/telans) for the AUR package

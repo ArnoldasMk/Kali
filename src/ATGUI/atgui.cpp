@@ -10,8 +10,9 @@
 #include "Windows/main.h"
 #include "Windows/playerlist.h"
 #include "Windows/skinmodelchanger.h"
+#include "Windows/showspectators.h"
 #include "../Hacks/radar.h"
-#include "../Hacks/showspectators.h"
+
 
 bool UI::isVisible = false;
 
@@ -52,6 +53,7 @@ bool UI::DrawImWatermark()
     ImGui::Begin( XORSTR("##mainFrame"), (bool*)false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize );
     Draw::ImText( ImVec2( 20.f, 10.f ), ImColor( 255, 255, 255, 255 ), XORSTR( "MissedIT" ), nullptr, 0.0f, nullptr,
                   ImFontFlags_Outline );
+	
 	ImGui::End();
 	ImGui::EndFrame();
 	return true;
@@ -59,12 +61,13 @@ bool UI::DrawImWatermark()
 
 void UI::SetupWindows()
 {
+	ImVec2 size = ImGui::GetWindowSize();
 	if (UI::isVisible)
 	{
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(960, 645));
-			Main::RenderWindow();
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2( (size.x - 960)/2,(size.x - 645)/2));
+		//MainHeader::RenderWindow();
+		Main::RenderWindow();
 		ImGui::PopStyleVar();
-
 		Configs::RenderWindow();
 		Colors::RenderWindow();
 	}

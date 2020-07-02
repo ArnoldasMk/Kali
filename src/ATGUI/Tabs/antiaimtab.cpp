@@ -14,24 +14,25 @@
 
 static void RageAntiAIm()
 {
-    // const char* yTypes[] = {
-    //         "NONE", "MAX_DELTA_LEFT", "MAX_DELTA_RIGHT", "MAX_DELTA_FLIPPER", "MAX_DELTA_LBY_AVOID"
-    // };
-
     const char* yType[] = {
         "NONE",
         "Static",
         "Jitter",
+        "Random",
     };
 
-    // const char* xTypes[] = {
-    //         "UP", "DOWN", "DANCE", "FRONT", // safe
-    //         "FAKE UP", "FAKE DOWN", "LISP DOWN", "ANGEL DOWN", "ANGEL UP" // untrusted
-    // };
+    const char* RageAntiAimType[] = {
+        "NONE",
+        "Fake Arround Real(Beta)",
+        "Real Arround Fake",
+    };
+    ImGui::Columns(1, nullptr, false); // Pick Rage Anti Aim type
+    {
+        ImGui::PushItemWidth(-1);
+        ImGui::Combo(XORSTR("##RageAntiAimType"), (int*)&Settings::AntiAim::RageAntiAim::Type, RageAntiAimType, IM_ARRAYSIZE(RageAntiAimType));
+        ImGui::PopItemWidth();
+    }
 
-    if ( ImGui::Checkbox(XORSTR("Enable"), &Settings::AntiAim::RageAntiAim::enable) )
-        Settings::AntiAim::LegitAntiAim::enable = false;
-    ImGui::Separator();
     ImGui::Columns(2, nullptr, false);
     {
         ImGui::ItemSize(ImVec2(0.0f, 0.0f), 0.0f);
@@ -46,35 +47,64 @@ static void RageAntiAIm()
         ImGui::Combo(XORSTR("##YACTUALTYPE"), (int*)& Settings::AntiAim::Yaw::typeReal, yType, IM_ARRAYSIZE(yType));
         ImGui::PopItemWidth();
     }
-    // Fake Percentage
-    ImGui::Columns(1);
-    ImGui::PushItemWidth(-1);
-    
-    if(Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Jitter)
-        ImGui::SliderFloat(XORSTR("##RealJitterPercentage"), &Settings::AntiAim::RageAntiAim::RealJitterPercent, 10, 100, "Real Jitter Ammount : %.0f perent");
-    
-    ImGui::SliderFloat(XORSTR("##FakePercentage"), &Settings::AntiAim::RageAntiAim::FakePercent, 10, 100, "Fake Ammount : %.0f percent");
-    if (Settings::AntiAim::Yaw::typeFake == AntiAimFakeType_y::Static)
+
+    if ( Settings::AntiAim::RageAntiAim::Type == RageAntiAimType::RealArroundFake )
     {
-        ImGui::Text(XORSTR("Invert Key"));
-        ImGui::SameLine();
-        UI::KeyBindButton(&Settings::AntiAim::RageAntiAim::InvertKey);      
-    }        
+        // Fake Percentage
+        ImGui::Columns(1);
+        {
+            ImGui::PushItemWidth(-1);
+            if(Settings::AntiAim::Yaw::typeFake == AntiAimFakeType_y::Jitter)
+                ImGui::SliderFloat(XORSTR("##FakeJitterPercentage"), &Settings::AntiAim::RageAntiAim::JitterPercent, 0, 100, "Fake Jitter Ammount : %.0f perent");
+
+            if (Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Static)
+            {
+                ImGui::SliderFloat(XORSTR("##RealPercentage"), &Settings::AntiAim::RageAntiAim::AntiAImPercent, 0, 100, "Real Ammount : %.0f percent");
+                ImGui::Text(XORSTR("Invert Key"));
+                ImGui::SameLine();
+                UI::KeyBindButton(&Settings::AntiAim::RageAntiAim::InvertKey);      
+            }
+            else if (Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Jitter)      
+                ImGui::SliderFloat(XORSTR("##RealJitterPercentage"), &Settings::AntiAim::RageAntiAim::AntiAImPercent, 0, 100, "Real Jitter Ammount : %.0f percent");
+            
+            ImGui::PopItemWidth();
+        }    
+    }
+    
+    else if (Settings::AntiAim::RageAntiAim::Type == RageAntiAimType::FakeArroundReal)
+    {
+        // Real Percentage
+        ImGui::Columns(1);
+        {
+            ImGui::PushItemWidth(-1);
+            if(Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Jitter)
+                ImGui::SliderFloat(XORSTR("##RealJitterPercentage"), &Settings::AntiAim::RageAntiAim::JitterPercent, 0, 100, "Real Jitter Ammount : %.0f perent");
+        
+            
+            if (Settings::AntiAim::Yaw::typeFake == AntiAimFakeType_y::Static)
+            {
+                ImGui::SliderFloat(XORSTR("##FakePercentage"), &Settings::AntiAim::RageAntiAim::AntiAImPercent, 0, 100, "Fake Ammount : %.0f percent");
+                ImGui::Text(XORSTR("Invert Key"));
+                ImGui::SameLine();
+                UI::KeyBindButton(&Settings::AntiAim::RageAntiAim::InvertKey);      
+            }
+            else if (Settings::AntiAim::Yaw::typeFake == AntiAimFakeType_y::Jitter)  
+                      ImGui::SliderFloat(XORSTR("##FakeJitterPercentage"), &Settings::AntiAim::RageAntiAim::AntiAImPercent, 0, 100, "Fake Jitter Ammount : %.0f percent");
          
-    ImGui::PopItemWidth();
+            ImGui::PopItemWidth();
+        }
+    }
+    
 
-    ImGui::Checkbox(XORSTR("At the Target(alfa)"), &Settings::AntiAim::RageAntiAim::atTheTarget);            
-    // ImGui::Columns(1);
-    // ImGui::Separator();
-    // ImGui::Text(XORSTR("Disable"));
-    // ImGui::Separator();
-    // ImGui::Checkbox(XORSTR("Knife"), &Settings::AntiAim::AutoDisable::knifeHeld);
-    // ImGui::Checkbox(XORSTR("No Enemy"), &Settings::AntiAim::AutoDisable::noEnemy);
+    ImGui::Spacing(); ImGui::Spacing();
+    ImGui::Columns(1, nullptr, false);
+    
+    ImGui::Checkbox(XORSTR("At the Target(alfa)"), &Settings::AntiAim::RageAntiAim::atTheTarget);
+    
 
+    ImGui::Spacing(); ImGui::Spacing();
     ImGui::Columns(1);
-    ImGui::Separator();
     ImGui::Text(XORSTR("Edging(Alfa)"));
-    ImGui::Separator();
     
     ImGui::Columns(2, nullptr, false);
     {
@@ -90,13 +120,11 @@ static void RageAntiAIm()
     /*
     ** Starting of Manual anti aim
     */
+    ImGui::Spacing(); ImGui::Spacing();
     ImGui::Columns(1);
-                
-    ImGui::Separator();
     ImGui::Checkbox(XORSTR("##Manual Anti Aim"), &Settings::AntiAim::ManualAntiAim::Enable);
     ImGui::SameLine();
-    ImGui::Text(XORSTR("Manuan AntiAim"));                
-    ImGui::Separator();
+    ImGui::Text(XORSTR("Manuan AntiAim"));
 
     //For player to move right
     ImGui::Text("Align Right");
@@ -119,24 +147,6 @@ static void RageAntiAIm()
     UI::KeyBindButton(&Settings::AntiAim::ManualAntiAim::LeftButton);
     ImGui::PopItemWidth();
     // END
-
-    /*
-    ** Implementiong The secondary features with AntiAim
-    */
-    ImGui::Columns(1);
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(210, 85));
-    if (ImGui::BeginPopupModal(XORSTR("Error###UNTRUSTED_AA")))
-    {
-        ImGui::Text(XORSTR("You cannot use this antiaim type on a VALVE server."));
-
-        ImGui::Checkbox(XORSTR("This is not a VALVE server"), &ValveDSCheck::forceUT);
-
-        if (ImGui::Button(XORSTR("OK")))
-            ImGui::CloseCurrentPopup();
-
-        ImGui::EndPopup();
-    }
-    ImGui::PopStyleVar();
 }
 
 static void LegitAntiAim()
@@ -144,15 +154,25 @@ static void LegitAntiAim()
     /*
     * part where legit anti aim ui constructed
     */
-    ImGui::Columns(1, nullptr, true);
-    if ( ImGui::Checkbox(XORSTR("Enable"), &Settings::AntiAim::LegitAntiAim::enable) )
-        Settings::AntiAim::RageAntiAim::enable = false;
+   ImGui::Spacing();
+    ImGui::Columns(1, nullptr, false);
     ImGui::Text(XORSTR("InvertKey"));
     ImGui::SameLine();
-    UI::KeyBindButton(&Settings::AntiAim::LegitAntiAim::InvertKey);   
+    UI::KeyBindButton(&Settings::AntiAim::LegitAntiAim::InvertKey); 
+    ImGui::Spacing(); ImGui::Spacing(); 
+    ImGui::PushItemWidth(-1); 
+    ImGui::SliderFloat(XORSTR("##RealPercentage"), &Settings::AntiAim::LegitAntiAim::RealPercentage, 0, 100, "Real Percent : %.0f percent" );  
+    ImGui::Spacing();
+    ImGui::SliderFloat(XORSTR("##INCROUTCHREALPERCENTAGE"), &Settings::AntiAim::LegitAntiAim::RealPercentageInCroutch, 0, 100, "Real Percent In Croutch : %.0f percent" ); 
+    ImGui::PopItemWidth();
     /*
     * End of legit antiaim
     */
+}
+
+static void LagacyAntiAim()
+{
+    ImGui::SliderFloat(XORSTR("##LBYOFFSET"), &Settings::AntiAim::LBYBreaker::offset, 0, 360, "LBY Offset(from fake): %0.f");
 }
 void HvH::RenderTab()
 {
@@ -160,36 +180,58 @@ void HvH::RenderTab()
     static char* AntiAimType[] = {
         "Legit AntiAIm",
         "Rage AntiAIm",
-        "Lagacy",
+        "LBY Breaker",
     }; 
+    
+    ImGui::Spacing();
 
     ImGui::Columns(2, nullptr, false);
     {
+        switch (Settings::AntiAim::Type::antiaimType)
+        {
+        case AntiAimType::LegitAntiAim:
+           if ( ImGui::Checkbox(XORSTR("##EnableLegitAim"), &Settings::AntiAim::LegitAntiAim::enable) )
+                Settings::AntiAim::RageAntiAim::enable = false;
+            break;
+        case AntiAimType::RageAntiAim:
+            if ( ImGui::Checkbox(XORSTR("##EnableRageAntiAim"), &Settings::AntiAim::RageAntiAim::enable) )
+                Settings::AntiAim::LegitAntiAim::enable = false;
+            break;
+        case AntiAimType::Lagacy:
+            ImGui::Checkbox(XORSTR("##ENABLELbyBreaker"), &Settings::AntiAim::LBYBreaker::enabled);
+            break;
+        default:
+            break;
+        }
+            
+        ImGui::SameLine();
         ImGui::PushItemWidth(-1);
         ImGui::Combo(XORSTR("##AntiAimType"), (int*)&Settings::AntiAim::Type::antiaimType, AntiAimType, IM_ARRAYSIZE(AntiAimType));
         ImGui::PopItemWidth();
-        ImGui::BeginChild(XORSTR("HVH1"), ImVec2(0, 0), true);
+        ImGui::BeginChild(XORSTR("HVH1"), ImVec2(0, 0), false);
         {
-                
-            if ( Settings::AntiAim::Type::antiaimType == AntiAimType::RageAntiAim )
+            switch (Settings::AntiAim::Type::antiaimType)
+            {
+            case AntiAimType::RageAntiAim:
                 RageAntiAIm();
-            else if ( Settings::AntiAim::Type::antiaimType == AntiAimType::LegitAntiAim )
+                break;
+            case AntiAimType::LegitAntiAim:
                 LegitAntiAim();
+                break;
+            case AntiAimType::Lagacy:
+                LagacyAntiAim();
+                break;
+            default:
+                break;
+            }
         }
         ImGui::EndChild();
     }
     ImGui::NextColumn();
     {
-        ImGui::BeginChild(XORSTR("HVH2"), ImVec2(0, 0), true);
+        ImGui::BeginChild(XORSTR("HVH2"), ImVec2(0, 0), false);
         {
-            ImGui::Text(XORSTR("Movement"));
-            ImGui::Checkbox(XORSTR("Auto Crouch"), &Settings::Ragebot::AutoCrouch::enable);
-            ImGui::Separator();
             ImGui::Checkbox(XORSTR("Angle Indicator"), &Settings::AngleIndicator::enabled);
-            ImGui::Checkbox(XORSTR("LBY Breaker"), &Settings::AntiAim::LBYBreaker::enabled);
-            if( Settings::AntiAim::LBYBreaker::enabled ){
-                ImGui::SliderFloat(XORSTR("##LBYOFFSET"), &Settings::AntiAim::LBYBreaker::offset, 0, 360, "LBY Offset(from fake): %0.f");
-            }
             ImGui::EndChild();
         }
     }

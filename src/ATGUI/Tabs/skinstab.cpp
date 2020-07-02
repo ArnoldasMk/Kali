@@ -15,7 +15,7 @@ void SplitSkins()
 {
 	static int modelCT = 1;
 	static int modelSkinCT = 1;
-	static float skinWearCT = 0.0005f;
+	static float skinWearCT = 0.0001f;
 	static int skinSeedCT = -1;
 	static int skinStatTrakCT = -1;
 	static char skinNameCT[18];
@@ -23,7 +23,7 @@ void SplitSkins()
 	static char filterModelSkinsCT[18];
 	static int modelT = 1;
 	static int modelSkinT = 1;
-	static float skinWearT = 0.0005f;
+	static float skinWearT = 0.0001f;
 	static int skinSeedT = -1;
 	static int skinStatTrakT = -1;
 	static char skinNameT[18];
@@ -116,13 +116,13 @@ void SplitSkins()
 	ImGui::Columns(2);
 	for (auto skin : itemSkins)
 	{
-		if (skin.second.paintName != nullptr ? !(Util::Contains(Util::ToLower(std::string(filterModelSkinsCT)), Util::ToLower(Util::WstringToString(localize->FindSafe(skin.second.displayName)))) || Util::Contains(Util::ToLower(std::string(filterModelSkinsCT)), skin.second.paintName)) : !Util::Contains(Util::ToLower(std::string(filterModelSkinsCT)), Util::ToLower(Util::WstringToString(localize->FindSafe(skin.second.displayName)))))
+		if (skin.second.paintName != nullptr ? !(Util::Contains(Util::ToLower(std::string(filterModelSkinsCT)), Util::ToLower(skin.second.displayName)) || Util::Contains(Util::ToLower(std::string(filterModelSkinsCT)), skin.second.paintName)) : !Util::Contains(Util::ToLower(std::string(filterModelSkinsCT)), Util::ToLower(skin.second.displayName)))
 			continue;
-		if (Util::Items::IsGlove((ItemDefinitionIndex) modelCT) && skin.first < 10006)
+		if (Util::Items::IsGlove((ItemDefinitionIndex) modelCT) && skin.first < 10064)
 			continue;
 		const bool item_selected = (skin.first == modelSkinCT);
 		ImGui::PushID(skin.first);
-		if (ImGui::Selectable(skin.first == -1 ? skin.second.displayName : Util::WstringToString(localize->FindSafe(skin.second.displayName)).c_str(), item_selected, ImGuiSelectableFlags_SpanAllColumns))
+		if (ImGui::Selectable(skin.first == -1 ? skin.second.displayName : skin.second.displayName, item_selected, ImGuiSelectableFlags_SpanAllColumns))
 			modelSkinCT = skin.first;
 		ImGui::NextColumn();
 
@@ -179,13 +179,13 @@ void SplitSkins()
 	ImGui::Columns(2);
 	for (auto skin : itemSkins)
 	{
-		if (skin.second.paintName != nullptr ? !(Util::Contains(Util::ToLower(std::string(filterModelSkinsT)), Util::ToLower(Util::WstringToString(localize->FindSafe(skin.second.displayName)))) || Util::Contains(Util::ToLower(std::string(filterModelSkinsT)), skin.second.paintName)) : !Util::Contains(Util::ToLower(std::string(filterModelSkinsT)), Util::ToLower(Util::WstringToString(localize->FindSafe(skin.second.displayName)))))
+		if (skin.second.paintName != nullptr ? !(Util::Contains(Util::ToLower(std::string(filterModelSkinsT)), Util::ToLower(skin.second.displayName)) || Util::Contains(Util::ToLower(std::string(filterModelSkinsT)), skin.second.paintName)) : !Util::Contains(Util::ToLower(std::string(filterModelSkinsT)), Util::ToLower(skin.second.displayName)))
 			continue;
 		if (Util::Items::IsGlove((ItemDefinitionIndex) modelT) && skin.first < 10006)
 			continue;
 		const bool item_selected = (skin.first == modelSkinT);
 		ImGui::PushID(skin.first);
-		if (ImGui::Selectable(skin.first == -1 ? skin.second.displayName : Util::WstringToString(localize->FindSafe(skin.second.displayName)).c_str(), item_selected, ImGuiSelectableFlags_SpanAllColumns))
+		if (ImGui::Selectable(skin.first == -1 ? skin.second.displayName : skin.second.displayName, item_selected, ImGuiSelectableFlags_SpanAllColumns))
 			modelSkinT = skin.first;
 		ImGui::NextColumn();
 
@@ -292,7 +292,7 @@ void CombinedSkins()
 {
 	static int selectedModel = 1;
 	static int selectedModelSkin = 1;
-	static float skinWear = 0.0005f;
+	static float skinWear = 0.0001f;
 	static int skinSeed = -1;
 	static int skinStatTrak = -1;
 	static char skinName[18];
@@ -359,13 +359,13 @@ void CombinedSkins()
 	ImGui::Columns(2);
 	for (auto skin : itemSkins)
 	{
-		if (skin.second.paintName != nullptr ? !(Util::Contains(Util::ToLower(std::string(filterModelSkins)), Util::ToLower(Util::WstringToString(localize->FindSafe(skin.second.displayName)))) || Util::Contains(Util::ToLower(std::string(filterModelSkins)), skin.second.paintName)) : !Util::Contains(Util::ToLower(std::string(filterModelSkins)), Util::ToLower(Util::WstringToString(localize->FindSafe(skin.second.displayName)))))
+		if (skin.second.paintName != nullptr ? !(Util::Contains(Util::ToLower(std::string(filterModelSkins)), Util::ToLower(skin.second.displayName)) || Util::Contains(Util::ToLower(std::string(filterModelSkins)), skin.second.paintName)) : !Util::Contains(Util::ToLower(std::string(filterModelSkins)), Util::ToLower(skin.second.displayName)))
 			continue;
 		if (Util::Items::IsGlove((ItemDefinitionIndex)selectedModel) && skin.first < 10006)
 			continue;
 		const bool item_selected = (skin.first == selectedModelSkin);
 		ImGui::PushID(skin.first);
-		if (ImGui::Selectable(skin.first == -1 ? skin.second.displayName : Util::WstringToString(localize->FindSafe(skin.second.displayName)).c_str(), item_selected, ImGuiSelectableFlags_SpanAllColumns))
+		if (ImGui::Selectable(skin.first == -1 ? skin.second.displayName : skin.second.displayName, item_selected, ImGuiSelectableFlags_SpanAllColumns))
 			selectedModelSkin = skin.first;
 		ImGui::NextColumn();
 

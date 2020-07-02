@@ -12,7 +12,6 @@
 #include "interfaces.h"
 #include "SDK/IGameEvent.h"
 #include "settings.h"
-#include "Hacks/resolverNimbus.h"
 
 EventListener::EventListener(std::vector<const char*> events)
 {
@@ -28,24 +27,17 @@ EventListener::~EventListener()
 void EventListener::FireGameEvent(IGameEvent* event)
 {
     if(Settings::Legitbot::enabled)
-    {
         Legitbot::FireGameEvent(event);
-    }
     else if (Settings::Ragebot::enabled)
-    {
         Ragebot::FireGameEvent(event);
-    }
+
     Hitmarkers::FireGameEvent(event);
     Eventlog::FireGameEvent(event);
     NameStealer::FireGameEvent(event);
-    if (Settings::Resolver::resolverNumbus)
-    {
-        ResolverNimbus::FireGameEvent(event);
-    }
-    else if (Settings::Resolver::resolveAll)
-    {
-        Resolver::FireGameEvent(event);
-    }
+    
+    
+    Resolver::FireGameEvent(event);
+
     Spammer::FireGameEvent(event);
     ValveDSCheck::FireGameEvent(event);
     SkinChanger::FireGameEvent(event);

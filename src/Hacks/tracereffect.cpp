@@ -1,3 +1,6 @@
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
+// #pragma GCC diagnostic ignored "-Wstringop-overflow="
+
 #include "tracereffect.h"
 
 #include <string>
@@ -91,7 +94,7 @@ void TracerEffect::RestoreTracers( )
     {
         CCSWeaponInfo *swag = (CCSWeaponInfo*)tracerRecords[i].address;
         *swag->GetTracerFrequency() = tracerRecords[i].frequency;
-        strncpy(swag->GetTracerEffect(), tracerRecords[i].effectName, strlen(tracerRecords[i].effectName));
+        strncpy(swag->GetTracerEffect(), tracerRecords[i].effectName, strlen(swag->GetTracerEffect()));
     }
     tracerRecords.clear();
 }

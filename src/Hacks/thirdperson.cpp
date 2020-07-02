@@ -33,12 +33,12 @@ void ThirdPerson::OverrideView(CViewSetup *pSetup)
 		/*
 		* Button Toggel Code :)
 		*/
-		if ( inputSystem->IsButtonDown(Settings::ThirdPerson::toggleThirdPerson) && buttonToggle == false )
+		if ( inputSystem->IsButtonDown(Settings::ThirdPerson::toggleThirdPerson) && !buttonToggle)
 		{
 			buttonToggle = true;
 			Settings::ThirdPerson::toggled = !Settings::ThirdPerson::toggled;
 		}
-		else if ( !inputSystem->IsButtonDown(Settings::ThirdPerson::toggleThirdPerson ) && buttonToggle == true)
+		else if ( !inputSystem->IsButtonDown(Settings::ThirdPerson::toggleThirdPerson ) && buttonToggle)
 			buttonToggle = false;
 		
 		// END

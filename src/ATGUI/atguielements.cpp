@@ -229,7 +229,8 @@ void UI::SetupColors()
 
 	ImVec4 mainColorHovered	= ImVec4(Settings::UI::mainColor.Color().Value.x + 0.1f, Settings::UI::mainColor.Color().Value.y + 0.1f, Settings::UI::mainColor.Color().Value.z + 0.1f, Settings::UI::mainColor.Color().Value.w);
 	ImVec4 mainColorActive = ImVec4(Settings::UI::mainColor.Color().Value.x + 0.2f, Settings::UI::mainColor.Color().Value.y + 0.2f, Settings::UI::mainColor.Color().Value.z + 0.2f, Settings::UI::mainColor.Color().Value.w);
-	ImVec4 menubarColor = ImVec4(Settings::UI::bodyColor.Color().Value.x, Settings::UI::bodyColor.Color().Value.y, Settings::UI::bodyColor.Color().Value.z, Settings::UI::bodyColor.Color().Value.w - 0.8f);
+	//ImVec4 menubarColor = ImVec4(Settings::UI::bodyColor.Color().Value.x, Settings::UI::bodyColor.Color().Value.y, Settings::UI::bodyColor.Color().Value.z, Settings::UI::bodyColor.Color().Value.w - 0.8f);
+	ImVec4 menubarColor = ImVec4(0,0,0,0);
 	ImVec4 frameBgColor = ImVec4(Settings::UI::bodyColor.Color().Value.x, Settings::UI::bodyColor.Color().Value.y, Settings::UI::bodyColor.Color().Value.z, Settings::UI::bodyColor.Color().Value.w + .1f);
 	ImVec4 tooltipBgColor = ImVec4(Settings::UI::bodyColor.Color().Value.x, Settings::UI::bodyColor.Color().Value.y, Settings::UI::bodyColor.Color().Value.z, Settings::UI::bodyColor.Color().Value.w + .05f);
 	ImVec4 accentColorHovered	= ImVec4(Settings::UI::accentColor.Color().Value.x + 0.1f, Settings::UI::accentColor.Color().Value.y + 0.1f, Settings::UI::accentColor.Color().Value.z + 0.1f, Settings::UI::accentColor.Color().Value.w);
@@ -277,7 +278,6 @@ void UI::SetupColors()
 	style.Colors[ImGuiCol_ScrollbarGrab] = Settings::UI::accentColor.Color();
 	style.Colors[ImGuiCol_ScrollbarGrabHovered] = accentColorHovered;
 	style.Colors[ImGuiCol_ScrollbarGrabActive] = accentColorActive;
-	style.Colors[ImGuiCol_FrameBg] = frameBgColor;
 	style.Colors[ImGuiCol_CheckMark]  = Settings::UI::accentColor.Color();
 	style.Colors[ImGuiCol_SliderGrab] = accentColorHovered;
 	style.Colors[ImGuiCol_SliderGrabActive] = accentColorActive;
@@ -287,7 +287,7 @@ void UI::SetupColors()
 	style.Colors[ImGuiCol_Header] = Settings::UI::accentColor.Color();
 	style.Colors[ImGuiCol_HeaderHovered] = accentColorHovered;
 	style.Colors[ImGuiCol_HeaderActive] = accentColorActive;
-	style.Colors[ImGuiCol_Column] = Settings::UI::mainColor.Color();
+	style.Colors[ImGuiCol_Column] =  Settings::UI::mainColor.Color();
 	style.Colors[ImGuiCol_ColumnHovered] = mainColorHovered;
 	style.Colors[ImGuiCol_ColumnActive] = mainColorActive;
 	style.Colors[ImGuiCol_ResizeGrip] = Settings::UI::accentColor.Color();

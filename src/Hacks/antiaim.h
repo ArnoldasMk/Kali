@@ -18,7 +18,7 @@ namespace AntiAim
                     alignLeft = false;
     }
     
-
+    inline bool bSend = true;
     //Hooks
     void CreateMove(CUserCmd* cmd);
 }

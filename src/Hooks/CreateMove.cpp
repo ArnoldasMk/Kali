@@ -25,12 +25,28 @@
 #include "../Hacks/tracereffect.h"
 #include "../Hacks/nofall.h"
 #include "../Hacks/ragdollgravity.h"
+#include "../Hacks/lagcomp.h"
 
 bool CreateMove::sendPacket = true;
-QAngle CreateMove::lastTickViewAngles = QAngle(0, 0, 0);
+QAngle CreateMove::lastTickViewAngles = QAngle(0);
 
 typedef bool (*CreateMoveFn) (void*, float, CUserCmd*);
 
+static void RandomMethod(CUserCmd *cmd, bool *sendPacket)
+{
+	PredictionSystem::StartPrediction(cmd);
+	Legitbot::CreateMove(cmd);
+	// auto ragebot = std::async(std::launch::async, Ragebot::CreateMove, cmd);
+	Ragebot::CreateMove(cmd);
+	Triggerbot::CreateMove(cmd);
+	LagComp::CreateMove(cmd);
+	AutoKnife::CreateMove(cmd);
+	// auto antiaim = std::async(std::launch::async, Ragebot::CreateMove, cmd);
+	FakeLag::CreateMove(cmd);
+    AntiAim::CreateMove(cmd);
+
+	*sendPacket = CreateMove::sendPacket;
+}
 bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
 {
 	clientModeVMT->GetOriginalMethod<CreateMoveFn>(25)(thisptr, flInputSampleTime, cmd);
@@ -38,9 +54,10 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
 	if (cmd && cmd->command_number)
 	{
         // Special thanks to Gre-- I mean Heep ( https://www.unknowncheats.me/forum/counterstrike-global-offensive/290258-updating-bsendpacket-linux.html )
-        uintptr_t rbp;
+        uintptr_t* rbp;
+		
         asm volatile("mov %%rbp, %0" : "=r" (rbp));
-        bool *sendPacket = ((*(bool **)rbp) - 0x18);
+        bool *sendPacket = ((*(bool **)rbp) - (int)24);
         CreateMove::sendPacket = true;
 
 		/* run code that affects movement before prediction */
@@ -56,31 +73,21 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
 		Autoblock::CreateMove(cmd);
 		NoFall::PrePredictionCreateMove(cmd);
 
-		PredictionSystem::StartPrediction(cmd);
-			if(Settings::Legitbot::enabled)
-			{
-				Legitbot::CreateMove(cmd);
-			}
-			else if( Settings::Ragebot::enabled)
-			{
-				Ragebot::CreateMove(cmd);
-			}
-			AutoKnife::CreateMove(cmd);
-            AntiAim::CreateMove(cmd);
-			FakeLag::CreateMove(cmd);
-			ESP::CreateMove(cmd);
-			TracerEffect::CreateMove(cmd);
-			RagdollGravity::CreateMove(cvar);
+		std::async(std::launch::async, RandomMethod, cmd, sendPacket); // Actions
+		// RandomMethod(cmd);
+		
+		ESP::CreateMove(cmd);
+		TracerEffect::CreateMove(cmd);
+		RagdollGravity::CreateMove(cvar);
 		PredictionSystem::EndPrediction();
-
+		
 		EdgeJump::PostPredictionCreateMove(cmd);
 		NoFall::PostPredictionCreateMove(cmd);
 
-        *sendPacket = CreateMove::sendPacket;
+        // *sendPacket = CreateMove::sendPacket;
 
-        if (CreateMove::sendPacket) {
+        if (CreateMove::sendPacket)
             CreateMove::lastTickViewAngles = cmd->viewangles;
-        }
 	}
 
 	return false;

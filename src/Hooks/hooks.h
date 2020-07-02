@@ -13,6 +13,7 @@ namespace Hooks
 	/* ClientMode */
 	void OverrideView(void* thisptr, CViewSetup* pSetup);
 	bool CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd);
+	// bool CreateMove2(void* thisptr, float flInputSampleTime, CUserCmd* cmd);
 	bool ShouldDrawCrosshair(void* thisptr);
 	float GetViewModelFOV(void* thisptr);
 

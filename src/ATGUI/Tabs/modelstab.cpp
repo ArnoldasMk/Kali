@@ -70,7 +70,6 @@ void Models::RenderTab()
 
 	ImGui::Columns(4);
 
-	ImGui::GetCurrentContext()->FontBaseSize = 14.0f;
 	ImGui::ListBoxHeader(XORSTR("##originalModelsCT"), ImVec2(-1, 300));
 	ImGui::Columns(2);
 	for (auto model : ItemDefinitionIndexMap)

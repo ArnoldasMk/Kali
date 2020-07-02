@@ -433,14 +433,6 @@ void SkinChanger::SetViewModelSequence(const CRecvProxyData *pDataConst, void *p
 						break;
 				}
 			}
-			//else if (szModel == "models/weapons/v_knife_gg.mdl")
-			//{
-			//		Fix animations for the Gold Knife.
-			//	switch (m_nSequence)
-			//	{
-			//		
-			//	}
-			//}
 
 			// Set the fixed sequence.
 			pData->m_Value.m_Int = m_nSequence;

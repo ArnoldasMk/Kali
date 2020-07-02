@@ -14,9 +14,8 @@
 #include "SDK/Materialsystem_config.h"
 
 enum class DamagePrediction : int {
-	safety = 0,
+	justDamage = 0,
 	damage,
-
 };
 
 enum class EnemySelectionType : int {
@@ -24,11 +23,18 @@ enum class EnemySelectionType : int {
 	CLosestToCrosshair,
 };
 
+enum class DesireBones : int {
+	BONE_HEAD = 0,
+	UPPER_CHEST,
+	MIDDLE_CHEST,
+	LOWER_CHEST,
+	BONE_HIP,
+	LOWER_BODY,
+};
 enum class DrawingBackend : int {
     SURFACE = 0,
     IMGUI,
-
-    NUMBER_OF_TYPES
+    NUMBER_OF_TYPES,
 };
 
 enum class SmoothType : int
@@ -63,10 +69,25 @@ enum class AutostrafeType : int
 
 enum class ChamsType : int
 {
-	CHAMS,
-	CHAMS_XQZ,
+	WHITE_ADDTIVE,
+	WIREFRAME,
+	PREDICTION_GLASS,
+	FBI_GLASS,
+	CRYSTAL_CLEAR,
+	GIB_GLASS,
+	Dog_Class,
 	CHAMS_FLAT,
-	CHAMS_FLAT_XQZ,
+	Achivements,
+	NONE,
+};
+
+enum class Filter : int
+{
+	Enemies,
+	LocalPlayer,
+	Alise,
+	Fish,
+	Chicken,
 };
 
 enum class BoxType : int
@@ -123,15 +144,25 @@ enum class TeamColorType : int
 
 enum class ArmsType : int
 {
-	DEFAULT,
+	WHITE_ADDTIVE,
 	WIREFRAME,
+	PREDICTION_GLASS,
+	FBI_GLASS,
+	CRYSTAL_CLEAR,
+	GIB_GLASS,
+	Dog_Class,
 	NONE,
 };
 
 enum class WeaponType : int
 {
-	DEFAULT,
+	WHITE_ADDTIVE,
 	WIREFRAME,
+	PREDICTION_GLASS,
+	FBI_GLASS,
+	CRYSTAL_CLEAR,
+	GIB_GLASS,
+	Dog_Class,
 	NONE,
 };
 
@@ -167,6 +198,7 @@ enum class AntiAimRealType_Y : int
 	NONE,
 	Static,
 	Jitter,
+	Randome,
 };
 
 enum class AntiAimFakeType_y : int
@@ -174,6 +206,7 @@ enum class AntiAimFakeType_y : int
 	NONE,
 	Static,
 	Jitter,
+	Randome,
 };
 
 enum class AntiAimType_X : int
@@ -196,6 +229,12 @@ enum class AntiAimType : int
 	Lagacy,
 };
 
+enum class RageAntiAimType : int
+{
+	NONE,
+	FakeArroundReal,
+	RealArroundFake,
+};
 struct AimbotWeapon_t
 {
 	bool silent,
@@ -224,7 +263,8 @@ struct AimbotWeapon_t
 		 autoAimRealDistance,
 		 autoSlow,
 		 predEnabled,
-		 scopeControlEnabled;
+		 scopeControlEnabled,
+		 TriggerBot;
 	int engageLockTTR = 700;
 	Bone bone = BONE_HEAD;
 	SmoothType smoothType = SmoothType::SLOW_END;
@@ -293,7 +333,8 @@ struct AimbotWeapon_t
 			this->autoSlow == another.autoSlow &&
 			this->predEnabled == another.predEnabled &&
 			this->autoAimRealDistance == another.autoAimRealDistance &&
-			this->scopeControlEnabled == another.scopeControlEnabled;
+			this->scopeControlEnabled == another.scopeControlEnabled &&
+			this->TriggerBot == another.TriggerBot;
 	}
 } const defaultSettings{};
 
@@ -308,40 +349,30 @@ struct RagebotWeapon_t
 		 autoScopeEnabled,
 		 autoSlow,
 		 scopeControlEnabled,
-		 HitChanceOverwrriteEnable,
 		 DoubleFire;
-	float RagebotautoAimFov = 180.f,
-		  autoWallValue = 10.0f,
-		  visibleDamage = 50.f,
-		  HitChance = 20.f,
-		  HitchanceOverwrriteValue = 1.f;
-	DamagePrediction DmagePredictionType = DamagePrediction::safety;
+	float MinDamage = 50.f,
+		  HitChance = 20.f;
+	DamagePrediction DmagePredictionType = DamagePrediction::damage;
 	EnemySelectionType enemySelectionType = EnemySelectionType::CLosestToCrosshair;
-	bool desiredBones[31];
+	bool desireBones[6];
 	
 
 	bool operator == (const RagebotWeapon_t& Ragebotanother) const
 	{
-		for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
-		{
-			if( this->desiredBones[bone] != Ragebotanother.desiredBones[bone] )
+		for (int bone = 0; bone <= 5; bone++) // static bones
+			if( this->desireBones[bone] != Ragebotanother.desireBones[bone] )
 				return false;
-		}
 
 		return this->silent == Ragebotanother.silent &&
 			this->friendly == Ragebotanother.friendly &&
 			this->closestBone == Ragebotanother.closestBone &&
-			this->RagebotautoAimFov == Ragebotanother.RagebotautoAimFov &&
 			this->autoPistolEnabled == Ragebotanother.autoPistolEnabled &&
 			this->autoShootEnabled == Ragebotanother.autoShootEnabled &&
 			this->autoScopeEnabled == Ragebotanother.autoScopeEnabled &&
 			this->HitChanceEnabled == Ragebotanother.HitChanceEnabled &&
-			this->autoWallValue == Ragebotanother.autoWallValue &&
-			this->visibleDamage == Ragebotanother.visibleDamage &&
+			this->MinDamage == Ragebotanother.MinDamage &&
 			this->autoSlow == Ragebotanother.autoSlow &&
 			this->scopeControlEnabled == Ragebotanother.scopeControlEnabled && 
-			this->HitChanceOverwrriteEnable == Ragebotanother.HitChanceOverwrriteEnable &&
-			this->HitchanceOverwrriteValue == Ragebotanother.HitchanceOverwrriteValue &&
 			this->HitChance == Ragebotanother.HitChance && 
 			this->DmagePredictionType == Ragebotanother.DmagePredictionType && 
 			this->enemySelectionType == Ragebotanother.enemySelectionType && 
@@ -356,6 +387,7 @@ class ColorVar
 {
 public:
 	ImColor color;
+	ImVec4 ColorVec4;
 	bool rainbow;
 	float rainbowSpeed;
 
@@ -366,6 +398,7 @@ public:
 		this->color = color;
 		this->rainbow = false;
 		this->rainbowSpeed = 0.5f;
+		this->ColorVec4 = getVec4();
 	}
 
 	ImColor Color()
@@ -373,6 +406,11 @@ public:
 		ImColor result = this->rainbow ? Util::GetRainbowColor(this->rainbowSpeed) : this->color;
 		result.Value.w = this->color.Value.w;
 		return result;
+	}
+
+	ImVec4 getVec4()
+	{
+		return color.operator ImVec4();
 	}
 };
 
@@ -401,10 +439,10 @@ namespace Settings
 {
 	namespace UI
 	{
-		inline ColorVar mainColor = ImColor(1, 1, 1, 255 );
-		inline ColorVar bodyColor = ImColor( 4, 4, 4, 232 );
-		inline ColorVar fontColor = ImColor( 162, 214, 187, 187 );
-		inline ColorVar accentColor = ImColor( 99, 78, 5, 255 );
+		inline ColorVar mainColor = ImColor(36, 95, 35, 255 );
+		inline ColorVar bodyColor = ImColor( 56, 67, 78, 182 );
+		inline ColorVar fontColor = ImColor( 255, 255, 255, 195 );
+		inline ColorVar accentColor = ImColor( 113, 128, 129, 255 );
 		inline bool imGuiAliasedLines = false;
 		inline bool imGuiAliasedFill = false;
 
@@ -416,7 +454,7 @@ namespace Settings
 				inline int posX = 540;
 				inline int posY = 325;
 				inline int sizeX = 540;
-				inline int sizeY = 325;
+				inline int sizeY = 360;
 				inline bool open = false;
 				inline bool reload = false ; // True on config load, used to change Window Properties.
 			}
@@ -517,6 +555,7 @@ namespace Settings
                                           false, false, false, false, false, // left leg
                                           false, false, false, false, false  // right leg
             };
+			
             inline bool engageLock = false;
             inline bool engageLockTR = false; // Target Reacquisition ( re-target after getting a kill when spraying ).
             inline int engageLockTTR = 700; // Time to Target Reacquisition in ms
@@ -525,6 +564,22 @@ namespace Settings
 		namespace ShootAssist
 		{
 			inline bool enabled = false;
+
+			namespace ShotDelay
+			{
+				inline float Value = 100.f;
+			}	
+			namespace MinShotFire
+			
+			{
+				inline int value = 6;
+			} // namespace MinShotFire
+
+			namespace Hitchance
+			{
+				inline bool enabled = false;
+				inline float value = 20;
+			}
 		}
 
 		namespace AutoWall
@@ -595,21 +650,9 @@ namespace Settings
 			inline bool enabled = false;
 		}
 
-		namespace ShotDelay
-		{
-			inline int value = 200;
-		}
-
-		namespace MinShotFire
-		{
-			inline int value = 6;
-		} // namespace MinShotDealay
 		
-		namespace Hitchance
-		{
-			inline bool enabled = false;
-			inline float value = 20;
-		}
+		
+		
 
 		namespace Prediction
 		{
@@ -628,30 +671,19 @@ namespace Settings
 
 	namespace Ragebot
 	{
-		inline float visibleDamage = 50.f;
+		inline float MinDamage = 50.f;
 		inline bool enabled = false;
         inline bool silent = false;
         inline bool friendly = false;
 		inline bool DoubleFire = false;
 
-		inline DamagePrediction damagePrediction = DamagePrediction::safety;
+		inline DamagePrediction damagePrediction = DamagePrediction::damage;
 		inline EnemySelectionType enemySelectionType = EnemySelectionType::CLosestToCrosshair;
 
 		namespace AutoAim
 		{
 			inline bool enabled = false;
-            inline float fov = 180.0f;
-            inline bool desiredBones[] = {true, true, true, true, true, true, true, // center mass
-                                          true, true, true, true, true, true, true, // left arm
-                                          true, true, true, true, true, true, true, // right arm
-                                          true, true, true, true, true, // left leg
-                                          true, true, true, true, true  // right leg
-            };
-		}
-
-		namespace AutoWall
-		{
-			inline float value = 15.0f;
+			inline bool desireBones[] = {true, true, true, true, true, true};
 		}
 
 		namespace AutoPistol
@@ -693,6 +725,11 @@ namespace Settings
 			inline bool enable = false;
 		}
 
+		namespace backTrack
+		{
+			inline bool enabled = false;
+		}
+
 		inline std::unordered_map<ItemDefinitionIndex, RagebotWeapon_t, Util::IntHash<ItemDefinitionIndex>> weapons = {
                 { ItemDefinitionIndex::INVALID, ragedefault },
         };
@@ -704,6 +741,11 @@ namespace Settings
 	{
 		inline bool enabled = false;
 		inline ButtonCode_t key = ButtonCode_t::KEY_LALT;
+
+		namespace Magnet
+		{
+			inline bool enabled = false;
+		}
 
 		namespace Filters
 		{
@@ -721,7 +763,7 @@ namespace Settings
 
 		namespace RandomDelay
 		{
-			inline bool enabled = true;
+			inline bool enabled = false;
 			inline int lowBound = 20; // in ms
 			inline int highBound = 35;// in ms
 			inline int lastRoll = 0;
@@ -745,16 +787,21 @@ namespace Settings
             inline bool enable = false;
 			inline ButtonCode_t InvertKey = ButtonCode_t::KEY_T;
 			inline bool inverted = false;
-			inline float FakePercent = 100.f;
-			inline float RealJitterPercent = 30.f;
+			inline float AntiAImPercent = 100.f;
+			inline float JitterPercent = 30.f;
 			inline bool atTheTarget = false;
+			inline bool SendReal = false;
+			inline RageAntiAimType Type = RageAntiAimType::RealArroundFake;
         }
 
 		namespace LegitAntiAim 
 		{
 			inline bool enable = false;
+			inline bool OverWatchProof = true;
 			inline ButtonCode_t InvertKey = ButtonCode_t::KEY_T;
 			inline bool inverted = false;
+			inline float RealPercentage = 30.f;
+			inline float RealPercentageInCroutch = 30.f;
 		}
 		
 		namespace ManualAntiAim
@@ -785,13 +832,13 @@ namespace Settings
 	namespace Resolver
 	{
 		inline bool resolveAll = false;
-		inline bool resolverNumbus = false;
 	}
 
 	namespace ESP
 	{
 		inline bool enabled = false;
         inline DrawingBackend backend = DrawingBackend::IMGUI;
+		inline Filter filter = Filter::Enemies;
 		inline ButtonCode_t key = ButtonCode_t::KEY_Z;
 		inline TeamColorType teamColorType = TeamColorType::RELATIVE;
         inline HealthColorVar enemyColor = ImColor(255, 0, 0, 255);
@@ -819,6 +866,182 @@ namespace Settings
         inline ColorVar chargeColor = ImColor(205, 32, 31, 255);
         inline ColorVar allyInfoColor = ImColor(255, 255, 255, 255);
         inline ColorVar enemyInfoColor = ImColor(255, 255, 255, 255);
+
+		namespace FilterEnemy
+		{
+			namespace playerInfo
+			{
+				inline bool enabled = false;
+			}
+			namespace Glow
+			{
+				inline bool enabled = false;
+            	inline HealthColorVar allyColor = ImColor(0, 0, 255, 255);
+            	inline HealthColorVar enemyColor = ImColor(255, 0, 0, 255);
+            	inline HealthColorVar enemyVisibleColor = ImColor(255, 255, 0, 255);
+            	inline HealthColorVar localplayerColor = ImColor(0, 255, 255, 255);
+            	inline ColorVar weaponColor = ImColor(158, 158, 158, 255);
+            	inline ColorVar grenadeColor = ImColor(96, 125, 139, 255);
+           	 	inline ColorVar defuserColor = ImColor(49, 27, 146, 255);
+            	inline ColorVar chickenColor = ImColor(255, 193, 7, 255);
+			}
+			namespace Skeleton
+			{
+				inline bool enabled = false;
+            	inline ColorVar allyColor = ImColor(255, 255, 255, 255);
+            	inline ColorVar enemyColor = ImColor(255, 255, 255, 255);
+			}
+			namespace HeadDot
+			{
+				inline bool enabled = false;
+				inline float size = 2.0f;
+			}
+			namespace BulletTracers
+			{
+				inline bool enabled = false;
+			}
+			namespace Boxes
+			{
+				inline bool enabled = false;
+				inline BoxType type = BoxType::FRAME_2D;
+			}
+
+			namespace Chams
+			{
+				inline bool enabled = false;
+				inline ChamsType type = ChamsType::WHITE_ADDTIVE;
+			}
+			namespace HelthBar
+			{
+				inline bool enabled = false;
+				inline BarType type = BarType::VERTICAL;
+				inline BarColorType colorType = BarColorType::HEALTH_BASED;
+			}
+
+			namespace Tracers
+			{
+				inline bool enabled = false;
+				inline TracerType type = TracerType::BOTTOM;
+			}
+		}
+
+		namespace FilterAlise
+		{
+			namespace playerInfo
+			{
+				inline bool enabled = false;
+			}
+
+			namespace Glow
+			{
+				inline bool enabled = false;
+            	inline HealthColorVar allyColor = ImColor(0, 0, 255, 255);
+            	inline HealthColorVar enemyColor = ImColor(255, 0, 0, 255);
+            	inline HealthColorVar enemyVisibleColor = ImColor(255, 255, 0, 255);
+            	inline HealthColorVar localplayerColor = ImColor(0, 255, 255, 255);
+            	inline ColorVar weaponColor = ImColor(158, 158, 158, 255);
+            	inline ColorVar grenadeColor = ImColor(96, 125, 139, 255);
+           	 	inline ColorVar defuserColor = ImColor(49, 27, 146, 255);
+            	inline ColorVar chickenColor = ImColor(255, 193, 7, 255);
+			}
+			namespace Skeleton
+			{
+				inline bool enabled = false;
+            	inline ColorVar allyColor = ImColor(255, 255, 255, 255);
+            	inline ColorVar enemyColor = ImColor(255, 255, 255, 255);
+			}
+			namespace HeadDot
+			{
+				inline bool enabled = false;
+				inline float size = 2.0f;
+			}
+			namespace BulletTracers
+			{
+				inline bool enabled = false;
+			}
+			namespace Boxes
+			{
+				inline bool enabled = false;
+				inline BoxType type = BoxType::FRAME_2D;
+			}
+
+			namespace Chams
+			{
+				inline bool enabled = false;
+				inline ChamsType type = ChamsType::WHITE_ADDTIVE;
+			}
+			namespace HelthBar
+			{
+				inline bool enabled = false;
+				inline BarType type = BarType::VERTICAL;
+				inline BarColorType colorType = BarColorType::HEALTH_BASED;
+			}
+
+			namespace Tracers
+			{
+				inline bool enabled = false;
+				inline TracerType type = TracerType::BOTTOM;
+			}
+		}
+
+		namespace FilterLocalPlayer
+		{
+			namespace playerInfo
+			{
+				inline bool enabled = false;
+			}
+			
+			namespace Glow
+			{
+				inline bool enabled = false;
+            	inline HealthColorVar allyColor = ImColor(0, 0, 255, 255);
+            	inline HealthColorVar enemyColor = ImColor(255, 0, 0, 255);
+            	inline HealthColorVar enemyVisibleColor = ImColor(255, 255, 0, 255);
+            	inline HealthColorVar localplayerColor = ImColor(0, 255, 255, 255);
+            	inline ColorVar weaponColor = ImColor(158, 158, 158, 255);
+            	inline ColorVar grenadeColor = ImColor(96, 125, 139, 255);
+           	 	inline ColorVar defuserColor = ImColor(49, 27, 146, 255);
+            	inline ColorVar chickenColor = ImColor(255, 193, 7, 255);
+			}
+			namespace Skeleton
+			{
+				inline bool enabled = false;
+            	inline ColorVar allyColor = ImColor(255, 255, 255, 255);
+            	inline ColorVar enemyColor = ImColor(255, 255, 255, 255);
+			}
+			namespace HeadDot
+			{
+				inline bool enabled = false;
+				inline float size = 2.0f;
+			}
+			namespace BulletTracers
+			{
+				inline bool enabled = false;
+			}
+			namespace Boxes
+			{
+				inline bool enabled = false;
+				inline BoxType type = BoxType::FRAME_2D;
+			}
+
+			namespace Chams
+			{
+				inline bool enabled = false;
+				inline ChamsType type = ChamsType::WHITE_ADDTIVE;
+			}
+			namespace HelthBar
+			{
+				inline bool enabled = false;
+				inline BarType type = BarType::VERTICAL;
+				inline BarColorType colorType = BarColorType::HEALTH_BASED;
+			}
+
+			namespace Tracers
+			{
+				inline bool enabled = false;
+				inline TracerType type = TracerType::BOTTOM;
+			}
+		}
 
 		namespace Glow
 		{
@@ -923,6 +1146,7 @@ namespace Settings
 
 		namespace Chams
 		{
+	
 			inline bool enabled = false;
             inline HealthColorVar allyColor = ImColor(0, 0, 255, 255);
             inline HealthColorVar allyVisibleColor = ImColor(0, 255, 0, 255);
@@ -930,20 +1154,21 @@ namespace Settings
             inline HealthColorVar enemyVisibleColor = ImColor(255, 255, 0, 255);
             inline HealthColorVar localplayerColor = ImColor(0, 255, 255, 255);
 			inline HealthColorVar FakeColor = ImColor(124,145,25,255);
-			inline ChamsType type = ChamsType::CHAMS;
+
+			inline ChamsType type = ChamsType::WHITE_ADDTIVE;
 
 			namespace Arms
 			{
 				inline bool enabled = false;
 				inline ColorVar color = ImColor(255, 255, 255, 255);
-				inline ArmsType type = ArmsType::DEFAULT;
+				inline ArmsType type = ArmsType::WHITE_ADDTIVE;
 			}
 
 			namespace Weapon
 			{
 				inline bool enabled = false;
 				inline ColorVar color = ImColor( 255, 255, 255, 255 );
-				inline WeaponType type = WeaponType::DEFAULT;
+				inline WeaponType type = WeaponType::WHITE_ADDTIVE;
 			}
 		}
 
@@ -1424,7 +1649,7 @@ namespace Settings
 		namespace AutoAim
 		{
 			inline bool drawTarget = false;
-			inline Vector target = {0,0,0};
+			inline Vector target = Vector(0);
 		}
 		namespace BoneMap
 		{

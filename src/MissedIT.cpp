@@ -62,21 +62,28 @@ void MainThread()
     Offsets::GetNetVarOffsets();
     Fonts::SetupFonts();
 
+    
+    engineVGuiVMT = new VMT(engineVGui);
+    engineVGuiVMT->HookVM(Hooks::Paint, 15);
+    engineVGuiVMT->ApplyVMT();
+
+    clientModeVMT = new VMT(clientMode);
+    clientModeVMT->HookVM(Hooks::OverrideView, 19);
+    clientModeVMT->HookVM(Hooks::CreateMove, 25);
+    // clientModeVMT->HookVM(Hooks::CreateMove2, 27);
+    clientModeVMT->HookVM(Hooks::ShouldDrawCrosshair, 29);
+    clientModeVMT->HookVM(Hooks::GetViewModelFOV, 36);
+    clientModeVMT->ApplyVMT();
+
     clientVMT = new VMT(client);
     clientVMT->HookVM(Hooks::LevelInitPostEntity, 6);
     clientVMT->HookVM(Hooks::FrameStageNotify, 37);
 	clientVMT->ApplyVMT();
 
-    clientModeVMT = new VMT(clientMode);
-    clientModeVMT->HookVM(Hooks::OverrideView, 19);
-    clientModeVMT->HookVM(Hooks::CreateMove, 25);
-    clientModeVMT->HookVM(Hooks::ShouldDrawCrosshair, 29);
-    clientModeVMT->HookVM(Hooks::GetViewModelFOV, 36);
-    clientModeVMT->ApplyVMT();
-
-    engineVGuiVMT = new VMT(engineVGui);
-    engineVGuiVMT->HookVM(Hooks::Paint, 15);
-    engineVGuiVMT->ApplyVMT();
+    materialVMT = new VMT(material);
+    materialVMT->HookVM(Hooks::OverrideConfig, 21);
+    materialVMT->HookVM(Hooks::BeginFrame, 42);
+	materialVMT->ApplyVMT();
 
     gameEventsVMT = new VMT(gameEvents);
 	gameEventsVMT->HookVM(Hooks::FireEventClientSide, 10);
@@ -91,10 +98,9 @@ void MainThread()
     launcherMgrVMT->HookVM(Hooks::PumpWindowsMessageLoop, 19);
     launcherMgrVMT->ApplyVMT();
 
-    materialVMT = new VMT(material);
-    materialVMT->HookVM(Hooks::OverrideConfig, 21);
-    materialVMT->HookVM(Hooks::BeginFrame, 42);
-	materialVMT->ApplyVMT();
+    soundVMT = new VMT(sound);
+    soundVMT->HookVM( Hooks::EmitSound2, 6);
+    soundVMT->ApplyVMT();
 
     modelRenderVMT = new VMT(modelRender);
     modelRenderVMT->HookVM(Hooks::DrawModelExecute, 21);
@@ -104,18 +110,16 @@ void MainThread()
     panelVMT->HookVM(Hooks::PaintTraverse, 42);
     panelVMT->ApplyVMT();
 
-    soundVMT = new VMT(sound);
-    soundVMT->HookVM( Hooks::EmitSound2, 6);
-    soundVMT->ApplyVMT();
-
-    surfaceVMT = new VMT(surface);
-    surfaceVMT->HookVM(Hooks::OnScreenSizeChanged, 116);
-	surfaceVMT->ApplyVMT();
-
     viewRenderVMT = new VMT(viewRender);
     viewRenderVMT->HookVM(Hooks::RenderView, 6 );
     viewRenderVMT->HookVM(Hooks::RenderSmokePostViewmodel, 42);
     viewRenderVMT->ApplyVMT();
+    
+    surfaceVMT = new VMT(surface);
+    surfaceVMT->HookVM(Hooks::OnScreenSizeChanged, 116);
+	surfaceVMT->ApplyVMT();
+
+    
     
 	eventListener = new EventListener({ XORSTR("cs_game_disconnected"), XORSTR("player_connect_full"), XORSTR("player_death"), XORSTR("item_purchase"), XORSTR("item_remove"), XORSTR("item_pickup"), XORSTR("player_hurt"), XORSTR("bomb_begindefuse"), XORSTR("enter_bombzone"), XORSTR("bomb_beginplant"), XORSTR("switch_team") });
 

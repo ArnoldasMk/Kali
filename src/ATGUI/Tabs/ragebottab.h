@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Ragebot 
+namespace RagebotTab 
 {
     void RenderTab();
 }

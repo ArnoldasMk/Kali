@@ -40,3 +40,4 @@ void JumpThrow::CreateMove(CUserCmd* cmd)
 	cmd->buttons |= IN_ATTACK;
 	inAttackState = true;
 }
+

@@ -17,6 +17,7 @@
 #include "../../Hacks/grenadehelper.h"
 #include "../../Hacks/clantagchanger.h"
 #include "../../Hacks/valvedscheck.h"
+#include "../Windows/playerlist.h"
 
 #pragma GCC diagnostic ignored "-Wformat-security"
 
@@ -53,6 +54,8 @@ void Misc::RenderTab()
 					ImGui::Checkbox(XORSTR("Hop Chance"), &Settings::BHop::Chance::enabled);
 					ImGui::Checkbox(XORSTR("Min Hops"), &Settings::BHop::Hops::enabledMin);
 					ImGui::Checkbox(XORSTR("Max Hops"), &Settings::BHop::Hops::enabledMax);
+					ImGui::Checkbox(XORSTR("Auto Strafe"), &Settings::AutoStrafe::enabled);
+					ImGui::Checkbox(XORSTR("Edge Jump"), &Settings::EdgeJump::enabled);
 				}
 				ImGui::NextColumn();
 				{
@@ -60,28 +63,19 @@ void Misc::RenderTab()
 					ImGui::SliderInt(XORSTR("##BHOPCHANCE"), &Settings::BHop::Chance::value, 0, 100);
 					ImGui::SliderInt(XORSTR("##BHOPMIN"), &Settings::BHop::Hops::Min, 0, 20);
 					ImGui::SliderInt(XORSTR("##BHOPMAX"), &Settings::BHop::Hops::Max, 0, 20);
+					ImGui::PushItemWidth(Settings::AutoStrafe::type == AutostrafeType::AS_RAGE ? ImGui::CalcItemWidth() : -1);
+					ImGui::Combo(XORSTR("##STRAFETYPE"), (int*)& Settings::AutoStrafe::type, strafeTypes, IM_ARRAYSIZE(strafeTypes));
+
+					if (Settings::AutoStrafe::type == AutostrafeType::AS_RAGE)
+					{
+						ImGui::SameLine();
+						ImGui::Checkbox(XORSTR("Silent"), &Settings::AutoStrafe::silent);
+					}
+
+					ImGui::PopItemWidth();
+					UI::KeyBindButton(&Settings::EdgeJump::key);
 				}
 				ImGui::Separator();
-			}
-
-			ImGui::Columns(2, nullptr, true);
-			{
-				ImGui::Checkbox(XORSTR("Auto Strafe"), &Settings::AutoStrafe::enabled);
-				ImGui::Checkbox(XORSTR("Edge Jump"), &Settings::EdgeJump::enabled);
-			}
-			ImGui::NextColumn();
-			{
-				ImGui::PushItemWidth(Settings::AutoStrafe::type == AutostrafeType::AS_RAGE ? ImGui::CalcItemWidth() : -1);
-				ImGui::Combo(XORSTR("##STRAFETYPE"), (int*)& Settings::AutoStrafe::type, strafeTypes, IM_ARRAYSIZE(strafeTypes));
-
-				if (Settings::AutoStrafe::type == AutostrafeType::AS_RAGE)
-				{
-					ImGui::SameLine();
-					ImGui::Checkbox(XORSTR("Silent"), &Settings::AutoStrafe::silent);
-				}
-
-				ImGui::PopItemWidth();
-				UI::KeyBindButton(&Settings::EdgeJump::key);
 			}
 
 			ImGui::Columns(1);
@@ -447,6 +441,7 @@ void Misc::RenderTab()
 				ImGui::Checkbox(XORSTR("Attempt NoFall"), &Settings::NoFall::enabled);
 				ImGui::Checkbox(XORSTR("Ragdoll Gravity"), &Settings::RagdollGravity::enabled);
 				ImGui::Checkbox(XORSTR("Show Spectator list"), &Settings::ShowSpectators::enabled);
+				ImGui::Checkbox(XORSTR("Show Player list"), &PlayerList::showWindow);
 			}
 			ImGui::Columns(1);
 			ImGui::Separator();

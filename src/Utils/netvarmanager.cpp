@@ -5,6 +5,7 @@
 
 #include "../interfaces.h"
 #include "../Utils/xorstring.h"
+
 std::vector<RecvTable*> NetVarManager::GetTables()
 {
 	std::vector<RecvTable*> tables;

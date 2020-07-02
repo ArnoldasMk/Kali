@@ -3,7 +3,7 @@
 #include "../SDK/vector.h"
 #include "../SDK/IEngineTrace.h"
 
-namespace Autowall
+namespace AutoWall
 {
 	struct FireBulletData
 	{
@@ -11,11 +11,13 @@ namespace Autowall
 		trace_t enter_trace;
 		Vector direction;
 		CTraceFilter filter;
-		float trace_length;
-		float trace_length_remaining;
-		float current_damage;
-		int penetrate_count;
+		float trace_length = 0;
+		float trace_length_remaining = 0;
+		float current_damage = 0;
+		int penetrate_count = 0;
 	};
 
-	float GetDamage(const Vector& vecPoint, bool teamCheck, FireBulletData& fData);
+	int GetDamage(const Vector& vecPoint, bool teamCheck, FireBulletData& fData);
+	void ScaleDamage(HitGroups hitgroup, C_BasePlayer* enemy, float weapon_armor_ratio, float& current_damage);
+	bool SimulateFireBullet(C_BaseCombatWeapon* pWeapon, bool teamCheck, AutoWall::FireBulletData& data);
 }

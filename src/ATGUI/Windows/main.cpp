@@ -18,43 +18,75 @@
 
 bool Main::showWindow = true;
 
+static void Buttons()
+{
+	ImVec2 size =  ImGui::GetWindowSize();
+	size = ImVec2( (size.x - Settings::UI::Windows::Main::sizeX)/ 2, (size.y - Settings::UI::Windows::Main::sizeY) / 2);
+	
+	ImGui::SetNextWindowPos(ImVec2(0, (ImGui::GetWindowSize().y / 2) - 20), ImGuiCond_Once);
+	ImGui::SetNextWindowSize(ImVec2(size.x - 20,30), ImGuiCond_Once );
+
+	ImGui::GetStyle().Colors[ImGuiCol_WindowBg] = ImVec4(0,0,0,0);
+
+	ImGui::GetStyle().Colors[ImGuiCol_Button] = ImVec4(
+						Settings::UI::mainColor.Color().Value.x ,
+						Settings::UI::mainColor.Color().Value.y ,
+						Settings::UI::mainColor.Color().Value.z ,
+						Settings::UI::mainColor.Color().Value.w
+				);
+
+	if (ImGui::Begin(XORSTR("##BUTTONS"), &Main::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiConfigFlags_NoMouseCursorChange ) )
+	{
+		ImGui::Columns(1);
+		{			
+			ImGui::PushItemWidth(-1);
+			if (ImGui::Button(XORSTR("Config"), ImVec2( ImGui::GetWindowSize().x, 50) ) )
+				Configs::showWindow = !Configs::showWindow;
+
+			if (ImGui::Button(XORSTR("COLOR PICKER"), ImVec2( ImGui::GetWindowSize().x, 50) ) )
+				Colors::showWindow = !Colors::showWindow;
+
+			ImGui::PopItemWidth();
+		}
+	}
+	ImGui::End();
+
+	ImGui::GetStyle().Colors[ImGuiCol_Button] = Settings::UI::accentColor.Color();
+	ImGui::GetStyle().Colors[ImGuiCol_WindowBg] = Settings::UI::bodyColor.Color();
+
+}
+
 void Main::RenderWindow()
 {
+	if (!Main::showWindow)
+	{
+		Settings::UI::Windows::Main::open = false;
+		return;
+	} 
+
+	ImVec2 size =  ImGui::GetWindowSize();
+	size = ImVec2( (size.x - Settings::UI::Windows::Main::sizeX)/ 2, (size.y - Settings::UI::Windows::Main::sizeY) / 2);
 	if( Settings::UI::Windows::Main::reload )
 	{
-		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Main::posX, Settings::UI::Windows::Main::posY), ImGuiSetCond_Always);
-		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Main::sizeX, Settings::UI::Windows::Main::sizeY), ImGuiSetCond_Always);
+		ImGui::SetNextWindowPos(ImVec2(size.x, size.y), ImGuiCond_Once);
+		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Main::sizeX, Settings::UI::Windows::Main::sizeY), ImGuiCond_Once);
 		Main::showWindow = Settings::UI::Windows::Main::open;
 		Settings::UI::Windows::Main::reload = false;
 	}
 	else
 	{
-		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Main::posX, Settings::UI::Windows::Main::posY), ImGuiSetCond_FirstUseEver);
-		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Main::sizeX, Settings::UI::Windows::Main::sizeY), ImGuiSetCond_FirstUseEver);
-	}
-	if (!Main::showWindow)
-	{
-		Settings::UI::Windows::Main::open = false;
-		return;
+		ImGui::SetNextWindowPos(ImVec2(size.x, size.y), ImGuiCond_Once);
+		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Main::sizeX, Settings::UI::Windows::Main::sizeY), ImGuiCond_Once);
 	}
 
 	static int page = 0;
 
+	ImVec2 temp = ImGui::GetWindowSize();
 	
-
-	if (ImGui::Begin(XORSTR("MissedIt"), &Main::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize  ) )
+	if (ImGui::Begin(XORSTR("##MissedIt"), &Main::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiConfigFlags_NoMouseCursorChange ) )
 	{
-		ImVec2 temp = ImGui::GetWindowSize();
-		
-		ImGui::Columns(1);
-		if (ImGui::Button(XORSTR("Config"), ImVec2( (temp.x / 2) - 9.f, 0) ) )
-			Configs::showWindow = !Configs::showWindow;
-		ImGui::SameLine();
-		if (ImGui::Button(XORSTR("COLOR PICKER"), ImVec2( (temp.x /2) - 9, 0) ) )
-			Colors::showWindow = !Colors::showWindow;
-			
 		Settings::UI::Windows::Main::open = true;
-		
+
 		Settings::UI::Windows::Main::sizeX = (int)temp.x;
 		Settings::UI::Windows::Main::sizeY = (int)temp.y;
 		temp = ImGui::GetWindowPos();
@@ -90,13 +122,15 @@ void Main::RenderWindow()
 				ImGui::SameLine();
 		}
 
+		ImGui::Columns(1);
+		ImGui::Dummy(ImVec2(0,2));
 		switch (page)
 		{
 			case 0:
 				Legitbot::RenderTab();
 				break;
 			case 1:
-				Ragebot::RenderTab();
+				RagebotTab::RenderTab();
 				break;
 			case 2:
 				HvH::RenderTab();
@@ -114,7 +148,9 @@ void Main::RenderWindow()
 				Misc::RenderTab();
 				break;
 		}
-		ImGui::Separator();
-		ImGui::End();
+		
 	}
+	ImGui::End();
+	
+	Buttons();
 }

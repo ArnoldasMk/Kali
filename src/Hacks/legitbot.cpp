@@ -16,11 +16,8 @@ bool Legitbot::aimStepInProgress = false;
 std::vector<int64_t> Legitbot::friends = { };
 std::vector<long> killTimes = { 0 }; // the Epoch time from when we kill someone
 
-bool shouldAim;
-inline int delay = 0, shotFIred = 0;
-inline bool _delayed = false; // to determaine all ready delayed or not
 QAngle AimStepLastAngle;
-QAngle RCSLastPunch = {0,0,0};
+QAngle RCSLastPunch;
 
 int Legitbot::targetAimbot = -1;
 const int headVectors = 11;
@@ -34,7 +31,9 @@ static QAngle ApplyErrorToAngle(QAngle* angles, float margin)
 	return error;
 }
 
-
+/*
+* get the Distance from your View Point to the enemy
+*/
 static float GetRealDistanceFOV(float distance, QAngle angle, CUserCmd* cmd)
 {
 	/*    n
@@ -65,15 +64,22 @@ static float GetRealDistanceFOV(float distance, QAngle angle, CUserCmd* cmd)
 	return aimingAt.DistTo(aimAt);
 }
 
-static Vector VelocityExtrapolate(C_BasePlayer* player, Vector aimPos)
+static void VelocityExtrapolate(C_BasePlayer* player, Vector& aimPos, Vector& localeye)
 {
-	return aimPos + (player->GetVelocity() * globalVars->interval_per_tick);
+	aimPos += (player->GetVelocity() * globalVars->interval_per_tick);
+	localeye += (player->GetVelocity() * globalVars->interval_per_tick);
 }
 
+/*
+* Check Certein Position Is in the Fov Or not
+*/
 static bool IsIzFov(C_BasePlayer* player, CUserCmd *cmd, const Vector& pVecTarget, const Vector& cbVecTarget, AimTargetType aimTargetType = AimTargetType::FOV)
 {
+	if (!player)
+		return false;
+
 	using namespace Settings::Legitbot::AutoAim;
-	float cbFov = 0.0;
+
 	QAngle viewAngles;
 	engine->GetViewAngles(viewAngles);
 	float realDistance = 0.f;
@@ -84,7 +90,8 @@ static bool IsIzFov(C_BasePlayer* player, CUserCmd *cmd, const Vector& pVecTarge
 		realDistance = GetRealDistanceFOV(distance, Math::CalcAngle(pVecTarget, cbVecTarget), cmd);	
 	}
 		
-	cbFov = Math::GetFov( viewAngles, Math::CalcAngle(pVecTarget, cbVecTarget) );
+	float cbFov = Math::GetFov( viewAngles, Math::CalcAngle(pVecTarget, cbVecTarget) );
+
 	if (cbFov > 0 && cbFov <= fov && aimTargetType == AimTargetType::FOV)
 	{
 		if ( !Entity::IsVisible(player, (int) Settings::Legitbot::bone, cbFov, true) )
@@ -101,15 +108,22 @@ static bool IsIzFov(C_BasePlayer* player, CUserCmd *cmd, const Vector& pVecTarge
 	return false;
 	
 }
-/* Original Credits to: https://github.com/goldenguy00 ( study! study! study! :^) ) */
+
+/* 
+* Original Credits to: https://github.com/goldenguy00 ( study! study! study! :^) ) 
+* It find out he clossest enemy from your View Angle and return the enemy
+*/
 static C_BasePlayer* GetClosestEnemy (C_BasePlayer *localplayer, CUserCmd* cmd, AimTargetType aimTargetType = AimTargetType::FOV)
 {
+	if (!localplayer)
+		return nullptr;
+
 	C_BasePlayer* closenstEntity = nullptr;
 	float bestFov = Settings::Legitbot::AutoAim::fov;
 	float bestRealDistance = Settings::Legitbot::AutoAim::fov * 5.0f;
 
-	float prevDistance = 0.f,
-	  		cbFov = 0.f;
+	float prevDistance = (float)0;
+
 	Vector pVecTarget = localplayer->GetEyePosition();
 	QAngle viewAngles;
 	engine->GetViewAngles(viewAngles);
@@ -118,7 +132,7 @@ static C_BasePlayer* GetClosestEnemy (C_BasePlayer *localplayer, CUserCmd* cmd, 
 		aimTargetType = AimTargetType::REAL_DISTANCE;
 
 	
-	for (int i = 1; i < engine->GetMaxClients(); ++i)
+	for (int i = engine->GetMaxClients(); i > 1 ; i--)
 	{
 		C_BasePlayer* player = (C_BasePlayer*)entityList->GetClientEntity(i);
 
@@ -132,16 +146,33 @@ static C_BasePlayer* GetClosestEnemy (C_BasePlayer *localplayer, CUserCmd* cmd, 
 		if (!Settings::Ragebot::friendly && Entity::IsTeamMate(player, localplayer))
 	   	 	continue;
 
-		Vector cbVecTarget = player->GetAbsOrigin();
-		cbFov = Math::GetFov( viewAngles, Math::CalcAngle(pVecTarget, cbVecTarget) );
-		float distance = pVecTarget.DistTo(cbVecTarget);
-		float realDistance = GetRealDistanceFOV(distance, Math::CalcAngle(pVecTarget, cbVecTarget), cmd);
-		
-		if (aimTargetType == AimTargetType::FOV && cbFov > bestFov)
-			continue;
-		if (aimTargetType == AimTargetType::REAL_DISTANCE && realDistance > bestRealDistance)
-			continue;
+		Vector cbVecTarget = player->GetEyePosition();
 
+		if (Entity::IsSpotVisible(player, cbVecTarget, bestFov, true))
+			return player;
+
+		float cbFov = 0.f;
+		float distance = 0.f;
+		float realDistance = 0.f;
+		
+		switch (aimTargetType)
+		{
+			case AimTargetType::FOV:
+				cbFov = Math::GetFov( viewAngles, Math::CalcAngle(pVecTarget, cbVecTarget) );
+				if (cbFov > bestFov)
+					continue;
+				break;
+		
+			case AimTargetType::REAL_DISTANCE :
+				distance = pVecTarget.DistTo(cbVecTarget);
+				realDistance = GetRealDistanceFOV(distance, Math::CalcAngle(pVecTarget, cbVecTarget), cmd);
+				if (realDistance > bestRealDistance)
+					continue;
+				break;
+
+			default:
+				break;
+		}
 		if (prevDistance == 0 && cbFov != 0)
 		{
 			prevDistance = cbFov;
@@ -155,23 +186,29 @@ static C_BasePlayer* GetClosestEnemy (C_BasePlayer *localplayer, CUserCmd* cmd, 
 	}
 	return closenstEntity;
 }
-
-/* Original Credits to: https://github.com/goldenguy00 ( study! study! study! :^) ) */
+/* 
+* This Function Return the Clossest Spot from the Crosshair
+* Original Credits to: https://github.com/goldenguy00 ( study! study! study! :^) ) 
+*/
 static Vector GetClosestSpot( CUserCmd* cmd, C_BasePlayer* localPlayer, C_BasePlayer* enemy, AimTargetType aimTargetType = AimTargetType::FOV)
 {
+	if (!localPlayer || !enemy)
+		return Vector(0);
+
 	QAngle viewAngles;
 	engine->GetViewAngles(viewAngles);
 
-	float tempFov = Settings::Legitbot::AutoAim::fov;
+	float& tempFov = Settings::Legitbot::AutoAim::fov;
 	float tempDistance = Settings::Legitbot::AutoAim::fov * 5.f;
 
 	Vector pVecTarget = localPlayer->GetEyePosition();
 
-	Vector tempSpot = {0,0,0};
+	Vector tempSpot = Vector(0);
 
 	const std::unordered_map<int, int> *modelType = BoneMaps::GetModelTypeBoneMap(enemy);
 
 	static int len = sizeof(Settings::Legitbot::AutoAim::desiredBones) / sizeof(Settings::Legitbot::AutoAim::desiredBones[0]);
+	
 	for( int i = 0; i < len; i++ )
 	{
 		if( !Settings::Legitbot::AutoAim::desiredBones[i] )
@@ -183,64 +220,56 @@ static Vector GetClosestSpot( CUserCmd* cmd, C_BasePlayer* localPlayer, C_BasePl
 
 		Vector bone3D = enemy->GetBonePosition(boneID);
 
-		Autowall::FireBulletData data;
-		float boneDamage = Autowall::GetDamage(bone3D, !Settings::Legitbot::friendly, data);
+		AutoWall::FireBulletData data;
+		float boneDamage = AutoWall::GetDamage(bone3D, !Settings::Legitbot::friendly, data);
+		if (boneDamage < Settings::Legitbot::minDamage) 
+			continue;
 
 		Vector cbVecTarget = enemy->GetBonePosition(boneID);
-
+		
 		if( aimTargetType == AimTargetType::FOV )
 		{
 			float cbFov = Math::GetFov(viewAngles, Math::CalcAngle(pVecTarget, cbVecTarget));
 
-			if( cbFov < tempFov )
-			{
-				if( Entity::IsVisibleThroughEnemies(enemy, boneID) && boneDamage >= Settings::Legitbot::minDamage )
-				{
-					tempFov = cbFov;
-					tempSpot = cbVecTarget;
-				}
+			if	( cbFov < tempFov && Entity::IsVisibleThroughEnemies(enemy, boneID) )
+			{	
+				tempFov = cbFov;	
+				tempSpot = cbVecTarget;	
 			}
 		}
 		else if( aimTargetType == AimTargetType::REAL_DISTANCE )
 		{
-			float cbDistance = pVecTarget.DistTo(cbVecTarget);
-			float cbRealDistance = GetRealDistanceFOV(cbDistance, Math::CalcAngle(pVecTarget, cbVecTarget), cmd);
+			float cbRealDistance = GetRealDistanceFOV(pVecTarget.DistTo(cbVecTarget), Math::CalcAngle(pVecTarget, cbVecTarget), cmd);
 
-			if( cbRealDistance < tempDistance )
+			if	( cbRealDistance < tempDistance && Entity::IsVisibleThroughEnemies(enemy, boneID)  )
 			{
-				if( Entity::IsVisibleThroughEnemies(enemy, boneID) && boneDamage >= Settings::Legitbot::minDamage)
-				{
-					tempDistance = cbRealDistance;
-					tempSpot = cbVecTarget;
-				}
+				tempDistance = cbRealDistance;
+				tempSpot = cbVecTarget;	
 			}
 		}
 	}
 	return tempSpot;
 }
 
-static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, bool visibleCheck, Vector* bestSpot, float* bestDamage, AimTargetType aimTargetType = AimTargetType::FOV)
+/*
+* Send Clossest Player From Crosshair and and the spot to shoot
+*/
+static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, C_BasePlayer* localplayer, bool visibleCheck, Vector* bestSpot, float* bestDamage, AimTargetType aimTargetType = AimTargetType::FOV)
 {
-	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
-	C_BasePlayer* closestEntity = nullptr;
-
 	C_BasePlayer *player = GetClosestEnemy(localplayer, cmd); // getting the closest enemy to the crosshair
 
-	if (player == nullptr)
+	if ( !player || !localplayer)
 		return nullptr;
 
-	Vector eVecTarget = {0,0,0};
-	auto IsPriorityBoneINFov = IsIzFov( player, cmd, localplayer->GetEyePosition(), player->GetAbsOrigin() );
-	if ( !IsPriorityBoneINFov )
+	Vector eVecTarget = player->GetBonePosition( (int)Settings::Legitbot::bone );
+	auto IsPriorityBoneInFov = IsIzFov( player, cmd, localplayer->GetEyePosition(), eVecTarget );
+	
+	if ( !IsPriorityBoneInFov )
 	{
 		Vector tempSpot = GetClosestSpot(cmd, localplayer, player, aimTargetType);
 		if( tempSpot.IsZero() || !Entity::IsSpotVisibleThroughEnemies(player, tempSpot) )
 			return nullptr;
 		eVecTarget = tempSpot;
-	}
-	else if (IsPriorityBoneINFov)
-	{
-		eVecTarget = player->GetBonePosition((int) Settings::Legitbot::bone);
 	}
 	
 	if (visibleCheck && !Entity::IsSpotVisible(player, eVecTarget))
@@ -250,51 +279,47 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, bool visibleCheck, V
 	if ( Settings::Legitbot::FlashCheck::enabled && localplayer->IsFlashed() )
 		return nullptr;
 
-
-	closestEntity = player;
 	*bestSpot = eVecTarget;
 
 	if( bestSpot->IsZero() )
 		return nullptr;
 
-	return closestEntity;
+	return player;
 }
 
-
-
-static void RCS(QAngle& angle, C_BasePlayer* player, CUserCmd* cmd)
+/*
+* Recoil controll System
+*/
+static void RCS(QAngle& angle, C_BasePlayer* player,C_BasePlayer* localplayer, CUserCmd* cmd, bool& shouldAim)
 {
-	if (!Settings::Legitbot::RCS::enabled)
+	if (!Settings::Legitbot::RCS::enabled || !(cmd->buttons & IN_ATTACK ))
 		return;
 
-	if (!(cmd->buttons & IN_ATTACK))
+	if (!Settings::Legitbot::RCS::always_on && !player)
 		return;
 
-	bool hasTarget = Settings::Legitbot::AutoAim::enabled && shouldAim && player;
-
-	if (!Settings::Legitbot::RCS::always_on && !hasTarget)
-		return;
-
-	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 	QAngle CurrentPunch = *localplayer->GetAimPunchAngle();
 
-	if ( Settings::Legitbot::silent || hasTarget )
+	float aimpunch = cvar->FindVar("weapon_recoil_scale")->GetFloat();
+	if ( Settings::Legitbot::silent && aimpunch)
 	{
 		angle.x -= CurrentPunch.x * Settings::Legitbot::RCS::valueX;
 		angle.y -= CurrentPunch.y * Settings::Legitbot::RCS::valueY;
 	}
-	else if (localplayer->GetShotsFired() > 1)
+	else if (localplayer->GetShotsFired() > 3 )
 	{
 		QAngle NewPunch = { CurrentPunch.x - RCSLastPunch.x, CurrentPunch.y - RCSLastPunch.y, 0 };
 
 		angle.x -= NewPunch.x * Settings::Legitbot::RCS::valueX;
 		angle.y -= NewPunch.y * Settings::Legitbot::RCS::valueY;
 	}
-
 	RCSLastPunch = CurrentPunch;
 }
 
-static void AimStep(C_BasePlayer* player, QAngle& angle, CUserCmd* cmd)
+/*
+* I don't know What it actuall Does xd
+*/
+static void AimStep(C_BasePlayer* player, QAngle& angle, CUserCmd* cmd, bool& shouldAim)
 {
 	if (!Settings::Legitbot::AimStep::enabled)
 		return;
@@ -349,7 +374,10 @@ static void Salt(float& smooth)
 	smooth *= oval;
 }
 
-static void Smooth(C_BasePlayer* player, QAngle& angle)
+/*
+ * Add smoothness to the aim but bit more soothness is bad for helth xd
+ */
+static void Smooth(C_BasePlayer* player, QAngle& angle, bool& shouldAim)
 {
 	if (!Settings::Legitbot::Smooth::enabled)
 		return;
@@ -391,22 +419,23 @@ static void Smooth(C_BasePlayer* player, QAngle& angle)
 	angle = viewAngles + toChange;
 }
 
-float hitchance()
+/*
+ * Hitchance Source from NanoScence
+ */
+static bool hitchance(C_BasePlayer* localplayer, C_BaseCombatWeapon* activeWeapon)
 {
 	float hitchance = 101;
-	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
-	C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
+	activeWeapon->UpdateAccuracyPenalty();
 	if (activeWeapon)
 	{
-		if (Settings::Legitbot::Hitchance::value > 0)
-		{
-			float inaccuracy = activeWeapon->GetInaccuracy();
-			if (inaccuracy == 0) inaccuracy = 0.0000001;
-			inaccuracy = 1 / inaccuracy;
-			hitchance = inaccuracy;
-		}
-		return hitchance;
+		float inaccuracy = activeWeapon->GetInaccuracy();
+		if (inaccuracy == 0) inaccuracy = 0.0000001;
+		inaccuracy = 1 / inaccuracy;
+		hitchance = inaccuracy;
+		
+		return hitchance >= (Settings::Legitbot::ShootAssist::Hitchance::value * 1.5);
 	}
+	return true;
 }
 
 static void AutoCrouch(C_BasePlayer* player, CUserCmd* cmd)
@@ -420,122 +449,22 @@ static void AutoCrouch(C_BasePlayer* player, CUserCmd* cmd)
 	cmd->buttons |= IN_BULLRUSH | IN_DUCK;
 }
 
-static void AutoSlow(C_BasePlayer* player, float& forward, float& sideMove, float& bestDamage, C_BaseCombatWeapon* active_weapon, CUserCmd* cmd)
+static void AutoSlow(C_BasePlayer* player,C_BasePlayer* localplayer, float& forward, float& sideMove, float& bestDamage, C_BaseCombatWeapon* activeWeapon, CUserCmd* cmd)
 {
-
-	if (!Settings::Legitbot::AutoSlow::enabled){
-		return;
-	}
-
-	if (!player){
-		return;
-	}
-
-	float nextPrimaryAttack = active_weapon->GetNextPrimaryAttack();
-
-	if (nextPrimaryAttack > globalVars->curtime)
-    {
-		return;
-	}
-
-	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
-
-	C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
-	if (!activeWeapon || activeWeapon->GetAmmo() == 0)
+	if (!Settings::Legitbot::AutoSlow::enabled || !player || activeWeapon->GetNextPrimaryAttack() > globalVars->curtime || !activeWeapon || activeWeapon->GetAmmo() == 0)
 		return;
 
-	if( Settings::Legitbot::Hitchance::enabled)
-	{
-		float hc = hitchance();
-		if( hc > Settings::Legitbot::Hitchance::value )
-		{
-			cmd->buttons |= IN_WALK;
-			forward = -forward;
-			sideMove = -sideMove;
-			cmd->upmove = 0;
-			return;
-		}
-		else if( hc == Settings::Legitbot::Hitchance::value ) {
-			cmd->buttons |= IN_WALK;
-			forward = 0;
-			sideMove = 0;
-			cmd->upmove = 0;
-			return;
-		}
-        else if (cmd->buttons & IN_ATTACK2)
-        {
-            return;
-        }
-        else if (cmd->buttons & IN_ATTACK) 
-        {
-            forward = 0;
-			sideMove = 0;
-			return;
-        }
-		else 
-		{
-			cmd->buttons |= IN_RUN;
-			forward = 0;
-			sideMove = 0;
-			return;
-		}
-	}
-
-	else if( (active_weapon->GetSpread() + active_weapon->GetInaccuracy()) > (activeWeapon->GetCSWpnData()->GetMaxPlayerSpeed() / 3.0f)) // https://youtu.be/ZgjYxBRuagA
-	{
-		cmd->buttons |= IN_WALK;
-		forward = -forward;
-		sideMove = -sideMove;
-		cmd->upmove = 0;
-	}
-
-    else if ( (active_weapon->GetSpread() + active_weapon->GetInaccuracy()) == (activeWeapon->GetCSWpnData()->GetMaxPlayerSpeed() / 3.0f) ) 
+	// if( Settings::Legitbot::ShootAssist::Hitchance::enabled && !hitchance(localplayer, activeWeapon))
+	// {
+    //     forward = 0;
+	// 	sideMove = 0;
+	// }
+    if ( (activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) == (activeWeapon->GetCSWpnData()->GetMaxPlayerSpeed() / 3.0f) ) 
     {
         cmd->buttons |= IN_WALK;
 		forward = 0;
 		sideMove = 0;
 		cmd->upmove = 0;
-        return;
-    }
-
-    else if (cmd->buttons & IN_ATTACK2)
-    {
-        return;
-    }
-
-	else 
-	{
-		cmd->buttons |= IN_RUN;
-		return;
-	}
-}
-
-static void AutoCock(C_BasePlayer* player, C_BaseCombatWeapon* activeWeapon, CUserCmd* cmd)
-{
-    if (!Settings::Legitbot::AutoShoot::enabled)
-        return;
-
-    if (Settings::Legitbot::AimStep::enabled && Legitbot::aimStepInProgress)
-        return;
-
-    if (*activeWeapon->GetItemDefinitionIndex() != ItemDefinitionIndex::WEAPON_REVOLVER)
-        return;
-
-    if(activeWeapon->GetAmmo() == 0)
-        return;
-    if (cmd->buttons & IN_USE)
-        return;
-
-    cmd->buttons |= IN_ATTACK;
-    float postponeFireReadyTime = activeWeapon->GetPostPoneReadyTime();
-    if (postponeFireReadyTime > 0)
-    {
-        if (postponeFireReadyTime < globalVars->curtime)
-        {
-            if (player)
-                return;
-            cmd->buttons &= ~IN_ATTACK;
-        }
     }
 }
 
@@ -543,10 +472,8 @@ static void AutoPistol(C_BaseCombatWeapon* activeWeapon, CUserCmd* cmd)
 {
 	if (!Settings::Legitbot::AutoPistol::enabled)
 		return;
-
 	if (!activeWeapon || activeWeapon->GetCSWpnData()->GetWeaponType() != CSWeaponType::WEAPONTYPE_PISTOL)
 		return;
-
 	if (activeWeapon->GetNextPrimaryAttack() < globalVars->curtime)
 		return;
 
@@ -554,21 +481,10 @@ static void AutoPistol(C_BaseCombatWeapon* activeWeapon, CUserCmd* cmd)
         cmd->buttons &= ~IN_ATTACK;
 }
 
-static void NoShoot(C_BaseCombatWeapon* activeWeapon, C_BasePlayer* player, CUserCmd* cmd)
-{
-	if (player && Settings::Legitbot::NoShoot::enabled)
-	{
-		if (*activeWeapon->GetItemDefinitionIndex() == ItemDefinitionIndex::WEAPON_C4)
-			return;
-
-		if (*activeWeapon->GetItemDefinitionIndex() == ItemDefinitionIndex::WEAPON_REVOLVER)
-			cmd->buttons &= ~IN_ATTACK2;
-		else
-			cmd->buttons &= ~IN_ATTACK;
-	}
-}
-
-static void FixMouseDeltas(CUserCmd* cmd, const QAngle &angle, const QAngle &oldAngle)
+/*
+* Add Fake Mouse movement because vacnet is a bitch
+*/
+static void FixMouseDeltas(CUserCmd* cmd, const QAngle &angle, const QAngle &oldAngle, bool &shouldAim)
 {
     if( !shouldAim)
         return;
@@ -587,216 +503,139 @@ static void FixMouseDeltas(CUserCmd* cmd, const QAngle &angle, const QAngle &old
 bool AimKeyOnly (CUserCmd* cmd)
 {
 	if (cmd->buttons & IN_ATTACK)
-    {
         return true;
-    }
     else if (inputSystem->IsButtonDown(Settings::Legitbot::aimkey))
-	{
         return true;
-    }
     else
-    {
         return false;
-    }
 }
 
-// void ShootAssist(CUserCmd* cmd, C_BasePlayer* localplayer, C_BasePlayer* player) 
-// {
-// 	if (!Settings::Legitbot::ShootAssist::enabled)
-// 		return;
-// 	/*cheking the player is near my cross hair or not
-// 	// if it is then it will reduce the mouse sencitivity
-// 	*/
-// 	if ( GetClosestSpot(cmd, localplayer, player).IsZero())
-// 		return; 
-	
-// 	cmd->buttons |= IN_ATTACK;
-// 	shouldAim = true;
-// }
+static void AutoShoot(C_BasePlayer* localplayer, C_BasePlayer* player, C_BaseCombatWeapon* activeWeapon, CUserCmd* cmd, bool& shouldAim)
+{
+    if ( activeWeapon->GetAmmo() == 0 || !shouldAim )
+		return;
+
+    CSWeaponType weaponType = activeWeapon->GetCSWpnData()->GetWeaponType();
+	if (weaponType == CSWeaponType::WEAPONTYPE_KNIFE || weaponType == CSWeaponType::WEAPONTYPE_C4 || weaponType == CSWeaponType::WEAPONTYPE_GRENADE)
+		return;
+
+    if (Settings::Legitbot::AutoShoot::autoscope && Util::Items::IsScopeable(*activeWeapon->GetItemDefinitionIndex()) && !localplayer->IsScoped() && !(cmd->buttons & IN_ATTACK2))
+    {
+		cmd->buttons |= IN_ATTACK2;
+		return; // continue next tick
+    }
+
+	//cvar->ConsoleDPrintf(XORSTR("WE are now applying auto shoot"));
+    float nextPrimaryAttack = activeWeapon->GetNextPrimaryAttack();
+
+    if (*activeWeapon->GetItemDefinitionIndex() != ItemDefinitionIndex::WEAPON_REVOLVER)
+	{	
+		if (nextPrimaryAttack > globalVars->curtime)
+	    	cmd->buttons &= ~IN_ATTACK;
+		else
+	    	cmd->buttons |= IN_ATTACK;
+	}
+}
+
+static bool CanShoot(C_BasePlayer* localplayer, C_BaseCombatWeapon* activeweapon)
+{
+	if (!localplayer)
+		return false;
+	if (!localplayer->GetAlive())
+		return false;
+	if (!activeweapon)
+		return false;
+	if (!activeweapon->GetInReload())
+		return false;
+
+	return true;
+}
 void Legitbot::CreateMove(CUserCmd* cmd)
 {
 
 	if(!Settings::Legitbot::enabled)
-		return;
-			
+		return; 		
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
-	
-	if (!localplayer || !localplayer->GetAlive())
+	C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
+
+	if (!CanShoot(localplayer, activeWeapon))
 		return;
 
-	Legitbot::UpdateValues();
+	if (Legitbot::prevWeapon != (ItemDefinitionIndex)*activeWeapon->GetItemDefinitionIndex())
+	{
+		Legitbot::prevWeapon = (ItemDefinitionIndex)*activeWeapon->GetItemDefinitionIndex();
+		Legitbot::UpdateValues();
+	}
 
 	QAngle oldAngle;
 	engine->GetViewAngles(oldAngle);
+	
 	float oldForward = cmd->forwardmove;
 	float oldSideMove = cmd->sidemove;
-
+	bool shouldAim = false;
 	QAngle angle = cmd->viewangles;
-	static bool newTarget = true;
-	static QAngle lastRandom = {0,0,0};
+	static QAngle lastRandom = QAngle(0);
+	
 	Vector localEye = localplayer->GetEyePosition();
 
 	if (Settings::Legitbot::IgnoreJump::enabled && (!(localplayer->GetFlags() & FL_ONGROUND) && localplayer->GetMoveType() != MOVETYPE_LADDER))
-		return;
-
-	C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
-	if (!activeWeapon || activeWeapon->GetInReload())
 		return;
 
 	CSWeaponType weaponType = activeWeapon->GetCSWpnData()->GetWeaponType();
 	if (weaponType == CSWeaponType::WEAPONTYPE_C4 || weaponType == CSWeaponType::WEAPONTYPE_GRENADE || weaponType == CSWeaponType::WEAPONTYPE_KNIFE)
 		return;
 
-    Vector bestSpot = {0,0,0};
-	float bestDamage = 0.0f;
-	C_BasePlayer* player = GetClosestPlayerAndSpot(cmd, !Settings::Legitbot::AutoWall::enabled, &bestSpot, &bestDamage);
+    Vector bestSpot = Vector(0);
+	float bestDamage = float(0);
+
+	C_BasePlayer* player = GetClosestPlayerAndSpot(cmd, localplayer, !Settings::Legitbot::AutoWall::enabled, &bestSpot, &bestDamage);
 
 	if (player)
 	{
-		//Auto Matic place the crosshair in to the player
-        if (Settings::Legitbot::AutoAim::enabled)
-		{
-            //Do not shoot if player is in air or in ladder 
-            if (Settings::Legitbot::IgnoreEnemyJump::enabled && (!(player->GetFlags() & FL_ONGROUND) && player->GetMoveType() != MOVETYPE_LADDER))
-		    	{return;}
+         // Conditions if AimKeyOnly enabled
+        if (Settings::Legitbot::aimkeyOnly)
+			shouldAim = AimKeyOnly(cmd);
+		else if( (cmd->buttons & IN_ATTACK) || Settings::Triggerbot::Magnet::enabled)
+			shouldAim = true;
 
-            //Auto Scop Controll system to controll auto scoping every time
-            if (Settings::Legitbot::ScopeControl::enabled)
-	        {
-                //cheking if the weapon scopable and not scop then it will scop and go back to the next tick
-		        if (Util::Items::IsScopeable(*activeWeapon->GetItemDefinitionIndex()) && !localplayer->IsScoped())
-                {
-                    cmd->buttons |= IN_ATTACK2;
-                    return; // will go to the next tick
-                }
-			
-	        }
-            // Conditions if AimKeyOnly enabled
-            if (Settings::Legitbot::aimkeyOnly)
-            {
-				shouldAim = AimKeyOnly(cmd);
-                
-            }
-			else if( cmd->buttons & IN_ATTACK)
+		Settings::Debug::AutoAim::target = bestSpot; // For Debug showing aimspot.
+
+		if (shouldAim)
+		{	
+			if (Settings::Legitbot::Prediction::enabled)
+				VelocityExtrapolate(localplayer, bestSpot, localEye); // get eye pos next tick
+
+			angle = Math::CalcAngle(localEye, bestSpot);
+
+			if (Settings::Legitbot::ErrorMargin::enabled)
 			{
-				shouldAim = true;
+				static int lastShotFired = 0;
+				if ((localplayer->GetShotsFired() > lastShotFired)) //get new random spot when firing a shot or when aiming at a new target
+					lastRandom = ApplyErrorToAngle(&angle, Settings::Legitbot::ErrorMargin::value);
+
+				angle += lastRandom;
+				lastShotFired = localplayer->GetShotsFired();
 			}
-			else if (Settings::Legitbot::ShootAssist::enabled) {
-				if (!(GetClosestSpot(cmd, localplayer, player).IsZero()) || !newTarget)
-				{
-					if(Settings::Legitbot::Hitchance::enabled)
-					{
-						if(hitchance() > Settings::Legitbot::Hitchance::value * 1.5)
-						{
-							if(delay >= (Settings::Legitbot::ShotDelay::value / 10.f) && _delayed == false)
-							{
-								_delayed = true;
-								shouldAim = false;
-							}
-							if (_delayed)
-							{
-								cmd->buttons |= IN_ATTACK;
-								shouldAim = true;
-							}
-							else
-							{
-								shouldAim = false;
-							}
-							
-							delay++;
-						}
-					}	
-					else 
-					{
-						if(delay >= (Settings::Legitbot::ShotDelay::value / 10.f) && _delayed == false)
-							{
-								_delayed = true;
-								shouldAim = false;
-							}
-							if (_delayed)
-							{
-								cmd->buttons |= IN_ATTACK;
-								shouldAim = true;
-							}
-							else 
-							{
-								shouldAim = false;
-							}
-							delay++;
-					}
-				}				
-			}
-            else {
-                shouldAim = false;
-            }
-
-			Settings::Debug::AutoAim::target = bestSpot; // For Debug showing aimspot.
-
-			if (shouldAim)
-			{
-				
-				if (Settings::Legitbot::Prediction::enabled)
-				{
-					localEye = VelocityExtrapolate(localplayer, localEye); // get eye pos next tick
-					bestSpot = VelocityExtrapolate(player, bestSpot); // get target pos next tick
-				}
-				angle = Math::CalcAngle(localEye, bestSpot);
-
-				if (Settings::Legitbot::ErrorMargin::enabled)
-				{
-					static int lastShotFired = 0;
-					if ((localplayer->GetShotsFired() > lastShotFired) || newTarget) //get new random spot when firing a shot or when aiming at a new target
-						lastRandom = ApplyErrorToAngle(&angle, Settings::Legitbot::ErrorMargin::value);
-
-					angle += lastRandom;
-					lastShotFired = localplayer->GetShotsFired();
-				}
-				newTarget = false;
-			}
-		}
-		else 
-		{
-			Settings::Legitbot::ShootAssist::enabled = false;
 		}
 	}
 	else // No player to Shoot
 	{
-        Settings::Debug::AutoAim::target = {0,0,0};
-        newTarget = true;
-        lastRandom = {0,0,0};
-		delay = 0;
-		// _delayed = false;
-		shotFIred = localplayer->GetShotsFired();
-		if(_delayed)
-		{
-			if(shotFIred <= Settings::Legitbot::MinShotFire::value && shotFIred > 0)
-			{
-				cmd->buttons |= IN_ATTACK;
-			}
-			else
-			{
-				shotFIred = 0;
-				_delayed = false;
-			}	
-		}
-			
+        Settings::Debug::AutoAim::target = Vector(0);
+        lastRandom = QAngle(0);	
     }
 
-	AimStep(player, angle, cmd);
+	AimStep(player, angle, cmd, shouldAim);
 	AutoCrouch(player, cmd);
-	AutoSlow(player, oldForward, oldSideMove, bestDamage, activeWeapon, cmd);
+	AutoShoot(localplayer, player, activeWeapon, cmd, shouldAim);
+	AutoSlow(player,localplayer, oldForward, oldSideMove, bestDamage, activeWeapon, cmd);
 	AutoPistol(activeWeapon, cmd);
-	// ShootAssist(cmd, localplayer, player);
-	//AutoShoot(player, activeWeapon, cmd);
-	AutoCock(player, activeWeapon, cmd);
-	RCS(angle, player, cmd);
-	Smooth(player, angle);
-	NoShoot(activeWeapon, player, cmd);
-
+	RCS(angle, player,localplayer, cmd, shouldAim);
+	Smooth(player, angle, shouldAim);
+	
     Math::NormalizeAngles(angle);
     Math::ClampAngles(angle);
 
-	FixMouseDeltas(cmd, angle, oldAngle);
+	FixMouseDeltas(cmd, angle, oldAngle, shouldAim);
 	
 	cmd->viewangles = angle;
 
@@ -806,9 +645,10 @@ void Legitbot::CreateMove(CUserCmd* cmd)
     	engine->SetViewAngles(cmd->viewangles);
 
 }
+
 void Legitbot::FireGameEvent(IGameEvent* event)
 {
-	if (!event)
+	if(!Settings::Legitbot::enabled || !event)
 		return;
 
 	if (strcmp(event->GetName(), XORSTR("player_connect_full")) == 0 || strcmp(event->GetName(), XORSTR("cs_game_disconnected")) == 0 )
@@ -831,9 +671,15 @@ void Legitbot::FireGameEvent(IGameEvent* event)
 		killTimes.push_back(Util::GetEpochTime());
 	}
 }
+
 void Legitbot::UpdateValues()
 {
+	if (!engine->IsInGame() || !Settings::Legitbot::enabled)
+		return;
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+	
+	if (!localplayer)
+		return;
 	C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
 	if (!activeWeapon)
 		return;
@@ -877,14 +723,15 @@ void Legitbot::UpdateValues()
 	Settings::Legitbot::Smooth::Salting::multiplier = currentWeaponSetting.smoothSaltMultiplier;
 	Settings::Legitbot::SmokeCheck::enabled = currentWeaponSetting.smokeCheck;
 	Settings::Legitbot::FlashCheck::enabled = currentWeaponSetting.flashCheck;
-	Settings::Legitbot::Hitchance::enabled = currentWeaponSetting.hitchanceEnaled;
-	Settings::Legitbot::Hitchance::value = currentWeaponSetting.hitchance;
-	Settings::Legitbot::ShotDelay::value = currentWeaponSetting.shotDelay;
-	Settings::Legitbot::MinShotFire::value = currentWeaponSetting.minShotFire;
+	Settings::Legitbot::ShootAssist::Hitchance::enabled = currentWeaponSetting.hitchanceEnaled;
+	Settings::Legitbot::ShootAssist::Hitchance::value = currentWeaponSetting.hitchance;
+	Settings::Legitbot::ShootAssist::ShotDelay::Value = currentWeaponSetting.shotDelay;
+	Settings::Legitbot::ShootAssist::MinShotFire::value = currentWeaponSetting.minShotFire;
 	Settings::Legitbot::AutoWall::enabled = currentWeaponSetting.autoWallEnabled;
 	Settings::Legitbot::minDamage = currentWeaponSetting.MinDamage;
 	Settings::Legitbot::AutoSlow::enabled = currentWeaponSetting.autoSlow;
 	Settings::Legitbot::ScopeControl::enabled = currentWeaponSetting.scopeControlEnabled;
+	Settings::Triggerbot::enabled = currentWeaponSetting.TriggerBot;
 
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 		Settings::Legitbot::AutoAim::desiredBones[bone] = currentWeaponSetting.desiredBones[bone];

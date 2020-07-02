@@ -104,6 +104,7 @@ void Configs::RenderWindow()
 			path << GetConfigDirectory() << configItems[configItemCurrent] << XORSTR("/config.json");
 
 			Settings::LoadConfig(path.str());
+			UI::ReloadRageWeaponSettings();
 			UI::ReloadWeaponSettings();
 		}
 		ImGui::PopItemWidth();

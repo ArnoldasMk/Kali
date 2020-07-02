@@ -11,8 +11,8 @@ void Triggerbot::CreateMove(CUserCmd *cmd)
 	if (!Settings::Triggerbot::enabled)
 		return;
 
-	if (!inputSystem->IsButtonDown(Settings::Triggerbot::key))
-		return;
+	// if (!inputSystem->IsButtonDown(Settings::Triggerbot::key) && Settings::Triggerbot::)
+	// 	return;
 
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 	if (!localplayer || !localplayer->GetAlive())
@@ -52,8 +52,8 @@ void Triggerbot::CreateMove(CUserCmd *cmd)
 
 	if (Settings::Triggerbot::Filters::walls)
 	{
-		Autowall::FireBulletData data;
-		if (Autowall::GetDamage(traceEnd, !Settings::Triggerbot::Filters::allies, data) == 0.0f)
+		AutoWall::FireBulletData data;
+		if (AutoWall::GetDamage(traceEnd, !Settings::Triggerbot::Filters::allies, data) == 0.0f)
 			return;
 
 		tr = data.enter_trace;
@@ -120,6 +120,7 @@ void Triggerbot::CreateMove(CUserCmd *cmd)
 	if (Settings::Triggerbot::Filters::smokeCheck && LineGoesThroughSmoke(tr.startpos, tr.endpos, 1))
 		return;
 
+	
 	C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
 	if (!activeWeapon || activeWeapon->GetAmmo() == 0)
 		return;
@@ -127,7 +128,12 @@ void Triggerbot::CreateMove(CUserCmd *cmd)
 	ItemDefinitionIndex itemDefinitionIndex = *activeWeapon->GetItemDefinitionIndex();
 	if (itemDefinitionIndex == ItemDefinitionIndex::WEAPON_KNIFE || itemDefinitionIndex >= ItemDefinitionIndex::WEAPON_KNIFE_BAYONET)
 		return;
-
+	if (Settings::Legitbot::AutoShoot::autoscope)
+	    if (Util::Items::IsScopeable(*activeWeapon->GetItemDefinitionIndex()) && !localplayer->IsScoped() && !(cmd->buttons & IN_ATTACK2) )
+	    {
+			cmd->buttons |= IN_ATTACK2;
+			return; // will go to the next tick
+	    }
 	CSWeaponType weaponType = activeWeapon->GetCSWpnData()->GetWeaponType();
 	if (weaponType == CSWeaponType::WEAPONTYPE_C4 || weaponType == CSWeaponType::WEAPONTYPE_GRENADE)
 		return;
@@ -149,7 +155,7 @@ void Triggerbot::CreateMove(CUserCmd *cmd)
 
 		if (*activeWeapon->GetItemDefinitionIndex() == ItemDefinitionIndex::WEAPON_REVOLVER)
 			cmd->buttons |= IN_ATTACK2;
-		else
+		else if ( !(cmd->buttons & IN_ATTACK) )
 			cmd->buttons |= IN_ATTACK;
 		if(Settings::Triggerbot::RandomDelay::enabled)
 			Settings::Triggerbot::RandomDelay::lastRoll = randomDelay;

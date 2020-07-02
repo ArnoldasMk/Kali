@@ -1,5 +1,6 @@
 #pragma GCC diagnostic ignored "-Wunused-value"
 #pragma GCC diagnostic ignored "-Wreturn-type"
+// #pragma GCC diagnostic ignored "-Warray-bounds"
 
 #include <math.h>
 #include <stdlib.h>
@@ -132,6 +133,7 @@ public:
 	float x, y, z;
 	Vector(void);
 	Vector(float X, float Y, float Z);
+	inline Vector(const float& defVal);
 	void Init(float ix = 0.0f, float iy = 0.0f, float iz = 0.0f);
 	bool IsValid() const;
 	float operator[](int i) const;
@@ -160,7 +162,7 @@ public:
 			z > -tolerance && z < tolerance);
 	}
 	Vector	Normalize();
-	float	NormalizeInPlace();
+	inline void	NormalizeInPlace();
 	inline float	DistTo(const Vector &vOther) const;
 	inline float	DistToSqr(const Vector &vOther) const;
 	float	Dot(const Vector& vOther) const;
@@ -174,11 +176,18 @@ public:
 	Vector	operator/(const Vector& v) const;
 	Vector	operator*(float fl) const;
 	Vector	operator/(float fl) const;
+	
+	inline Vector CrossProduct(const Vector& b);
 	// Base address...
 	float* Base();
 	float const* Base() const;
 };
 
+// To Initialise the Vector with same Value
+inline Vector::Vector(const float& defval)
+{
+	x = defval; y = defval, z = defval;
+}
 //===============================================
 inline void Vector::Init(float ix, float iy, float iz)
 {
@@ -351,9 +360,9 @@ inline float Vector::Length2DSqr(void) const
 	return (x*x + y*y);
 }
 //===============================================
-inline Vector CrossProduct(const Vector& a, const Vector& b)
+inline Vector Vector::CrossProduct(const Vector& b)
 {
-	return Vector(a.y*b.z - a.z*b.y, a.z*b.x - a.x*b.z, a.x*b.y - a.y*b.x);
+	return Vector(this->y*b.z - this->z*b.y, this->z*b.x - this->x*b.z, this->x*b.y - this->y*b.x);
 }
 //===============================================
 float Vector::DistTo(const Vector &vOther) const
@@ -396,15 +405,14 @@ inline Vector Vector::Normalize()
 	return vector;
 }
 //===============================================
-inline float Vector::NormalizeInPlace()
+inline void Vector::NormalizeInPlace()
 {
-	Vector& v = *this;
 
 	float iradius = 1.f / (this->Length() + 1.192092896e-07F); //FLT_EPSILON
 
-	v.x *= iradius;
-	v.y *= iradius;
-	v.z *= iradius;
+	this->x *= iradius;
+	this->y *= iradius;
+	this->z *= iradius;
 }
 //===============================================
 inline float VectorNormalize(Vector& v)
@@ -1253,6 +1261,7 @@ public:
 	// Construction/destruction
 	QAngle(void);
 	QAngle(float X, float Y, float Z);
+	QAngle(const float& defVal);
 	//QAngle(RadianEuler const &angles);      // evil auto type promotion!!!
 
 	// Allow pass-by-value
@@ -1334,9 +1343,21 @@ inline QAngle::QAngle(void)
 #endif
 }
 
+/*
+* Constructor when user want to initialise with custom value
+*/
 inline QAngle::QAngle(float X, float Y, float Z)
 {
 	x = X; y = Y; z = Z;
+	CHECK_VALID(*this);
+}
+
+/*
+* Constructor To initialise the QAngle with default Value
+*/
+inline QAngle::QAngle(const float& defVal)
+{
+	x = defVal; y = defVal; z = defVal;
 	CHECK_VALID(*this);
 }
 

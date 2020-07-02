@@ -12,7 +12,7 @@
 #include "../Hacks/nosmoke.h"
 #include "../Hacks/thirdperson.h"
 #include "../settings.h"
-#include "../Hacks/resolverNimbus.h"
+#include "../Hacks/lagcomp.h"
 
 typedef void (*FrameStageNotifyFn) (void*, ClientFrameStage_t);
 
@@ -36,14 +36,6 @@ void Hooks::FrameStageNotify(void* thisptr, ClientFrameStage_t stage)
 	}
 
 	clientVMT->GetOriginalMethod<FrameStageNotifyFn>(37)(thisptr, stage);
-
-	if (Settings::Resolver::resolverNumbus)
-    {
-        ResolverNimbus::FrameStageNotify(stage);
-    }
-    else if (Settings::Resolver::resolveAll)
-    {
-        Resolver::PostFrameStageNotify(stage);
-    }
+	
 	View::PostFrameStageNotify(stage);
 }

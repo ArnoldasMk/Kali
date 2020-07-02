@@ -7,7 +7,7 @@
 // Get latest version at https://github.com/ocornut/imgui
 
 #pragma once
-
+#pragma GCC diagnostic ignored "-Wclass-memaccess"
 // Configuration file (edit imconfig.h or define IMGUI_USER_CONFIG to set your own filename)
 #ifdef IMGUI_USER_CONFIG
 #include IMGUI_USER_CONFIG
@@ -127,7 +127,8 @@ struct ImVec2
     float     x, y;
     ImVec2()  { x = y = 0.0f; }
     ImVec2(float _x, float _y) { x = _x; y = _y; }
-    float operator[] (size_t i) const { IM_ASSERT(i <= 1); return (&x)[i]; }    // We very rarely use this [] operator, the assert overhead is fine.
+    float operator[] (size_t i) const { IM_ASSERT(i <= 1); return (&x)[i]; }
+    ImVec2 operator/(float val) {  return ImVec2(this->x / val, this->y / val); }    // We very rarely use this [] operator, the assert overhead is fine.
 #ifdef IM_VEC2_CLASS_EXTRA
     IM_VEC2_CLASS_EXTRA     // Define additional constructors and implicit cast operators in imconfig.h to convert back and forth between your math types and ImVec2.
 #endif
