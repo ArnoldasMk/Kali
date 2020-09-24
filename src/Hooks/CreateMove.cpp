@@ -3,7 +3,7 @@
 
 #include "../interfaces.h"
 #include "../settings.h"
-
+#include "../Hacks/slowwalk.h"
 #include "../Hacks/bhop.h"
 #include "../Hacks/noduckcooldown.h"
 #include "../Hacks/autostrafe.h"
@@ -26,27 +26,17 @@
 #include "../Hacks/nofall.h"
 #include "../Hacks/ragdollgravity.h"
 #include "../Hacks/lagcomp.h"
+#include "../Hacks/fakeduck.h"
+#include "../Hacks/Tickbase.h"
+#include "../Hacks/silentWalk.h"
+#include "../Hacks/quickswitch.h"
+#include "../Hacks/fakewalk.h"
 
 bool CreateMove::sendPacket = true;
 QAngle CreateMove::lastTickViewAngles = QAngle(0);
 
 typedef bool (*CreateMoveFn) (void*, float, CUserCmd*);
 
-static void RandomMethod(CUserCmd *cmd, bool *sendPacket)
-{
-	PredictionSystem::StartPrediction(cmd);
-	Legitbot::CreateMove(cmd);
-	// auto ragebot = std::async(std::launch::async, Ragebot::CreateMove, cmd);
-	Ragebot::CreateMove(cmd);
-	Triggerbot::CreateMove(cmd);
-	LagComp::CreateMove(cmd);
-	AutoKnife::CreateMove(cmd);
-	// auto antiaim = std::async(std::launch::async, Ragebot::CreateMove, cmd);
-	FakeLag::CreateMove(cmd);
-    AntiAim::CreateMove(cmd);
-
-	*sendPacket = CreateMove::sendPacket;
-}
 bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
 {
 	clientModeVMT->GetOriginalMethod<CreateMoveFn>(25)(thisptr, flInputSampleTime, cmd);
@@ -62,6 +52,7 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
 
 		/* run code that affects movement before prediction */
 		BHop::CreateMove(cmd);
+                SilentWalk::CreateMove(cmd);
 		NoDuckCooldown::CreateMove(cmd);
 		AutoStrafe::CreateMove(cmd);
 		ShowRanks::CreateMove(cmd);
@@ -72,19 +63,28 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
         EdgeJump::PrePredictionCreateMove(cmd);
 		Autoblock::CreateMove(cmd);
 		NoFall::PrePredictionCreateMove(cmd);
-
-		std::async(std::launch::async, RandomMethod, cmd, sendPacket); // Actions
-		// RandomMethod(cmd);
-		
+		PredictionSystem::StartPrediction(cmd);
+		FakeLag::CreateMove(cmd);
+		FakeeWalk::CreateMove(cmd);
+		LagComp::CreateMove(cmd);
+		Legitbot::CreateMove(cmd);
+		Ragebot::CreateMove(cmd);
+		//Tickbase::run(cmd, CreateMove::sendPacket);
+		Triggerbot::CreateMove(cmd);
+		AutoKnife::CreateMove(cmd);
+    	AntiAim::CreateMove(cmd);
+		FakeDuck::CreateMove(cmd);
+		FakeWalk::CreateMove(cmd);
 		ESP::CreateMove(cmd);
 		TracerEffect::CreateMove(cmd);
+ 		QuickSwitch::CreateMove(cmd);
 		RagdollGravity::CreateMove(cvar);
 		PredictionSystem::EndPrediction();
 		
 		EdgeJump::PostPredictionCreateMove(cmd);
 		NoFall::PostPredictionCreateMove(cmd);
 
-        // *sendPacket = CreateMove::sendPacket;
+        *sendPacket = CreateMove::sendPacket;
 
         if (CreateMove::sendPacket)
             CreateMove::lastTickViewAngles = cmd->viewangles;
@@ -92,3 +92,4 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
 
 	return false;
 }
+

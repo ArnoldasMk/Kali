@@ -20,6 +20,7 @@ namespace UI
 	void UpdateRageWeaponSettings();
 	void ReloadRageWeaponSettings();
 	void SwapWindow();
+	void angleIndicator();
 }
 
 

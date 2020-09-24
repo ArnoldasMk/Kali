@@ -6,16 +6,51 @@
 #include "../Utils/math.h"
 #include "../Utils/entity.h"
 
+bool TriggercanShoot(C_BasePlayer* localplayer, C_BaseCombatWeapon* activeWeapon, const LegitWeapon_t& currentSettings)
+{
+	if(!localplayer || !localplayer->GetAlive() )
+		return false;
+	if (!activeWeapon || activeWeapon->GetInReload())
+		return false;
+	if (!currentSettings.hitchanceEnaled)
+	{
+		if ( (activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) <= (activeWeapon->GetCSWpnData()->GetMaxPlayerSpeed() / 3.0f) )
+			return true;
+		else
+			return false;
+	}
+	
+	activeWeapon->UpdateAccuracyPenalty();
+	float hitchance = activeWeapon->GetInaccuracy();
+	// hitchance = activeWeapon->GetInaccuracy();
+	if (hitchance == 0) hitchance = 0.0000001;
+	hitchance = 1/(hitchance);
+	
+	return hitchance >= (currentSettings.hitchance*2);
+}
+
 void Triggerbot::CreateMove(CUserCmd *cmd)
 {
-	if (!Settings::Triggerbot::enabled)
-		return;
-
-	// if (!inputSystem->IsButtonDown(Settings::Triggerbot::key) && Settings::Triggerbot::)
-	// 	return;
-
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 	if (!localplayer || !localplayer->GetAlive())
+		return;
+
+	C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
+	if (!activeWeapon || activeWeapon->GetAmmo() == 0)
+		return;
+
+	ItemDefinitionIndex index = ItemDefinitionIndex::INVALID;
+	if (Settings::Legitbot::weapons.find(*activeWeapon->GetItemDefinitionIndex()) != Settings::Legitbot::weapons.end())
+		index = *activeWeapon->GetItemDefinitionIndex();
+	const LegitWeapon_t& currentWeaponSetting = Settings::Legitbot::weapons.at(index);
+
+	if (!currentWeaponSetting.TriggerBot)
+		return;
+
+	if (!inputSystem->IsButtonDown(Settings::Triggerbot::key))
+		return;
+
+	if ( !TriggercanShoot(localplayer, activeWeapon, currentWeaponSetting))
 		return;
 
 	if (Settings::Triggerbot::Filters::flashCheck && localplayer->IsFlashed())
@@ -118,11 +153,6 @@ void Triggerbot::CreateMove(CUserCmd *cmd)
 		return;
 
 	if (Settings::Triggerbot::Filters::smokeCheck && LineGoesThroughSmoke(tr.startpos, tr.endpos, 1))
-		return;
-
-	
-	C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
-	if (!activeWeapon || activeWeapon->GetAmmo() == 0)
 		return;
 
 	ItemDefinitionIndex itemDefinitionIndex = *activeWeapon->GetItemDefinitionIndex();

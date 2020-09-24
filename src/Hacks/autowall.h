@@ -2,6 +2,10 @@
 
 #include "../SDK/vector.h"
 #include "../SDK/IEngineTrace.h"
+#include "legitbot.h"
+#include "../Utils/math.h"
+#include "../Utils/entity.h"
+#include "../interfaces.h"
 
 namespace AutoWall
 {
@@ -17,7 +21,8 @@ namespace AutoWall
 		int penetrate_count = 0;
 	};
 
-	int GetDamage(const Vector& vecPoint, bool teamCheck, FireBulletData& fData);
-	void ScaleDamage(HitGroups hitgroup, C_BasePlayer* enemy, float weapon_armor_ratio, float& current_damage);
-	bool SimulateFireBullet(C_BaseCombatWeapon* pWeapon, bool teamCheck, AutoWall::FireBulletData& data);
+	int GetDamage(const Vector& vecPoint, bool teamCheck);
+	int GetDamage(const Vector& point, bool teamCheck, FireBulletData& fdata);
+	int GetDamage(C_BasePlayer* player, const Vector& point, bool teamCheck, FireBulletData& fdata);
 }
+

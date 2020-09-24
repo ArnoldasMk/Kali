@@ -71,8 +71,8 @@ void AutoKnife::CreateMove(CUserCmd *cmd)
 	if (!Settings::AutoKnife::enabled && !Settings::Ragebot::enabled)
 		return;
 
-	if (!inputSystem->IsButtonDown(Settings::Triggerbot::key) && Settings::AutoKnife::onKey)
-		return;
+//	if (!inputSystem->IsButtonDown(Settings::Triggerbot::key) && Settings::AutoKnife::onKey)
+//		return;
 
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 	if (!localplayer || !localplayer->GetAlive())

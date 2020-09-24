@@ -38,8 +38,8 @@ void FakeLag::CreateMove(CUserCmd* cmd)
 			if (localplayer->GetVelocity().Length() > 0.f)
 			{
 				packetsToChoke = (int)((64.f / globalVars->interval_per_tick) / localplayer->GetVelocity().Length()) + 1;
-				if (packetsToChoke >= 15)
-					packetsToChoke = 14;
+				//if (packetsToChoke >= 15)
+				//	packetsToChoke = 14;
 				if (packetsToChoke < Settings::FakeLag::value)
 					packetsToChoke = Settings::FakeLag::value;
 			}

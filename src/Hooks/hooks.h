@@ -16,7 +16,7 @@ namespace Hooks
 	// bool CreateMove2(void* thisptr, float flInputSampleTime, CUserCmd* cmd);
 	bool ShouldDrawCrosshair(void* thisptr);
 	float GetViewModelFOV(void* thisptr);
-
+	bool hkdWriteUsercmdDeltaToBuffer(void* ecx, void*, int slot, bf_write* buf, int from, int to, bool isnewcommand);
 	/* GameEvents */
 	bool FireEventClientSide(void* thisptr, IGameEvent* event);
 
@@ -33,7 +33,6 @@ namespace Hooks
 
 	/* Panel */
 	void PaintTraverse(void* thisptr, VPANEL vgui_panel, bool force_repaint, bool allow_force);
-
 	/* Sound */
 	void EmitSound2(void* thisptr, IRecipientFilter& filter, int iEntIndex, int iChannel, const char* pSoundEntry, unsigned int nSoundEntryHash, const char *pSample, float flVolume, int nSeed, soundlevel_t iSoundLevel, int iFlags, int iPitch, const Vector* pOrigin, const Vector* pDirection, void* pUtlVecOrigins, bool bUpdatePositions, float soundtime, int speakerentity, StartSoundParams_t& params);
 

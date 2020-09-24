@@ -7,7 +7,6 @@ void BHop::CreateMove(CUserCmd* cmd)
 {
 	if (!Settings::BHop::enabled)
 		return;
-
 	static bool bLastJumped = false;
 	static bool bShouldFake = false;
 	static int bActualHop = 0;

@@ -48,6 +48,7 @@ enum class TracerType : int
 {
 	BOTTOM,
 	CURSOR,
+	ARROWS,
 };
 
 enum class ClanTagType : int
@@ -58,6 +59,49 @@ enum class ClanTagType : int
 	LETTERS,
 };
 
+enum class MusicType : int
+{
+        CSGO,
+        CSGO2,
+        CRIMSON_ASSAULT,
+        SHARPENED,
+	INSURGENCY,
+	ADB,
+	HIGH_MOON,
+	DEATHS_HEAD_DEMOLITION,
+	DESERT_FIRE,
+	LNOE,
+	METAL,
+	ALL_I_WANT_FOR_CHRISTMAS,
+	ISORHYTHM,
+	FOR_NO_MANKIND,
+	HOTLINE_MIAMI,
+	TOTAL_DOMINATION,
+	THE_TALOS_PRINCIPLE,
+	BATTLEPACK,
+	MOLOTOV,
+	UBER_BLASTO_PHONE,
+	HAZARDOUS_ENVIRONMENTS,
+	II_HEADSHOT,
+	THE_8_BIT_KIT,
+	I_AM,
+	DIAMONDS,
+	INVASION,
+	LIONS_MOUTH,
+	SPONGE_FINGERZ,
+	DISGUSTING,
+	JAVA_HAVANA_FUNKALOO,
+	MOMENTS_CSGO,
+	AGGRESSIVE,
+	THE_GOOD_YOUTH,
+	FREE,
+	LIFES_NOT_OUT_TO_GET_YOU,
+	BACKBONE,
+	GLA,
+	III_ARENA,
+	EZ4ENCE,
+};
+
 enum class AutostrafeType : int
 {
 	AS_FORWARDS,
@@ -65,19 +109,17 @@ enum class AutostrafeType : int
 	AS_LEFTSIDEWAYS,
 	AS_RIGHTSIDEWAYS,
 	AS_RAGE,
+	AS_DIRECTIONAL,
 };
 
 enum class ChamsType : int
 {
-	WHITE_ADDTIVE,
+	WHITEADDTIVE,
+	ADDITIVETWO,
 	WIREFRAME,
-	PREDICTION_GLASS,
-	FBI_GLASS,
-	CRYSTAL_CLEAR,
-	GIB_GLASS,
-	Dog_Class,
-	CHAMS_FLAT,
-	Achivements,
+	FLAT,
+	PEARL,
+	GLOW,
 	NONE,
 };
 
@@ -118,7 +160,7 @@ enum class Sound : int {
 	MEME,
 	ERROR,
 	ORCHESTRAL,
-
+	GAMESENSE,
 };
 
 enum class BarType : int
@@ -127,7 +169,7 @@ enum class BarType : int
 	VERTICAL_RIGHT,
 	HORIZONTAL,
 	HORIZONTAL_UP,
-	INTERWEBZ,
+	BATTERY,
 };
 
 enum class BarColorType : int
@@ -140,30 +182,6 @@ enum class TeamColorType : int
 {
 	ABSOLUTE,
 	RELATIVE,
-};
-
-enum class ArmsType : int
-{
-	WHITE_ADDTIVE,
-	WIREFRAME,
-	PREDICTION_GLASS,
-	FBI_GLASS,
-	CRYSTAL_CLEAR,
-	GIB_GLASS,
-	Dog_Class,
-	NONE,
-};
-
-enum class WeaponType : int
-{
-	WHITE_ADDTIVE,
-	WIREFRAME,
-	PREDICTION_GLASS,
-	FBI_GLASS,
-	CRYSTAL_CLEAR,
-	GIB_GLASS,
-	Dog_Class,
-	NONE,
 };
 
 enum class SmokeType : int
@@ -187,10 +205,11 @@ enum class SpammerType : int
 	SPAMMER_POSITIONS,
 };
 
-enum class ShowedAngle : int
+enum class resolverType : int
 {
-    REAL,
-    FAKE,
+        NONE,
+        Experimental,
+        ApuWare,
 };
 
 enum class AntiAimRealType_Y : int
@@ -209,19 +228,6 @@ enum class AntiAimFakeType_y : int
 	Randome,
 };
 
-enum class AntiAimType_X : int
-{
-    STATIC_UP,
-    STATIC_DOWN,
-    DANCE,
-    FRONT,
-    STATIC_UP_FAKE,
-    STATIC_DOWN_FAKE,
-    LISP_DOWN,
-    ANGEL_DOWN,
-    ANGEL_UP,
-};
-
 enum class AntiAimType : int
 {
 	LegitAntiAim,
@@ -229,43 +235,57 @@ enum class AntiAimType : int
 	Lagacy,
 };
 
+enum class LbyMode : int
+{
+	Normal,
+	Opposite,
+};
+
 enum class RageAntiAimType : int
 {
-	NONE,
+	DefaultRage,
 	FakeArroundReal,
 	RealArroundFake,
+	SemiDirection,
+	FreeStand,
+	JitterAntiAim,
 };
-struct AimbotWeapon_t
+
+enum class LegitAAType : int
+{
+    OverWatchProof,
+	FakeLegitAA,
+	Experimental,
+};
+
+enum class SkinAndModel : int
+{
+	Skins,
+	Model,
+};
+
+struct LegitWeapon_t
 {
 	bool silent,
-		 friendly,
-		 closestBone,
-	     engageLock,
-		 engageLockTR,
+		 autoShoot,
 		 aimkeyOnly,
 		 smoothEnabled,
 		 smoothSaltEnabled,
 		 errorMarginEnabled,
 		 autoAimEnabled,
-		 shootassist,
 		 aimStepEnabled,
 		 rcsEnabled,
 		 rcsAlwaysOn,
 		 hitchanceEnaled,
 		 autoPistolEnabled,
 		 autoScopeEnabled,
-		 noShootEnabled,
 		 ignoreJumpEnabled,
 		 ignoreEnemyJumpEnabled,
-		 smokeCheck,
-		 flashCheck,
-		 autoWallEnabled,
-		 autoAimRealDistance,
 		 autoSlow,
 		 predEnabled,
-		 scopeControlEnabled,
-		 TriggerBot;
-	int engageLockTTR = 700;
+		 TriggerBot,
+		 mindamage,
+		 autoWall;
 	Bone bone = BONE_HEAD;
 	SmoothType smoothType = SmoothType::SLOW_END;
 	ButtonCode_t aimkey = ButtonCode_t ::MOUSE_MIDDLE;
@@ -277,13 +297,11 @@ struct AimbotWeapon_t
 		  aimStepMax = 35.0f,
 		  rcsAmountX = 2.0f,
 		  rcsAmountY = 2.0f,
-		  MinDamage = 10.0f,
+		  minDamagevalue = 10.0f,
 		  hitchance = 20;
-	int	shotDelay = 200,
-		minShotFire = 6;
 	bool desiredBones[31];
 
-	bool operator == (const AimbotWeapon_t& another) const
+	bool operator == (const LegitWeapon_t& another) const
 	{
 		for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 		{
@@ -292,11 +310,7 @@ struct AimbotWeapon_t
 		}
 
 		return this->silent == another.silent &&
-			this->friendly == another.friendly &&
-			this->closestBone == another.closestBone &&
-			this->engageLock == another.engageLock &&
-			this->engageLockTR == another.engageLockTR &&
-			this->engageLockTTR == another.engageLockTTR &&
+			this->autoShoot == another.autoShoot &&
 			this->bone == another.bone &&
 			this->aimkey == another.aimkey &&
 			this->aimkeyOnly == another.aimkeyOnly &&
@@ -308,7 +322,6 @@ struct AimbotWeapon_t
 			this->errorMarginEnabled == another.errorMarginEnabled &&
 			this->errorMarginValue == another.errorMarginValue &&
 			this->autoAimEnabled == another.autoAimEnabled &&
-			this->shootassist == another.shootassist &&
 			this->LegitautoAimFov == another.LegitautoAimFov &&
 			this->aimStepEnabled == another.aimStepEnabled &&
 			this->aimStepMin == another.aimStepMin &&
@@ -319,26 +332,18 @@ struct AimbotWeapon_t
 			this->rcsAmountY == another.rcsAmountY &&
 			this->autoPistolEnabled == another.autoPistolEnabled &&
 			this->autoScopeEnabled == another.autoScopeEnabled &&
-			this->noShootEnabled == another.noShootEnabled &&
-			this->ignoreJumpEnabled == another.ignoreJumpEnabled &&
 			this->ignoreEnemyJumpEnabled == another.ignoreEnemyJumpEnabled &&
-			this->smokeCheck == another.smokeCheck &&
-			this->flashCheck == another.flashCheck &&
 			this->hitchanceEnaled == another.hitchanceEnaled &&
 			this->hitchance == another.hitchance &&
-			this->shotDelay == another.shotDelay &&
-			this->minShotFire == another.minShotFire &&
-			this->autoWallEnabled == another.autoWallEnabled &&
-			this->MinDamage == another.MinDamage &&
 			this->autoSlow == another.autoSlow &&
 			this->predEnabled == another.predEnabled &&
-			this->autoAimRealDistance == another.autoAimRealDistance &&
-			this->scopeControlEnabled == another.scopeControlEnabled &&
-			this->TriggerBot == another.TriggerBot;
+			this->TriggerBot == another.TriggerBot &&
+			this->mindamage == another.mindamage &&
+			this->autoWall == another.autoWall;
 	}
 } const defaultSettings{};
 
-struct RagebotWeapon_t
+struct RageWeapon_t
 {
 	bool silent,
 		 friendly,
@@ -355,13 +360,19 @@ struct RagebotWeapon_t
 	DamagePrediction DmagePredictionType = DamagePrediction::damage;
 	EnemySelectionType enemySelectionType = EnemySelectionType::CLosestToCrosshair;
 	bool desireBones[6];
+	bool desiredMultiBones[6];
 	
 
-	bool operator == (const RagebotWeapon_t& Ragebotanother) const
+	bool operator == (const RageWeapon_t& Ragebotanother) const
 	{
-		for (int bone = 0; bone <= 5; bone++) // static bones
+		for (int bone = 0; bone < 6; bone++) // static bones
+		{
 			if( this->desireBones[bone] != Ragebotanother.desireBones[bone] )
 				return false;
+			if( this->desiredMultiBones[bone] != Ragebotanother.desiredMultiBones[bone] )
+				return false;
+		}
+			
 
 		return this->silent == Ragebotanother.silent &&
 			this->friendly == Ragebotanother.friendly &&
@@ -439,12 +450,12 @@ namespace Settings
 {
 	namespace UI
 	{
-		inline ColorVar mainColor = ImColor(36, 95, 35, 255 );
-		inline ColorVar bodyColor = ImColor( 56, 67, 78, 182 );
-		inline ColorVar fontColor = ImColor( 255, 255, 255, 195 );
-		inline ColorVar accentColor = ImColor( 113, 128, 129, 255 );
+		inline ColorVar mainColor = ImColor(42, 45, 42, 255 );
+		inline ColorVar bodyColor = ImColor( 0, 0, 0, 245 );
+		inline ColorVar fontColor = ImColor( 238, 224, 224, 154 );
+		inline ColorVar accentColor = ImColor( 0, 171, 178, 255 );
 		inline bool imGuiAliasedLines = false;
-		inline bool imGuiAliasedFill = false;
+		inline bool imGuiAliasedFill = true;
 
         /* Window Position/Size Defaults */
         namespace Windows
@@ -507,7 +518,7 @@ namespace Settings
 		{
 			namespace ESP
 			{
-				inline char* family = (char*)"Georgia";
+				inline char* family = (char*)"Verdana";
 				inline int size = 12;
 				inline int flags = (int)FontFlags::FONTFLAG_OUTLINE;
 			}
@@ -664,17 +675,47 @@ namespace Settings
 			inline bool enabled = false;
 		}
 
-		inline std::unordered_map<ItemDefinitionIndex, AimbotWeapon_t, Util::IntHash<ItemDefinitionIndex>> weapons = {
+		inline std::unordered_map<ItemDefinitionIndex, LegitWeapon_t, Util::IntHash<ItemDefinitionIndex>> weapons = {
                 { ItemDefinitionIndex::INVALID, defaultSettings },
         };
 	}
+		namespace ProfileChanger
+                {
+                extern int coinID;
+                extern int musicID;
+                extern int compRank;
+                extern int weaponStatus;
+                extern int weaponRarity;
+		extern int music;
+		extern int rank;
+		extern int coin;
+                extern bool enabled;
+		inline MusicType type = MusicType::CSGO;
+                }
 
 	namespace Ragebot
 	{
+		namespace exploits
+		{
+                        inline ButtonCode_t doubletapKey;
+                        inline bool doubletapToggle;
+                        inline bool enabled;
+		        inline bool doubletap;
+			inline int doubletapSpeed = 0;
+		}
+
+		inline float test;
+		namespace quickpeek
+		{
+         		inline ButtonCode_t key;
+			inline bool enabled;
+		        inline ColorVar color = ImColor(255, 255, 255, 190 );
+		}
+		inline bool DoubleTap;
 		inline float MinDamage = 50.f;
 		inline bool enabled = false;
-        inline bool silent = false;
-        inline bool friendly = false;
+        	inline bool silent = false;
+        	inline bool friendly = false;
 		inline bool DoubleFire = false;
 
 		inline DamagePrediction damagePrediction = DamagePrediction::damage;
@@ -728,9 +769,10 @@ namespace Settings
 		namespace backTrack
 		{
 			inline bool enabled = false;
+			inline float time = 0.2f;
 		}
 
-		inline std::unordered_map<ItemDefinitionIndex, RagebotWeapon_t, Util::IntHash<ItemDefinitionIndex>> weapons = {
+		inline std::unordered_map<ItemDefinitionIndex, RageWeapon_t, Util::IntHash<ItemDefinitionIndex>> weapons = {
                 { ItemDefinitionIndex::INVALID, ragedefault },
         };
 	}
@@ -769,10 +811,29 @@ namespace Settings
 			inline int lastRoll = 0;
 		}
 	}
+    namespace SilentWalk
+    {
 
+	inline bool enabled;
+	inline ButtonCode_t key = ButtonCode_t::KEY_Z;
+    }
     namespace AntiAim
     {
-		namespace Type
+
+
+	inline bool lbyjitter;
+	namespace airspin
+		{
+	inline bool enabled;
+		}
+	namespace SlowWalk 
+		{
+	inline float Speed;
+	inline bool enabled;
+	inline ButtonCode_t key;
+
+		}
+	namespace Type
 		{
 			inline AntiAimType antiaimType = AntiAimType::LegitAntiAim;
 		}
@@ -781,19 +842,21 @@ namespace Settings
             inline bool noEnemy = false;
             inline bool knifeHeld = false;
         }
-
         namespace RageAntiAim
         {
+	    inline bool pitchJitter;
+	    inline float offset = 180;
+	    inline bool invertOnHurt = false;
             inline bool enable = false;
-			inline ButtonCode_t InvertKey = ButtonCode_t::KEY_T;
+			inline ButtonCode_t InvertKey;
 			inline bool inverted = false;
 			inline float AntiAImPercent = 100.f;
 			inline float JitterPercent = 30.f;
 			inline bool atTheTarget = false;
 			inline bool SendReal = false;
 			inline RageAntiAimType Type = RageAntiAimType::RealArroundFake;
-        }
-
+        		inline LbyMode lbym = LbyMode::Normal;
+	}
 		namespace LegitAntiAim 
 		{
 			inline bool enable = false;
@@ -802,8 +865,8 @@ namespace Settings
 			inline bool inverted = false;
 			inline float RealPercentage = 30.f;
 			inline float RealPercentageInCroutch = 30.f;
+			inline LegitAAType legitAAtype = LegitAAType::OverWatchProof;
 		}
-		
 		namespace ManualAntiAim
 		{
 			inline bool Enable = false;
@@ -816,7 +879,6 @@ namespace Settings
             inline AntiAimRealType_Y typeReal = AntiAimRealType_Y::Static;
             inline AntiAimFakeType_y typeFake = AntiAimFakeType_y::Static;
         }
-
         namespace HeadEdge
         {
             inline bool enabled = false;
@@ -827,16 +889,50 @@ namespace Settings
             inline bool enabled = false;
             inline float offset = 180.0f;
         }
-    }
+		namespace FakeDuck
+		{
+			inline bool enabled = false;
+			inline ButtonCode_t fakeDuckKey;
+		}
+  namespace randomLag
+                {
+                        inline bool enabled = false;
+                }
+
+	}
 
 	namespace Resolver
 	{
+		inline float Pitch;
+		inline float resolveDelt = 0.5f;
 		inline bool resolveAll = false;
+		inline float goalFeetYaw;
+		inline float EyeAngles;
+		inline bool manual = false;
+		inline bool forcebrute = false;
+		inline bool resolveAllAP;
+                inline resolverType resolverType = resolverType::NONE;
+
 	}
 
 	namespace ESP
 	{
-		inline bool enabled = false;
+		inline bool indicators;
+		inline bool drawback;
+		inline bool showimpacts;
+		inline bool KeyBinds = false;
+	namespace keybi
+	{
+		inline int x;
+		inline int y;
+		inline int w;
+		inline int h;
+	}
+	inline ColorVar manualAAColor;
+
+	inline bool showDormant = true;
+	inline ColorVar dormantColor = ImColor(255, 255, 255, 255);
+	inline bool enabled = false;
         inline DrawingBackend backend = DrawingBackend::IMGUI;
 		inline Filter filter = Filter::Enemies;
 		inline ButtonCode_t key = ButtonCode_t::KEY_Z;
@@ -866,6 +962,11 @@ namespace Settings
         inline ColorVar chargeColor = ImColor(205, 32, 31, 255);
         inline ColorVar allyInfoColor = ImColor(255, 255, 255, 255);
         inline ColorVar enemyInfoColor = ImColor(255, 255, 255, 255);
+           namespace Watermark
+                {
+                inline bool enabled = true;
+                inline ColorVar color = ImColor(215, 5, 252, 255);
+                }
 
 		namespace FilterEnemy
 		{
@@ -909,7 +1010,7 @@ namespace Settings
 			namespace Chams
 			{
 				inline bool enabled = false;
-				inline ChamsType type = ChamsType::WHITE_ADDTIVE;
+				inline ChamsType type = ChamsType::WHITEADDTIVE;
 			}
 			namespace HelthBar
 			{
@@ -968,7 +1069,7 @@ namespace Settings
 			namespace Chams
 			{
 				inline bool enabled = false;
-				inline ChamsType type = ChamsType::WHITE_ADDTIVE;
+				inline ChamsType type = ChamsType::WHITEADDTIVE;
 			}
 			namespace HelthBar
 			{
@@ -1003,6 +1104,16 @@ namespace Settings
            	 	inline ColorVar defuserColor = ImColor(49, 27, 146, 255);
             	inline ColorVar chickenColor = ImColor(255, 193, 7, 255);
 			}
+			namespace RealChams
+			{
+				inline bool enabled = false;
+				inline ChamsType type = ChamsType::WHITEADDTIVE;
+			}
+			namespace Chams
+			{
+				inline bool enabled = false;
+				inline ChamsType type = ChamsType::WHITEADDTIVE;
+			}
 			namespace Skeleton
 			{
 				inline bool enabled = false;
@@ -1022,12 +1133,6 @@ namespace Settings
 			{
 				inline bool enabled = false;
 				inline BoxType type = BoxType::FRAME_2D;
-			}
-
-			namespace Chams
-			{
-				inline bool enabled = false;
-				inline ChamsType type = ChamsType::WHITE_ADDTIVE;
 			}
 			namespace HelthBar
 			{
@@ -1136,7 +1241,6 @@ namespace Settings
 		{
 			inline bool enabled = false;
 		}
-
 		namespace FOVCrosshair
 		{
 			inline bool enabled = false;
@@ -1153,22 +1257,22 @@ namespace Settings
             inline HealthColorVar enemyColor = ImColor(255, 0, 0, 255);
             inline HealthColorVar enemyVisibleColor = ImColor(255, 255, 0, 255);
             inline HealthColorVar localplayerColor = ImColor(0, 255, 255, 255);
-			inline HealthColorVar FakeColor = ImColor(124,145,25,255);
+			inline HealthColorVar FakeColor = ImColor(124,145,25,225);
 
-			inline ChamsType type = ChamsType::WHITE_ADDTIVE;
+			inline ChamsType type = ChamsType::WHITEADDTIVE;
 
 			namespace Arms
 			{
 				inline bool enabled = false;
 				inline ColorVar color = ImColor(255, 255, 255, 255);
-				inline ArmsType type = ArmsType::WHITE_ADDTIVE;
+				inline ChamsType type = ChamsType::WHITEADDTIVE;
 			}
 
 			namespace Weapon
 			{
 				inline bool enabled = false;
 				inline ColorVar color = ImColor( 255, 255, 255, 255 );
-				inline WeaponType type = WeaponType::WHITE_ADDTIVE;
+				inline ChamsType type = ChamsType::WHITEADDTIVE;
 			}
 		}
 
@@ -1318,6 +1422,12 @@ namespace Settings
 			inline int Min = 3;
 		}
 	}
+namespace FakeWalk
+{
+inline bool enabled;
+inline int speed;
+inline ButtonCode_t key;
+}
 
 	namespace NoDuckCooldown
 	{
@@ -1395,8 +1505,13 @@ namespace Settings
 		inline ButtonCode_t key = ButtonCode_t::KEY_6;
 	}
 
+	namespace SkinOrModel
+	{
+		inline SkinAndModel skin_or_model = SkinAndModel::Model;
+	}
 	namespace Skinchanger
 	{
+	inline std::string PlayerModel = "models/player/custom_player/legacy/ctm_st6_varianti.mdl";
 		namespace Skins
 		{
 			inline bool enabled = false;
@@ -1573,7 +1688,6 @@ namespace Settings
 		inline bool toggled = true;
 		inline ButtonCode_t toggleThirdPerson = ButtonCode_t::KEY_LALT;
 		inline float distance = 100.0f;
-        inline ShowedAngle type = ShowedAngle::REAL;
 	}
 
 	namespace JumpThrow
@@ -1586,6 +1700,54 @@ namespace Settings
 	{
 		inline bool enabled = false;
 	}
+
+namespace SvCheats
+{
+inline bool enabled;
+
+namespace gravity {
+inline bool enabled;
+inline int amount;
+}
+
+namespace aspect
+{
+inline bool enabled;
+inline float var;
+}
+
+namespace bright
+{
+inline bool enabled;
+}
+
+namespace fog
+{
+inline bool enabled;
+}
+
+namespace impacts
+{
+inline bool enabled;
+}
+
+
+namespace viewmodel
+{
+inline bool enabled;
+inline float fov;
+inline float x;
+inline float y;
+inline float z;
+}
+
+namespace grenadetraj
+{
+inline bool enabled;
+}
+
+}
+
 
 	namespace DisablePostProcessing
 	{
@@ -1636,9 +1798,25 @@ namespace Settings
  			inline bool allies = false;
  		}
  	}
+
+	namespace QuickSwitch
+	{
+		inline bool enabled;
+	}
+
 	namespace AngleIndicator
 	{
 		inline bool enabled = false;
+	}
+	namespace voterevealer
+	{
+		inline bool enabled;
+	}
+	namespace buybot
+	{
+	inline bool enabled = false;
+	inline bool scout = false;
+	inline bool autosniper = false;
 	}
     namespace Debug
     {

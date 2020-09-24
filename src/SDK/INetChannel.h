@@ -339,7 +339,6 @@ public:
     // and vice versa
     virtual unsigned short NetToHostShort( unsigned short us_in );
 
-
 };
 
 

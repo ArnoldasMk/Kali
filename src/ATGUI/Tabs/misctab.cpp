@@ -11,13 +11,15 @@
 #include "../imgui.h"
 #include "../../ImGUI/imgui_internal.h"
 #include "../atgui.h"
-
+#include "../../Hacks/namechanger.h"
+#include "../../Hacks/profilechanger.h"
 #include "../../Hacks/namechanger.h"
 #include "../../Hacks/namestealer.h"
 #include "../../Hacks/grenadehelper.h"
 #include "../../Hacks/clantagchanger.h"
 #include "../../Hacks/valvedscheck.h"
 #include "../Windows/playerlist.h"
+#include "../Windows/configs.h"
 
 #pragma GCC diagnostic ignored "-Wformat-security"
 
@@ -26,13 +28,15 @@ static char nickname[127] = "";
 
 void Misc::RenderTab()
 {
-	const char* strafeTypes[] = { "Forwards", "Backwards", "Left", "Right", "Rage" };
+
+	const char* buyBotWeapons[] = {"buy defuser", "buy p250", "buy vesthelm", "buy mp7", "buy ak47", "buy m4a1", "buy awp", "buy scar20;buy g3sg1", "buy flashbang", "buy hegrenade", "buy smokegrenade", "buy deagle", "buy incgrenade; buy molotov", "buy decoy" };
+	const char* strafeTypes[] = { "Forwards", "Backwards", "Left", "Right", "Rage", "Directional" };
 	const char* animationTypes[] = { "Static", "Marquee", "Words", "Letters" };
+        const char* musicType[] = { "CSGO", "CSGO2", "Crimson_Assault", "Sharpened", "Insurgency", "ADB", "High_Moon", "Deaths_Head_Demolition","Desert_Fire","LNOE","Metal","All_I_Want_for_Christmas","IsoRhythm","For_No_Mankind","Hotline_Miami","Total_Domination","The_Talos_Principle","Battlepack","MOLOTOV","Uber_Blasto_Phone","Hazardous_Environments","II-Headshot","The_8-Bit_Kit","I_Am","Diamonds","Invasion!","Lions_Mouth","Sponge_Fingerz","Disgusting","Java_Havana_Funkaloo","Moments_CSGO","Aggressive","The_Good_Youth","FREE","Lifes_Not_Out_to_Get_You","Backbone","GLA","III-Arena","EZ4ENCE" };
 	const char* spammerTypes[] = { "None", "Normal", "Positions" };
 	const char* teams[] = { "Allies", "Enemies", "Both" };
 	const char* grenadeTypes[] = { "FLASH", "SMOKE", "MOLOTOV", "HEGRENADE" };
 	const char* throwTypes[] = { "NORMAL", "RUN", "JUMP", "WALK" };
-
 	ImGui::Columns(2, nullptr, true);
 	{
 		ImGui::BeginChild(XORSTR("Child1"), ImVec2(0, 0), true);
@@ -322,6 +326,27 @@ void Misc::RenderTab()
 			}
 			ImGui::Columns(1);
 			ImGui::Separator();
+              ImGui::Checkbox(XORSTR("Force SvCheats"), &Settings::SvCheats::enabled);
+                if(Settings::SvCheats::enabled) {
+                    ImGui::Checkbox(XORSTR("Ragdoll Override"), &Settings::SvCheats::gravity::enabled);
+                    ImGui::Checkbox(XORSTR("Show Impacts"), &Settings::SvCheats::impacts::enabled);
+                    ImGui::Checkbox(XORSTR("Viewmodel OVerride"), &Settings::SvCheats::viewmodel::enabled);
+                    ImGui::Checkbox(XORSTR("Aspect OVerride"), &Settings::SvCheats::aspect::enabled);
+                    ImGui::Checkbox(XORSTR("Fullbright"), &Settings::SvCheats::bright::enabled);
+                    ImGui::Checkbox(XORSTR("Fog Override"), &Settings::SvCheats::fog::enabled);
+	            ImGui::Checkbox(XORSTR("Show grenade trajectory"), &Settings::SvCheats::grenadetraj::enabled);
+                }
+
+                        ImGui::Separator();
+                                        ImGui::Checkbox(XORSTR("BuyBot"), &Settings::buybot::enabled);
+					if ( Settings::buybot::enabled){
+                                        ImGui::Checkbox(XORSTR("AutoSniper"), &Settings::buybot::autosniper);
+                                        ImGui::Checkbox(XORSTR("Scout"), &Settings::buybot::scout);
+					//ImGui::Combo(XORSTR("##BUYBOTWEAPONS"), (int*)&Settings::buybot::type, buyBotWeapons, IM_ARRAYSIZE(buyBotWeapons));
+					}
+	                        if (ImGui::Button(XORSTR("Configs")) )
+                                Configs::showWindow = !Configs::showWindow;
+
 			ImGui::EndChild();
 		}
 	}
@@ -373,7 +398,7 @@ void Misc::RenderTab()
 
 			ImGui::SameLine();
 			if (ImGui::Button(XORSTR("Set Nickname"), ImVec2(-1, 0)))
-				NameChanger::SetName(std::string(nickname).c_str());
+			NameChanger::changeName(false, std::string(nickname).c_str(), 5.0f);
 
 			if (ImGui::Button(XORSTR("Glitch Name")))
 				NameChanger::SetName("\n\xAD\xAD\xAD");
@@ -413,6 +438,20 @@ void Misc::RenderTab()
 			{
 				ImGui::Combo("", &Settings::NameStealer::team, teams, IM_ARRAYSIZE(teams));
 			}
+			if (ImGui::Button(XORSTR("Set Banned-Name")))
+			{
+std::string banText{ nickname };
+banText += " has been permanently banned from official CS:GO servers.";
+			//	NameChanger::SetName(std::string("\x1\xB7").append(std::string(nickname)).append(banText).c_str());
+      std::string res = " \x01\x0B";
+        res += (char)(NameChanger::Colors::LIGHT_RED);
+        res.append(banText);
+        res.append("\230");
+
+		//	    NameChanger::changeName(false, std::string{ "\x1\xB" }.append(std::string{ static_cast<char>(7) }).append(banText).append("\x1").c_str(), 5.0f);
+NameChanger::changeName(false, res.c_str(), 5.0f);
+	}
+
 
 			ImGui::Columns(1);
 			ImGui::Separator();
@@ -429,6 +468,9 @@ void Misc::RenderTab()
 				ImGui::Checkbox(XORSTR("Sniper Crosshair"), &Settings::SniperCrosshair::enabled);
 				ImGui::Checkbox(XORSTR("Disable post-processing"), &Settings::DisablePostProcessing::enabled);
 				ImGui::Checkbox(XORSTR("No Duck Cooldown"), &Settings::NoDuckCooldown::enabled);
+                                ImGui::Checkbox(XORSTR("Silent Walk"), &Settings::SilentWalk::enabled);
+		                ImGui::Checkbox(XORSTR("Fake Walk"), &Settings::FakeWalk::enabled);
+
 			}
 			ImGui::NextColumn();
 			{
@@ -436,16 +478,32 @@ void Misc::RenderTab()
 				ImGui::SliderInt(XORSTR("##FAKELAGAMOUNT"), &Settings::FakeLag::value, 0, 16, XORSTR("Amount: %0.f"));
 				ImGui::PopItemWidth();
 				ImGui::Checkbox(XORSTR("Show Ranks"), &Settings::ShowRanks::enabled);
+				ImGui::Checkbox(XORSTR("Show Votes"), &Settings::voterevealer::enabled);
 				UI::KeyBindButton(&Settings::Autoblock::key);
 				UI::KeyBindButton(&Settings::JumpThrow::key);
 				ImGui::Checkbox(XORSTR("Attempt NoFall"), &Settings::NoFall::enabled);
 				ImGui::Checkbox(XORSTR("Ragdoll Gravity"), &Settings::RagdollGravity::enabled);
 				ImGui::Checkbox(XORSTR("Show Spectator list"), &Settings::ShowSpectators::enabled);
 				ImGui::Checkbox(XORSTR("Show Player list"), &PlayerList::showWindow);
+			        ImGui::Checkbox(XORSTR("AWP Quick Switch"), &Settings::QuickSwitch::enabled);
+		                UI::KeyBindButton(&Settings::FakeWalk::key);
+
 			}
 			ImGui::Columns(1);
 			ImGui::Separator();
-
+			ImGui::Text(XORSTR("Profile Changer"));
+			ImGui::Separator();
+			ImGui::Columns(1, nullptr, true);
+			{
+				int shaft = 0;
+				ImGui::Combo(XORSTR("##MUSICTYPE"), (int*)&Settings::ProfileChanger::type, musicType, IM_ARRAYSIZE(musicType));
+				ImGui::InputInt(XORSTR("COIN##ID"), &Settings::ProfileChanger::coinID);
+				ImGui::InputInt(XORSTR("COMP RANK##ID"), &Settings::ProfileChanger::compRank);
+				if (ImGui::Button(XORSTR("Update profile"), ImVec2(-1, 0)))
+					ProfileChanger::UpdateProfile();
+			}
+			ImGui::Columns(1);
+			ImGui::Separator();
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(210, 85));
 			if (ImGui::BeginPopupModal(XORSTR("Error###UNTRUSTED_FEATURE")))
 			{
@@ -459,8 +517,8 @@ void Misc::RenderTab()
 				ImGui::EndPopup();
 			}
 			ImGui::PopStyleVar();
-
-			ImGui::EndChild();
+ 
+ 			ImGui::EndChild();
 		}
 	}
 }

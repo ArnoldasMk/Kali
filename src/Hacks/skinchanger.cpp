@@ -43,7 +43,15 @@ void SkinChanger::FrameStageNotifyModels(ClientFrameStage_t stage)
 
 			return;
 		}
-
+		else
+		{
+			static int originalIdx = 0;
+			if (stage == ClientFrameStage_t::FRAME_RENDER_START)
+				originalIdx = *localplayer->GetModelIndex(); 
+			const auto idx = stage == ClientFrameStage_t::FRAME_RENDER_END && originalIdx ? originalIdx : modelInfo->GetModelIndex(Settings::Skinchanger::PlayerModel.c_str());
+    		localplayer->SetModelIndex(idx);
+		}
+		
 		for (size_t i = 0; localplayer->GetWeapons()[i] != (int) 0xFFFFFFFF; i++)
 		{
 			if (localplayer->GetWeapons()[i] == -1)

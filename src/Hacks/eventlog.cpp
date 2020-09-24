@@ -11,7 +11,30 @@
 
 std::vector<std::pair<std::string, long>> logToShow;
 long lastLogTimestamp = 0;
-
+std::string HitgroupToString(int hitgroup)
+{
+    switch((HitGroups) hitgroup)
+    {
+        case HitGroups::HITGROUP_GENERIC:
+            return XORSTR("Generic");
+        case HitGroups::HITGROUP_CHEST:
+            return XORSTR("Body");
+        case HitGroups::HITGROUP_HEAD:
+            return XORSTR("Head");
+        case HitGroups::HITGROUP_LEFTARM:
+            return XORSTR("Left Arm");
+        case HitGroups::HITGROUP_LEFTLEG:
+            return XORSTR("Left Leg");
+        case HitGroups::HITGROUP_RIGHTARM:
+            return XORSTR("Right Arm");
+        case HitGroups::HITGROUP_RIGHTLEG:
+            return XORSTR("Right Leg");
+        case HitGroups::HITGROUP_STOMACH:
+            return XORSTR("Stomach");
+        case HitGroups::HITGROUP_GEAR:
+            return XORSTR("Gear");
+    }
+}
 void Eventlog::Paint( ) {
 	if ( !Settings::ESP::enabled )
 		return;	
@@ -79,12 +102,11 @@ void Eventlog::FireGameEvent(IGameEvent* event)
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 	if (!localplayer)
 		return;
-
 	if (strstr(event->GetName(), XORSTR("player_hurt"))){
 
 		int hurt_player_id = event->GetInt(XORSTR("userid"));
 		int attacker_id = event->GetInt(XORSTR("attacker"));
-
+        std::string hitgroup = HitgroupToString(event->GetInt(XORSTR("hitgroup")));
 		if (engine->GetPlayerForUserID(hurt_player_id) == engine->GetLocalPlayer())
 			return;
 
@@ -107,6 +129,7 @@ void Eventlog::FireGameEvent(IGameEvent* event)
 
 		std::string damageLog = "damage: -";
 		damageLog += std::to_string(event->GetInt(XORSTR("dmg_health")));
+                std::string consoleLog = "[eyehook] Hit ";
 
 		if ((engine->GetPlayerForUserID(hurt_player_id) == engine->GetLocalPlayer() && (engine->GetPlayerForUserID(attacker_id) != engine->GetLocalPlayer()))){
 			damageLog += XORSTR(" from ");
@@ -119,7 +142,15 @@ void Eventlog::FireGameEvent(IGameEvent* event)
 
 			IEngineClient::player_info_t damageToPlayer;		
 			engine->GetPlayerInfo(engine->GetPlayerForUserID(hurt_player_id), &damageToPlayer);
+			consoleLog += std::string(damageToPlayer.name);
+			consoleLog += XORSTR(" for ");
+			consoleLog += std::to_string(event->GetInt(XORSTR("dmg_health")));
 			damageLog += std::string(damageToPlayer.name);			
+			damageLog += XORSTR(" in the ");
+			damageLog += hitgroup;
+		        consoleLog += XORSTR(" in the ");
+                        consoleLog += hitgroup;
+
 		}
 		
 		if ((hurt_player->GetHealth()) - (event->GetInt(XORSTR("dmg_health"))) <= 0){
@@ -131,8 +162,10 @@ void Eventlog::FireGameEvent(IGameEvent* event)
 		}
 
 		logToShow.insert(logToShow.begin(), std::pair<std::string, long>(damageLog, now));
+		consoleLog += XORSTR("\n");
+		cvar->ConsoleDPrintf(consoleLog.c_str());
 
-	} else if (strstr(event->GetName(), XORSTR("item_purchase"))){
+		} else if (strstr(event->GetName(), XORSTR("item_purchase"))){
 
 		int buyer_player_id = event->GetInt(XORSTR("userid"));
 
@@ -329,5 +362,28 @@ void Eventlog::FireGameEvent(IGameEvent* event)
 
 		logToShow.insert(logToShow.begin(), std::pair<std::string, long>(dropLog, now));
 
+	} else if (strstr(event->GetName(), XORSTR("round_start"))){ 
+	if (Settings::buybot::enabled){
+	if (Settings::buybot::autosniper){
+	engine->ClientCmd_Unrestricted("buy elite;buy scar20;buy g3sg1;buy vesthelm;buy taser;buy defuser;buy molotov;buy incgrenade;buy hegrenade;buy smokegrenade"); 
+        }else if (Settings::buybot::scout){
+	engine->ClientCmd_Unrestricted("buy elite;buy ssg08;buy vesthelm;buy taser;buy defuser;buy molotov;buy incgrenade;buy hegrenade;buy smokegrenade"); 
 	}
+	}
+        }else if (strstr(event->GetName(), XORSTR("vote_cast"))){ 
+
+                std::string drop_player_id = event->GetString(XORSTR("entityid"));
+
+
+                long now = Util::GetEpochTime();
+                lastLogTimestamp = now;
+
+                std::string dropLog = std::string(drop_player_id);
+                dropLog += " casted a vote";
+
+                logToShow.insert(logToShow.begin(), std::pair<std::string, long>(dropLog, now));
+
+        } 
+
+
 }

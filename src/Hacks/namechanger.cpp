@@ -75,7 +75,35 @@ void NameChanger::SetName(const char* name)
     cvar_name->fnChangeCallback = 0;
 	cvar_name->SetValue(name);
 }
+bool NameChanger::changeName(bool reconnect, const char* newName, float delay) 
+{
+    static auto exploitInitialized{ false };
 
+    static auto name = cvar->FindVar(XORSTR("name"));
+
+    if (reconnect) {
+        exploitInitialized = false;
+        return false;
+    }
+
+    if (!exploitInitialized &&  engine->IsInGame()) {
+        if (IEngineClient::player_info_t playerInfo; engine->GetPlayerInfo(engine->GetLocalPlayer(), &playerInfo) && (!strcmp(playerInfo.name, "?empty") || !strcmp(playerInfo.name, "\n\xAD\xAD\xAD"))) {
+            exploitInitialized = true;
+        } else {
+            name->fnChangeCallback = 0;
+            name->SetValue("\n\xAD\xAD\xAD");
+            return false;
+        }
+    }
+
+    static auto nextChangeTime{ 0.0f };
+    if (nextChangeTime <= globalVars->curtime) {
+        name->SetValue(newName);
+        nextChangeTime = globalVars->curtime + delay;
+        return true;
+    }
+    return false;
+}
 void NameChanger::InitColorChange(NameChanger::NC_Type type, NameChanger::Colors color /*= NameChanger::Colors::LIGHT_RED*/)
 {
 	NameChanger::changes = 0;
@@ -107,7 +135,7 @@ void NameChanger::BeginFrame(float frameTime)
 		switch (NameChanger::type)
 		{
 			case NC_Type::NC_NORMAL:
-				SetName(Util::PadStringRight(XORSTR("\230realnigga.club"), strlen(XORSTR("\230realnigga.club")) + Util::RandomInt(10, 50)));
+SetName(Util::PadStringRight(XORSTR("\230"), strlen(XORSTR("\230")) + Util::RandomInt(10, 50)));
 				break;
 			case NC_Type::NC_RAINBOW:
 				SetName(Util::PadStringRight(Rainbowify(origName), origName.size() + Util::RandomInt(10, 50)));
@@ -122,5 +150,5 @@ void NameChanger::BeginFrame(float frameTime)
 		return;
 	}
 
-	SetName(Util::PadStringRight(XORSTR("realnigga.club"), strlen(XORSTR("realnigga.club")) + changes));
+	SetName(Util::PadStringRight(XORSTR(""), strlen(XORSTR("")) + changes));
 }

@@ -40,7 +40,7 @@ void GetVal(Json::Value& config, bool* setting)
 void GetVal(Json::Value& config, float* setting)
 {
     if (config.isNull())
-	return;
+	    return;
 
     *setting = config.asFloat();
 }
@@ -163,94 +163,86 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
     for (auto i : Settings::Legitbot::weapons)
     {
-// TODO this is kind of a hack and i'm too tired to find a better way to do this
-// yes i tried defining a variable, skinSetting, and giving it the same value but woooooo operator overloading
-// in C++ and weird shit
-#define weaponSetting settings[XORSTR("Legitbot")][XORSTR("weapons")][Util::Items::GetItemName((enum ItemDefinitionIndex)i.first)]
-	weaponSetting[XORSTR("Silent")] = i.second.silent;
-	weaponSetting[XORSTR("Friendly")] = i.second.friendly;
-	weaponSetting[XORSTR("ClosestBone")] = i.second.closestBone;
-	weaponSetting[XORSTR("engageLock")] = i.second.engageLock;
-	weaponSetting[XORSTR("engageLockTR")] = i.second.engageLockTR;
-	weaponSetting[XORSTR("engageLockTTR")] = i.second.engageLockTTR;
-	weaponSetting[XORSTR("TargetBone")] = (int)i.second.bone;
-	weaponSetting[XORSTR("AimKey")] = Util::GetButtonName(i.second.aimkey);
-	weaponSetting[XORSTR("AimKeyOnly")] = i.second.aimkeyOnly;
-	weaponSetting[XORSTR("Smooth")][XORSTR("Enabled")] = i.second.smoothEnabled;
-	weaponSetting[XORSTR("Smooth")][XORSTR("Amount")] = i.second.smoothAmount;
-	weaponSetting[XORSTR("Smooth")][XORSTR("Type")] = (int)i.second.smoothType;
-	weaponSetting[XORSTR("Smooth")][XORSTR("Salting")][XORSTR("Enabled")] = i.second.smoothSaltEnabled;
-	weaponSetting[XORSTR("Smooth")][XORSTR("Salting")][XORSTR("Multiplier")] = i.second.smoothSaltMultiplier;
-	weaponSetting[XORSTR("ErrorMargin")][XORSTR("Enabled")] = i.second.errorMarginEnabled;
-	weaponSetting[XORSTR("ErrorMargin")][XORSTR("Value")] = i.second.errorMarginValue;
-	weaponSetting[XORSTR("AutoAim")][XORSTR("Enabled")] = i.second.autoAimEnabled;
-	weaponSetting[XORSTR("ShootAssist")][XORSTR("Enable")] = i.second.shootassist;
-	weaponSetting[XORSTR("AutoAim")][XORSTR("LegitFOV")] = i.second.LegitautoAimFov;
-	weaponSetting[XORSTR("AimStep")][XORSTR("Enabled")] = i.second.aimStepEnabled;
-	weaponSetting[XORSTR("AimStep")][XORSTR("min")] = i.second.aimStepMin;
-	weaponSetting[XORSTR("AimStep")][XORSTR("max")] = i.second.aimStepMax;
-	weaponSetting[XORSTR("RCS")][XORSTR("Enabled")] = i.second.rcsEnabled;
-	weaponSetting[XORSTR("RCS")][XORSTR("AlwaysOn")] = i.second.rcsAlwaysOn;
-	weaponSetting[XORSTR("RCS")][XORSTR("AmountX")] = i.second.rcsAmountX;
-	weaponSetting[XORSTR("RCS")][XORSTR("AmountY")] = i.second.rcsAmountY;
-	weaponSetting[XORSTR("AutoPistol")][XORSTR("Enabled")] = i.second.autoPistolEnabled;
-	weaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")] = i.second.autoScopeEnabled;
-	weaponSetting[XORSTR("NoShoot")][XORSTR("Enabled")] = i.second.noShootEnabled;
-	weaponSetting[XORSTR("IgnoreJump")][XORSTR("Enabled")] = i.second.ignoreJumpEnabled;
-	weaponSetting[XORSTR("IgnoreEnemyJump")][XORSTR("Enabled")] = i.second.ignoreEnemyJumpEnabled;
-	weaponSetting[XORSTR("SmokeCheck")][XORSTR("Enabled")] = i.second.smokeCheck;
-	weaponSetting[XORSTR("FlashCheck")][XORSTR("Enabled")] = i.second.flashCheck;
-	weaponSetting[XORSTR("HitChance")][XORSTR("Enabled")] = i.second.hitchanceEnaled;
-	weaponSetting[XORSTR("HitChance")][XORSTR("Value")] = i.second.hitchance;
-	weaponSetting[XORSTR("shotDelay")][XORSTR("value")] = i.second.shotDelay;
-	weaponSetting[XORSTR("minShotFire")][XORSTR("value")] = i.second.minShotFire;
-	weaponSetting[XORSTR("AutoWall")][XORSTR("Enabled")] = i.second.autoWallEnabled;
-	weaponSetting[XORSTR("MinDamage")][XORSTR("Value")] = i.second.MinDamage;
-	weaponSetting[XORSTR("AutoSlow")][XORSTR("enabled")] = i.second.autoSlow;
-	weaponSetting[XORSTR("Prediction")][XORSTR("enabled")] = i.second.predEnabled;
-	weaponSetting[XORSTR("ScopeControl")][XORSTR("Enabled")] = i.second.scopeControlEnabled;
-	weaponSetting[XORSTR("AutoAim")][XORSTR("RealDistance")] = i.second.autoAimRealDistance;
-    weaponSetting[XORSTR("TriggerBot")][XORSTR("enabled")] = i.second.TriggerBot;
+    // TODO this is kind of a hack and i'm too tired to find a better way to do this
+    // yes i tried defining a variable, skinSetting, and giving it the same value but woooooo operator overloading
+    // in C++ and weird shit
+    #define LegitweaponSetting settings[XORSTR("Legitbot")][XORSTR("weapons")][Util::Items::GetItemName((enum ItemDefinitionIndex)i.first)]
+	    LegitweaponSetting[XORSTR("Silent")] = i.second.silent;
+	    LegitweaponSetting[XORSTR("AutoShoot")] = i.second.autoShoot;
+	    LegitweaponSetting[XORSTR("TargetBone")] = (int)i.second.bone;
+	    LegitweaponSetting[XORSTR("AimKey")] = Util::GetButtonName(i.second.aimkey);
+	    LegitweaponSetting[XORSTR("AimKeyOnly")] = i.second.aimkeyOnly;
+	    LegitweaponSetting[XORSTR("Smooth")][XORSTR("Enabled")] = i.second.smoothEnabled;
+	    LegitweaponSetting[XORSTR("Smooth")][XORSTR("Amount")] = i.second.smoothAmount;
+	    LegitweaponSetting[XORSTR("Smooth")][XORSTR("Type")] = (int)i.second.smoothType;
+	    LegitweaponSetting[XORSTR("Smooth")][XORSTR("Salting")][XORSTR("Enabled")] = i.second.smoothSaltEnabled;
+	    LegitweaponSetting[XORSTR("Smooth")][XORSTR("Salting")][XORSTR("Multiplier")] = i.second.smoothSaltMultiplier;
+	    LegitweaponSetting[XORSTR("ErrorMargin")][XORSTR("Enabled")] = i.second.errorMarginEnabled;
+	    LegitweaponSetting[XORSTR("ErrorMargin")][XORSTR("Value")] = i.second.errorMarginValue;
+	    LegitweaponSetting[XORSTR("AutoAim")][XORSTR("Enabled")] = i.second.autoAimEnabled;
+	    LegitweaponSetting[XORSTR("AutoAim")][XORSTR("LegitFOV")] = i.second.LegitautoAimFov;
+	    LegitweaponSetting[XORSTR("AimStep")][XORSTR("Enabled")] = i.second.aimStepEnabled;
+	    LegitweaponSetting[XORSTR("AimStep")][XORSTR("min")] = i.second.aimStepMin;
+	    LegitweaponSetting[XORSTR("AimStep")][XORSTR("max")] = i.second.aimStepMax;
+	    LegitweaponSetting[XORSTR("RCS")][XORSTR("Enabled")] = i.second.rcsEnabled;
+	    LegitweaponSetting[XORSTR("RCS")][XORSTR("AlwaysOn")] = i.second.rcsAlwaysOn;
+	    LegitweaponSetting[XORSTR("RCS")][XORSTR("AmountX")] = i.second.rcsAmountX;
+    	LegitweaponSetting[XORSTR("RCS")][XORSTR("AmountY")] = i.second.rcsAmountY;
+    	LegitweaponSetting[XORSTR("AutoPistol")][XORSTR("Enabled")] = i.second.autoPistolEnabled;
+    	LegitweaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")] = i.second.autoScopeEnabled;
+    	LegitweaponSetting[XORSTR("IgnoreJump")][XORSTR("Enabled")] = i.second.ignoreJumpEnabled;
+	    LegitweaponSetting[XORSTR("IgnoreEnemyJump")][XORSTR("Enabled")] = i.second.ignoreEnemyJumpEnabled;
+    	LegitweaponSetting[XORSTR("HitChance")][XORSTR("Enabled")] = i.second.hitchanceEnaled;
+	    LegitweaponSetting[XORSTR("HitChance")][XORSTR("Value")] = i.second.hitchance;
+    	LegitweaponSetting[XORSTR("AutoSlow")][XORSTR("enabled")] = i.second.autoSlow;
+	    LegitweaponSetting[XORSTR("Prediction")][XORSTR("enabled")] = i.second.predEnabled;
+        LegitweaponSetting[XORSTR("TriggerBot")][XORSTR("enabled")] = i.second.TriggerBot;
+        LegitweaponSetting[XORSTR("MinDamage")][XORSTR("enabled")] = i.second.mindamage;
+        LegitweaponSetting[XORSTR("MinDamage")][XORSTR("Value")] = i.second.minDamagevalue;
+        LegitweaponSetting[XORSTR("Autowall")][XORSTR("enabled")] = i.second.autoWall;
 	
-	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
-	    weaponSetting[XORSTR("DesiredBones")][XORSTR("Bones")][bone] = i.second.desiredBones[bone];
+	    for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
+	        LegitweaponSetting[XORSTR("DesiredBones")][XORSTR("Bones")][bone] = i.second.desiredBones[bone];
 
-#undef weaponSetting
+    #undef LegitweaponSetting
     }
 
     for (auto i : Settings::Ragebot::weapons)
     {
-// TODO this is kind of a hack and i'm too tired to find a better way to do this
-// yes i tried defining a variable, skinSetting, and giving it the same value but woooooo operator overloading
-// in C++ and weird shit
-#define RageweaponSetting settings[XORSTR("Ragebot")][XORSTR("weapons")][Util::Items::GetItemName((enum ItemDefinitionIndex)i.first)]
-	RageweaponSetting[XORSTR("Silent")] = i.second.silent;
-	RageweaponSetting[XORSTR("Friendly")] = i.second.friendly;
-	RageweaponSetting[XORSTR("ClosestBone")] = i.second.closestBone;
-	RageweaponSetting[XORSTR("AutoPistol")][XORSTR("Enabled")] = i.second.autoPistolEnabled;
-	RageweaponSetting[XORSTR("AutoShoot")][XORSTR("Enabled")] = i.second.autoShootEnabled;
-	RageweaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")] = i.second.autoScopeEnabled;
-	RageweaponSetting[XORSTR("HitChance")][XORSTR("Enabled")] = i.second.HitChanceEnabled;
-	RageweaponSetting[XORSTR("HitChance")][XORSTR("Value")] = i.second.HitChance;
-    RageweaponSetting[XORSTR("MinDamage")] = i.second.MinDamage;
-	RageweaponSetting[XORSTR("AutoSlow")][XORSTR("Enabled")] = i.second.autoSlow;
-	RageweaponSetting[XORSTR("DoubleFire")][XORSTR("Enabled")] = i.second.DoubleFire;
-	RageweaponSetting[XORSTR("ScopeControl")][XORSTR("Enabled")] = i.second.scopeControlEnabled;
-    RageweaponSetting[XORSTR("DamagePrediction")][XORSTR("Type")] = (int)i.second.DmagePredictionType;
-    RageweaponSetting[XORSTR("EnemySelectionType")][XORSTR("Type")] = (int)i.second.enemySelectionType;
+    // TODO this is kind of a hack and i'm too tired to find a better way to do this
+    // yes i tried defining a variable, skinSetting, and giving it the same value but woooooo operator overloading
+    // in C++ and weird shit
+    #define RageweaponSetting settings[XORSTR("Ragebot")][XORSTR("weapons")][Util::Items::GetItemName((enum ItemDefinitionIndex)i.first)]
+	    RageweaponSetting[XORSTR("Silent")] = i.second.silent;
+	    RageweaponSetting[XORSTR("Friendly")] = i.second.friendly;
+	    RageweaponSetting[XORSTR("ClosestBone")] = i.second.closestBone;
+	    RageweaponSetting[XORSTR("AutoPistol")][XORSTR("Enabled")] = i.second.autoPistolEnabled;
+	    RageweaponSetting[XORSTR("AutoShoot")][XORSTR("Enabled")] = i.second.autoShootEnabled;
+	    RageweaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")] = i.second.autoScopeEnabled;
+	    RageweaponSetting[XORSTR("HitChance")][XORSTR("Enabled")] = i.second.HitChanceEnabled;
+	    RageweaponSetting[XORSTR("HitChance")][XORSTR("Value")] = i.second.HitChance;
+        RageweaponSetting[XORSTR("MinDamage")] = i.second.MinDamage;
+	    RageweaponSetting[XORSTR("AutoSlow")][XORSTR("Enabled")] = i.second.autoSlow;
+	    RageweaponSetting[XORSTR("DoubleFire")][XORSTR("Enabled")] = i.second.DoubleFire;
+	    RageweaponSetting[XORSTR("ScopeControl")][XORSTR("Enabled")] = i.second.scopeControlEnabled;
+        RageweaponSetting[XORSTR("DamagePrediction")][XORSTR("Type")] = (int)i.second.DmagePredictionType;
+        RageweaponSetting[XORSTR("EnemySelectionType")][XORSTR("Type")] = (int)i.second.enemySelectionType;
 
-    for (int bone = 0; bone <= 5; bone++)
-	    RageweaponSetting[XORSTR("DesireBones")][XORSTR("Bones")][bone] = i.second.desireBones[bone];
-
-
-#undef RageweaponSetting
+        for (int bone = 0; bone < 6; bone++)
+        {
+            RageweaponSetting[XORSTR("DesireBones")][XORSTR("Bones")][bone] = i.second.desireBones[bone];
+            RageweaponSetting[XORSTR("DesireMultiBones")][XORSTR("Bones")][bone] = i.second.desiredMultiBones[bone];
+        }
+	
+    #undef RageweaponSetting
     }
 
     settings[XORSTR("Legitbot")][XORSTR("AutoCrouch")][XORSTR("enabled")] = Settings::Legitbot::AutoCrouch::enabled;
-    settings[XORSTR("Ragebot")][XORSTR("AutoShoot")][XORSTR("velocityCheck")] = Settings::Ragebot::AutoShoot::velocityCheck;
     settings[XORSTR("Ragebot")][XORSTR("AUtoAcrouth")][XORSTR("enable")] = Settings::Ragebot::AutoCrouch::enable;
     settings[XORSTR("Ragebot")][XORSTR("BackTrack")][XORSTR("enable")] = Settings::Ragebot::backTrack::enabled;
-    
+    settings[XORSTR("Ragebot")][XORSTR("BackTrack")][XORSTR("time")] = Settings::Ragebot::backTrack::time;
+    settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("key")] = Util::GetButtonName(Settings::Ragebot::quickpeek::key);
+    settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("enabled")] = Settings::Ragebot::quickpeek::enabled;
     settings[XORSTR("Triggerbot")][XORSTR("enabled")] = Settings::Triggerbot::enabled;
 	settings[XORSTR("Triggerbot")][XORSTR("key")] = Util::GetButtonName(Settings::Triggerbot::key);
 	settings[XORSTR("Triggerbot")][XORSTR("Filters")][XORSTR("enemies")] = Settings::Triggerbot::Filters::enemies;
@@ -270,26 +262,65 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("AntiAim")][XORSTR("Type")] = (int)Settings::AntiAim::Type::antiaimType;
     settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("no_enemy")] = Settings::AntiAim::AutoDisable::noEnemy;
     settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("knife_held")] = Settings::AntiAim::AutoDisable::knifeHeld;
-    
+    settings[XORSTR("AntiAim")][XORSTR("FakeDuck")][XORSTR("enabled")] = Settings::AntiAim::FakeDuck::enabled;
+    settings[XORSTR("AntiAim")][XORSTR("FakeDuck")][XORSTR("fakeDuckKey")] = Util::GetButtonName(Settings::AntiAim::FakeDuck::fakeDuckKey);
+
+    settings[XORSTR("SilentWalk")][XORSTR("Key")] = Util::GetButtonName(Settings::SilentWalk::key);
+    settings[XORSTR("SilentWalk")][XORSTR("enabled")] = Settings::SilentWalk::enabled;
+
+
+    settings[XORSTR("AntiAim")][XORSTR("airspin")][XORSTR("enabled")] = Settings::AntiAim::airspin::enabled;
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("enabled")] = Settings::AntiAim::RageAntiAim::enable;
+    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("invertonhurt")] = Settings::AntiAim::RageAntiAim::invertOnHurt;
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Fake Percent")] = Settings::AntiAim::RageAntiAim::AntiAImPercent;
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Real Jitter Percent")] = Settings::AntiAim::RageAntiAim::JitterPercent;
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("togglekey")] = Util::GetButtonName(Settings::AntiAim::RageAntiAim::InvertKey);
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("inverted")] = Settings::AntiAim::RageAntiAim::inverted;
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Type")] = (int)Settings::AntiAim::RageAntiAim::Type;
+    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("LbyMode")] = (int)Settings::AntiAim::RageAntiAim::lbym;
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("atTheTarget")] = Settings::AntiAim::RageAntiAim::atTheTarget;
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("SendReal")] = Settings::AntiAim::RageAntiAim::SendReal;
     settings[XORSTR("AntiAim")][XORSTR("ManualAntiAim")][XORSTR("Enable")] = Settings::AntiAim::ManualAntiAim::Enable;
-    
+    settings[XORSTR("AntiAim")][XORSTR("ManualAntiAim")][XORSTR("backButton")] = Settings::AntiAim::ManualAntiAim::backButton;
+    settings[XORSTR("AntiAim")][XORSTR("ManualAntiAim")][XORSTR("RightButton")] = Settings::AntiAim::ManualAntiAim::RightButton;
+    settings[XORSTR("AntiAim")][XORSTR("ManualAntiAim")][XORSTR("LeftButton")] = Settings::AntiAim::ManualAntiAim::LeftButton;
+
+    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("offset")] = Settings::AntiAim::RageAntiAim::offset;
+    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("pitchJitter")] = Settings::AntiAim::RageAntiAim::pitchJitter;
+    settings[XORSTR("AntiAim")][XORSTR("LBYJitter")] = Settings::AntiAim::lbyjitter;
+
+    settings[XORSTR("SvCheats")][XORSTR("enabled")] = Settings::SvCheats::enabled;
+
+    settings[XORSTR("gravity")][XORSTR("enabled")] = Settings::SvCheats::gravity::enabled;
+    settings[XORSTR("impacts")][XORSTR("enabled")] = Settings::SvCheats::impacts::enabled;
+    settings[XORSTR("grenadetraj")][XORSTR("enabled")] = Settings::SvCheats::grenadetraj::enabled;
+    settings[XORSTR("viewmodel")][XORSTR("enabled")] = Settings::SvCheats::viewmodel::enabled;
+    settings[XORSTR("viewmodelfov")][XORSTR("fov")] = Settings::SvCheats::viewmodel::fov;
+
+    settings[XORSTR("aspect")][XORSTR("enabled")] = Settings::SvCheats::aspect::enabled;
+    settings[XORSTR("aspect")][XORSTR("var")] = Settings::SvCheats::aspect::var;
+
+    settings[XORSTR("gravity")][XORSTR("enabled")] = Settings::SvCheats::gravity::enabled;
+    settings[XORSTR("gravity")][XORSTR("amount")] = Settings::SvCheats::gravity::amount;
+
+
+    settings[XORSTR("bright")][XORSTR("enabled")] = Settings::SvCheats::bright::enabled;
+    settings[XORSTR("fog")][XORSTR("enabled")] = Settings::SvCheats::fog::enabled;
+
+    settings[XORSTR("viewmodelx")][XORSTR("x")] = Settings::SvCheats::viewmodel::x;
+    settings[XORSTR("viewmodely")][XORSTR("y")] = Settings::SvCheats::viewmodel::y;
+    settings[XORSTR("viewmodelz")][XORSTR("z")] = Settings::SvCheats::viewmodel::z;
+
+    settings[XORSTR("BuyBot")][XORSTR("enabled")] = Settings::buybot::enabled;
+    settings[XORSTR("BuyBot")][XORSTR("scout")] = Settings::buybot::scout;
+    settings[XORSTR("BuyBot")][XORSTR("autosniper")] = Settings::buybot::autosniper;
     /*
     * legit anti aim settings 
     */
     settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("enabled")] = Settings::AntiAim::LegitAntiAim::enable;
     settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("togglekey")] = Util::GetButtonName(Settings::AntiAim::LegitAntiAim::InvertKey);
     settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("inverted")] = Settings::AntiAim::LegitAntiAim::inverted;
-    settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("RealPercentage")] = Settings::AntiAim::LegitAntiAim::RealPercentage;
-    settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("RealPercentageInCroutch")] = Settings::AntiAim::LegitAntiAim::RealPercentageInCroutch;
-    settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("OverWatchProof")] = Settings::AntiAim::LegitAntiAim::OverWatchProof;
+    // settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("OverWatchProof")] = (int)Settings::AntiAim::LegitAntiAim::legitAAtype;
     // END
 
 	settings[XORSTR("AntiAim")][XORSTR("Yaw")][XORSTR("type")] = (int) Settings::AntiAim::Yaw::typeReal;
@@ -298,12 +329,24 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("AntiAim")][XORSTR("HeadEdge")][XORSTR("distance")] = Settings::AntiAim::HeadEdge::distance;
     settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("enabled")] = Settings::AntiAim::LBYBreaker::enabled;
     settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("offset")] = Settings::AntiAim::LBYBreaker::offset;
-
+    settings[XORSTR("Resolver")][XORSTR("resolve_allAP")] = Settings::Resolver::resolveAllAP;
     settings[XORSTR("Resolver")][XORSTR("resolve_all")] = Settings::Resolver::resolveAll;
+    settings[XORSTR("Resolver")][XORSTR("manual")] = Settings::Resolver::manual;
+    settings[XORSTR("Resolver")][XORSTR("goalFeetYaw")] = Settings::Resolver::goalFeetYaw;
+    settings[XORSTR("Resolver")][XORSTR("EyeAngles")] = Settings::Resolver::EyeAngles;
+    LoadColor(settings[XORSTR("ESP")][XORSTR("manualAAColor")], Settings::ESP::manualAAColor);
+    settings[XORSTR("Resolver")][XORSTR("Type")] = (int)Settings::Resolver::resolverType;
 
+    settings[XORSTR("ESP")][XORSTR("KeybindsY")] = Settings::ESP::keybi::y;
+    settings[XORSTR("ESP")][XORSTR("KeybindsX")] = Settings::ESP::keybi::x;
+    settings[XORSTR("ESP")][XORSTR("showKeybinds")] = Settings::ESP::KeyBinds;
+    settings[XORSTR("ESP")][XORSTR("showDormant")] = Settings::ESP::showDormant;
+    settings[XORSTR("ESP")][XORSTR("showimpacts")] = Settings::ESP::showimpacts;
     settings[XORSTR("ESP")][XORSTR("enabled")] = Settings::ESP::enabled;
     settings[XORSTR("ESP")][XORSTR("backend")] = (int)Settings::ESP::backend;
     settings[XORSTR("ESP")][XORSTR("key")] = Util::GetButtonName(Settings::ESP::key);
+    LoadColor(settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("color")], Settings::Ragebot::quickpeek::color);
+    LoadColor(settings[XORSTR("ESP")][XORSTR("Watermark")][XORSTR("color")], Settings::ESP::Watermark::color);
     LoadColor(settings[XORSTR("ESP")][XORSTR("enemy_color")], Settings::ESP::enemyColor);
     LoadColor(settings[XORSTR("ESP")][XORSTR("enemy_visible_color")], Settings::ESP::enemyVisibleColor);
     LoadColor(settings[XORSTR("ESP")][XORSTR("ally_color")], Settings::ESP::allyColor);
@@ -373,7 +416,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
     // For Enemy
     settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("Boxes")][XORSTR("enabled")] = Settings::ESP::FilterEnemy::Boxes::enabled;
     settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("Boxes")][XORSTR("type")] = (int)Settings::ESP::FilterEnemy::Boxes::type;
-    settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("Skeleton")][XORSTR("enabled")] = Settings::ESP::Skeleton::enabled;
+    settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("Skeleton")][XORSTR("enabled")] = Settings::ESP::FilterEnemy::Skeleton::enabled;
     LoadColor(settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("Skeleton")][XORSTR("ally_color")], Settings::ESP::FilterEnemy::Skeleton::allyColor);
     LoadColor(settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("Skeleton")][XORSTR("enemy_color")], Settings::ESP::FilterEnemy::Skeleton::enemyColor);
     settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("HelthBar")][XORSTR("enabled")] = Settings::ESP::FilterEnemy::HelthBar::enabled;
@@ -386,7 +429,11 @@ void Settings::LoadDefaultsOrSave(std::string path)
     // For LocalPlayer
     settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("Boxes")][XORSTR("enabled")] = Settings::ESP::FilterLocalPlayer::Boxes::enabled;
     settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("Boxes")][XORSTR("type")] = (int)Settings::ESP::FilterLocalPlayer::Boxes::type;
-    settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("Skeleton")][XORSTR("enabled")] = Settings::ESP::Skeleton::enabled;
+    settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("Skeleton")][XORSTR("enabled")] = Settings::ESP::FilterLocalPlayer::Skeleton::enabled;
+    settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("FakeAngle")][XORSTR("enabled")] = Settings::ESP::FilterLocalPlayer::RealChams::enabled;
+
+    LoadColor(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("FakeColor")], Settings::ESP::Chams::FakeColor);
+
     LoadColor(settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("Skeleton")][XORSTR("ally_color")], Settings::ESP::FilterLocalPlayer::Skeleton::allyColor);
     LoadColor(settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("Skeleton")][XORSTR("enemy_color")], Settings::ESP::FilterLocalPlayer::Skeleton::enemyColor);
     settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("Bars")][XORSTR("enabled")] = Settings::ESP::FilterLocalPlayer::HelthBar::enabled;
@@ -400,7 +447,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
     // For Alise
     settings[XORSTR("ESP")][XORSTR("Alise")][XORSTR("Boxes")][XORSTR("enabled")] = Settings::ESP::FilterAlise::Boxes::enabled;
     settings[XORSTR("ESP")][XORSTR("Alise")][XORSTR("Boxes")][XORSTR("type")] = (int)Settings::ESP::FilterAlise::Boxes::type;
-    settings[XORSTR("ESP")][XORSTR("Alise")][XORSTR("Skeleton")][XORSTR("enabled")] = Settings::ESP::Skeleton::enabled;
+    settings[XORSTR("ESP")][XORSTR("Alise")][XORSTR("Skeleton")][XORSTR("enabled")] = Settings::ESP::FilterAlise::Skeleton::enabled;
     LoadColor(settings[XORSTR("ESP")][XORSTR("Alise")][XORSTR("Skeleton")][XORSTR("ally_color")], Settings::ESP::FilterAlise::Skeleton::allyColor);
     LoadColor(settings[XORSTR("ESP")][XORSTR("Alise")][XORSTR("Skeleton")][XORSTR("enemy_color")], Settings::ESP::FilterAlise::Skeleton::enemyColor);
     settings[XORSTR("ESP")][XORSTR("Alise")][XORSTR("Bars")][XORSTR("enabled")] = Settings::ESP::FilterAlise::HelthBar::enabled;
@@ -428,7 +475,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Enemy")][XORSTR("type")] = (int)Settings::ESP::FilterEnemy::Chams::type;
     // For Local Player
     settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Localplayer")][XORSTR("enabled")] = Settings::ESP::FilterLocalPlayer::Chams::enabled;
-    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Localplayer")][XORSTR("type")] = (int)Settings::ESP::FilterLocalPlayer::Chams::type;
+    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Localplayer")][XORSTR("Fake")] = (int)Settings::ESP::FilterLocalPlayer::Chams::type;
+    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Localplayer")][XORSTR("Real")] = (int)Settings::ESP::FilterLocalPlayer::RealChams::type;
     // For Alise
     settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Alise")][XORSTR("enabled")] = Settings::ESP::FilterAlise::Chams::enabled;
     settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Alise")][XORSTR("type")] = (int)Settings::ESP::FilterAlise::Chams::type;
@@ -464,6 +512,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("HitChance")] = Settings::ESP::Spread::spreadLimit;
     LoadColor(settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("color")], Settings::ESP::Spread::color);
     LoadColor(settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("spreadLimitColor")], Settings::ESP::Spread::spreadLimitColor);
+    settings[XORSTR("ESP")][XORSTR("indicators")] = Settings::ESP::indicators;
 
     settings[XORSTR("ESP")][XORSTR("DangerZone")][XORSTR("drawDist")] = Settings::ESP::DangerZone::drawDist;
     settings[XORSTR("ESP")][XORSTR("DangerZone")][XORSTR("drawDistEnabled")] = Settings::ESP::DangerZone::drawDistEnabled;
@@ -653,10 +702,14 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
     settings[XORSTR("View")][XORSTR("NoViewPunch")][XORSTR("enabled")] = Settings::View::NoViewPunch::enabled;
     settings[XORSTR("View")][XORSTR("NoAimPunch")][XORSTR("enabled")] = Settings::View::NoAimPunch::enabled;
+    settings[XORSTR("FakeWalk")][XORSTR("enabled")] = Settings::FakeWalk::enabled;
 
     settings[XORSTR("FakeLag")][XORSTR("enabled")] = Settings::FakeLag::enabled;
     settings[XORSTR("FakeLag")][XORSTR("value")] = Settings::FakeLag::value;
     settings[XORSTR("FakeLag")][XORSTR("adaptive")] = Settings::FakeLag::adaptive;
+    settings[XORSTR("FakeLag")][XORSTR("randomLag")] = Settings::AntiAim::randomLag::enabled;
+
+    settings[XORSTR("SlowWalk")][XORSTR("enabled")] = Settings::AntiAim::SlowWalk::enabled;
 
     settings[XORSTR("AutoAccept")][XORSTR("enabled")] = Settings::AutoAccept::enabled;
 
@@ -729,7 +782,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("AutoKnife")][XORSTR("Filters")][XORSTR("enemies")] = Settings::AutoKnife::Filters::enemies;
     settings[XORSTR("AutoKnife")][XORSTR("Filters")][XORSTR("allies")] = Settings::AutoKnife::Filters::allies;
     settings[XORSTR("AutoKnife")][XORSTR("onKey")] = Settings::AutoKnife::onKey;
-
+    settings[XORSTR("QuickSwitch")][XORSTR("enabled")] = Settings::QuickSwitch::enabled;
     std::ofstream(path) << styledWriter.write(settings);
 }
 
@@ -763,7 +816,7 @@ void Settings::LoadConfig(std::string path)
     for (Json::ValueIterator itr = settings[XORSTR("Legitbot")][XORSTR("weapons")].begin(); itr != settings[XORSTR("Legitbot")][XORSTR("weapons")].end(); itr++)
     {
 	    std::string weaponDataKey = itr.key().asString();
-	    auto weaponSetting = settings[XORSTR("Legitbot")][XORSTR("weapons")][weaponDataKey];
+	    auto LegitweaponSetting = settings[XORSTR("Legitbot")][XORSTR("weapons")][weaponDataKey];
 
 	    // XXX Using exception handling to deal with this is stupid, but I don't care to find a better solution
 	    // XXX We can't use GetOrdinal() since the key type is a string...
@@ -778,57 +831,46 @@ void Settings::LoadConfig(std::string path)
 	    }
 
 	    if (Settings::Legitbot::weapons.find(weaponID) == Settings::Legitbot::weapons.end())
-	        Settings::Legitbot::weapons[weaponID] = AimbotWeapon_t();
+	        Settings::Legitbot::weapons[weaponID] = LegitWeapon_t();
 
-	    AimbotWeapon_t weapon = {
-	        .silent = weaponSetting[XORSTR("Silent")].asBool(),
-	        .friendly = weaponSetting[XORSTR("Friendly")].asBool(),
-	        .closestBone = weaponSetting[XORSTR("ClosestBone")].asBool(),
-	        .engageLock = weaponSetting[XORSTR("engageLock")].asBool(),
-	        .engageLockTR = weaponSetting[XORSTR("engageLockTR")].asBool(),
-	        .aimkeyOnly = weaponSetting[XORSTR("AimKeyOnly")].asBool(),
-	        .smoothEnabled = weaponSetting[XORSTR("Smooth")][XORSTR("Enabled")].asBool(),
-	        .smoothSaltEnabled = weaponSetting[XORSTR("Smooth")][XORSTR("Salting")][XORSTR("Enabled")].asBool(),
-	        .errorMarginEnabled = weaponSetting[XORSTR("ErrorMargin")][XORSTR("Enabled")].asBool(),
-	        .autoAimEnabled = weaponSetting[XORSTR("AutoAim")][XORSTR("Enabled")].asBool(),
-	        .shootassist = weaponSetting[XORSTR("ShootAssist")][XORSTR("Enable")].asBool(),
-	        .aimStepEnabled = weaponSetting[XORSTR("AimStep")][XORSTR("Enabled")].asBool(),
-	        .rcsEnabled = weaponSetting[XORSTR("RCS")][XORSTR("Enabled")].asBool(),
-	        .rcsAlwaysOn = weaponSetting[XORSTR("RCS")][XORSTR("AlwaysOn")].asBool(),
-	        .hitchanceEnaled = weaponSetting[XORSTR("HitChance")][XORSTR("Enabled")].asBool(),
-	        .autoPistolEnabled = weaponSetting[XORSTR("AutoPistol")][XORSTR("Enabled")].asBool(),
-	        .autoScopeEnabled = weaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")].asBool(),
-	        .noShootEnabled = weaponSetting[XORSTR("NoShoot")][XORSTR("Enabled")].asBool(),
-	        .ignoreJumpEnabled = weaponSetting[XORSTR("IgnoreJump")][XORSTR("Enabled")].asBool(),
-	        .ignoreEnemyJumpEnabled = weaponSetting[XORSTR("IgnoreEnemyJump")][XORSTR("Enabled")].asBool(),
-	        .smokeCheck = weaponSetting[XORSTR("SmokeCheck")][XORSTR("Enabled")].asBool(),
-	        .flashCheck = weaponSetting[XORSTR("FlashCheck")][XORSTR("Enabled")].asBool(),
-	        .autoWallEnabled = weaponSetting[XORSTR("AutoWall")][XORSTR("Enabled")].asBool(),
-	        .autoAimRealDistance = weaponSetting[XORSTR("AutoAim")][XORSTR("RealDistance")].asBool(),
-	        .autoSlow = weaponSetting[XORSTR("AutoSlow")][XORSTR("enabled")].asBool(),
-	        .predEnabled = weaponSetting[XORSTR("Prediction")][XORSTR("enabled")].asBool(),
-	        .scopeControlEnabled = weaponSetting[XORSTR("ScopeControl")][XORSTR("Enabled")].asBool(),
-            .TriggerBot = weaponSetting[XORSTR("TriggerBot")][XORSTR("enabled")].asBool(),
-	        .engageLockTTR = weaponSetting[XORSTR("engageLockTTR")].asInt(),
-	        .bone = weaponSetting[XORSTR("TargetBone")].asInt(),
-	        .smoothType = (SmoothType)weaponSetting[XORSTR("Smooth")][XORSTR("Type")].asInt(),
-	        .aimkey = Util::GetButtonCode(weaponSetting[XORSTR("AimKey")].asCString()),
-	        .smoothAmount = weaponSetting[XORSTR("Smooth")][XORSTR("Amount")].asFloat(),
-	        .smoothSaltMultiplier = weaponSetting[XORSTR("Smooth")][XORSTR("Salting")][XORSTR("Multiplier")].asFloat(),
-	        .errorMarginValue = weaponSetting[XORSTR("ErrorMargin")][XORSTR("Value")].asFloat(),
-	        .LegitautoAimFov = weaponSetting[XORSTR("AutoAim")][XORSTR("LegitFOV")].asFloat(),
-	        .aimStepMin = weaponSetting[XORSTR("AimStep")][XORSTR("min")].asFloat(),
-	        .aimStepMax = weaponSetting[XORSTR("AimStep")][XORSTR("max")].asFloat(),
-	        .rcsAmountX = weaponSetting[XORSTR("RCS")][XORSTR("AmountX")].asFloat(),
-	        .rcsAmountY = weaponSetting[XORSTR("RCS")][XORSTR("AmountY")].asFloat(),
-	        .MinDamage = weaponSetting[XORSTR("MinDamage")][XORSTR("Value")].asFloat(),
-	        .hitchance = weaponSetting[XORSTR("HitChance")][XORSTR("Value")].asFloat(),
-	        .shotDelay = weaponSetting[XORSTR("shotDelay")][XORSTR("value")].asInt(),
-	        .minShotFire = weaponSetting[XORSTR("minShotFire")][XORSTR("value")].asInt(),
+	    LegitWeapon_t weapon = {
+	        .silent = LegitweaponSetting[XORSTR("Silent")].asBool(),
+	        .autoShoot = LegitweaponSetting[XORSTR("AutoShoot")].asBool(),
+	        .aimkeyOnly = LegitweaponSetting[XORSTR("AimKeyOnly")].asBool(),
+	        .smoothEnabled = LegitweaponSetting[XORSTR("Smooth")][XORSTR("Enabled")].asBool(),
+	        .smoothSaltEnabled = LegitweaponSetting[XORSTR("Smooth")][XORSTR("Salting")][XORSTR("Enabled")].asBool(),
+	        .errorMarginEnabled = LegitweaponSetting[XORSTR("ErrorMargin")][XORSTR("Enabled")].asBool(),
+	        .autoAimEnabled = LegitweaponSetting[XORSTR("AutoAim")][XORSTR("Enabled")].asBool(),
+	        .aimStepEnabled = LegitweaponSetting[XORSTR("AimStep")][XORSTR("Enabled")].asBool(),
+	        .rcsEnabled = LegitweaponSetting[XORSTR("RCS")][XORSTR("Enabled")].asBool(),
+	        .rcsAlwaysOn = LegitweaponSetting[XORSTR("RCS")][XORSTR("AlwaysOn")].asBool(),
+	        .hitchanceEnaled = LegitweaponSetting[XORSTR("HitChance")][XORSTR("Enabled")].asBool(),
+	        .autoPistolEnabled = LegitweaponSetting[XORSTR("AutoPistol")][XORSTR("Enabled")].asBool(),
+	        .autoScopeEnabled = LegitweaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")].asBool(),
+	        .ignoreJumpEnabled = LegitweaponSetting[XORSTR("IgnoreJump")][XORSTR("Enabled")].asBool(),
+	        .ignoreEnemyJumpEnabled = LegitweaponSetting[XORSTR("IgnoreEnemyJump")][XORSTR("Enabled")].asBool(),
+	        .autoSlow = LegitweaponSetting[XORSTR("AutoSlow")][XORSTR("enabled")].asBool(),
+	        .predEnabled = LegitweaponSetting[XORSTR("Prediction")][XORSTR("enabled")].asBool(),
+            .TriggerBot = LegitweaponSetting[XORSTR("TriggerBot")][XORSTR("enabled")].asBool(),
+            .mindamage = LegitweaponSetting[XORSTR("MinDamage")][XORSTR("enabled")].asBool(),
+            .autoWall = LegitweaponSetting[XORSTR("Autowall")][XORSTR("enabled")].asBool(),
+	        .bone = LegitweaponSetting[XORSTR("TargetBone")].asInt(),
+	        .smoothType = (SmoothType)LegitweaponSetting[XORSTR("Smooth")][XORSTR("Type")].asInt(),
+	        .aimkey = Util::GetButtonCode(LegitweaponSetting[XORSTR("AimKey")].asCString()),
+	        .smoothAmount = LegitweaponSetting[XORSTR("Smooth")][XORSTR("Amount")].asFloat(),
+	        .smoothSaltMultiplier = LegitweaponSetting[XORSTR("Smooth")][XORSTR("Salting")][XORSTR("Multiplier")].asFloat(),
+	        .errorMarginValue = LegitweaponSetting[XORSTR("ErrorMargin")][XORSTR("Value")].asFloat(),
+	        .LegitautoAimFov = LegitweaponSetting[XORSTR("AutoAim")][XORSTR("LegitFOV")].asFloat(),
+	        .aimStepMin = LegitweaponSetting[XORSTR("AimStep")][XORSTR("min")].asFloat(),
+	        .aimStepMax = LegitweaponSetting[XORSTR("AimStep")][XORSTR("max")].asFloat(),
+	        .rcsAmountX = LegitweaponSetting[XORSTR("RCS")][XORSTR("AmountX")].asFloat(),
+	        .rcsAmountY = LegitweaponSetting[XORSTR("RCS")][XORSTR("AmountY")].asFloat(),
+	        .minDamagevalue = LegitweaponSetting[XORSTR("MinDamage")][XORSTR("Value")].asFloat(),
+	        .hitchance = LegitweaponSetting[XORSTR("HitChance")][XORSTR("Value")].asFloat(),
 	    };
 
 	    for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
-	        weapon.desiredBones[bone] = weaponSetting[XORSTR("DesiredBones")][XORSTR("Bones")][bone].asBool();
+	        weapon.desiredBones[bone] = LegitweaponSetting[XORSTR("DesiredBones")][XORSTR("Bones")][bone].asBool();
 	    Settings::Legitbot::weapons.at(weaponID) = weapon;
     }
 
@@ -838,46 +880,48 @@ void Settings::LoadConfig(std::string path)
 
     for (Json::ValueIterator itr = settings[XORSTR("Ragebot")][XORSTR("weapons")].begin(); itr != settings[XORSTR("Ragebot")][XORSTR("weapons")].end(); itr++)
     {
-	std::string RageweaponDataKey = itr.key().asString();
-	auto RageweaponSetting = settings[XORSTR("Ragebot")][XORSTR("weapons")][RageweaponDataKey];
+	    std::string RageweaponDataKey = itr.key().asString();
+	    auto RageweaponSetting = settings[XORSTR("Ragebot")][XORSTR("weapons")][RageweaponDataKey];
 
-	// XXX Using exception handling to deal with this is stupid, but I don't care to find a better solution
-	// XXX We can't use GetOrdinal() since the key type is a string...
-	ItemDefinitionIndex weaponID;
-	try
-	{
-	    weaponID = (ItemDefinitionIndex)std::stoi(RageweaponDataKey);
-	}
-	catch (std::invalid_argument&) // Not a number
-	{
-	    weaponID = Util::Items::GetItemIndex(RageweaponDataKey);
-	}
+	    // XXX Using exception handling to deal with this is stupid, but I don't care to find a better solution
+	    // XXX We can't use GetOrdinal() since the key type is a string...
+	    ItemDefinitionIndex weaponID;
+	    try
+	    {
+	        weaponID = (ItemDefinitionIndex)std::stoi(RageweaponDataKey);
+	    }
+	    catch (std::invalid_argument&) // Not a number
+	    {
+	        weaponID = Util::Items::GetItemIndex(RageweaponDataKey);
+	    }
 
-	// loading ragebot default
-	if (Settings::Ragebot::weapons.find(weaponID) == Settings::Ragebot::weapons.end())
-	    Settings::Ragebot::weapons[weaponID] = RagebotWeapon_t();
+	    // loading ragebot default
+	    if (Settings::Ragebot::weapons.find(weaponID) == Settings::Ragebot::weapons.end())
+	        Settings::Ragebot::weapons[weaponID] = RageWeapon_t();
 
-	RagebotWeapon_t weapon = {
-	    .silent = RageweaponSetting[XORSTR("Silent")].asBool(),
-	    .friendly = RageweaponSetting[XORSTR("Friendly")].asBool(),
-	    .closestBone = RageweaponSetting[XORSTR("ClosestBone")].asBool(),
-	    .HitChanceEnabled = RageweaponSetting[XORSTR("HitChance")][XORSTR("Enabled")].asBool(),
-	    .autoPistolEnabled = RageweaponSetting[XORSTR("AutoPistol")][XORSTR("Enabled")].asBool(),
-	    .autoShootEnabled = RageweaponSetting[XORSTR("AutoShoot")][XORSTR("Enabled")].asBool(),
-	    .autoScopeEnabled = RageweaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")].asBool(),
-	    .autoSlow = RageweaponSetting[XORSTR("AutoSlow")][XORSTR("Enabled")].asBool(),
-	    .scopeControlEnabled = RageweaponSetting[XORSTR("ScopeControl")][XORSTR("Enabled")].asBool(),
-		.DoubleFire = RageweaponSetting[XORSTR("Prediction")][XORSTR("Enabled")].asBool(),
-        .MinDamage = RageweaponSetting[XORSTR("MinDamage")].asFloat(),
-	    .HitChance = RageweaponSetting[XORSTR("HitChance")][XORSTR("Value")].asFloat(),
-    };
-    // Getting value like this because can't find anyother way convert value from json to enum
-    GetVal(RageweaponSetting[XORSTR("DamagePrediction")][XORSTR("Type")], (int*)&weapon.DmagePredictionType);
-    GetVal(RageweaponSetting[XORSTR("EnemySelectionType")][XORSTR("Type")], (int*)&weapon.enemySelectionType);
+	    RageWeapon_t weapon = {
+	        .silent = RageweaponSetting[XORSTR("Silent")].asBool(),
+	        .friendly = RageweaponSetting[XORSTR("Friendly")].asBool(),
+	        .closestBone = RageweaponSetting[XORSTR("ClosestBone")].asBool(),
+	        .HitChanceEnabled = RageweaponSetting[XORSTR("HitChance")][XORSTR("Enabled")].asBool(),
+	        .autoPistolEnabled = RageweaponSetting[XORSTR("AutoPistol")][XORSTR("Enabled")].asBool(),
+	        .autoShootEnabled = RageweaponSetting[XORSTR("AutoShoot")][XORSTR("Enabled")].asBool(),
+	        .autoScopeEnabled = RageweaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")].asBool(),
+	        .autoSlow = RageweaponSetting[XORSTR("AutoSlow")][XORSTR("Enabled")].asBool(),
+	        .scopeControlEnabled = RageweaponSetting[XORSTR("ScopeControl")][XORSTR("Enabled")].asBool(),
+		    .DoubleFire = RageweaponSetting[XORSTR("Prediction")][XORSTR("Enabled")].asBool(),
+            .MinDamage = RageweaponSetting[XORSTR("MinDamage")].asFloat(),
+	        .HitChance = RageweaponSetting[XORSTR("HitChance")][XORSTR("Value")].asFloat(),
+        };
+        // Getting value like this because can't find anyother way convert value from json to enum
+        GetVal(RageweaponSetting[XORSTR("DamagePrediction")][XORSTR("Type")], (int*)&weapon.DmagePredictionType);
+        GetVal(RageweaponSetting[XORSTR("EnemySelectionType")][XORSTR("Type")], (int*)&weapon.enemySelectionType);
 
 	    for (int bone = 0; bone < 6; bone++)
-	        weapon.desireBones[bone] = RageweaponSetting[XORSTR("DesireBones")][XORSTR("Bones")][bone].asBool();
-	    
+        {
+            weapon.desireBones[bone] = RageweaponSetting[XORSTR("DesireBones")][XORSTR("Bones")][bone].asBool();
+            weapon.desiredMultiBones[bone] = RageweaponSetting[XORSTR("DesireMultiBones")][XORSTR("Bones")][bone].asBool();
+        } 
         Settings::Ragebot::weapons.at(weaponID) = weapon;
     }
 
@@ -886,6 +930,7 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("Ragebot")][XORSTR("enabled")], &Settings::Ragebot::enabled);
     GetVal(settings[XORSTR("Ragebot")][XORSTR("AUtoAcrouth")][XORSTR("enable")], &Settings::Ragebot::AutoCrouch::enable);
     GetVal(settings[XORSTR("Ragebot")][XORSTR("BackTrack")][XORSTR("enable")], &Settings::Ragebot::backTrack::enabled);
+    GetVal(settings[XORSTR("Ragebot")][XORSTR("BackTrack")][XORSTR("time")], &Settings::Ragebot::backTrack::time);
 
     GetVal(settings[XORSTR("Triggerbot")][XORSTR("enabled")], &Settings::Triggerbot::enabled);
 	GetButtonCode(settings[XORSTR("Triggerbot")][XORSTR("key")], &Settings::Triggerbot::key);
@@ -907,17 +952,64 @@ void Settings::LoadConfig(std::string path)
 
     GetVal(settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("no_enemy")], &Settings::AntiAim::AutoDisable::noEnemy);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("knife_held")], &Settings::AntiAim::AutoDisable::knifeHeld);
-    
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("FakeDuck")][XORSTR("enabled")], &Settings::AntiAim::FakeDuck::enabled);
+        GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("FakeDuck")][XORSTR("fakeDuckKey")], &Settings::AntiAim::FakeDuck::fakeDuckKey);
+    	GetVal(settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("enabled")], &Settings::Ragebot::quickpeek::enabled);
+        GetButtonCode(settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("key")], &Settings::Ragebot::quickpeek::key);
+
+        GetVal(settings[XORSTR("SilentWalk")][XORSTR("enabled")], &Settings::SilentWalk::enabled);
+        GetButtonCode(settings[XORSTR("SilentWalk")][XORSTR("Key")], &Settings::SilentWalk::key);
+
+    // Settings for RageAntiAIm
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("airspin")][XORSTR("enabled")], &Settings::AntiAim::airspin::enabled);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("enabled")], &Settings::AntiAim::RageAntiAim::enable);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("invertonhurt")], &Settings::AntiAim::RageAntiAim::invertOnHurt);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Fake Percent")], &Settings::AntiAim::RageAntiAim::AntiAImPercent);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Real Jitter Percent")], &Settings::AntiAim::RageAntiAim::JitterPercent);
     GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("togglekey")], &Settings::AntiAim::RageAntiAim::InvertKey);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("inverted")], &Settings::AntiAim::RageAntiAim::inverted);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Type")], (int*)&Settings::AntiAim::RageAntiAim::Type);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("LbyMode")], (int*)&Settings::AntiAim::RageAntiAim::lbym);
+
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("atTheTarget")], &Settings::AntiAim::RageAntiAim::atTheTarget);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("SendReal")], &Settings::AntiAim::RageAntiAim::SendReal);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("ManualAntiAim")][XORSTR("Enable")], &Settings::AntiAim::ManualAntiAim::Enable);
-    
+    GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("ManualAntiAim")][XORSTR("backButton")], &Settings::AntiAim::ManualAntiAim::backButton);
+    GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("ManualAntiAim")][XORSTR("RightButton")], &Settings::AntiAim::ManualAntiAim::RightButton);
+    GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("ManualAntiAim")][XORSTR("LeftButton")], &Settings::AntiAim::ManualAntiAim::LeftButton);
+
+
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Offset")], &Settings::AntiAim::RageAntiAim::offset);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("pitchJitter")], &Settings::AntiAim::RageAntiAim::pitchJitter);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("LBYJitter")], &Settings::AntiAim::lbyjitter);
+
+    GetVal(settings[XORSTR("SvCheats")][XORSTR("enabled")], &Settings::SvCheats::enabled);
+
+    GetVal(settings[XORSTR("aspect")][XORSTR("enabled")], &Settings::SvCheats::aspect::enabled);
+    GetVal(settings[XORSTR("aspect")][XORSTR("var")], &Settings::SvCheats::aspect::var);
+
+    GetVal(settings[XORSTR("bright")][XORSTR("enabled")], &Settings::SvCheats::bright::enabled);
+    GetVal(settings[XORSTR("fog")][XORSTR("enabled")], &Settings::SvCheats::fog::enabled);
+    GetVal(settings[XORSTR("impacts")][XORSTR("enabled")], &Settings::SvCheats::impacts::enabled);
+    GetVal(settings[XORSTR("grenadetraj")][XORSTR("enabled")], &Settings::SvCheats::grenadetraj::enabled);
+
+
+    GetVal(settings[XORSTR("gravity")][XORSTR("enabled")], &Settings::SvCheats::gravity::enabled);
+
+    GetVal(settings[XORSTR("viewmodel")][XORSTR("enabled")], &Settings::SvCheats::viewmodel::enabled);
+    GetVal(settings[XORSTR("viewmodelfov")][XORSTR("fov")], &Settings::SvCheats::viewmodel::fov);
+
+    GetVal(settings[XORSTR("gravity")][XORSTR("amount")], &Settings::SvCheats::gravity::amount);
+
+    GetVal(settings[XORSTR("viewmodelx")][XORSTR("x")], &Settings::SvCheats::viewmodel::x);
+    GetVal(settings[XORSTR("viewmodely")][XORSTR("y")], &Settings::SvCheats::viewmodel::y);
+    GetVal(settings[XORSTR("viewmodelz")][XORSTR("z")], &Settings::SvCheats::viewmodel::z);
+
+    GetVal(settings[XORSTR("BuyBot")][XORSTR("enabled")], &Settings::buybot::enabled);
+    GetVal(settings[XORSTR("BuyBot")][XORSTR("scout")], &Settings::buybot::scout);
+    GetVal(settings[XORSTR("BuyBot")][XORSTR("autosniper")], &Settings::buybot::autosniper);
+
+
     /* 
     *Legit Anti AIm Settings Saving
     */
@@ -926,20 +1018,30 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("inverted")], &Settings::AntiAim::LegitAntiAim::inverted);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("RealPercentage")], &Settings::AntiAim::LegitAntiAim::RealPercentage);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("RealPercentageInCroutch")], &Settings::AntiAim::LegitAntiAim::RealPercentageInCroutch);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("OverWatchProof")], &Settings::AntiAim::LegitAntiAim::OverWatchProof);
-    
-    //GetVal(settings[XORSTR("AntiAim")][XORSTR("Yaw")][XORSTR("enabled")], &Settings::AntiAim::Yaw::enabled);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("Yaw")][XORSTR("type")], (int*)&Settings::AntiAim::Yaw::typeReal);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("Yaw")][XORSTR("type_fake")], (int*)&Settings::AntiAim::Yaw::typeFake);
-    //GetVal(settings[XORSTR("AntiAim")][XORSTR("Pitch")][XORSTR("enabled")], &Settings::AntiAim::Pitch::enabled);
-   // GetVal(settings[XORSTR("AntiAim")][XORSTR("Pitch")][XORSTR("type")], (int*)&Settings::AntiAim::Pitch::type);
+    // GetVal(settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("OverWatchProof")], (int*)&Settings::AntiAim::LegitAntiAim::legitAAtype);
+    // End legit Anti aim settings Features
+
     GetVal(settings[XORSTR("AntiAim")][XORSTR("HeadEdge")][XORSTR("enabled")], &Settings::AntiAim::HeadEdge::enabled);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("HeadEdge")][XORSTR("distance")], &Settings::AntiAim::HeadEdge::distance);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("enabled")], &Settings::AntiAim::LBYBreaker::enabled);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("offset")], &Settings::AntiAim::LBYBreaker::offset);
+    GetVal(settings[XORSTR("Resolver")][XORSTR("resolve_allAP")], &Settings::Resolver::resolveAllAP);
 
     GetVal(settings[XORSTR("Resolver")][XORSTR("resolve_all")], &Settings::Resolver::resolveAll);
+    GetVal(settings[XORSTR("Resolver")][XORSTR("manual")], &Settings::Resolver::manual);
+    GetVal(settings[XORSTR("Resolver")][XORSTR("goalFeetYaw")], &Settings::Resolver::goalFeetYaw);
+    GetVal(settings[XORSTR("Resolver")][XORSTR("EyeAngles")], &Settings::Resolver::EyeAngles);
+    GetVal( settings[XORSTR("Resolver")][XORSTR("Type")], (int*)&Settings::Resolver::resolverType);
 
+    GetVal(settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("color")], &Settings::Ragebot::quickpeek::color);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Watermark")][XORSTR("color")], &Settings::ESP::Watermark::color);
+    GetVal(settings[XORSTR("ESP")][XORSTR("manualAAColor")], &Settings::ESP::manualAAColor);
+
+    GetVal(settings[XORSTR("ESP")][XORSTR("KeybindsY")], &Settings::ESP::keybi::y);
+    GetVal(settings[XORSTR("ESP")][XORSTR("KeybindsX")], &Settings::ESP::keybi::x);
+    GetVal(settings[XORSTR("ESP")][XORSTR("showKeybinds")], &Settings::ESP::KeyBinds);
+    GetVal(settings[XORSTR("ESP")][XORSTR("showDormant")], &Settings::ESP::showDormant);
+    GetVal(settings[XORSTR("ESP")][XORSTR("showimpacts")], &Settings::ESP::showimpacts);
     GetVal(settings[XORSTR("ESP")][XORSTR("enabled")], &Settings::ESP::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("backend")], (int*)&Settings::ESP::backend);
     GetButtonCode(settings[XORSTR("ESP")][XORSTR("key")], &Settings::ESP::key);
@@ -1012,7 +1114,7 @@ void Settings::LoadConfig(std::string path)
     // For Enemy
     GetVal(settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("Boxes")][XORSTR("enabled")], &Settings::ESP::FilterEnemy::Boxes::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("Boxes")][XORSTR("type")], (int*)&Settings::ESP::FilterEnemy::Boxes::type);
-    GetVal(settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("Skeleton")][XORSTR("enabled")], &Settings::ESP::Skeleton::enabled);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("Skeleton")][XORSTR("enabled")], &Settings::ESP::FilterEnemy::Skeleton::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("Skeleton")][XORSTR("ally_color")], &Settings::ESP::FilterEnemy::Skeleton::allyColor);
     GetVal(settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("Skeleton")][XORSTR("enemy_color")], &Settings::ESP::FilterEnemy::Skeleton::enemyColor);
     GetVal(settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("HelthBar")][XORSTR("enabled")], &Settings::ESP::FilterEnemy::HelthBar::enabled);
@@ -1022,9 +1124,11 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("BulletTracers")][XORSTR("enabled")], &Settings::ESP::FilterEnemy::BulletTracers::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("PlayerInfo")][XORSTR("enabled")], &Settings::ESP::FilterEnemy::playerInfo::enabled);
     // For LocalPlayer
+    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("FakeColor")], &Settings::ESP::Chams::FakeColor);
     GetVal(settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("Boxes")][XORSTR("enabled")], &Settings::ESP::FilterLocalPlayer::Boxes::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("Boxes")][XORSTR("type")], (int*)&Settings::ESP::FilterLocalPlayer::Boxes::type);
-    GetVal(settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("Skeleton")][XORSTR("enabled")], &Settings::ESP::Skeleton::enabled);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("Skeleton")][XORSTR("enabled")], &Settings::ESP::FilterLocalPlayer::Skeleton::enabled);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("FakeAngle")][XORSTR("enabled")], &Settings::ESP::FilterLocalPlayer::RealChams::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("Skeleton")][XORSTR("ally_color")], &Settings::ESP::FilterLocalPlayer::Skeleton::allyColor);
     GetVal(settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("Skeleton")][XORSTR("enemy_color")], &Settings::ESP::FilterLocalPlayer::Skeleton::enemyColor);
     GetVal(settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("HelthBar")][XORSTR("enabled")], &Settings::ESP::FilterLocalPlayer::HelthBar::enabled);
@@ -1036,7 +1140,7 @@ void Settings::LoadConfig(std::string path)
     //For Alise
     GetVal(settings[XORSTR("ESP")][XORSTR("Alise")][XORSTR("Boxes")][XORSTR("enabled")], &Settings::ESP::FilterAlise::Boxes::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("Alise")][XORSTR("Boxes")][XORSTR("type")], (int*)&Settings::ESP::FilterAlise::Boxes::type);
-    GetVal(settings[XORSTR("ESP")][XORSTR("Alise")][XORSTR("Skeleton")][XORSTR("enabled")], &Settings::ESP::Skeleton::enabled);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Alise")][XORSTR("Skeleton")][XORSTR("enabled")], &Settings::ESP::FilterAlise::Skeleton::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("Alise")][XORSTR("Skeleton")][XORSTR("ally_color")], &Settings::ESP::FilterAlise::Skeleton::allyColor);
     GetVal(settings[XORSTR("ESP")][XORSTR("Alise")][XORSTR("Skeleton")][XORSTR("enemy_color")], &Settings::ESP::FilterAlise::Skeleton::enemyColor);
     GetVal(settings[XORSTR("ESP")][XORSTR("Alise")][XORSTR("HelthBar")][XORSTR("enabled")], &Settings::ESP::FilterAlise::HelthBar::enabled);
@@ -1057,7 +1161,8 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Enemy")][XORSTR("type")], (int*)&Settings::ESP::FilterEnemy::Chams::type);
     // For Local Player
     GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Localplayer")][XORSTR("enabled")], &Settings::ESP::FilterLocalPlayer::Chams::enabled);
-    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Localplayer")][XORSTR("type")], (int*)&Settings::ESP::FilterLocalPlayer::Chams::type);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Localplayer")][XORSTR("Fake")], (int*)&Settings::ESP::FilterLocalPlayer::Chams::type);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Localplayer")][XORSTR("Real")], (int*)&Settings::ESP::FilterLocalPlayer::RealChams::type);
     // For Alise
     GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Alise")][XORSTR("enabled")], &Settings::ESP::FilterAlise::Chams::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Alise")][XORSTR("type")], (int*)&Settings::ESP::FilterAlise::Chams::type);
@@ -1094,6 +1199,7 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("HitChance")], &Settings::ESP::Spread::spreadLimit);
     GetVal(settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("color")], &Settings::ESP::Spread::color);
     GetVal(settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("spreadLimitColor")], &Settings::ESP::Spread::spreadLimitColor);
+    GetVal(settings[XORSTR("ESP")][XORSTR("indicators")], &Settings::ESP::indicators);
 
     GetVal(settings[XORSTR("ESP")][XORSTR("DangerZone")][XORSTR("drawDist")], &Settings::ESP::DangerZone::drawDist);
     GetVal(settings[XORSTR("ESP")][XORSTR("DangerZone")][XORSTR("drawDistEnabled")], &Settings::ESP::DangerZone::drawDistEnabled);
@@ -1341,10 +1447,14 @@ void Settings::LoadConfig(std::string path)
 
     GetVal(settings[XORSTR("View")][XORSTR("NoViewPunch")][XORSTR("enabled")], &Settings::View::NoViewPunch::enabled);
     GetVal(settings[XORSTR("View")][XORSTR("NoAimPunch")][XORSTR("enabled")], &Settings::View::NoAimPunch::enabled);
+    GetVal(settings[XORSTR("FakeWalk")][XORSTR("enabled")], &Settings::FakeWalk::enabled);
 
     GetVal(settings[XORSTR("FakeLag")][XORSTR("enabled")], &Settings::FakeLag::enabled);
     GetVal(settings[XORSTR("FakeLag")][XORSTR("value")], &Settings::FakeLag::value);
     GetVal(settings[XORSTR("FakeLag")][XORSTR("adaptive")], &Settings::FakeLag::adaptive);
+    GetVal(settings[XORSTR("FakeLag")][XORSTR("randomLag")], &Settings::AntiAim::randomLag::enabled);
+
+    GetVal(settings[XORSTR("SlowWalk")][XORSTR("enabled")], &Settings::AntiAim::SlowWalk::enabled);
 
     GetVal(settings[XORSTR("AutoAccept")][XORSTR("enabled")], &Settings::AutoAccept::enabled);
 
@@ -1418,6 +1528,7 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("AutoKnife")][XORSTR("Filters")][XORSTR("enemies")], &Settings::AutoKnife::Filters::enemies);
     GetVal(settings[XORSTR("AutoKnife")][XORSTR("Filters")][XORSTR("allies")], &Settings::AutoKnife::Filters::allies);
     GetVal(settings[XORSTR("AutoKnife")][XORSTR("onKey")], &Settings::AutoKnife::onKey);
+ 	GetVal(settings[XORSTR("QuickSwitch")][XORSTR("enabled")], &Settings::QuickSwitch::enabled);
 }
 
 void Settings::SaveGrenadeInfo(std::string path)

@@ -160,7 +160,7 @@ void TracerEffect::CreateMove(CUserCmd* cmd) {
         /* The Server-sided glitch normally doesn't show on the localClient. We ignore the user settings to show the taser glitch accurately */
         if( Settings::TracerEffects::serverSide )
         {
-            *localWeapon->GetCSWpnData()->GetTracerFrequency() = 1;
+            // *localWeapon->GetCSWpnData()->GetTracerFrequency() = 1;
             if( strlen(localWeapon->GetCSWpnData()->GetTracerEffect()) > strlen(tracerEffectNames[(int)TracerEffects_t::TASER]) )
             {
                 strncpy(localWeapon->GetCSWpnData()->GetTracerEffect(),
@@ -184,7 +184,7 @@ void TracerEffect::CreateMove(CUserCmd* cmd) {
         }
         else /* Just do some Client-Sided Effects for Fun based on the Settings */
         {
-            *localWeapon->GetCSWpnData()->GetTracerFrequency() = Settings::TracerEffects::frequency;
+            // *localWeapon->GetCSWpnData()->GetTracerFrequency() = Settings::TracerEffects::frequency;
             if( strlen(localWeapon->GetCSWpnData()->GetTracerEffect()) > strlen(tracerEffectNames[(int)Settings::TracerEffects::effect]) )
             {
                 strncpy(localWeapon->GetCSWpnData()->GetTracerEffect(),

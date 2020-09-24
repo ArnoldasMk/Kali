@@ -49,3 +49,4 @@
 #include "Materialsystem_config.h"
 #include "IGameTypes.h"
 #include "CItemSystem.h"
+#include "Beams.h"

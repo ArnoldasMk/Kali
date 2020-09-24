@@ -8,8 +8,8 @@
 #include "sdlhook.h"
 #include "interfaces.h"
 #include "offsets.h"
-
-
+#include "Utils/GlobalVars.h"
+//#include "SDK/CInput.h"
 int* nPredictionRandomSeed = nullptr;
 CMoveData* g_MoveData = nullptr;
 bool* s_bOverridePostProcessingDisable = nullptr;
@@ -30,6 +30,7 @@ VMT* uiEngineVMT = nullptr;
 
 MsgFunc_ServerRankRevealAllFn MsgFunc_ServerRankRevealAll;
 SendClanTagFn SendClanTag;
+ WriteUserCmdFn WriteUserCmd;
 SetLocalPlayerReadyFn SetLocalPlayerReady;
 
 RecvVarProxyFn fnSequenceProxyFn;
@@ -122,7 +123,11 @@ bool Hooker::HookRecvProp(const char* className, const char* propertyName, std::
 
 	return false;
 }
-
+//void Hooker::FindDeathNotices()
+//{
+//if (!ClearDeathNotices) ClearDeathNotices = (void(__thiscall*)(DWORD))UTILS::FindSignature("client_panorama.dll", "55 8B EC 83 EC 0C 53 56 8B 71 58");
+//if (ClearDeathNotices) ClearDeathNotices(((DWORD)deathNotice - 20));
+//} This is for later.
 void Hooker::FindIClientMode()
 {
     uintptr_t hudprocessinput = reinterpret_cast<uintptr_t>(getvtable(client)[10]);
@@ -131,6 +136,10 @@ void Hooker::FindIClientMode()
 	clientMode = GetClientMode();
 }
 
+//void Hooker::WriteUserCmd()
+//{
+//     WriteUsercmd = PatternFinder::FindPatternInModule("client_client.so", XORSTR("\x55\x8B\xEC\x83\xE4\xF8\x51\x53\x56\x8B\xD9\x8B\x0D"), XORSTR("xxxxxxxxxxxxxxxxxx"));
+//}
 void Hooker::FindGlobalVars()
 {
 	uintptr_t HudUpdate = reinterpret_cast<uintptr_t>(getvtable(client)[11]);
@@ -523,3 +532,53 @@ void Hooker::FindItemSystem()
 	itemSys += sizeof(void*); // 2nd vtable
     itemSystem = (CItemSystem*)itemSys;
 }
+
+void Hooker::FindWriteUserCmd(){
+	// 8B 46 04 				mov     eax, [esi+4]
+	// 89 44 24 08 				mov     [esp+8], eax
+	// 8B 43 04 				mov     eax, [ebx+4]
+	// C7 04 24 2F 32 00 01 	mov     dword ptr [esp]
+	// 89 44 24 04 				mov     [esp+4], eax
+	// E8 71 11 30 05 			call    ConDMsg
+	// E9  36 FD FF FF			jmp     loc_6EF7B2
+
+	// 8B 46 04 89 44 24 08 8B 43 04 C7 04 24 2F 32 00 01 89 44 24 04 E8 71 11 30 05 E9  36 FD FF FF
+
+	// 57 72 69 
+	// 74 65 55 
+	// 73 65 
+	// 72 63 
+	// 6D 64 
+	// 3A 20 
+	// 66 72 
+	// 6F 6D 3D 25
+	// 64 20 74 
+	// 6F 3D 25 
+	// 64 0A 00
+
+	uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
+																(unsigned char*) XORSTR("\x57\x00\x00"
+                                                                                        "\x74\x00\x00"
+																						"\x73\x00"
+																						"\x72\x00"
+																						"\x6D\x00"
+																						"\x3A\x00"
+																						"\x6F\x00\x00\x00"
+																						"\x64\x00\x00"
+																						"\x6F\x00\x00"
+																						"\x64\x00\x00"),
+																XORSTR("x??"
+                                                                        "x??"
+																		"x?"
+																		"x?"
+																		"x?"
+																		"x?"
+																		"x???"
+																		"x??"
+																		"x??"
+																		"x??" ));
+
+	WriteUserCmd = reinterpret_cast<WriteUserCmdFn>(func_address);																		   
+
+	// 'WriteUsercmd: from=%d to=%d',0Ah,0	
+} 

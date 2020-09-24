@@ -114,7 +114,8 @@ void Hitmarkers::FireGameEvent(IGameEvent* event)
 	long now = Util::GetEpochTime();
 	lastHitmarkerTimestamp = now;
 	damages.insert(damages.begin(), std::pair<int, long>(event->GetInt(XORSTR("dmg_health")), now));
-
+//	engine->ClientCmd_Unrestricted( "invnext" );
+//      engine->ClientCmd_Unrestricted( "invprev" );
 	if( Settings::ESP::Hitmarker::Sounds::enabled ){
 		switch( Settings::ESP::Hitmarker::Sounds::sound ){
 			case Sound::SPONGEBOB:
@@ -153,6 +154,10 @@ void Hitmarkers::FireGameEvent(IGameEvent* event)
 			case Sound::ORCHESTRAL:
 				engine->ClientCmd_Unrestricted( "playvol player\\orch_hit_csharp_short 0.8" );
 				break;
+                       case Sound::GAMESENSE:
+                                engine->ClientCmd_Unrestricted( "play buttons\\arena_switch_press_02" );
+                                break;
+
 			default:
 				break;
 		}

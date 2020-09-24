@@ -25,7 +25,7 @@ struct LagCompTickInfo
 };
 
 void CreateMove(CUserCmd *cmd);
-
+float GetLerpTime();
 extern std::vector<LagComp::LagCompTickInfo> lagCompTicks;
 
 } // namespace LagComp

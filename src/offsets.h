@@ -11,6 +11,7 @@ struct COffsets
 		std::ptrdiff_t m_viewPunchAngle;
 		std::ptrdiff_t m_vecViewOffset;
 		std::ptrdiff_t m_nTickBase;
+                std::ptrdiff_t m_nTickBaseShift;
 		std::ptrdiff_t m_vecVelocity;
 		std::ptrdiff_t m_iHealth;
 		std::ptrdiff_t m_lifeState;
@@ -20,6 +21,7 @@ struct COffsets
 		std::ptrdiff_t m_hViewModel;
 		std::ptrdiff_t m_szLastPlaceName;
 		std::ptrdiff_t deadflag;
+		std::ptrdiff_t m_clientAnimation;
 	} DT_BasePlayer;
 
 	struct
@@ -32,6 +34,7 @@ struct COffsets
 		std::ptrdiff_t m_MoveType;
 		std::ptrdiff_t m_Collision;
 		std::ptrdiff_t m_bSpotted;
+	 	std::ptrdiff_t m_bSpottedByMask;
 	} DT_BaseEntity;
 
 	struct
@@ -96,6 +99,9 @@ struct COffsets
 		std::ptrdiff_t m_flC4Blow;
 		std::ptrdiff_t m_bBombDefused;
 		std::ptrdiff_t m_hBombDefuser;
+		std::ptrdiff_t m_flDefuseCountDown;
+		std::ptrdiff_t m_flDefuseLength;
+		std::ptrdiff_t m_nBombSite;
 	} DT_PlantedC4;
 
 	struct

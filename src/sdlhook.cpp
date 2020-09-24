@@ -143,14 +143,13 @@ static void SwapWindow(SDL_Window* window)
         SDL_GetMouseState(&mx, &my);
 
         io.MousePos = ImVec2((float)mx, (float)my);
-
-        
     }
     SDL_ShowCursor(io.MouseDrawCursor ? 0: 1);
 
     UI::SetupColors();
-    if (!UI::DrawImWatermark())
-    {
+    
+    // if (!UI::isVisible)
+    // {
         ImGui::NewFrame();
             ImGui::SetNextWindowPos( ImVec2( 0, 0 ), ImGuiCond_Always );
             ImGui::SetNextWindowSize( ImVec2( w , h), ImGuiCond_Always );
@@ -158,13 +157,15 @@ static void SwapWindow(SDL_Window* window)
             ImGuiStyle& style = ImGui::GetStyle();
             style.WindowBorderSize = 0.0f;
             ImGui::Begin( XORSTR("##mainFrame"), (bool*)true, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiColumnsFlags_NoBorder | ImGuiWindowFlags_NoResize);
+                UI::DrawImWatermark();
                 UI::SetupWindows();
+                UI::angleIndicator();
                 //UI::DrawImWatermark();
                 Hooks::PaintImGui(); // Process ImGui Draw Commands
             ImGui::End();
         
 	    ImGui::EndFrame();
-    }
+    // }
 	ImGui::GetCurrentContext()->Font->DisplayOffset = ImVec2(0.f, 0.f);
 	ImGui::GetCurrentContext()->Font->DisplayOffset = ImVec2(0.0f, 0.0f);
 

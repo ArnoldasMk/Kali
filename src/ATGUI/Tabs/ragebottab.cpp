@@ -13,13 +13,14 @@
 
 static ItemDefinitionIndex currentWeapon = ItemDefinitionIndex::INVALID;
 static DamagePrediction damagePrediction = DamagePrediction::justDamage;
-static EnemySelectionType enemySelectionType = EnemySelectionType::CLosestToCrosshair;
+static EnemySelectionType enemySelectionType = EnemySelectionType::BestDamage;
 
 //static bool enabled = false;
 static bool silent = false;
 static bool friendly = false;
 static bool closestBone = false;
 static bool desireBones[] = {true, true, true, true, true, true};
+static bool desiredMultiBones[] = {true, true, true, true, true, true};
 static bool autoPistolEnabled = false;
 static bool autoShootEnabled = false;
 static bool autoScopeEnabled = false;
@@ -53,17 +54,21 @@ void UI::ReloadRageWeaponSettings()
 	enemySelectionType = Settings::Ragebot::weapons.at(index).enemySelectionType;
 
 	for (int BONE = 0; BONE < 6; BONE++)
-		desireBones[BONE] = Settings::Ragebot::weapons.at(index).desireBones[BONE];;
+	{
+		desireBones[BONE] = Settings::Ragebot::weapons.at(index).desireBones[BONE];
+		desiredMultiBones[BONE] = Settings::Ragebot::weapons.at(index).desiredMultiBones[BONE];
+	}
+		
 
-	Ragebot::UpdateValues();
+	// Ragebot::UpdateValues();
 }
 
 void UI::UpdateRageWeaponSettings()
 {
 	if (Settings::Ragebot::weapons.find(currentWeapon) == Settings::Ragebot::weapons.end() && Settings::Ragebot::enabled)
-		Settings::Ragebot::weapons[currentWeapon] = RagebotWeapon_t();
+		Settings::Ragebot::weapons[currentWeapon] = RageWeapon_t();
 
-	RagebotWeapon_t settings = {
+	RageWeapon_t settings = {
 			.silent = silent,
 			.friendly = friendly,
 			.closestBone = closestBone,
@@ -81,8 +86,11 @@ void UI::UpdateRageWeaponSettings()
 	};
 
 
-	for (int BONE = 0; BONE < 6; BONE++)
+	for (int BONE = 0; BONE < 6; BONE++){
 		settings.desireBones[BONE] = desireBones[BONE];
+		settings.desiredMultiBones[BONE] = desiredMultiBones[BONE];
+	}
+		
 
 	Settings::Ragebot::weapons.at(currentWeapon) = settings;
 
@@ -94,7 +102,7 @@ void UI::UpdateRageWeaponSettings()
 		return;
 	}
 
-	Ragebot::UpdateValues();
+	// Ragebot::UpdateValues();
 }
 
 void RagebotTab::RenderTab()
@@ -162,13 +170,8 @@ void RagebotTab::RenderTab()
 			{
 				if (ImGui::Checkbox(XORSTR("Auto Shoot"), &autoShootEnabled))
 					UI::UpdateRageWeaponSettings();
-				
-				ImGui::Checkbox(XORSTR("Velocity Check"), &Settings::Ragebot::AutoShoot::velocityCheck);
-				
 				if (ImGui::Checkbox(XORSTR("AutoSlow"), &autoSlow))
 					UI::UpdateRageWeaponSettings();
-
-				ImGui::Spacing();
 				if( ImGui::Checkbox(XORSTR("Hit Chance"), &HitChanceEnabled) )
 					UI::UpdateRageWeaponSettings();
 				ImGui::SameLine();
@@ -196,6 +199,23 @@ void RagebotTab::RenderTab()
 				if (ImGui::Selectable(XORSTR("HIP"), &desireBones[(int)DesireBones::BONE_HIP], ImGuiSelectableFlags_DontClosePopups))
 					UI::UpdateRageWeaponSettings();
 				if (ImGui::Selectable(XORSTR("LOWER BODY"), &desireBones[(int)DesireBones::LOWER_BODY], ImGuiSelectableFlags_DontClosePopups))
+					UI::UpdateRageWeaponSettings();
+				
+				ImGui::EndCombo();
+			}
+			if ( ImGui::BeginCombo(XORSTR("##MultiBONESELECTION"), XORSTR("SELECT Multi Points")) )
+			{
+				if ( ImGui::Selectable(XORSTR("HEAD"), &desiredMultiBones[(int)DesireBones::BONE_HEAD], ImGuiSelectableFlags_DontClosePopups) )
+					UI::UpdateRageWeaponSettings();
+				if (ImGui::Selectable(XORSTR("UPPER CHEST"), &desiredMultiBones[(int)DesireBones::UPPER_CHEST], ImGuiSelectableFlags_DontClosePopups))
+					UI::UpdateRageWeaponSettings();
+				if (ImGui::Selectable(XORSTR("MIDDLE CHEST"), &desiredMultiBones[(int)DesireBones::MIDDLE_CHEST], ImGuiSelectableFlags_DontClosePopups))
+					UI::UpdateRageWeaponSettings();
+				if (ImGui::Selectable(XORSTR("LOWER CHEST"), &desiredMultiBones[(int)DesireBones::LOWER_CHEST], ImGuiSelectableFlags_DontClosePopups))
+					UI::UpdateRageWeaponSettings();
+				if (ImGui::Selectable(XORSTR("HIP"), &desiredMultiBones[(int)DesireBones::BONE_HIP], ImGuiSelectableFlags_DontClosePopups))
+					UI::UpdateRageWeaponSettings();
+				if (ImGui::Selectable(XORSTR("LOWER BODY"), &desiredMultiBones[(int)DesireBones::LOWER_BODY], ImGuiSelectableFlags_DontClosePopups))
 					UI::UpdateRageWeaponSettings();
 				
 				ImGui::EndCombo();
@@ -252,7 +272,32 @@ void RagebotTab::RenderTab()
 			*/
 			ImGui::Spacing(); ImGui::Spacing();
 			ImGui::Columns(1, nullptr, false);
-				ImGui::Checkbox(XORSTR("Resolver"), &Settings::Resolver::resolveAll);
+		  const char* resolverType[] = {
+		        "NONE",
+		        "Experimental",
+		        "ApuWare",
+		    };
+        ImGui::Combo(XORSTR("##ResolverType"), (int*)&Settings::Resolver::resolverType, resolverType, IM_ARRAYSIZE(resolverType));
+        switch (Settings::Resolver::resolverType)
+        {
+        case resolverType::Experimental:
+		Settings::Resolver::resolveAll = true;
+		Settings::Resolver::resolveAllAP = false;
+            break;
+        case resolverType::ApuWare:
+                Settings::Resolver::resolveAll = false;
+                Settings::Resolver::resolveAllAP = true;
+            break;
+        case resolverType::NONE:
+                Settings::Resolver::resolveAll = false;
+                Settings::Resolver::resolveAllAP = false;
+
+            break;
+        default:
+            break;
+        }
+
+			//	ImGui::Checkbox(XORSTR("Resolver"), &Settings::Resolver::resolveAll);
 			// End of resolver tab
 
 			// Others Settings For Weapons
@@ -279,8 +324,6 @@ void RagebotTab::RenderTab()
 						break;
 				}
 				/*
-				if (ImGui::Checkbox(XORSTR("Silent Aim"), &silent))
-					UI::UpdateRageWeaponSettings();
 				if (ImGui::Checkbox(XORSTR("Double Fire"), &doubleFire))
 					UI::UpdateRageWeaponSettings();
 				*/
@@ -306,7 +349,19 @@ void RagebotTab::RenderTab()
 				}
 					
 				ImGui::Checkbox(XORSTR("Auto Crouch"), &Settings::Ragebot::AutoCrouch::enable);
-            
+				ImGui::Checkbox(XORSTR("LagCom"), &Settings::Ragebot::backTrack::enabled);
+				if (Settings::Ragebot::backTrack::enabled)
+                                ImGui::SliderFloat(XORSTR("##TRACKTIME"), &Settings::Ragebot::backTrack::time, 0.0f, 0.2f);
+
+                                ImGui::Checkbox(XORSTR("AutoKnife"), &Settings::AutoKnife::enabled);
+                                ImGui::Checkbox(XORSTR("Exploits"), &Settings::Ragebot::exploits::enabled);
+				if (Settings::Ragebot::exploits::enabled){
+                                ImGui::Checkbox(XORSTR("DoubleTap"), &Settings::Ragebot::exploits::doubletap);
+				    UI::KeyBindButton(&Settings::Ragebot::exploits::doubletapKey);
+
+				}
+				if (ImGui::Checkbox(XORSTR("Silent Aim"), &silent))
+					UI::UpdateRageWeaponSettings();
 			}
 			// END of other Settings
 			

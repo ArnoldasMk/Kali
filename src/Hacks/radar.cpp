@@ -293,7 +293,7 @@ static void InGameRadar(C_BasePlayer* player)
 	if (!player->GetAlive() || player->GetDormant())
 		return;
 
-	*player->GetSpotted() = true;
+	*player->GetSpottedByMask() = -1;
 }
 
 

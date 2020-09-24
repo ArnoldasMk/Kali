@@ -6,6 +6,8 @@
 #include "../Hacks/fovchanger.h"
 #include "../Hacks/thirdperson.h"
 #include "../Hacks/grenadeprediction.h"
+#include "../Hacks/fakeduck.h"
+#include "../Hacks/antiaim.h"
 
 float OverrideView::currentFOV = 90.0f;
 
@@ -18,6 +20,8 @@ void Hooks::OverrideView(void* thisptr, CViewSetup* pSetup)
 		GrenadePrediction::OverrideView(pSetup);
 		FOVChanger::OverrideView(pSetup);
 		ThirdPerson::OverrideView(pSetup);
+		FakeDuck::OverrideView(pSetup);
+		AntiAim::OverrideView(pSetup);
 	}
 
 	OverrideView::currentFOV = pSetup->fov;

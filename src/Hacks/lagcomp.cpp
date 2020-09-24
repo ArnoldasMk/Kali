@@ -3,6 +3,7 @@
 #include "../Utils/math.h"
 #include "../interfaces.h"
 #include "../settings.h"
+#include "../SDK/INetChannel.h"
 
 // source from nimbus bcz i am lezy xd
 #ifndef CLAMP
@@ -12,8 +13,9 @@
 std::vector<LagComp::LagCompTickInfo> LagComp::lagCompTicks;
 
 
-static float GetLerpTime()
+float LagComp::GetLerpTime()
 {
+//  auto network = INetChannel->getNetChannel();
 	int updateRate = cvar->FindVar("cl_updaterate")->GetInt();
 	ConVar *minUpdateRate = cvar->FindVar("sv_minupdaterate");
 	ConVar *maxUpdateRate = cvar->FindVar("sv_maxupdaterate");
@@ -40,12 +42,12 @@ static bool IsTickValid(float time) // pasted from polak getting some invalid ti
 {
 	float correct = 0;
 
-	correct += GetLerpTime();
+	correct += LagComp::GetLerpTime();
 	correct = CLAMP(correct, 0.f, cvar->FindVar("sv_maxunlag")->GetFloat());
 
 	float deltaTime = correct - (globalVars->curtime - time);
 
-	if (fabsf(deltaTime) < 0.2f)
+	if (fabsf(deltaTime) < Settings::Ragebot::backTrack::time)
 		return true;
 
 	return false;
@@ -106,11 +108,10 @@ void LagComp::CreateMove(CUserCmd *cmd)
 	RegisterTicks();
 
 	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
-	C_BaseCombatWeapon *weapon = (C_BaseCombatWeapon *)entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
-
 	if (!localplayer || !localplayer->GetAlive())
 		return;
 
+	C_BaseCombatWeapon *weapon = (C_BaseCombatWeapon *)entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
 	if (!weapon)
 		return;
 
@@ -124,7 +125,7 @@ void LagComp::CreateMove(CUserCmd *cmd)
 	{
 		float fov = 180.0f;
 
-		int tickcount = 0;
+		static int tickcount = cmd->tick_count;
 		bool has_target = false;
 
 		for (auto &&Tick : LagComp::lagCompTicks)
@@ -142,7 +143,6 @@ void LagComp::CreateMove(CUserCmd *cmd)
 			}
 		}
 
-		if (has_target)
-			cmd->tick_count = tickcount;
+		if (has_target)	cmd->tick_count = tickcount;
 	}
 }

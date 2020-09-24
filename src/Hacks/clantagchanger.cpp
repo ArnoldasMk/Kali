@@ -3,6 +3,7 @@
 #include <sstream>
 #include "../settings.h"
 #include "../interfaces.h"
+        float lastTime = 1.0f;
 
 static std::vector<std::wstring> splitWords(std::wstring text)
 {
@@ -96,7 +97,6 @@ void ClanTagChanger::BeginFrame(float frameTime)
 
 	if (!engine->IsInGame())
 		return;
-
 	if (Settings::ClanTagChanger::type == ClanTagType::STATIC)
 	{
 		std::string ctWithEscapesProcessed = std::string(Settings::ClanTagChanger::value);
@@ -114,8 +114,9 @@ void ClanTagChanger::BeginFrame(float frameTime)
 			timeStamp = currentTime_ms;
 			ClanTagChanger::animation->NextFrame();
 		}
-		if (!ClanTagChanger::animation->GetCurrentFrame().text.empty())
+		if (!ClanTagChanger::animation->GetCurrentFrame().text.empty() && globalVars->curtime - lastTime > 0.6f){
+			lastTime = globalVars->curtime;
 			SendClanTag(Util::WstringToString(ClanTagChanger::animation->GetCurrentFrame().text).c_str(), Util::WstringToString(ClanTagChanger::animation->GetCurrentFrame().text).c_str());
-		//SendClanTag((char*)ClanTagChanger::animation->GetCurrentFrame().text.c_str(), (char*)ClanTagChanger::animation->GetCurrentFrame().text.c_str());
+		}
 	}
 }

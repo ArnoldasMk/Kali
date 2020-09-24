@@ -99,6 +99,7 @@ public:
 };
 
 class IClientUnknown : public IHandleEntity {};
+
 class IClientRenderable
 {
 public:
@@ -217,6 +218,11 @@ public:
 		return *(float*)((uintptr_t)this + offsets.DT_BaseEntity.m_flSimulationTime);
 	}
 
+	float GetOldSimulationTime()
+	{
+                return *(float*)((uintptr_t)this + offsets.DT_BaseEntity.m_flSimulationTime + 4);
+	}
+
 	TeamID GetTeam()
 	{
 		return *(TeamID*)((uintptr_t)this + offsets.DT_BaseEntity.m_iTeamNum);
@@ -242,10 +248,29 @@ public:
 		return (ICollideable*)((uintptr_t)this + offsets.DT_BaseEntity.m_Collision);
 	}
 
+        uint32_t *GetSpottedByMask()
+        {
+                return (uint32_t *)((uintptr_t)this + offsets.DT_BaseEntity.m_bSpottedByMask);
+        }
+
 	bool* GetSpotted()
 	{
 		return (bool*)((uintptr_t)this + offsets.DT_BaseEntity.m_bSpotted);
 	}
+
+	void ClientAnimations(bool value) // responsible for local animation
+	{
+		*reinterpret_cast<bool*>(uintptr_t(this) + offsets.DT_BasePlayer.m_clientAnimation) = value;
+	}
+
+	void updateClientAnimation( )
+	{
+		// typedef void (* oSetDestroyedOnRecreateEntities)(void*);
+		// return getvfunc<oSetDestroyedOnRecreateEntities>(this, 13)(this);
+		typedef void (*UpdateAnim)(void*);
+		return getvfunc<UpdateAnim>( this, 223 )( this );
+	}
+
 };
 
 /* generic game classes */
@@ -281,6 +306,10 @@ public:
 	{
 		return *(Vector*)((uintptr_t)this + offsets.DT_BasePlayer.m_vecViewOffset);
 	}
+        unsigned int GetTickBaseShift()
+        {
+                return *(unsigned int*)((uintptr_t)this + offsets.DT_BasePlayer.m_nTickBaseShift);
+        }
 
 	unsigned int GetTickBase()
 	{
@@ -494,6 +523,20 @@ public:
 	{
 		return *(int*)((uintptr_t)this + offsets.DT_PlantedC4.m_hBombDefuser);
 	}
+	float GetBombDefuseCountDown()
+	{
+		return *(float*)((uintptr_t)this + offsets.DT_PlantedC4.m_flDefuseCountDown);
+	}
+
+	float GetDefuseLenght()
+	{
+		return *(float*)((uintptr_t)this + offsets.DT_PlantedC4.m_flDefuseLength);
+	}	
+
+	int GetBombSite()
+	{
+		return *(int*)((uintptr_t)this + offsets.DT_PlantedC4.m_nBombSite);
+	} 	
 };
 
 class C_BaseAttributableItem : public C_BaseEntity

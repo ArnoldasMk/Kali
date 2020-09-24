@@ -74,7 +74,10 @@ public:
 	{
 		return (int*)((uintptr_t)this + offsets.DT_CSPlayerResource.m_iCompetitiveRanking + index * 4);
 	}
-
+	int* SetCompetitiveRanking()
+	{
+		return (int*)((uintptr_t)this + offsets.DT_CSPlayerResource.m_iCompetitiveRanking);
+	}
 	int* GetCompetitiveWins(int index)
 	{
 		return (int*)((uintptr_t)this + offsets.DT_CSPlayerResource.m_iCompetitiveWins + index * 4);
@@ -94,12 +97,18 @@ public:
 	{
 		return (int*)((uintptr_t)this + offsets.DT_CSPlayerResource.m_nActiveCoinRank + index * 4);
 	}
-
+	int* SetActiveCoinRank()
+	{
+		return (int*)((uintptr_t)this + offsets.DT_CSPlayerResource.m_nActiveCoinRank);
+	}
 	int* GetMusicID(int index)
 	{
 		return (int*)((uintptr_t)this + offsets.DT_CSPlayerResource.m_nMusicID + index * 4);
 	}
-
+	int* SetMusicID()
+	{
+		return (int*)((uintptr_t)this + offsets.DT_CSPlayerResource.m_nMusicID);
+	}
 	int* GetPersonaDataPublicCommendsLeader(int index)
 	{
 		return (int*)((uintptr_t)this + offsets.DT_CSPlayerResource.m_nPersonaDataPublicCommendsLeader + index * 4);

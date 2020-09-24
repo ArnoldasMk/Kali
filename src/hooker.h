@@ -2,7 +2,7 @@
 
 #include <memory>
 #include "Utils/recvproxyhook.h"
-
+struct bf_write;
 struct dlinfo_t
 {
 	const char* library = nullptr;
@@ -14,6 +14,7 @@ namespace Hooker
 {
 	bool GetLibraryInformation(const char* library, uintptr_t* address, size_t* size);
 	bool HookRecvProp(const char* className, const char* propertyName, std::unique_ptr<RecvPropHook>& recvPropHook);
+	bool hkdWriteUsercmdDeltaToBuffer(void* ecx, void*, int slot, bf_write* buf, int from, int to, bool isnewcommand);
 	void FindIClientMode();
 	void FindGlobalVars();
 	void FindCInput();
@@ -36,8 +37,9 @@ namespace Hooker
 	void FindSetNamedSkybox();
 	void FindPanelArrayOffset();
 	void FindPlayerAnimStateOffset();
-    void FindPlayerAnimOverlayOffset();
+    	void FindPlayerAnimOverlayOffset();
 	void FindSequenceActivity();
 	void FindAbsFunctions();
 	void FindItemSystem();
+ 	void FindWriteUserCmd();
 }

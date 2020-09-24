@@ -7,6 +7,9 @@
 #include <map>
 #include <string>
 #include "vector.h"
+#include "bitbuf.h"
+#include "IInputSystem.h"
+
 
 /* generic constants */
 #define LIFE_ALIVE 0
@@ -24,8 +27,10 @@ struct CGlowObjectManager;
 /* function prototypes */
 typedef IClientMode* (*GetClientModeFn) (void);
 typedef CGlowObjectManager* (*GlowObjectManagerFn) (void);
-typedef bool (*MsgFunc_ServerRankRevealAllFn) (float*);
+typedef bool (*MsgFunc_ServerRankRevealAllFn) (void*);
 typedef void (*SendClanTagFn) (const char*, const char*);
+ typedef void (*WriteUserCmdFn) (bf_write *buf, const CUserCmd *to, const CUserCmd *from); // write user cmd fr function
+typedef bool(*WriteUsercmdDeltaToBufferFn)(void*, int, void*, int, int, bool);
 typedef void (*SetLocalPlayerReadyFn) (const char*);
 typedef ILauncherMgr* (*ILauncherMgrCreateFn) (void);
 typedef void (*StartDrawingFn) (void*);
@@ -213,7 +218,6 @@ enum class ItemDefinitionIndex : short
 	GLOVE_SPECIALIST = 5034,
 	GLOVE_HYDRA = 5035
 };
-
 enum class EClassIds : int
 {
 	CAI_BaseNPC = 0,
@@ -1770,6 +1774,10 @@ const std::map<ItemDefinitionIndex, DefItem_t> ItemDefinitionIndexMap = {
 		{ ItemDefinitionIndex::WEAPON_KNIFE_CSS,			{ "#SFUI_WPNHUD_KnifeCSS", "weapon_knife_css", "models/weapons/v_knife_css.mdl", "knife_css" } },
 		{ ItemDefinitionIndex::WEAPON_KNIFE_GHOST,			{ "#SFUI_WPNHUD_knife_ghost", "weapon_knife_ghost", "models/weapons/v_knife_ghost.mdl", "knife_ghost" } },
 		{ ItemDefinitionIndex::WEAPON_KNIFEGG,				{ "#SFUI_WPNHUD_Knife_GG", "weapon_knifegg", "models/weapons/v_knife_gg.mdl", "knifegg" } },
+	        { ItemDefinitionIndex::WEAPON_KNIFE_CORD,           { "#SFUI_WPNHUD_knife_cord", "weapon_knife_cord", "models/weapons/v_knife_cord.mdl", "knife_cord" } },
+		{ ItemDefinitionIndex::WEAPON_KNIFE_CANIS,          { "#SFUI_WPNHUD_knife_canis", "weapon_knife_canis", "models/weapons/v_knife_canis.mdl", "knife_canis" } },
+		{ ItemDefinitionIndex::WEAPON_KNIFE_OUTDOOR,        { "#SFUI_WPNHUD_knife_outdoor", "weapon_knife_outdoor", "models/weapons/v_knife_outdoor.mdl", "knife_outdoor" } },
+		{ ItemDefinitionIndex::WEAPON_KNIFE_SKELETON,       { "#SFUI_WPNHUD_knife_skeleton", "weapon_knife_skeleton", "models/weapons/v_knife_skeleton.mdl", "knife_skeleton" } },
 		{ ItemDefinitionIndex::GLOVE_STUDDED_BLOODHOUND,	{ "#CSGO_Wearable_t_studdedgloves", "studded_bloodhound_gloves", "models/weapons/v_models/arms/glove_bloodhound/v_glove_bloodhound.mdl" } },
 		{ ItemDefinitionIndex::GLOVE_T_SIDE,				{ "#CSGO_Wearable_t_defaultgloves", "t_gloves", "models/weapons/v_models/arms/glove_fingerless/v_glove_fingerless.mdl" } },
 		{ ItemDefinitionIndex::GLOVE_CT_SIDE,				{ "#CSGO_Wearable_ct_defaultgloves", "ct_gloves", "models/weapons/v_models/arms/glove_hardknuckle/v_glove_hardknuckle.mdl" } },

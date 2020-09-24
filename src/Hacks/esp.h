@@ -1,10 +1,11 @@
-#pragma once
+	#pragma once
 
 #include "../ImGUI/imgui.h"
 #include "../SDK/IClientEntity.h"
 #include "../SDK/vector.h"
 #include "../SDK/IVModelRender.h"
 #include "../SDK/IInputSystem.h"
+#include "../SDK/IGameEvent.h"
 
 
 namespace ESP
@@ -20,4 +21,6 @@ namespace ESP
 	void Paint();
 	void PaintToUpdateMatrix();
 	void CreateMove(CUserCmd* cmd);
+	void FireGameEvent(IGameEvent* event);
+
 }
