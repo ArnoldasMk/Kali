@@ -9,6 +9,7 @@
 #include "interfaces.h"
 #include "offsets.h"
 #include "Utils/GlobalVars.h"
+#include "Hacks/Tickbase.h"
 //#include "SDK/CInput.h"
 int* nPredictionRandomSeed = nullptr;
 CMoveData* g_MoveData = nullptr;
@@ -582,3 +583,53 @@ void Hooker::FindWriteUserCmd(){
 
 	// 'WriteUsercmd: from=%d to=%d',0Ah,0	
 } 
+static bool WriteUsercmdDeltaToBuffer(void* ecx, void* edx, int slot, bf_write* buffer, int from, int to, bool isnewcommand)
+{
+//    auto original = VMT::GetOriginalMethod<bool, 24>(slot, buffer, from, to, isnewcommand);
+    if (Tickbase::tick->tickshift <= 0)
+//        return original(ecx, slot, buffer, from, to, isnewcommand);
+
+    if (from != -1)
+        return true;
+
+    int* numBackupCommands = (int*)(reinterpret_cast <uintptr_t> (buffer) - 0x30);
+    int* numNewCommands = (int*)(reinterpret_cast <uintptr_t> (buffer) - 0x2C);
+
+    int32_t newcommands = *numNewCommands;
+
+    int nextcommmand; //= memory->clientState->lastOutgoingCommand + memory->clientState->chokedCommands + 1;
+    int totalcommands = std::min(Tickbase::tick->tickshift, Tickbase::tick->maxUsercmdProcessticks);
+    Tickbase::tick->tickshift = 0;
+
+    from = -1;
+    *numNewCommands = totalcommands;
+    *numBackupCommands = 0;
+
+    for (to = nextcommmand - newcommands + 1; to <= nextcommmand; to++)
+    {
+ //       if (!(original(ecx, slot, buffer, from, to, true)))
+ //           return false;
+
+        from = to;
+    }
+
+    CUserCmd* lastRealCmd;// = memory->input->GetUserCmd(slot, from);
+    CUserCmd fromcmd;
+
+    if (lastRealCmd)
+        fromcmd = *lastRealCmd;
+
+    CUserCmd tocmd = fromcmd;
+    tocmd.tick_count += 200;
+    tocmd.command_number++;
+
+    for (int i = newcommands; i <= totalcommands; i++)
+    {
+        //WriteUserCmd(buffer, &tocmd, &fromcmd);
+        fromcmd = tocmd;
+        tocmd.command_number++;
+        tocmd.tick_count++;
+    }
+
+    return true;
+}

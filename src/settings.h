@@ -120,6 +120,7 @@ enum class ChamsType : int
 	FLAT,
 	PEARL,
 	GLOW,
+	GLOWF,
 	NONE,
 };
 
@@ -198,6 +199,13 @@ enum class AimTargetType : int
 	HP,
 };
 
+enum class DtSpeed : int
+{
+        INSTANT,
+        FAST,
+        ACCURATE,
+};
+
 enum class SpammerType : int
 {
 	SPAMMER_NONE,
@@ -218,6 +226,8 @@ enum class AntiAimRealType_Y : int
 	Static,
 	Jitter,
 	Randome,
+	JitterSwitch,
+	JitterRandom,
 };
 
 enum class AntiAimFakeType_y : int
@@ -505,6 +515,15 @@ namespace Settings
 				inline bool open = false;
 				inline bool reload = false; // True on config load, used to change Window Position.
 			}
+			namespace Kills
+                        {
+                                inline int posX = 50;
+                                inline int posY = 100;
+                                inline int sizeX = 50;
+                                inline int sizeY = 100;
+                                inline bool reload = false; // True on config load, used to change Window Position.
+                        }
+
 			namespace Spectators
 			{
 				inline int posX = 50;
@@ -701,7 +720,7 @@ namespace Settings
                         inline bool doubletapToggle;
                         inline bool enabled;
 		        inline bool doubletap;
-			inline int doubletapSpeed = 0;
+ 	                inline DtSpeed doubletapSpeed = DtSpeed::INSTANT;
 		}
 
 		inline float test;
@@ -1585,6 +1604,11 @@ inline ButtonCode_t key;
 	{
 		inline bool enabled = false;
 	}
+       namespace ShowKills
+        {
+                inline bool enabled = false;
+        }
+
 
 	namespace ShowSpectators
 	{

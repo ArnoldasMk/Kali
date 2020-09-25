@@ -1,16 +1,17 @@
 **Warning** this fork will probably contain a lot of pasted, shitty code.
-USE ALFA BRANCH
 ===================
 <p align="center">
 <img src="./Pictures/missedit.png">
 </p>
 ===================
-
+#TODO
+Fix these stupid crashes.
+Add doubletap / tickbase shift exploits 
+Fix all the grammatical errors from original MissedIt
+Improve resolver
+===================
 # MissedIT
 <b> This branch is quite brocken now I want to try test branch untill I commit that code to master thanks :)</b>
-* To get Stable Updates with Bug Fixes Use Master Branch<a href = https://github.com/HackerPolice/MissedIT >MissedIT</a>. 
-
-# It looks like we are starting to get detected. Use public forks at your own Risk! 
 
 Want to chat or play with other MissedIT users? Join us on Discord :- <a href = https://discord.gg/PDtg8hd><b>Hacker.Police Discord</b></a>
 
@@ -51,7 +52,7 @@ sudo dnf install cmake gcc-c++ gdb git libstdc++-static mesa-libGL-devel SDL2-de
 #### Download MissedIT:
 
 ```bash
-git clone --recursive https://github.com/HackerPolice/MissedIT.git
+git clone --recursive https://github.com/HackerPolice/MissedIT.git -b alfa MissedIT-Alfa
 ```
 
 ```bash
@@ -98,7 +99,7 @@ Now, go back into CS:GO, if you are in the main menu of the game you should see 
 ![this](Pictures/mainmenu-ss.png)
 
 *Note:* if you are getting crashes ( that are unrelated to game updates ) Try disabling shader precaching in your Steam Client -> Steam -> Settings -> Shader Pre-Caching. 
-
+You will need to install this font https://mega.nz/file/omZBlaBQ#AOF2CpAuWTg2Z45zMjmD6da8_hsxZMdh8IwOEZDQ0Ns to both /usr/share/fonts/TTF and (CSGODIR)/csgo/panorama/fonts/ for the weapon icon esp to work
 ## Using the hack
 
 Now that MissedIT has been injected into the game, press <kbd>Insert</kbd> on your keyboard to open the hack menu (<kbd>ALT</kbd>+<kbd>I</kbd> if you are using a laptop).

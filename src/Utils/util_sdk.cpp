@@ -1182,7 +1182,7 @@ IMaterial* Util::CreateMaterial2(std::string type, std::string texture, bool ign
     return material->CreateMaterial(materialName.c_str(), keyValues);
 }
 
-IMaterial* Util::CreateMaterial3(std::string type, std::string texture, bool ignorez, bool nofog, bool model, bool nocull, float alpha)
+IMaterial* Util::CreateMaterial3(std::string type, std::string texture, bool ignorez, bool nofog, bool model, bool nocull, float alpha, Vector color)
 {
     static int matNum = 1;
     std::stringstream materialData;
@@ -1194,7 +1194,7 @@ IMaterial* Util::CreateMaterial3(std::string type, std::string texture, bool ign
                  //"\t\"$phongboost\" \"" + std::to_string(4) + "\"\n"
                  "\t\"$envmapfresnel\" \"" + std::to_string(1) + "\"\n"
                  "\t\"$nvmapfresnelminmaxexp\" \"" + "[0 1 2]" + "\"\n"
-                 "\t\"$envmaptint\" \"" + "[0 0 1]" + "\"\n"
+                 "\t\"$envmaptint\" \"" + "[" + std::to_string(color.x) + " " + std::to_string(color.y) + " " + std::to_string(color.z) + "]" + "\"\n"
 
                  "\t\"$alpha\" \"" + std::to_string(0.8) + "\"\n"
                  "}\n" << std::flush;

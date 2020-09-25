@@ -69,7 +69,7 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
 		LagComp::CreateMove(cmd);
 		Legitbot::CreateMove(cmd);
 		Ragebot::CreateMove(cmd);
-		//Tickbase::run(cmd, CreateMove::sendPacket);
+		Tickbase::run(cmd, CreateMove::sendPacket);
 		Triggerbot::CreateMove(cmd);
 		AutoKnife::CreateMove(cmd);
     	AntiAim::CreateMove(cmd);

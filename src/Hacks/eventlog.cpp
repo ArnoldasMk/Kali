@@ -8,6 +8,7 @@
 #include "../interfaces.h"
 #include "../Utils/draw.h"
 #include "../Hooks/hooks.h"
+#include "resolver.h"
 
 std::vector<std::pair<std::string, long>> logToShow;
 long lastLogTimestamp = 0;
@@ -130,7 +131,6 @@ void Eventlog::FireGameEvent(IGameEvent* event)
 		std::string damageLog = "damage: -";
 		damageLog += std::to_string(event->GetInt(XORSTR("dmg_health")));
                 std::string consoleLog = "[eyehook] Hit ";
-
 		if ((engine->GetPlayerForUserID(hurt_player_id) == engine->GetLocalPlayer() && (engine->GetPlayerForUserID(attacker_id) != engine->GetLocalPlayer()))){
 			damageLog += XORSTR(" from ");
 
@@ -138,9 +138,10 @@ void Eventlog::FireGameEvent(IGameEvent* event)
 			engine->GetPlayerInfo(engine->GetPlayerForUserID(attacker_id), &damageFromPlayer);
 			damageLog += std::string(damageFromPlayer.name);			
 		} else if ((engine->GetPlayerForUserID(hurt_player_id) != engine->GetLocalPlayer() && (engine->GetPlayerForUserID(attacker_id) == engine->GetLocalPlayer()))){
+                IEngineClient::player_info_t damageToPlayer;            
+
 			damageLog += XORSTR(" to ");
 
-			IEngineClient::player_info_t damageToPlayer;		
 			engine->GetPlayerInfo(engine->GetPlayerForUserID(hurt_player_id), &damageToPlayer);
 			consoleLog += std::string(damageToPlayer.name);
 			consoleLog += XORSTR(" for ");

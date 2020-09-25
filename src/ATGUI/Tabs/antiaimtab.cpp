@@ -17,8 +17,10 @@ static void RageAntiAIm()
     const char* yType[] = {
         "NONE",
         "Static",
+        "Balanced",
         "Jitter",
-        "Random",
+	"JitterSwitch",
+	"JitterRandom",
     };
 
 const char* lbyType[] = {
@@ -73,7 +75,7 @@ const char* lbyType[] = {
             ImGui::PopItemWidth();
         }
 
-        if(Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Jitter)
+        if(Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Randome)
             ImGui::SliderFloat(XORSTR("##RealJitterPercentage"), &Settings::AntiAim::RageAntiAim::JitterPercent, 1, 100, "Real Jitter Ammount : %.0f perent");
     }
     else if (Settings::AntiAim::RageAntiAim::Type != RageAntiAimType::JitterAntiAim)
@@ -81,14 +83,11 @@ const char* lbyType[] = {
         ImGui::Columns(2, nullptr, false);
         {
             ImGui::ItemSize(ImVec2(0.0f, 0.0f), 0.0f);
-            ImGui::Text(XORSTR("Yaw Fake"));
-            ImGui::ItemSize(ImVec2(0.0f, 0.0f), 0.0f);
-            ImGui::Text(XORSTR("Yaw Actual"));
+            ImGui::Text(XORSTR("Yaw"));
         }
         ImGui::NextColumn();
         {
             ImGui::PushItemWidth(-1);
-            ImGui::Combo(XORSTR("##YFAKETYPE"), (int*)&Settings::AntiAim::Yaw::typeFake, yType, IM_ARRAYSIZE(yType));
             ImGui::Combo(XORSTR("##YACTUALTYPE"), (int*)& Settings::AntiAim::Yaw::typeReal, yType, IM_ARRAYSIZE(yType));
             ImGui::PopItemWidth();
         }
@@ -98,8 +97,8 @@ const char* lbyType[] = {
             ImGui::PushItemWidth(-1);
             ImGui::SliderFloat(XORSTR("##MaxDeltaPercentage"), &Settings::AntiAim::RageAntiAim::AntiAImPercent, 0, 100, "Max Delta Ammount : %.0f percent");
 
-            if(Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Jitter || Settings::AntiAim::Yaw::typeFake == AntiAimFakeType_y::Jitter)
-                ImGui::SliderFloat(XORSTR("##JitterPercentage"), &Settings::AntiAim::RageAntiAim::JitterPercent, 0, 100, "Jitter Ammount : %.0f perent"); 
+            if(Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Randome || Settings::AntiAim::Yaw::typeFake == AntiAimFakeType_y::Jitter)
+                ImGui::SliderFloat(XORSTR("##JitterPercentage"), &Settings::AntiAim::RageAntiAim::JitterPercent, 0, 100, "Jitter Ammount : %.0f"); 
          
             ImGui::PopItemWidth();
         }

@@ -3,7 +3,7 @@ project(MissedIT)
 set(CMAKE_CXX_STANDARD 17)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.0)
         message(FATAL_ERROR "Your GCC seems outdated. Go to https://github.com/AimTuxOfficial/AimTux/wiki/Updating-your-compiler for further instructions. If you have done so and still see this message, run 'git clean -fdx' and try again")
     endif()
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")

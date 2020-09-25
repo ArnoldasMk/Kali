@@ -710,6 +710,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("FakeLag")][XORSTR("randomLag")] = Settings::AntiAim::randomLag::enabled;
 
     settings[XORSTR("SlowWalk")][XORSTR("enabled")] = Settings::AntiAim::SlowWalk::enabled;
+    settings[XORSTR("SlowWalk")][XORSTR("key")] = Settings::AntiAim::SlowWalk::key;
 
     settings[XORSTR("AutoAccept")][XORSTR("enabled")] = Settings::AutoAccept::enabled;
 
@@ -1455,6 +1456,7 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("FakeLag")][XORSTR("randomLag")], &Settings::AntiAim::randomLag::enabled);
 
     GetVal(settings[XORSTR("SlowWalk")][XORSTR("enabled")], &Settings::AntiAim::SlowWalk::enabled);
+    GetButtonCode(settings[XORSTR("SlowWalk")][XORSTR("key")], &Settings::AntiAim::SlowWalk::key);
 
     GetVal(settings[XORSTR("AutoAccept")][XORSTR("enabled")], &Settings::AutoAccept::enabled);
 

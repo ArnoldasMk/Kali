@@ -70,12 +70,13 @@ void ThirdPerson::OverrideView(CViewSetup *pSetup)
 			input->m_fCameraInThirdPerson = false;
 			input->m_vecCameraOffset = Vector(0.f, 0.f, 0.f);
 		}
-		
+
 	}
 	else if(input->m_fCameraInThirdPerson)
 	{
 		input->m_fCameraInThirdPerson = false;
 		input->m_vecCameraOffset = Vector(0.f, 0.f, 0.f);
+
 	}
 
 	

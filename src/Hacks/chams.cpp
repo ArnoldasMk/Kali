@@ -14,6 +14,7 @@ IMaterial *WhiteAdditive,*WhiteAdditiveIgnoreZ;
 IMaterial *AdditiveTwo, *AdditiveTwoIgnoreZ;
 IMaterial* materialChamsPearl;
 IMaterial* materialChamsGlow;
+                Vector colro = Vector(0, 0, 1);
 
 typedef void (*DrawModelExecuteFn) (void*, void*, void*, const ModelRenderInfo_t&, matrix3x4_t*);
 
@@ -47,7 +48,7 @@ static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRen
 	IMaterial *visible_material = nullptr;
 	IMaterial *hidden_material = nullptr;
 	IMaterial *overlay_material = nullptr;
-
+	bool wap;
 
 	switch (chamsType)
 	{
@@ -56,22 +57,28 @@ static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRen
 		case ChamsType::WHITEADDTIVE :
 			visible_material = WhiteAdditive;
 			hidden_material = materialChamsFlatIgnorez;
+			wap = false;
 			break;
 		case ChamsType::FLAT:
 			visible_material = materialChamsFlat;
 			hidden_material = materialChamsFlatIgnorez;
+			wap = false;
 			break;
 		case ChamsType::ADDITIVETWO:
 			visible_material = AdditiveTwo;
 			hidden_material = AdditiveTwoIgnoreZ;
+			wap = false;
 			break;
 		case ChamsType::PEARL:
         		visible_material = materialChamsPearl;
-       	 		hidden_material = materialChamsPearl;
+			hidden_material = materialChamsPearl;
+			wap = false;
+			break;
 		case ChamsType::GLOW:
 			visible_material = materialChamsFlat;
                         hidden_material = materialChamsFlatIgnorez;
 			overlay_material = materialChamsGlow;
+			wap = true;
 			break;
 		default :
 			return;
@@ -102,6 +109,10 @@ static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRen
 
 		visible_material->AlphaModulate(Settings::ESP::Chams::allyVisibleColor.Color(entity).Value.w);
 		hidden_material->AlphaModulate(Settings::ESP::Chams::allyColor.Color(entity).Value.w);
+		colro.x = Settings::ESP::Chams::allyColor.Color(entity).Value.x;
+		colro.y = Settings::ESP::Chams::allyColor.Color(entity).Value.y;
+                colro.z = Settings::ESP::Chams::allyColor.Color(entity).Value.z;
+
 	}
 	else if (!Entity::IsTeamMate(entity, localplayer))
 	{
@@ -134,7 +145,7 @@ static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRen
 	}
 
 	modelRender->ForcedMaterialOverride(visible_material);
-		if (chamsType == ChamsType::GLOW){
+		if (wap){
                 modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, pCustomBoneToWorld);
 
 	        modelRender->ForcedMaterialOverride(overlay_material);
@@ -178,9 +189,8 @@ static void DrawFake(void* thisptr, void* context, void *state, const ModelRende
                 case ChamsType::PEARL:
                         Fake_meterial = materialChamsPearl;
 	      		break;
-		case ChamsType::GLOW:
-                        Fake_meterial = materialChamsFlat;
-                        faoverlay_material = materialChamsGlow;
+		case ChamsType::GLOWF:
+                        Fake_meterial = materialChamsGlow;
 			break;
 		default:
 			return;
@@ -364,7 +374,7 @@ void Chams::DrawModelExecute(void* thisptr, void* context, void *state, const Mo
 	if (!materialsCreated)
 	{
 	        materialChamsPearl = Util::CreateMaterial2(XORSTR("VertexLitGeneric"), XORSTR("models/inventory_items/dogtags/dogtags_outline"), false, true, true, true, 1.f);
-                materialChamsGlow = Util::CreateMaterial3(XORSTR("VertexLitGeneric"), XORSTR("csgo/materials/glowOverlay.vmt"), false, true, true, true, 1.f);
+                materialChamsGlow = Util::CreateMaterial3(XORSTR("VertexLitGeneric"), XORSTR("csgo/materials/glowOverlay.vmt"), false, true, true, true, 1.f, colro);
 
 		materialChamsFlat = Util::CreateMaterial(XORSTR("UnlitGeneric"), XORSTR("VGUI/white_additive"), false, true, true, true, true);
 		materialChamsFlatIgnorez = Util::CreateMaterial(XORSTR("UnlitGeneric"), XORSTR("VGUI/white_additive"), true, true, true, true, true);

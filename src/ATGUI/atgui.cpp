@@ -16,7 +16,7 @@
 #include "Windows/showspectators.h"
 #include "../Hacks/radar.h"
 #include "../Hacks/antiaim.h"
-
+#include "../Hacks/killLog.h"
 
 bool UI::isVisible = false;
 
@@ -95,6 +95,8 @@ void UI::SetupWindows()
 
 	PlayerList::RenderWindow();
 	ShowSpectators::RenderWindow();
+        KillLog::RenderWindow();
+
 	Radar::RenderWindow();
 }
 

@@ -100,8 +100,7 @@ void ShowSpectators::RenderWindow()
 			ImGui::Text("%s", entityInformation.name);
 			ImGui::NextColumn();
 
-			switch (*player->GetObserverMode())
-			{
+			switch (*player->GetObserverMode()) {
 				case ObserverMode_t::OBS_MODE_IN_EYE:
 					ImGui::Text(XORSTR("Perspective"));
 					break;

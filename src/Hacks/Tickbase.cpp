@@ -9,7 +9,6 @@
 
 bool canShift(int ticks, bool shiftAnyways = false)
 {
-
         C_BasePlayer* localPlayer = (C_BasePlayer*)entityList->GetClientEntity(engine->GetLocalPlayer());
         C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*)entityList->GetClientEntityFromHandle(localPlayer->GetActiveWeapon());
 
@@ -128,6 +127,10 @@ void Tickbase::run(CUserCmd* cmd, bool& sendPacket) noexcept
 {
         C_BasePlayer* localPlayer = (C_BasePlayer*)entityList->GetClientEntity(engine->GetLocalPlayer());
 
+    if (!localPlayer || !localPlayer->GetAlive()|| !Settings::Ragebot::exploits::enabled)
+        return;
+
+
     if (Settings::Ragebot::exploits::doubletapKey) {
             if (!inputSystem->IsButtonDown(Settings::Ragebot::exploits::doubletapKey))
             {
@@ -140,14 +143,15 @@ void Tickbase::run(CUserCmd* cmd, bool& sendPacket) noexcept
          Settings::Ragebot::exploits::doubletapToggle = true;
 
     constexpr auto timeToTicks = [](float time) {  return static_cast<int>(0.5f + time / globalVars->interval_per_tick); };
+const auto netchannel = GetLocalClient(-1)->m_NetChannel;
 
-//    static void* oldNetwork = nullptr;
-  //  if (auto network = INetMessage::GetNetChannel(); network && oldNetwork != network)
-   // {
-     //   oldNetwork = network;
-       // tick->ticksAllowedForProcessing = tick->maxUsercmdProcessticks;
-        //tick->chokedPackets = 0;
-    //} // Commenting out until i decide to do it.
+    static void* oldNetwork = nullptr;
+   if (auto network = netchannel; network && oldNetwork != network)
+    {
+        oldNetwork = network;
+        tick->ticksAllowedForProcessing = tick->maxUsercmdProcessticks;
+        tick->chokedPackets = 0;
+    } // Commenting out until i decide to do it.
     if (FakeLag::ticks > tick->chokedPackets)
         tick->chokedPackets = FakeLag::ticks;
 
@@ -160,17 +164,17 @@ void Tickbase::run(CUserCmd* cmd, bool& sendPacket) noexcept
     auto ticks = 0;
 
     switch (Settings::Ragebot::exploits::doubletapSpeed) {
-    case 0: //Instant
+    case DtSpeed::INSTANT: //Instant
         ticks = 16;
         break;
-    case 1: //Fast
+    case DtSpeed::FAST: //Fast
         ticks = 14;
         break;
-    case 2: //Accurate
+    case DtSpeed::ACCURATE: //Accurate
         ticks = 12;
         break;
     }
-
+//You can shift 9 ticks to do hideshots without doubletapping
     if (Settings::Ragebot::exploits::doubletap && cmd->buttons & (IN_ATTACK) && Settings::Ragebot::exploits::doubletapToggle)
         shiftTicks(ticks, cmd);
 

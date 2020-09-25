@@ -716,6 +716,8 @@ cvar->ConsoleDPrintf("[eyehook] Missed shot due to spread\n");
 		engine->SetViewAngles(cmd->viewangles);
 
 	Math::CorrectMovement(oldAngle, cmd, oldForward, oldSideMove);
+Ragebot::quickpeek(cmd);
+Ragebot::drawStartPos();
 }
 
 void Ragebot::FireGameEvent(IGameEvent* event)
