@@ -15,7 +15,7 @@ long lastHitmarkerTimestamp = 0;
 
 void Hitmarkers::Paint( ) {
 
-	if ( !Settings::ESP::enabled || Settings::ESP::Hitmarker::enabled )
+	if ( !Settings::ESP::enabled || !Settings::ESP::Hitmarker::enabled )
 		return;
 
 	if ( !engine->IsInGame() )
