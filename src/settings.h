@@ -254,11 +254,7 @@ enum class LbyMode : int
 enum class RageAntiAimType : int
 {
 	DefaultRage,
-	FakeArroundReal,
-	RealArroundFake,
-	SemiDirection,
 	FreeStand,
-	JitterAntiAim,
 };
 
 enum class LegitAAType : int
@@ -873,7 +869,7 @@ namespace Settings
 			inline float JitterPercent = 30.f;
 			inline bool atTheTarget = false;
 			inline bool SendReal = false;
-			inline RageAntiAimType Type = RageAntiAimType::RealArroundFake;
+			inline RageAntiAimType Type = RageAntiAimType::DefaultRage;
         		inline LbyMode lbym = LbyMode::Normal;
 	}
 		namespace LegitAntiAim 
@@ -1642,6 +1638,8 @@ inline ButtonCode_t key;
 		inline bool enabled = false;
 		inline int value = 9;
 		inline bool adaptive = false;
+                inline ButtonCode_t ckey;
+
 	}
 
 	namespace AutoAccept

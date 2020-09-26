@@ -3,7 +3,7 @@
 #include "../settings.h"
 #include "../interfaces.h"
 #include "../Hooks/hooks.h"
-
+#include "Tickbase.h"
 #ifndef absol
         #define absol(x) x < 0 ? x*-1 : x
 #endif
@@ -82,7 +82,22 @@ void FakeLag::CreateMove(CUserCmd* cmd)
                         FakeLag::ticks = 0;
                 }
 
+if (!inputSystem->IsButtonDown(Settings::FakeLag::ckey)){
+
                 CreateMove::sendPacket = FakeLag::ticks < Settings::FakeLag::value;
+}else {
+
+    if (!localplayer || !localplayer->GetAlive())
+        return;
+    Tickbase::tick->commandNumber = cmd->command_number;
+    Tickbase::tick->tickbase = localplayer->GetTickBase();
+    Tickbase::tick->tickshift = 16;
+    Tickbase::lastShift = cmd->command_number;
+    //Teleport kinda buggy
+    //tick->chokedPackets += ticks;
+    //recalculateTicks();
+
+}
         }
 
 

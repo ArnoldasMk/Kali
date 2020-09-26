@@ -5,6 +5,7 @@
 #include "Hacks/antiaim.h"
 #include "Hacks/eventlog.h"
 #include "Hacks/hitmarkers.h"
+#include "Hacks/hitmarkers3D.h"
 #include "Hacks/namestealer.h"
 #include "Hacks/resolver.h"
 #include "Hacks/skinchanger.h"
@@ -33,6 +34,7 @@ void EventListener::FireGameEvent(IGameEvent* event)
     Ragebot::FireGameEvent(event);
     AntiAim::FireGameEvent(event);
     Hitmarkers::FireGameEvent(event);
+    //Hitmarkers3D::FireGameEvent(event);
     Eventlog::FireGameEvent(event);
     NameStealer::FireGameEvent(event);
     VoteRevealer::FireGameEvent(event);

@@ -15,9 +15,9 @@
 #include "../Tabs/skinstab.h"
 #include "../Tabs/modelstab.h"
 #include "../Tabs/skinsandmodel.h"
-
+#include "../menu_font.h"
 bool Main::showWindow = true;
-
+//ImFont* menu_font =  ImGui::GetIO().Fonts->AddFontFromMemoryCompressedTTF(menu_font_compressed_data,menu_font_compressed_size,25);
 void Main::RenderWindow()
 {
 	if (Settings::UI::Windows::Main::reload)
@@ -39,6 +39,7 @@ void Main::RenderWindow()
 	}
 
 	static int page = 0;
+//ImGui::PushFont(menu_font);
 
 	if (ImGui::Begin(XORSTR("##MissedIt"), &Main::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar))
 	{
@@ -57,7 +58,6 @@ void Main::RenderWindow()
 			"Skins",
 			"Misc",
 		};
-//ImGui::PushFont(ftest);
 		for (int i = 0; i < IM_ARRAYSIZE(tabs); i++)
 		{
 			int distance = i == page ? 0 : i > page ? i - page : page - i;

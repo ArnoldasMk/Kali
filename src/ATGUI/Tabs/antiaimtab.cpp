@@ -29,11 +29,7 @@ const char* lbyType[] = {
 };
     const char* RageAntiAimType[] = {
         "Default Rage",
-        "Fake Arround Real",
-	    "Real Arround Fake",
-        "Semi Direction",
         "Free Stand",
-	"Jitter",
     };
     ImGui::Columns(1, nullptr, false); // Pick Rage Anti Aim type
     {
@@ -41,32 +37,13 @@ const char* lbyType[] = {
         ImGui::Combo(XORSTR("##RageAntiAimType"), (int*)&Settings::AntiAim::RageAntiAim::Type, RageAntiAimType, IM_ARRAYSIZE(RageAntiAimType));
         ImGui::PopItemWidth();
     }
-    if (Settings::AntiAim::RageAntiAim::Type == RageAntiAimType::JitterAntiAim)
-    {
-        ImGui::Columns(2, nullptr, false);
-        {
-            ImGui::ItemSize(ImVec2(0.0f, 0.0f), 0.0f);
-            ImGui::Text(XORSTR("Yaw Offset"));
-            ImGui::Checkbox(XORSTR("Pitch Jitter"), &Settings::AntiAim::RageAntiAim::pitchJitter);
-            ImGui::Checkbox(XORSTR("LBY Jitter"), &Settings::AntiAim::lbyjitter);
-
-	}
-        ImGui::NextColumn();
-        {
-            ImGui::PushItemWidth(-1);
-            ImGui::SliderFloat(XORSTR("##YawOffset"), &Settings::AntiAim::RageAntiAim::offset, 1, 360, "Yaw offset : %.0f");
-
-            ImGui::PopItemWidth();
-        }
-
-    }
 
     if (Settings::AntiAim::RageAntiAim::Type == RageAntiAimType::FreeStand)
     {
         ImGui::Columns(2, nullptr, false);
         {
             ImGui::ItemSize(ImVec2(0.0f, 0.0f), 0.0f);
-            ImGui::Text(XORSTR("Yaw Actual"));
+            ImGui::Text(XORSTR("Yaw"));
         }
         ImGui::NextColumn();
         {
@@ -74,11 +51,16 @@ const char* lbyType[] = {
             ImGui::Combo(XORSTR("##YACTUALTYPE"), (int*)& Settings::AntiAim::Yaw::typeReal, yType, IM_ARRAYSIZE(yType));
             ImGui::PopItemWidth();
         }
+   ImGui::Columns(1);
+        {
+            ImGui::PushItemWidth(-1);
 
-        if(Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Randome)
-            ImGui::SliderFloat(XORSTR("##RealJitterPercentage"), &Settings::AntiAim::RageAntiAim::JitterPercent, 1, 100, "Real Jitter Ammount : %.0f perent");
+        if(Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Randome || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::JitterSwitch || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::JitterRandom)
+            ImGui::SliderFloat(XORSTR("##RealJitterPercentage"), &Settings::AntiAim::RageAntiAim::JitterPercent, 1, 100, "Jitter Ammount : %.0f");
+	ImGui::PopItemWidth();
+	}
     }
-    else if (Settings::AntiAim::RageAntiAim::Type != RageAntiAimType::JitterAntiAim)
+    else if (Settings::AntiAim::RageAntiAim::Type == RageAntiAimType::DefaultRage)
     {
         ImGui::Columns(2, nullptr, false);
         {
@@ -95,9 +77,8 @@ const char* lbyType[] = {
         ImGui::Columns(1);
         {
             ImGui::PushItemWidth(-1);
-            ImGui::SliderFloat(XORSTR("##MaxDeltaPercentage"), &Settings::AntiAim::RageAntiAim::AntiAImPercent, 0, 100, "Max Delta Ammount : %.0f percent");
 
-            if(Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Randome || Settings::AntiAim::Yaw::typeFake == AntiAimFakeType_y::Jitter)
+    if(Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Randome || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::JitterSwitch || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::JitterRandom)
                 ImGui::SliderFloat(XORSTR("##JitterPercentage"), &Settings::AntiAim::RageAntiAim::JitterPercent, 0, 100, "Jitter Ammount : %.0f"); 
          
             ImGui::PopItemWidth();
@@ -263,6 +244,8 @@ void HvH::RenderTab()
             ImGui::SliderInt(XORSTR("##FAKELAGAMOUNT"), &Settings::FakeLag::value, 0, 100, XORSTR("Amount: %0.f"));
 			ImGui::Checkbox(XORSTR("Adaptive Fake Lag"), &Settings::FakeLag::adaptive);
 ImGui::Checkbox(XORSTR("Random Fake Lag"), &Settings::AntiAim::randomLag::enabled);
+            //UI::KeyBindButton(&Settings::FakeLag::ckey);
+
                         ImGui::Checkbox(XORSTR("Slow Walk"), &Settings::AntiAim::SlowWalk::enabled);
 if (Settings::AntiAim::SlowWalk::enabled){
             ImGui::SameLine(); 

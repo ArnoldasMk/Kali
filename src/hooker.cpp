@@ -585,9 +585,9 @@ void Hooker::FindWriteUserCmd(){
 } 
 static bool WriteUsercmdDeltaToBuffer(void* ecx, void* edx, int slot, bf_write* buffer, int from, int to, bool isnewcommand)
 {
-//    auto original = VMT::GetOriginalMethod<bool, 24>(slot, buffer, from, to, isnewcommand);
+   // auto original = clientModeVMT->GetOriginalMethod<bool, 24>(slot, buffer, from, to, isnewcommand);
     if (Tickbase::tick->tickshift <= 0)
-//        return original(ecx, slot, buffer, from, to, isnewcommand);
+     //   return original(ecx, slot, buffer, from, to, isnewcommand);
 
     if (from != -1)
         return true;
@@ -607,17 +607,16 @@ static bool WriteUsercmdDeltaToBuffer(void* ecx, void* edx, int slot, bf_write* 
 
     for (to = nextcommmand - newcommands + 1; to <= nextcommmand; to++)
     {
- //       if (!(original(ecx, slot, buffer, from, to, true)))
- //           return false;
+       //if (!(original(ecx, slot, buffer, from, to, true)))
+       //     return false;
 
         from = to;
     }
 
-    CUserCmd* lastRealCmd;// = memory->input->GetUserCmd(slot, from);
+    CUserCmd lastRealCmd = input->GetUserCmd(slot, from);
     CUserCmd fromcmd;
 
-    if (lastRealCmd)
-        fromcmd = *lastRealCmd;
+        fromcmd = lastRealCmd;
 
     CUserCmd tocmd = fromcmd;
     tocmd.tick_count += 200;
@@ -625,7 +624,7 @@ static bool WriteUsercmdDeltaToBuffer(void* ecx, void* edx, int slot, bf_write* 
 
     for (int i = newcommands; i <= totalcommands; i++)
     {
-        //WriteUserCmd(buffer, &tocmd, &fromcmd);
+        WriteUserCmd(buffer, &tocmd, &fromcmd);
         fromcmd = tocmd;
         tocmd.command_number++;
         tocmd.tick_count++;

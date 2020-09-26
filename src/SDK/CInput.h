@@ -12,5 +12,5 @@ public:
 	int m_nCameraX;
 	int m_nCameraY;
 	bool m_CameraIsOrthographic;
-//	static CUserCmd GetUserCmd(int nSlot, int sequence_number);
+	static CUserCmd GetUserCmd(int nSlot, int sequence_number);
 };

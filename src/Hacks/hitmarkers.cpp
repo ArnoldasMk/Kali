@@ -14,7 +14,8 @@ std::vector<std::pair<int, long>> damages;
 long lastHitmarkerTimestamp = 0;
 
 void Hitmarkers::Paint( ) {
-	if ( !Settings::ESP::enabled || !Settings::ESP::Hitmarker::enabled )
+
+	if ( !Settings::ESP::enabled || Settings::ESP::Hitmarker::enabled )
 		return;
 
 	if ( !engine->IsInGame() )
@@ -78,7 +79,7 @@ void Hitmarkers::Paint( ) {
 
 void Hitmarkers::FireGameEvent(IGameEvent* event)
 {
-	if (!Settings::ESP::Hitmarker::enabled)
+	if (Settings::ESP::Hitmarker::enabled)
 		return;
 
 	if (!engine->IsInGame())
@@ -114,8 +115,6 @@ void Hitmarkers::FireGameEvent(IGameEvent* event)
 	long now = Util::GetEpochTime();
 	lastHitmarkerTimestamp = now;
 	damages.insert(damages.begin(), std::pair<int, long>(event->GetInt(XORSTR("dmg_health")), now));
-//	engine->ClientCmd_Unrestricted( "invnext" );
-//      engine->ClientCmd_Unrestricted( "invprev" );
 	if( Settings::ESP::Hitmarker::Sounds::enabled ){
 		switch( Settings::ESP::Hitmarker::Sounds::sound ){
 			case Sound::SPONGEBOB:

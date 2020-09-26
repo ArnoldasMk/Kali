@@ -666,20 +666,24 @@ void Visuals::RenderTab()
 			ImGui::Columns(2, nullptr, false);
 			{
 				ImGui::Checkbox(XORSTR("Hitmarkers"), &Settings::ESP::Hitmarker::enabled);
-
+if (Settings::ESP::Hitmarker::enabled){
 				ImGui::Checkbox(XORSTR("Enemies##HITMARKERS"), &Settings::ESP::Hitmarker::enemies);
 				ImGui::Checkbox(XORSTR("Allies##HITMARKERS"), &Settings::ESP::Hitmarker::allies);
                 ImGui::Checkbox(XORSTR("Sounds##HITMARKERS"), &Settings::ESP::Hitmarker::Sounds::enabled);
                 ImGui::Checkbox(XORSTR("Damage##HITMARKERS"), &Settings::ESP::Hitmarker::Damage::enabled);
+}
             }
 			ImGui::NextColumn();
 			{
+if (Settings::ESP::Hitmarker::enabled){
+
 				ImGui::PushItemWidth(-1);
 				ImGui::SliderInt(XORSTR("##HITMARKERDUR"), &Settings::ESP::Hitmarker::duration, 250, 3000, XORSTR("Timeout: %0.f"));
 				ImGui::SliderInt(XORSTR("##HITMARKERSIZE"), &Settings::ESP::Hitmarker::size, 1, 32, XORSTR("Size: %0.f"));
 				ImGui::SliderInt(XORSTR("##HITMARKERGAP"), &Settings::ESP::Hitmarker::innerGap, 1, 16, XORSTR("Gap: %0.f"));
                 ImGui::Combo( XORSTR ( "Sounds##HITMARKERCOMBO" ), ( int* ) &Settings::ESP::Hitmarker::Sounds::sound, Sounds, IM_ARRAYSIZE( Sounds ) );
                 ImGui::PopItemWidth();
+}
 			}
 ImGui::Separator();
 			ImGui::Text(XORSTR("Event logger"));

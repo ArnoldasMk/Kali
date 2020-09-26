@@ -950,6 +950,7 @@ void Settings::LoadConfig(std::string path)
 	GetVal(settings[XORSTR("Triggerbot")][XORSTR("RandomDelay")][XORSTR("highBound")], &Settings::Triggerbot::RandomDelay::highBound);
     
     GetVal( settings[XORSTR("AntiAim")][XORSTR("Type")], (int*)&Settings::AntiAim::Type::antiaimType );
+    GetVal( settings[XORSTR("AntiAim")][XORSTR("Yaw")][XORSTR("type")], (int*)&Settings::AntiAim::Yaw::typeReal);
 
     GetVal(settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("no_enemy")], &Settings::AntiAim::AutoDisable::noEnemy);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("knife_held")], &Settings::AntiAim::AutoDisable::knifeHeld);

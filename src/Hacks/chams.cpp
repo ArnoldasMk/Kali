@@ -112,7 +112,6 @@ static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRen
 		colro.x = Settings::ESP::Chams::allyColor.Color(entity).Value.x;
 		colro.y = Settings::ESP::Chams::allyColor.Color(entity).Value.y;
                 colro.z = Settings::ESP::Chams::allyColor.Color(entity).Value.z;
-
 	}
 	else if (!Entity::IsTeamMate(entity, localplayer))
 	{
