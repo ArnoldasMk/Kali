@@ -1527,6 +1527,9 @@ static void         Decode85(const unsigned char* src, unsigned char* dst)
 ImFont* ImFontAtlas::AddFontDefault(const ImFontConfig* font_cfg_template)
 {
     ImFontConfig font_cfg = font_cfg_template ? *font_cfg_template : ImFontConfig();
+    ImGuiIO& io = ImGui::GetIO();
+    ImFont* font2 = io.Fonts->AddFontFromFileTTF("/usr/share/fonts/TTF/Rudac-Bold.ttf", 14.0f);
+    return font2;
     if (!font_cfg_template)
     {
         font_cfg.OversampleH = font_cfg.OversampleV = 1;
@@ -1538,7 +1541,7 @@ ImFont* ImFontAtlas::AddFontDefault(const ImFontConfig* font_cfg_template)
     const char* ttf_compressed_base85 = GetDefaultCompressedFontDataTTFBase85();
     ImFont* font = AddFontFromMemoryCompressedBase85TTF(ttf_compressed_base85, font_cfg.SizePixels, &font_cfg, GetGlyphRangesDefault());
     font->DisplayOffset.y = 1.0f;
-    return font;
+    //return font;
 }
 
 ImFont* ImFontAtlas::AddFontFromFileTTF(const char* filename, float size_pixels, const ImFontConfig* font_cfg_template, const ImWchar* glyph_ranges)

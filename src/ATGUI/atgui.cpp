@@ -7,6 +7,8 @@
 #include "../settings.h"
 #include "../Utils/xorstring.h"
 #include "menu_font.h"
+#include "../FGUI/FGUI.hpp"
+#include "../FGUI/fgui_menu.h"
 
 #include "Windows/colors.h"
 #include "Windows/configs.h"
@@ -54,25 +56,6 @@ bool UI::DrawImWatermark()
             style.WindowBorderSize = 0.0f;
     if ( ImGui::Begin( XORSTR("##mainFrame"), (bool*)false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize ) ) ;
     {
-//		Draw::ImText( ImVec2( 20.f, 10.f ), ImColor( 255, 255, 255, 255 ), XORSTR( "MissedIT | FPS :" ), nullptr, 0.0f, nullptr,
-//	                ImFontFlags_Outline );
-//		int fps = static_cast< int >( 1.f / globalVars->frametime );
-//		std::string fps_string = std::to_string(fps);
-//		Draw::ImText( ImVec2( 140.f, 10.f ), ImColor( 255, 255, 255, 255 ), fps_string.c_str() , nullptr, 0.0f, nullptr,
-  //                	ImFontFlags_Outline );
-//                Draw::AddRectFilled(1653 + 73, 2, 1653 + 260, 30, ImColor(40, 40, 40, 225));
-  //              Draw::AddRectFilled(1653 + 5 + 73, 1 + 5, 1653 + 255, 30 - 5, ImColor(10, 10, 10, 225));
-    //            Draw::AddRect(1653 - 1 + 73, 1, 1653 + 261, 31, ImColor(200, 200, 200, 50));
-      //          Draw::AddRect(1652 + 5 + 73, 1 + 5, 1653 + 256, 31 - 5, ImColor(200, 200, 200, 50));
-        //        Draw::AddLine(1653 + 6 + 73, 1 + 5, 1653 + 254, 1 + 5, Settings::ESP::Chams::Arms::color.Color());
-//int fps = static_cast< int >( 1.f / globalVars->frametime );
-  //            std::string fps_string = std::to_string(fps);
-//std::string name = "eyehook | " + fps_string + " fps | 39ms";
-//std::string name = "eye     | " + fps_string + " fps | 39ms";
-
-//Draw::AddText(1653 + 10 + 73, 11, name.c_str(), ImColor( 255, 255, 255, 255 ) );
-//Draw::AddText(1653 + 10 + 73 + 21, 11, "hook", ImColor( 255, 166, 14, 255 ) );
-		
 		ImGui::End();
 	}
 
@@ -85,11 +68,14 @@ void UI::SetupWindows()
 	if (UI::isVisible)
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2( (size.x - 960)/2,(size.x - 645)/2));
+ImGui::ShowStyleEditor();
+
 		//MainHeader::RenderWindow();
 		Main::RenderWindow();
 		ImGui::PopStyleVar();
 		Configs::RenderWindow();
 		// Colors::RenderWindow();
+
 	}
 
 	PlayerList::RenderWindow();

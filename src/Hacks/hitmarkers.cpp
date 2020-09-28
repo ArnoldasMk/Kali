@@ -79,7 +79,7 @@ void Hitmarkers::Paint( ) {
 
 void Hitmarkers::FireGameEvent(IGameEvent* event)
 {
-	if (Settings::ESP::Hitmarker::enabled)
+	if (!Settings::ESP::Hitmarker::enabled)
 		return;
 
 	if (!engine->IsInGame())

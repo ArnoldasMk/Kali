@@ -459,7 +459,6 @@ NameChanger::changeName(false, res.c_str(), 5.0f);
 			ImGui::Separator();
 			ImGui::Columns(2, nullptr, true);
 			{
-				ImGui::Checkbox(XORSTR("Fake Lag"), &Settings::FakeLag::enabled);
 				ImGui::Checkbox(XORSTR("Adaptive Fake Lag"), &Settings::FakeLag::adaptive);
 				ImGui::Checkbox(XORSTR("Auto Accept"), &Settings::AutoAccept::enabled);
 				ImGui::Checkbox(XORSTR("Autoblock"), &Settings::Autoblock::enabled);
@@ -469,14 +468,10 @@ NameChanger::changeName(false, res.c_str(), 5.0f);
 				ImGui::Checkbox(XORSTR("Disable post-processing"), &Settings::DisablePostProcessing::enabled);
 				ImGui::Checkbox(XORSTR("No Duck Cooldown"), &Settings::NoDuckCooldown::enabled);
                                 ImGui::Checkbox(XORSTR("Silent Walk"), &Settings::SilentWalk::enabled);
-		                ImGui::Checkbox(XORSTR("Fake Walk"), &Settings::FakeWalk::enabled);
 
 			}
 			ImGui::NextColumn();
 			{
-				ImGui::PushItemWidth(-1);
-				ImGui::SliderInt(XORSTR("##FAKELAGAMOUNT"), &Settings::FakeLag::value, 0, 16, XORSTR("Amount: %0.f"));
-				ImGui::PopItemWidth();
 				ImGui::Checkbox(XORSTR("Show Ranks"), &Settings::ShowRanks::enabled);
 				ImGui::Checkbox(XORSTR("Show Votes"), &Settings::voterevealer::enabled);
 				UI::KeyBindButton(&Settings::Autoblock::key);
@@ -486,7 +481,6 @@ NameChanger::changeName(false, res.c_str(), 5.0f);
 				ImGui::Checkbox(XORSTR("Show Spectator list"), &Settings::ShowSpectators::enabled);
 				ImGui::Checkbox(XORSTR("Show Player list"), &PlayerList::showWindow);
 			        ImGui::Checkbox(XORSTR("AWP Quick Switch"), &Settings::QuickSwitch::enabled);
-		                UI::KeyBindButton(&Settings::FakeWalk::key);
 
 			}
 			ImGui::Columns(1);

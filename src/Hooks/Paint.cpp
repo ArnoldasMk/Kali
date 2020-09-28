@@ -12,7 +12,7 @@
 #include "../Hacks/recoilcrosshair.h"
 #include "../Hacks/hitmarkers.h"
 #include "../Hacks/hitmarkers3D.h"
-
+#include "../FGUI/fgui_menu.h"
 #include "../Hacks/eventlog.h"
 #include "../Hacks/snipercrosshair.h"
 #include "../Hacks/angleindicator.h"
@@ -57,6 +57,7 @@ void Hooks::Paint(void* thisptr, PaintMode_t mode)
         Eventlog::Paint();
         AngleIndicator::Paint();
         GrenadePrediction::Paint();
+        menu::RenderWindow();
 
         if( Settings::ESP::backend == DrawingBackend::SURFACE ){
             StartDrawing(surface);

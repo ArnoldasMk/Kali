@@ -1,3 +1,6 @@
+#define FGUI_IMPLEMENTATION // make sure this is defined before
+                            // you include the header file
+#include "FGUI/FGUI.hpp"
 #include <thread>
 
 #include "hooker.h"

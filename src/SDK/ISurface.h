@@ -52,6 +52,13 @@ public:
 		return getvfunc<oDrawOutlinedRect>(this, 18)(this, x0, y0, x1, y1);
 	}
 
+	void DrawFilledRectFade(int x, int y, int w, int h, unsigned int alpha1, unsigned int alpha2, bool is_horizontal) {
+
+		typedef void (* oDrawFilledRectFade)(void*, int, int, int, int, int, int, bool);
+                return getvfunc<oDrawFilledRectFade>(this, 18)(this, x, y, w, h, alpha1, alpha2, is_horizontal);
+
+	}
+
 	void DrawLine(int x0, int y0, int x1, int y1)
 	{
 		typedef void (* oDrawLine)(void*, int, int, int, int);

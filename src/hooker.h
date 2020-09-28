@@ -42,4 +42,6 @@ namespace Hooker
 	void FindAbsFunctions();
 	void FindItemSystem();
  	void FindWriteUserCmd();
+        void FindRenderBeams();
+
 }

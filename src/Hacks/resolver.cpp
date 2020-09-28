@@ -167,8 +167,8 @@ void Resolver::FrameStageNotify(ClientFrameStage_t stage)
 
 	if (stage == ClientFrameStage_t::FRAME_NET_UPDATE_POSTDATAUPDATE_START)
 	{
-		
 
+		bool Pitch = Settings::Resolver::rPitch;
 		int maxClient = engine->GetMaxClients();
 		for (int i = 1; i < maxClient; ++i)
 		{
@@ -224,7 +224,6 @@ void Resolver::FrameStageNotify(ClientFrameStage_t stage)
 					default:
 						break;
 				}
-														
 			}
 			else
             {
@@ -243,9 +242,12 @@ void Resolver::FrameStageNotify(ClientFrameStage_t stage)
   						 player->GetAnimState()->goalFeetYaw = NormalizeAsYaw(GetAngle(player) - fuck);
 						break;
 					case 1:
+						//if (Pitch)
+						//player->GetEyeAngles()->x -= 89.f
 						break;
 					case 2:
 						player->GetAnimState()->goalFeetYaw = trueDelta == 0 ? player->GetEyeAngles( )->y - 30.f :  player->GetEyeAngles( )->y + GetPercentVal(trueDelta, 60);
+
 						break;
 					case 3:
 						player->GetEyeAngles()->y = trueDelta <= 0 ? player->GetEyeAngles( )->y - 30.f : player->GetEyeAngles( )->y + 30.f;
@@ -278,25 +280,6 @@ void Resolver::FrameStageNotify(ClientFrameStage_t stage)
 						break;
 										}
 										}
-				// switch(Resolver::players[player->GetIndex()].MissedCount)
-				// {
-				// 	case 0:
-				// 		player->GetEyeAngles()->y = trueDelta == 0 ? player->GetEyeAngles( )->y - 30.f : player->GetEyeAngles( )->y + trueDelta;
-				// 		break;
-				// 	case 1:
-				// 		break;
-				// 	case 2:
-				// 		player->GetAnimState()->goalFeetYaw = trueDelta == 0 ? player->GetEyeAngles( )->y - 30.f :  player->GetEyeAngles( )->y + GetPercentVal(trueDelta, 60);
-				// 		break;
-				// 	case 3:
-				// 		player->GetEyeAngles()->y = trueDelta <= 0 ? player->GetEyeAngles( )->y - 30.f : player->GetEyeAngles( )->y + 30.f;
-				// 		break;
-				// 	case 4:
-				// 		player->GetEyeAngles()->y += trueDelta <= 0 ? player->GetEyeAngles( )->y - RANDOME_FLOAT(35.f) : player->GetEyeAngles( )->y + RANDOME_FLOAT(35.f);
-				// 		break;
-				// 	default:
-				// 		break;
-				// }
 
             }	
 			}

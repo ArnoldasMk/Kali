@@ -15,6 +15,7 @@
 #include "../SDK/CPlayerResource.h"
 #include "resolver.h"
 #include "../ATGUI/texture.h"
+#include "../ATGUI/atgui.h"
 #include "../Resources/tux.h"
 #include "antiaim.h"
 #include "Tickbase.h"
@@ -494,18 +495,18 @@ int lag = TIME_TO_TICKS(player->GetSimulationTime() - player->GetOldSimulationTi
                 int woop = lag;
 std::string bombStr = std::to_string(woop );
 
-                Draw::AddRectFilled(1653 + 73, 2, 1653 + 260, 30, ImColor(40, 40, 40, 225));
-                Draw::AddRectFilled(1653 + 5 + 73, 1 + 5, 1653 + 255, 30 - 5, ImColor(10, 10, 10, 225));
-                Draw::AddRect(1653 - 1 + 73, 1, 1653 + 261, 31, ImColor(200, 200, 200, 50));
-                Draw::AddRect(1652 + 5 + 73, 1 + 5, 1653 + 256, 31 - 5, ImColor(200, 200, 200, 50));
-                Draw::AddLine(1653 + 6 + 73, 1 + 5, 1653 + 254, 1 + 5, Settings::ESP::Watermark::color.Color());
+                Draw::AddRectFilled(1653 + 73 + 50, 2, 1653 + 260 , 30, ImColor(40, 40, 40, 225));
+                Draw::AddRectFilled(1653 + 5 + 73 + 50, 1 + 5, 1653 + 255 , 30 - 5, ImColor(10, 10, 10, 225));
+                Draw::AddRect(1653 - 1 + 73 + 50, 1, 1653 + 261 , 31, ImColor(200, 200, 200, 50));
+                Draw::AddRect(1652 + 5 + 73 + 50, 1 + 5, 1653 + 256  , 31 - 5, ImColor(200, 200, 200, 50));
+                Draw::AddLine(1653 + 6 + 73 + 50 , 1 + 5, 1653 + 254 , 1 + 5, Settings::ESP::Watermark::color.Color());
                 int fps = static_cast< int >( 1.f / globalVars->frametime );
                 std::string fps_string = std::to_string(fps);
 //std::string name = "eyehook | " + fps_string + " fps | 39ms";
-std::string name = "eye     | " + fps_string + " fps | " + bombStr + "FL";
+std::string name = "eye          | " + fps_string + " fps | " + bombStr + "FL";
 
-Draw::AddText(1653 + 10 + 73, 11, name.c_str(), ImColor( 255, 255, 255, 255 ) );
-Draw::AddText(1653 + 10 + 73 + 21, 11, "hook", ImColor( 255, 166, 14, 255 ) );
+Draw::AddText(1653 + 10 + 73 + 50, 11, name.c_str(), ImColor( 255, 255, 255, 255 ) );
+Draw::AddText(1653 + 7.9 + 73 + 21 + 50, 11, "hook", ImColor( 255, 166, 14, 255 ) );
 }
 
 static void DrawEntity( C_BaseEntity* entity, const char* string, ImColor color ) {
@@ -948,41 +949,41 @@ Vector2D nameSize = Draw::GetTextSize(XORSTR("AntiAim Inverter [Toggled]"), esp_
     Draw::AddLine(x, c, x + nameSize.x - 5, c, Settings::ESP::Watermark::color.Color());
 
 if (inputSystem->IsButtonDown(Settings::Autoblock::key) && Settings::Autoblock::enabled){
-                Draw::AddText( x + 1, y + 1, "AutoBlock  [Holding]", ImColor( 255, 255, 255, 255 ) );
+                Draw::AddText( x + 2, y + 1, "AutoBlock  [Holding]", ImColor( 255, 255, 255, 255 ) );
 y = y + 10;
 }
 if (inputSystem->IsButtonDown(Settings::AntiAim::SlowWalk::key) && Settings::AntiAim::SlowWalk::enabled){
-                Draw::AddText( x + 1, y + 2, "SlowWalk  [Holding]", ImColor( 255, 255, 255, 255 ) );
+                Draw::AddText( x + 2, y + 2, "SlowWalk  [Holding]", ImColor( 255, 255, 255, 255 ) );
 y = y + 10;
 }
 if (Settings::AntiAim::RageAntiAim::inverted && Settings::AntiAim::RageAntiAim::enable || Settings::AntiAim::LegitAntiAim::inverted){
-                Draw::AddText( x + 1, y + 3, "AA Inverter [Toggled]", ImColor( 255, 255, 255, 255 ) );
+                Draw::AddText( x + 2, y + 3, "AA Inverter [Toggled]", ImColor( 255, 255, 255, 255 ) );
 y = y + 10;
 }
 if (inputSystem->IsButtonDown(Settings::AntiAim::FakeDuck::fakeDuckKey) && Settings::AntiAim::FakeDuck::enabled){
-                Draw::AddText( x + 1, y + 4, "FakeDuck  [Holding]", ImColor( 255, 255, 255, 255 ) );
+                Draw::AddText( x + 2, y + 4, "FakeDuck  [Holding]", ImColor( 255, 255, 255, 255 ) );
 y = y + 10;
 }
 if (inputSystem->IsButtonDown(Settings::Ragebot::quickpeek::key) && Settings::Ragebot::quickpeek::enabled){
-                Draw::AddText( x + 1, y + 5, "QuickPeek [Holding]", ImColor( 255, 255, 255, 255 ) );
+                Draw::AddText( x + 2, y + 5, "QuickPeek [Holding]", ImColor( 255, 255, 255, 255 ) );
 y = y + 10;
 }
 if (AntiAim::ManualAntiAim::alignLeft && Settings::AntiAim::ManualAntiAim::Enable){
-                Draw::AddText( x + 1, y + 5, "Manual AA [LEFT]", ImColor( 255, 255, 255, 255 ) );
+                Draw::AddText( x + 2, y + 5, "Manual AA [LEFT]", ImColor( 255, 255, 255, 255 ) );
 y = y + 10;
 }else if (AntiAim::ManualAntiAim::alignBack && Settings::AntiAim::ManualAntiAim::Enable){
-                Draw::AddText( x + 1, y + 5, "Manual AA [BACK]", ImColor( 255, 255, 255, 255 ) );
+                Draw::AddText( x + 2, y + 5, "Manual AA [BACK]", ImColor( 255, 255, 255, 255 ) );
 y = y + 10;
 }else if (AntiAim::ManualAntiAim::alignRight && Settings::AntiAim::ManualAntiAim::Enable){
-                Draw::AddText( x + 1, y + 5, "Manual AA [RIGHT]", ImColor( 255, 255, 255, 255 ) );
+                Draw::AddText( x + 2, y + 5, "Manual AA [RIGHT]", ImColor( 255, 255, 255, 255 ) );
 y = y + 10;
 }
 if ( Settings::Resolver::resolveAll && Settings::Resolver::manual && Settings::Resolver::forcebrute){
-                Draw::AddText( x + 1, y + 5, "Resolver Override [BRUTE]", ImColor( 255, 255, 255, 255 ) );
+                Draw::AddText( x + 2, y + 5, "Resolver Override [BRUTE]", ImColor( 255, 255, 255, 255 ) );
 y = y + 10;
 }
 if ( Settings::Ragebot::exploits::doubletapToggle){
-                Draw::AddText( x + 1, y + 5, "Double Tap [TOGGLED]", ImColor( 255, 255, 255, 255 ) );
+                Draw::AddText( x + 2, y + 5, "Double Tap [TOGGLED]", ImColor( 255, 255, 255, 255 ) );
 y = y + 10;
 }
 
@@ -1121,7 +1122,10 @@ static void DrawPlayerText( C_BasePlayer* player, C_BasePlayer* localplayer, int
 	//}
 	//}
 	if( Settings::Resolver::resolveAll && !(Entity::IsTeamMate(player,localplayer)) && Settings::Resolver::manual){
- 		                std::string bombStr = "Max Desync Delta " + std::to_string(AntiAim::GetMaxDelta(player->GetAnimState()));
+                                std::string bombStr = "Max Desync Delta " + std::to_string(player->GetEyeAngles()->x);
+
+// 		                std::string bombStr = "Max Desync Delta " + std::to_string(AntiAim::GetMaxDelta(player->GetAnimState()));
+
 		Vector2D rankSize = Draw::GetTextSize( bombStr.c_str(), esp_font );
                 Draw::AddText( ( x + ( w / 2 ) - ( rankSize.x / 2 ) ),( y - ( textSize.y * lineNum ) - nameOffset ), bombStr.c_str(), Entity::IsTeamMate(player, localplayer) ? Settings::ESP::allyInfoColor.Color() : Settings::ESP::enemyInfoColor.Color() );
                 lineNum++;

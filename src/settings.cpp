@@ -259,6 +259,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("Triggerbot")][XORSTR("RandomDelay")][XORSTR("lowBound")] = Settings::Triggerbot::RandomDelay::lowBound;
 	settings[XORSTR("Triggerbot")][XORSTR("RandomDelay")][XORSTR("highBound")] = Settings::Triggerbot::RandomDelay::highBound;
 
+	settings[XORSTR("AntiAim")][XORSTR("pitchtype")] = (int) Settings::AntiAim::pitchtype;
     settings[XORSTR("AntiAim")][XORSTR("Type")] = (int)Settings::AntiAim::Type::antiaimType;
     settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("no_enemy")] = Settings::AntiAim::AutoDisable::noEnemy;
     settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("knife_held")] = Settings::AntiAim::AutoDisable::knifeHeld;
@@ -334,6 +335,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("Resolver")][XORSTR("manual")] = Settings::Resolver::manual;
     settings[XORSTR("Resolver")][XORSTR("goalFeetYaw")] = Settings::Resolver::goalFeetYaw;
     settings[XORSTR("Resolver")][XORSTR("EyeAngles")] = Settings::Resolver::EyeAngles;
+    settings[XORSTR("Resolver")][XORSTR("rPitch")] = Settings::Resolver::rPitch;
+
     LoadColor(settings[XORSTR("ESP")][XORSTR("manualAAColor")], Settings::ESP::manualAAColor);
     settings[XORSTR("Resolver")][XORSTR("Type")] = (int)Settings::Resolver::resolverType;
 
@@ -951,7 +954,7 @@ void Settings::LoadConfig(std::string path)
     
     GetVal( settings[XORSTR("AntiAim")][XORSTR("Type")], (int*)&Settings::AntiAim::Type::antiaimType );
     GetVal( settings[XORSTR("AntiAim")][XORSTR("Yaw")][XORSTR("type")], (int*)&Settings::AntiAim::Yaw::typeReal);
-
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("Pitchtype")], (int*)&Settings::AntiAim::pitchtype);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("no_enemy")], &Settings::AntiAim::AutoDisable::noEnemy);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("knife_held")], &Settings::AntiAim::AutoDisable::knifeHeld);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("FakeDuck")][XORSTR("enabled")], &Settings::AntiAim::FakeDuck::enabled);
@@ -1028,6 +1031,7 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("enabled")], &Settings::AntiAim::LBYBreaker::enabled);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("offset")], &Settings::AntiAim::LBYBreaker::offset);
     GetVal(settings[XORSTR("Resolver")][XORSTR("resolve_allAP")], &Settings::Resolver::resolveAllAP);
+    GetVal(settings[XORSTR("Resolver")][XORSTR("rPitch")], &Settings::Resolver::rPitch);
 
     GetVal(settings[XORSTR("Resolver")][XORSTR("resolve_all")], &Settings::Resolver::resolveAll);
     GetVal(settings[XORSTR("Resolver")][XORSTR("manual")], &Settings::Resolver::manual);

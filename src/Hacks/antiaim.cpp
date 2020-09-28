@@ -890,24 +890,24 @@ static void FreeStand(C_BasePlayer *const localplayer, QAngle& angle, CUserCmd* 
    // AntiAim::fakeAngle = AntiAim::realAngle = angle;
 }
 
-static void DoAntiAimX(QAngle& angle)   
+static void DoAntiAimX(QAngle& angle, CUserCmd* cmd)
 { 
-    if (Settings::AntiAim::RageAntiAim::pitchJitter){
-//    if(AntiAim::bSend)
-  //  {
- float randNum = (rand()%(-70-(-89) + 1) + -89);
- AntiAim::fakeAngle.x = angle.x = -540;
-
-//	}
-//	else{
-  //  AntiAim::realAngle.x = angle.x = 89.f;
-//		}
-	}
-	else{
-    AntiAim::fakeAngle.x = AntiAim::realAngle.x = angle.x = 89.f;
-	}
+ switch ( Settings::AntiAim::pitchtype)
+    {
+        case AntiAimType_X::STATIC_UP:
+            angle.x = -89.0f;
+            break;
+        case AntiAimType_X::STATIC_DOWN:
+            angle.x = 89.0f;
+            break;
+	case AntiAimType_X::FRONT:
+            angle.x = 0.0f;
+            break;
+        case AntiAimType_X::FRONT_FAKE:
+            cmd->viewangles.x = -1080.f;
+            break;
 }
-
+}
 static void DoLegitAntiAim(C_BasePlayer *const localplayer, QAngle& angle, bool& bSend, CUserCmd* cmd)
 {
     if (!localplayer->GetAlive() || !localplayer)
@@ -1143,7 +1143,7 @@ if( Settings::AntiAim::LBYBreaker::enabled ){
                 break;
         }       
 
-        DoAntiAimX(angle); // changing the x View Angle
+        DoAntiAimX(angle, cmd); // changing the x View Angle
  if (Settings::AntiAim::airspin::enabled) {
 	AirAntiAim(localplayer,cmd);
 	}

@@ -535,58 +535,30 @@ void Hooker::FindItemSystem()
 }
 
 void Hooker::FindWriteUserCmd(){
-	// 8B 46 04 				mov     eax, [esi+4]
-	// 89 44 24 08 				mov     [esp+8], eax
-	// 8B 43 04 				mov     eax, [ebx+4]
-	// C7 04 24 2F 32 00 01 	mov     dword ptr [esp]
-	// 89 44 24 04 				mov     [esp+4], eax
-	// E8 71 11 30 05 			call    ConDMsg
-	// E9  36 FD FF FF			jmp     loc_6EF7B2
+//                 push    ebp
+//                 mov     ebp, esp
+//                 push    edi
+//                 push    esi
+//                 push    ebx
+//                 sub     esp, 2Ch
+//                 mov     eax, ds:dword_1528EDC
+//                 mov     edi, [ebp+arg_0]
+//                 mov     esi, [ebp+arg_4]
+//                 mov     ebx, [ebp+arg_8]
+        uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
+                                                                                                                                (unsigned char*) XORSTR("\x55\x89\xE5\x57\x56\x53\x00\x00\x00\x00\x00\x00\x00\x00\x8B\x7D\x08\x8B\x75\x0C\x8B\x5D\x10"),
+                                                                                                                                XORSTR("xxxxxx????????xxxxxxxxx"));
+//12
+        //func_address += 7;
+        WriteUserCmd = reinterpret_cast<WriteUserCmdFn>(func_address);
 
-	// 8B 46 04 89 44 24 08 8B 43 04 C7 04 24 2F 32 00 01 89 44 24 04 E8 71 11 30 05 E9  36 FD FF FF
-
-	// 57 72 69 
-	// 74 65 55 
-	// 73 65 
-	// 72 63 
-	// 6D 64 
-	// 3A 20 
-	// 66 72 
-	// 6F 6D 3D 25
-	// 64 20 74 
-	// 6F 3D 25 
-	// 64 0A 00
-
-	uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
-																(unsigned char*) XORSTR("\x57\x00\x00"
-                                                                                        "\x74\x00\x00"
-																						"\x73\x00"
-																						"\x72\x00"
-																						"\x6D\x00"
-																						"\x3A\x00"
-																						"\x6F\x00\x00\x00"
-																						"\x64\x00\x00"
-																						"\x6F\x00\x00"
-																						"\x64\x00\x00"),
-																XORSTR("x??"
-                                                                        "x??"
-																		"x?"
-																		"x?"
-																		"x?"
-																		"x?"
-																		"x???"
-																		"x??"
-																		"x??"
-																		"x??" ));
-
-	WriteUserCmd = reinterpret_cast<WriteUserCmdFn>(func_address);																		   
-
-	// 'WriteUsercmd: from=%d to=%d',0Ah,0	
-} 
+        // 'WriteUsercmd: from=%d to=%d',0Ah,0  
+}
 static bool WriteUsercmdDeltaToBuffer(void* ecx, void* edx, int slot, bf_write* buffer, int from, int to, bool isnewcommand)
 {
    // auto original = clientModeVMT->GetOriginalMethod<bool, 24>(slot, buffer, from, to, isnewcommand);
     if (Tickbase::tick->tickshift <= 0)
+	return false;
      //   return original(ecx, slot, buffer, from, to, isnewcommand);
 
     if (from != -1)
