@@ -137,10 +137,6 @@ void Hooker::FindIClientMode()
 	clientMode = GetClientMode();
 }
 
-//void Hooker::WriteUserCmd()
-//{
-//     WriteUsercmd = PatternFinder::FindPatternInModule("client_client.so", XORSTR("\x55\x8B\xEC\x83\xE4\xF8\x51\x53\x56\x8B\xD9\x8B\x0D"), XORSTR("xxxxxxxxxxxxxxxxxx"));
-//}
 void Hooker::FindGlobalVars()
 {
 	uintptr_t HudUpdate = reinterpret_cast<uintptr_t>(getvtable(client)[11]);
@@ -545,14 +541,15 @@ void Hooker::FindWriteUserCmd(){
 //                 mov     edi, [ebp+arg_0]
 //                 mov     esi, [ebp+arg_4]
 //                 mov     ebx, [ebp+arg_8]
-        uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
-                                                                                                                                (unsigned char*) XORSTR("\x55\x89\xE5\x57\x56\x53\x00\x00\x00\x00\x00\x00\x00\x00\x8B\x7D\x08\x8B\x75\x0C\x8B\x5D\x10"),
-                                                                                                                                XORSTR("xxxxxx????????xxxxxxxxx"));
-//12
-        //func_address += 7;
-        WriteUserCmd = reinterpret_cast<WriteUserCmdFn>(func_address);
+uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
+                                                                (unsigned char*) XORSTR("\x41\x8B\x54\x24\x08"
+                                                                                    "\x48\x8D\x00\x00\x00\x00\x00"),
+                                                                XORSTR("xxxxx"
+                                                                        "xx?????"));
 
-        // 'WriteUsercmd: from=%d to=%d',0Ah,0  
+    func_address += 6;
+    func_address = GetAbsoluteAddress(func_address, 1, 6);
+    WriteUserCmd = reinterpret_cast<WriteUserCmdFn>(func_address);
 }
 static bool WriteUsercmdDeltaToBuffer(void* ecx, void* edx, int slot, bf_write* buffer, int from, int to, bool isnewcommand)
 {
@@ -596,7 +593,7 @@ static bool WriteUsercmdDeltaToBuffer(void* ecx, void* edx, int slot, bf_write* 
 
     for (int i = newcommands; i <= totalcommands; i++)
     {
-        WriteUserCmd(buffer, &tocmd, &fromcmd);
+//        WriteUserCmd(buffer, &tocmd, &fromcmd);
         fromcmd = tocmd;
         tocmd.command_number++;
         tocmd.tick_count++;
