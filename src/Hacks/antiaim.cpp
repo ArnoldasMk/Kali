@@ -355,16 +355,18 @@ static void DefaultRageAntiAim(C_BasePlayer *const localplayer, QAngle& angle, C
     if (Settings::AntiAim::ManualAntiAim::Enable)
     {
         if (AntiAim::ManualAntiAim::alignLeft) {
-            AntiAim::realAngle.y = AntiAim::fakeAngle.y = angle.y += 70.f;
+            angle.y += 70.f;
             return;
         } else if (AntiAim::ManualAntiAim::alignBack) {
-            AntiAim::realAngle.y = AntiAim::fakeAngle.y = angle.y -= 180.f;
+            angle.y -= 180.f;
             return;
         } else if (AntiAim::ManualAntiAim::alignRight) {
-            AntiAim::realAngle.y = AntiAim::fakeAngle.y = angle.y -= 70.f;
+            angle.y -= 70.f;
             return;
         }
-    }
+    }else {
+       angle.y -= 180.f;
+}
 
     static bool buttonToggle = false;
     if ( inputSystem->IsButtonDown(InvertKey) && !buttonToggle )
@@ -375,7 +377,6 @@ static void DefaultRageAntiAim(C_BasePlayer *const localplayer, QAngle& angle, C
 	else if ( !inputSystem->IsButtonDown(InvertKey) && buttonToggle)
 		buttonToggle = false;
 if (Settings::AntiAim::RageAntiAim::lbym == LbyMode::Normal){
-       angle.y -= 180.f;
         bool sw = false;
 
         switch (Settings::AntiAim::Yaw::typeReal)
@@ -796,17 +797,17 @@ static void FreeStand(C_BasePlayer *const localplayer, QAngle& angle, CUserCmd* 
     {
         if (alignLeft)
         {
-            AntiAim::realAngle.y = AntiAim::fakeAngle.y = angle.y += 70.f;
+            angle.y += 70.f;
             return;
         }
         else if (alignBack)
         {
-            AntiAim::realAngle.y = AntiAim::fakeAngle.y = angle.y -= 180.f;
+            angle.y -= 180.f;
             return;
         }
         else if (alignRight)
         {
-            AntiAim::realAngle.y = AntiAim::fakeAngle.y = angle.y -= 70.f;
+            angle.y -= 70.f;
             return;
         }
     }
@@ -839,10 +840,10 @@ static void FreeStand(C_BasePlayer *const localplayer, QAngle& angle, CUserCmd* 
                 break;
 
             case AntiAimRealType_Y::Static:
-                should_sidemove = true;
+	        should_sidemove = true;
                 if (!AntiAim::bSend)
-                AntiAim::fakeAngle.y = angle.y -= inverted ? 58.f : -58.f;
-		AntiAim::realAngle.y = AntiAim::fakeAngle.y - inverted ? 58.f : -58.f;
+                AntiAim::fakeAngle.y = angle.y += inverted ? AntiAim::GetMaxDelta(localplayer->GetAnimState()) : -AntiAim::GetMaxDelta(localplayer->GetAnimState());
+
                 break;
 
             case AntiAimRealType_Y::Jitter:
@@ -851,7 +852,6 @@ static void FreeStand(C_BasePlayer *const localplayer, QAngle& angle, CUserCmd* 
                 AntiAim::fakeAngle.y = angle.y -= inverted ? 116.f : -116.f;
                 if (AntiAim::LbyUpdate())
                 AntiAim::fakeAngle.y = angle.y -= inverted ? 116.f : -116.f;
-
                 break;
 
             case AntiAimRealType_Y::Randome:

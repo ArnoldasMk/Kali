@@ -14,7 +14,7 @@ IMaterial *WhiteAdditive,*WhiteAdditiveIgnoreZ;
 IMaterial *AdditiveTwo, *AdditiveTwoIgnoreZ;
 IMaterial* materialChamsPearl;
 IMaterial* materialChamsGlow;
-                Vector colro = Vector(0, 0, 1);
+                Vector colro = Vector(0.5, 0, 1);
 
 typedef void (*DrawModelExecuteFn) (void*, void*, void*, const ModelRenderInfo_t&, matrix3x4_t*);
 
@@ -109,9 +109,9 @@ static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRen
 
 		visible_material->AlphaModulate(Settings::ESP::Chams::allyVisibleColor.Color(entity).Value.w);
 		hidden_material->AlphaModulate(Settings::ESP::Chams::allyColor.Color(entity).Value.w);
-		colro.x = Settings::ESP::Chams::allyColor.Color(entity).Value.x;
-		colro.y = Settings::ESP::Chams::allyColor.Color(entity).Value.y;
-                colro.z = Settings::ESP::Chams::allyColor.Color(entity).Value.z;
+		//colro.x = Settings::ESP::Chams::allyColor.Color(entity).Value.x;
+		//colro.y = Settings::ESP::Chams::allyColor.Color(entity).Value.y;
+                //colro.z = Settings::ESP::Chams::allyColor.Color(entity).Value.z;
 	}
 	else if (!Entity::IsTeamMate(entity, localplayer))
 	{

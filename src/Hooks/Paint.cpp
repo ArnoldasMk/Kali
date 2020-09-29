@@ -57,7 +57,7 @@ void Hooks::Paint(void* thisptr, PaintMode_t mode)
         Eventlog::Paint();
         AngleIndicator::Paint();
         GrenadePrediction::Paint();
-        menu::RenderWindow();
+//        menu::RenderWindow();
 
         if( Settings::ESP::backend == DrawingBackend::SURFACE ){
             StartDrawing(surface);

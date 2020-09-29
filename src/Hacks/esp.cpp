@@ -506,7 +506,7 @@ std::string bombStr = std::to_string(woop );
 std::string name = "eye          | " + fps_string + " fps | " + bombStr + "FL";
 
 Draw::AddText(1653 + 10 + 73 + 50, 11, name.c_str(), ImColor( 255, 255, 255, 255 ) );
-Draw::AddText(1653 + 7.9 + 73 + 21 + 50, 11, "hook", ImColor( 255, 166, 14, 255 ) );
+Draw::AddText(1653 + 8 + 73 + 21 + 50, 11, "hook", ImColor( 255, 166, 14, 255 ) );
 }
 
 static void DrawEntity( C_BaseEntity* entity, const char* string, ImColor color ) {
