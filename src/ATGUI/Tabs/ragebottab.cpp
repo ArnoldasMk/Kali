@@ -277,6 +277,8 @@ void RagebotTab::RenderTab()
 		        "Experimental",
 		        "ApuWare",
 		    };
+	                                ImGui::TextWrapped(XORSTR("Resolver Type"));
+
         ImGui::Combo(XORSTR("##ResolverType"), (int*)&Settings::Resolver::resolverType, resolverType, IM_ARRAYSIZE(resolverType));
         switch (Settings::Resolver::resolverType)
         {

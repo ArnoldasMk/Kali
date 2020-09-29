@@ -7,8 +7,8 @@
 #include "../settings.h"
 #include "../Utils/xorstring.h"
 #include "menu_font.h"
-#include "../FGUI/FGUI.hpp"
-#include "../FGUI/fgui_menu.h"
+//#include "../FGUI/FGUI.hpp"
+//#include "../FGUI/fgui_menu.h"
 
 #include "Windows/colors.h"
 #include "Windows/configs.h"
@@ -68,7 +68,7 @@ void UI::SetupWindows()
 	if (UI::isVisible)
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2( (size.x - 960)/2,(size.x - 645)/2));
-ImGui::ShowStyleEditor();
+//ImGui::ShowStyleEditor();
 
 		//MainHeader::RenderWindow();
 		Main::RenderWindow();

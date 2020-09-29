@@ -206,8 +206,7 @@ static bool GetBox( C_BaseEntity* entity, int& x, int& y, int& w, int& h ) {
 		if ( right < arr[i].x )
 			right = arr[i].x;
 		if ( top > arr[i].y )
-			top = arr[i].y;
-	}
+			top = arr[i].y;	}
 
 	// Width / height
 	x = ( int ) left;
@@ -1122,9 +1121,7 @@ static void DrawPlayerText( C_BasePlayer* player, C_BasePlayer* localplayer, int
 	//}
 	//}
 	if( Settings::Resolver::resolveAll && !(Entity::IsTeamMate(player,localplayer)) && Settings::Resolver::manual){
-                                std::string bombStr = "Max Desync Delta " + std::to_string(player->GetEyeAngles()->x);
-
-// 		                std::string bombStr = "Max Desync Delta " + std::to_string(AntiAim::GetMaxDelta(player->GetAnimState()));
+ 		                std::string bombStr = "Max Desync Delta " + std::to_string(AntiAim::GetMaxDelta(player->GetAnimState()));
 
 		Vector2D rankSize = Draw::GetTextSize( bombStr.c_str(), esp_font );
                 Draw::AddText( ( x + ( w / 2 ) - ( rankSize.x / 2 ) ),( y - ( textSize.y * lineNum ) - nameOffset ), bombStr.c_str(), Entity::IsTeamMate(player, localplayer) ? Settings::ESP::allyInfoColor.Color() : Settings::ESP::enemyInfoColor.Color() );
@@ -1404,14 +1401,47 @@ static void DrawPlayer(C_BasePlayer* player)
 }
 static void DrawImpacts(IGameEvent* event)
 {
-if (!(strstr(event->GetName(), XORSTR("bullet_impact"))))
+        C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+if (!localplayer)
+return;
+if (!Settings::ESP::showimpacts)
+return;
+if (!localplayer->GetAlive())
+return;
+if (!(strstr(event->GetName(), XORSTR("player_hurt"))))
 		return;
+		C_BasePlayer* victim = (C_BasePlayer*) entityList->GetClientEntity(engine->GetPlayerForUserID(event->GetInt(XORSTR("userid"))));
+		C_BasePlayer* attacker = (C_BasePlayer*) entityList->GetClientEntity(engine->GetPlayerForUserID(event->GetInt(XORSTR("attacker"))));
+    matrix3x4_t matrix[128];
 
-                float x = event->GetFloat(XORSTR("x"));
-		float y = event->GetFloat(XORSTR("y"));
-                float z = event->GetFloat(XORSTR("z"));
- Draw::AddCircleFilled(x, y, 200, Settings::ESP::FOVCrosshair::color.Color(), std::max(12, (int)100*2));
+    if ( !victim->SetupBones( matrix, 128, 0x00000100, globalVars->curtime ) )
+        return;
 
+        studiohdr_t* pStudioModel = modelInfo->GetStudioModel( victim->GetModel() );
+        if ( !pStudioModel )
+                return;
+if (Entity::IsTeamMate(victim, localplayer))
+	return;
+if (attacker != localplayer)
+return;
+        static matrix3x4_t pBoneToWorldOut[128];
+        if ( !victim->SetupBones( pBoneToWorldOut, 128, 256, 0 ) )
+                return;
+
+    studiohdr_t* hdr = modelInfo->GetStudioModel( victim->GetModel() );
+    mstudiohitboxset_t* set = hdr->pHitboxSet( 0 );
+
+        for ( int i = 0; i < set->numhitboxes; i++ ) {
+            mstudiobbox_t* hitbox = set->pHitbox( i );
+            if ( !hitbox ) {
+                continue;
+            }
+            Vector vMin, vMax;
+            Math::VectorTransform( hitbox->bbmin, matrix[hitbox->bone], vMin );
+            Math::VectorTransform( hitbox->bbmax, matrix[hitbox->bone], vMax );
+
+            debugOverlay->DrawPill( vMin, vMax, hitbox->radius, 20, 187, 0, 100, 2 );
+        }
 
 }
 static void DrawBomb(C_BaseCombatWeapon* bomb, C_BasePlayer* localplayer)

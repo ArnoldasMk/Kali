@@ -125,13 +125,13 @@ const char* lbyType[] = {
     ImGui::Columns(2, nullptr, false);
     {
 
-    ImGui::Text(XORSTR("LBY Mode"));
+//    ImGui::Text(XORSTR("LBY Mode"));
 
     }
     ImGui::NextColumn();
     {
 
-    ImGui::Combo(XORSTR("##LbyType"), (int*)&Settings::AntiAim::RageAntiAim::lbym, lbyType, IM_ARRAYSIZE(lbyType));
+//    ImGui::Combo(XORSTR("##LbyType"), (int*)&Settings::AntiAim::RageAntiAim::lbym, lbyType, IM_ARRAYSIZE(lbyType));
 
     }
     /*
@@ -256,9 +256,9 @@ void HvH::RenderTab()
             ImGui::Checkbox(XORSTR("Fake Lag"), &Settings::FakeLag::enabled);
             ImGui::SameLine();
             ImGui::SliderInt(XORSTR("##FAKELAGAMOUNT"), &Settings::FakeLag::value, 0, 100, XORSTR("Amount: %0.f"));
-			ImGui::Checkbox(XORSTR("Adaptive Fake Lag"), &Settings::FakeLag::adaptive);
-ImGui::Checkbox(XORSTR("Random Fake Lag"), &Settings::AntiAim::randomLag::enabled);
-            UI::KeyBindButton(&Settings::FakeLag::ckey);
+//			ImGui::Checkbox(XORSTR("Adaptive Fake Lag"), &Settings::FakeLag::adaptive);
+//ImGui::Checkbox(XORSTR("Random Fake Lag"), &Settings::AntiAim::randomLag::enabled);
+         //   UI::KeyBindButton(&Settings::FakeLag::ckey);
 
                         ImGui::Checkbox(XORSTR("Slow Walk"), &Settings::AntiAim::SlowWalk::enabled);
 if (Settings::AntiAim::SlowWalk::enabled){

@@ -340,9 +340,9 @@ void Misc::RenderTab()
                         ImGui::Separator();
                                         ImGui::Checkbox(XORSTR("BuyBot"), &Settings::buybot::enabled);
 					if ( Settings::buybot::enabled){
+
                                         ImGui::Checkbox(XORSTR("AutoSniper"), &Settings::buybot::autosniper);
                                         ImGui::Checkbox(XORSTR("Scout"), &Settings::buybot::scout);
-					//ImGui::Combo(XORSTR("##BUYBOTWEAPONS"), (int*)&Settings::buybot::type, buyBotWeapons, IM_ARRAYSIZE(buyBotWeapons));
 					}
 	                        if (ImGui::Button(XORSTR("Configs")) )
                                 Configs::showWindow = !Configs::showWindow;
