@@ -59,6 +59,12 @@ enum class ClanTagType : int
 	LETTERS,
 };
 
+enum class impactType : int
+{
+        ITSME,
+        PRITAM,
+};
+
 enum class MusicType : int
 {
         CSGO,
@@ -716,6 +722,7 @@ namespace Settings
 
 	namespace Ragebot
 	{
+			inline impactType impacttype = impactType::ITSME;
 		namespace exploits
 		{
                         inline ButtonCode_t doubletapKey;

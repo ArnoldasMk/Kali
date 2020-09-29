@@ -112,6 +112,7 @@ void RagebotTab::RenderTab()
 	
 	const char *DamagePredictionType[] = {"Safety","Damage",};
 	const char *EnemySelectionType[] = {"Best Damage(Lagacy Old Method)", "Closest To Crosshair( Faster But In alfa)"};
+        const char *impactType[] = {"itsme","Pritam",};
 
 
 	
@@ -299,7 +300,13 @@ void RagebotTab::RenderTab()
             break;
         }
 
+                                        ImGui::TextWrapped(XORSTR("Miss Detection Type"));
+
+ImGui::Combo(XORSTR("##ImpactDetection"), (int*)&Settings::Ragebot::impacttype, impactType, IM_ARRAYSIZE(impactType) );
+
 			//	ImGui::Checkbox(XORSTR("Resolver"), &Settings::Resolver::resolveAll);
+
+
 			// End of resolver tab
 
 			// Others Settings For Weapons

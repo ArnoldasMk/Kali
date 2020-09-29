@@ -340,6 +340,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
     LoadColor(settings[XORSTR("ESP")][XORSTR("manualAAColor")], Settings::ESP::manualAAColor);
     settings[XORSTR("Resolver")][XORSTR("Type")] = (int)Settings::Resolver::resolverType;
 
+    settings[XORSTR("Ragebot")][XORSTR("impactType")] = (int)Settings::Ragebot::impacttype;
+
     settings[XORSTR("ESP")][XORSTR("KeybindsY")] = Settings::ESP::keybi::y;
     settings[XORSTR("ESP")][XORSTR("KeybindsX")] = Settings::ESP::keybi::x;
     settings[XORSTR("ESP")][XORSTR("showKeybinds")] = Settings::ESP::KeyBinds;
@@ -1038,6 +1040,8 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("Resolver")][XORSTR("goalFeetYaw")], &Settings::Resolver::goalFeetYaw);
     GetVal(settings[XORSTR("Resolver")][XORSTR("EyeAngles")], &Settings::Resolver::EyeAngles);
     GetVal( settings[XORSTR("Resolver")][XORSTR("Type")], (int*)&Settings::Resolver::resolverType);
+
+    GetVal( settings[XORSTR("Ragebot")][XORSTR("impactType")], (int*)&Settings::Ragebot::impacttype);
 
     GetVal(settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("color")], &Settings::Ragebot::quickpeek::color);
     GetVal(settings[XORSTR("ESP")][XORSTR("Watermark")][XORSTR("color")], &Settings::ESP::Watermark::color);

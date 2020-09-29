@@ -1402,19 +1402,18 @@ static void DrawPlayer(C_BasePlayer* player)
 static void DrawImpacts(IGameEvent* event)
 {
         C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
-if (!localplayer)
-return;
-if (!Settings::ESP::showimpacts)
-return;
-if (!localplayer->GetAlive())
-return;
-if (!(strstr(event->GetName(), XORSTR("player_hurt"))))
+	if (!localplayer)
+	return;
+	if (!Settings::ESP::showimpacts)
+	return;
+	if (!(strstr(event->GetName(), XORSTR("player_hurt"))))
 		return;
-
+if (!event->GetInt(XORSTR("userid")) || !event->GetInt(XORSTR("attacker")))
+return;
 		C_BasePlayer* victim = (C_BasePlayer*) entityList->GetClientEntity(engine->GetPlayerForUserID(event->GetInt(XORSTR("userid"))));
 		C_BasePlayer* attacker = (C_BasePlayer*) entityList->GetClientEntity(engine->GetPlayerForUserID(event->GetInt(XORSTR("attacker"))));
-if (attacker != localplayer)
-return;
+	if (attacker != localplayer)
+	return;
 
     matrix3x4_t matrix[128];
 
@@ -1424,7 +1423,7 @@ return;
         studiohdr_t* pStudioModel = modelInfo->GetStudioModel( victim->GetModel() );
         if ( !pStudioModel )
                 return;
-if (Entity::IsTeamMate(victim, localplayer))
+	if (Entity::IsTeamMate(victim, localplayer))
 	return;
         static matrix3x4_t pBoneToWorldOut[128];
         if ( !victim->SetupBones( pBoneToWorldOut, 128, 256, 0 ) )

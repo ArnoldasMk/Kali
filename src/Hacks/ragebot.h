@@ -179,6 +179,7 @@ public :
 
 };
 namespace Ragebot {
+void CheckHit(C_BaseCombatWeapon*);
 
     struct enemy 
     {
