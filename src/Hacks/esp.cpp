@@ -1410,8 +1410,12 @@ if (!localplayer->GetAlive())
 return;
 if (!(strstr(event->GetName(), XORSTR("player_hurt"))))
 		return;
+
 		C_BasePlayer* victim = (C_BasePlayer*) entityList->GetClientEntity(engine->GetPlayerForUserID(event->GetInt(XORSTR("userid"))));
 		C_BasePlayer* attacker = (C_BasePlayer*) entityList->GetClientEntity(engine->GetPlayerForUserID(event->GetInt(XORSTR("attacker"))));
+if (attacker != localplayer)
+return;
+
     matrix3x4_t matrix[128];
 
     if ( !victim->SetupBones( matrix, 128, 0x00000100, globalVars->curtime ) )
@@ -1422,8 +1426,6 @@ if (!(strstr(event->GetName(), XORSTR("player_hurt"))))
                 return;
 if (Entity::IsTeamMate(victim, localplayer))
 	return;
-if (attacker != localplayer)
-return;
         static matrix3x4_t pBoneToWorldOut[128];
         if ( !victim->SetupBones( pBoneToWorldOut, 128, 256, 0 ) )
                 return;

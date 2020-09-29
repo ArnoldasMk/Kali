@@ -7,9 +7,6 @@
 #include "../settings.h"
 #include "../Utils/xorstring.h"
 #include "menu_font.h"
-//#include "../FGUI/FGUI.hpp"
-//#include "../FGUI/fgui_menu.h"
-
 #include "Windows/colors.h"
 #include "Windows/configs.h"
 #include "Windows/main.h"
