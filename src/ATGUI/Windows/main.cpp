@@ -51,12 +51,12 @@ void Main::RenderWindow()
 		Settings::UI::Windows::Main::posX = (int)temp.x;
 		Settings::UI::Windows::Main::posY = (int)temp.y;
 		const char *tabs[] = {
-			"ĩ",
-			"Ĩ",
-			"ĭ",
-			"Ī",
-			"Ĭ",
-			"ī",
+				"Legit Bot",
+				"Rage Bot",
+				"Anti Aim",
+				"Visuals",
+				"Skin/Model",
+				"Misc",
 		};
 		for (int i = 0; i < IM_ARRAYSIZE(tabs); i++)
 		{
