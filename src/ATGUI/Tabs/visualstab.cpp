@@ -19,6 +19,7 @@
 								"PEARL",
 								"GLOW",
 								"GLOWF",
+								"PULSE",
 								"NONE",
 								};
 

@@ -80,6 +80,11 @@ static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRen
 			overlay_material = materialChamsGlow;
 			wap = true;
 			break;
+		case ChamsType::PULSE:
+			visible_material = material->FindMaterial("models/inventory_items/dogtags/dogtags_outline", TEXTURE_GROUP_MODEL);
+			hidden_material = materialChamsFlatIgnorez;
+			wap = false;
+			break;
 		default :
 			return;
 	}
@@ -191,6 +196,9 @@ static void DrawFake(void* thisptr, void* context, void *state, const ModelRende
 		case ChamsType::GLOWF:
                         Fake_meterial = materialChamsGlow;
 			break;
+		case ChamsType::PULSE:
+			Fake_meterial = material->FindMaterial("models/inventory_items/dogtags/dogtags_outline", TEXTURE_GROUP_MODEL);
+			break;
 		default:
 			return;
 	}
@@ -230,7 +238,6 @@ static void DrawFake(void* thisptr, void* context, void *state, const ModelRende
 	{
 		Fake_meterial->AlphaModulate(0.5f);
 	}
-	//entity->SetupBones
 	modelRender->ForcedMaterialOverride(Fake_meterial);
 	modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, fakeBoneMatrix);
                 if (Settings::ESP::FilterLocalPlayer::Chams::type == ChamsType::GLOW){
@@ -263,6 +270,10 @@ static void DrawWeapon(const ModelRenderInfo_t& pInfo)
 		case ChamsType::ADDITIVETWO:
 			mat = AdditiveTwo;
 			break;
+                case ChamsType::PULSE:
+                        mat = material->FindMaterial("models/inventory_items/dogtags/dogtags_outline", TEXTURE_GROUP_MODEL);
+                        break;
+
 		default :
 			return;
 	}
@@ -279,10 +290,6 @@ static void DrawWeapon(const ModelRenderInfo_t& pInfo)
 }
 static void DrawRecord(void *thisptr, void *context, void *state, const ModelRenderInfo_t &pInfo, matrix3x4_t *pCustomBoneToWorld)
 {
-  //  if (!Settings::LagComp::enabled)
- //       return;
-  //if (!Settings::ESP::drawback)
-    //    return;
 
     C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
 
@@ -391,6 +398,7 @@ void Chams::DrawModelExecute(void* thisptr, void* context, void *state, const Mo
 
 	if (modelName.find(XORSTR("models/player")) != std::string::npos)
 	{
+//                DrawLag(thisptr, context, state, pInfo, pCustomBoneToWorld);
 		DrawFake(thisptr, context, state, pInfo, pCustomBoneToWorld);
 		DrawPlayer(thisptr, context, state, pInfo, pCustomBoneToWorld);
                  DrawRecord(thisptr, context, state, pInfo, pCustomBoneToWorld);

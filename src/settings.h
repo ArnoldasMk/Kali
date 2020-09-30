@@ -127,6 +127,7 @@ enum class ChamsType : int
 	PEARL,
 	GLOW,
 	GLOWF,
+	PULSE,
 	NONE,
 };
 

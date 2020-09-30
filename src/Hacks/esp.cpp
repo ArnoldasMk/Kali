@@ -618,6 +618,53 @@ QAngle viewAngles;
 draw_arrow(rot, Color::FromImColor(ESP::GetESPPlayerColor( player, bIsVisible )));
 }
 }
+static void Drawlc()
+{
+        C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+        if (!localplayer || !localplayer->GetAlive())
+                return;
+
+        if (/*!Settings::ESP::lagbones ||*/ !Settings::ThirdPerson::toggled)
+                return;
+        IMaterial* meterial = nullptr;
+
+Vector last_networked_origin;
+//if ( localplayer->GetVelocity().Length2D() > 30)
+   // last_networked_origin = Vector(0, 0, 0);
+if (AntiAim::bSend)
+     last_networked_origin = localplayer->GetVecOrigin();
+Vector lc;
+ debugOverlay->ScreenPosition(last_networked_origin, lc);
+        Draw::AddCircleFilled( lc.x, lc.y, Settings::ESP::HeadDot::size, Settings::ESP::Skeleton::allyColor.Color(), 10 );
+
+        studiohdr_t* pStudioModel = modelInfo->GetStudioModel( localplayer->GetModel() );
+        if ( !pStudioModel )
+                return;
+
+
+        static matrix3x4_t pBoneToWorldOut[128];
+        if ( !localplayer->SetupBones( pBoneToWorldOut, 128, 256, 0 ) )
+                return;
+/*
+        for ( int i = 0; i < pStudioModel->numbones; i++ ) {
+                mstudiobone_t* pBone = pStudioModel->pBone( i );
+                if ( !pBone || !( pBone->flags & 256 ) || pBone->parent == -1 )
+                        continue;
+
+                Vector vBonePos1;
+                if ( debugOverlay->ScreenPosition( Vector( pBoneToWorldOut[i][0][3] + last_networked_origin.x, pBoneToWorldOut[i][1][3]+ last_networked_origin.y, pBoneToWorldOut[i][2][3] + last_networked_origin.z), vBonePos1 ) )
+                        continue;
+
+                Vector vBonePos2;
+                if ( debugOverlay->ScreenPosition( Vector( pBoneToWorldOut[pBone->parent][0][3]+ last_networked_origin.x, pBoneToWorldOut[pBone->parent][1][3]+ last_networked_origin.y, pBoneToWorldOut[pBone->parent][2][3]+ last_networked_origin.z ), vBonePos2 ) )
+                        continue;
+
+                Draw::AddLine( vBonePos1.x, vBonePos1.y, vBonePos2.x, vBonePos2.y, Settings::ESP::Skeleton::allyColor.Color());
+
+		}
+*/
+
+}
 
 
 static void DrawAimbotSpot( ) {
@@ -2080,6 +2127,7 @@ void ESP::Paint()
 				DrawDZItems(entity, localplayer);
 		}
 	}
+	Drawlc();
 	DrawLag(Settings::ESP::keybi::x, Settings::ESP::keybi::y + 90, localplayer);
 	if (Settings::ESP::KeyBinds)
         	DrawKeyBinds(Settings::ESP::keybi::x, Settings::ESP::keybi::y);
