@@ -1,6 +1,4 @@
 **Warning** this fork will probably contain a lot of pasted, shitty code.
-INSTALL THIS FONT Rudac-Bold.ttf (from repo)
-TO THIS EXACT DIRECTORY /usr/share/fonts/TTF/Rudac-Bold.ttf
 ===================
 <p align="center">
 <img src="./Pictures/missedit.png">

@@ -16,7 +16,7 @@
 #include "imgui.h"
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui_internal.h"
-
+#include "Ruda.h"
 #include <stdio.h>      // vsnprintf, sscanf, printf
 #if !defined(alloca)
 #if defined(__GLIBC__) || defined(__sun) || defined(__CYGWIN__)
@@ -1528,9 +1528,10 @@ ImFont* ImFontAtlas::AddFontDefault(const ImFontConfig* font_cfg_template)
 {
     ImFontConfig font_cfg = font_cfg_template ? *font_cfg_template : ImFontConfig();
     ImGuiIO& io = ImGui::GetIO();
-    ImFont* font2 = io.Fonts->AddFontFromFileTTF("/usr/share/fonts/TTF/Rudac-Bold.ttf", 14.0f);
-    return font2;
-    if (!font_cfg_template)
+  //  ImFont* font2 = io.Fonts->AddFontFromFileTTF("/usr/share/fonts/TTF/Rudac-Bold.ttf", 14.0f);
+//    return font2;
+return ImGui::GetIO().Fonts->AddFontFromMemoryCompressedTTF(Ruda_compressed_data, Ruda_compressed_size, 14.0f); 
+  if (!font_cfg_template)
     {
         font_cfg.OversampleH = font_cfg.OversampleV = 1;
         font_cfg.PixelSnapH = true;
