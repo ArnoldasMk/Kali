@@ -893,16 +893,9 @@ Draw::AddText( x, y + 50, "LBY", Color );
 ImColor AColor = ImColor ( GetBlendedColor(desyncRedPercentage), GetBlendedColor(desyncGreenPercentage), 0, 255);
 Draw::AddText( x, y + 60, "AA", AColor );
 ImColor DColor;
-//if (Tickbase::canShift(16, false)){
-//DColor = ImColor( 0, 255, 0, 255 );
-//}
-//else {
-//DColor = ImColor( 255, 0, 0, 255 );
-
-//}
-
-//Draw::AddText( x, y + 70, "DT", DColor );
         float vel2D = localplayer->GetVelocity().Length2D();
+		if (vel2D < 1.02 && localplayer->GetAlive()) // P1000000 MicroMovement Removal
+		vel2D = 0;
 std::string veltext = std::to_string(vel2D);
 Draw::AddText( x, y + 70, veltext.c_str(), AColor );
 
@@ -1441,7 +1434,7 @@ return;
             Math::VectorTransform( hitbox->bbmin, matrix[hitbox->bone], vMin );
             Math::VectorTransform( hitbox->bbmax, matrix[hitbox->bone], vMax );
 
-            debugOverlay->DrawPill( vMin, vMax, hitbox->radius, 20, 187, 0, 100, 2 );
+            debugOverlay->DrawPill( vMin, vMax, hitbox->radius, 20, 187, 0, 100, 3 );
         }
 
 }

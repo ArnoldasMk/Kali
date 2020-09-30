@@ -792,8 +792,6 @@ static void FreeStand(C_BasePlayer *const localplayer, QAngle& angle, CUserCmd* 
     using namespace AntiAim::ManualAntiAim;
     using namespace Settings::AntiAim::RageAntiAim;
             bool sw = false;
-           bool bFlip;
-
 
     if (Settings::AntiAim::ManualAntiAim::Enable)
     {
@@ -872,29 +870,18 @@ static void FreeStand(C_BasePlayer *const localplayer, QAngle& angle, CUserCmd* 
                 break;
             case AntiAimRealType_Y::JitterSwitch:
                 should_sidemove = true;
-                if (!AntiAim::bSend)
-                       AntiAim::fakeAngle.y = angle.y += sw ? JitterPercent : -JitterPercent;
+                if ( !(cmd->tick_count%16) )
                 sw = !sw;
+                AntiAim::fakeAngle.y = angle.y += sw ? JitterPercent : -JitterPercent;
                 break;
-      case AntiAimRealType_Y::FakeJitter:
-	{
-          should_sidemove = true;
-            bFlip = false;
-            if ( !(cmd->tick_count%16) )
-                bFlip = !bFlip;
-            AntiAim::fakeAngle.y = angle.y = bFlip ? (angle.y-180.f)-GetPercentVal(360.f, JitterPercent) : (angle.y-180.f)+GetPercentVal(360.f, JitterPercent);
-}         
-       break;
-
         case AntiAimRealType_Y::JitterRandom:
-{ 
-               should_sidemove = true;
+                should_sidemove = true;
                 int stuff = JitterPercent;
                 float randNum = (rand()%(stuff-(-stuff) + 1) + -stuff);
+
                 if (!AntiAim::bSend)
                          AntiAim::fakeAngle.y = angle.y += randNum;
-} 
-               break;
+                break;
 
     }
    // AntiAim::fakeAngle = AntiAim::realAngle = angle;

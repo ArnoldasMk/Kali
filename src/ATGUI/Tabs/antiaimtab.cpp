@@ -19,9 +19,8 @@ static void RageAntiAIm()
         "Static",
         "Balanced",
         "Jitter",
-	"JitterSwitch",
+        "Brainfuck Fake Fake AA",
 	"JitterRandom",
-	"Brainfuck Fake AA",
     };
 const char* pitchType[] = {
         "Up",
