@@ -89,10 +89,10 @@ if (!inputSystem->IsButtonDown(Settings::FakeLag::ckey)){
 
     if (!localplayer || !localplayer->GetAlive())
         return;
-    Tickbase::tick->commandNumber = cmd->command_number;
-    Tickbase::tick->tickbase = localplayer->GetTickBase();
-    Tickbase::tick->tickshift = 16;
-    Tickbase::lastShift = cmd->command_number;
+//    Tickbase::tick->commandNumber = cmd->command_number;
+//    Tickbase::tick->tickbase = localplayer->GetTickBase();
+ //   Tickbase::tick->tickshift = 16;
+ //   Tickbase::lastShift = cmd->command_number;
     //Teleport kinda buggy
     //tick->chokedPackets += ticks;
     //recalculateTicks();

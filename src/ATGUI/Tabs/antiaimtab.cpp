@@ -21,6 +21,7 @@ static void RageAntiAIm()
         "Jitter",
 	"JitterSwitch",
 	"JitterRandom",
+	"Brainfuck Fake AA",
     };
 const char* pitchType[] = {
         "Up",
@@ -264,7 +265,6 @@ void HvH::RenderTab()
 if (Settings::AntiAim::SlowWalk::enabled){
             ImGui::SameLine(); 
             UI::KeyBindButton(&Settings::AntiAim::SlowWalk::key);
-     ImGui::SliderFloat(XORSTR("##FakeWalkSPeed"), &Settings::AntiAim::SlowWalk::Speed, 0, 100, XORSTR("Amount: %0.f"));
 
 }
                         ImGui::Checkbox(XORSTR("QuickPeek"), &Settings::Ragebot::quickpeek::enabled);
