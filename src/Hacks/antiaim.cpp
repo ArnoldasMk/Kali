@@ -388,16 +388,16 @@ if (Settings::AntiAim::RageAntiAim::lbym == LbyMode::Normal){
             case AntiAimRealType_Y::Static:
 		should_sidemove = true;
                 if (!AntiAim::bSend)
-		AntiAim::fakeAngle.y = angle.y += inverted ? AntiAim::GetMaxDelta(localplayer->GetAnimState()) : -AntiAim::GetMaxDelta(localplayer->GetAnimState());
+		 angle.y += inverted ? AntiAim::GetMaxDelta(localplayer->GetAnimState()) : -AntiAim::GetMaxDelta(localplayer->GetAnimState());
 
 		break;
 
             case AntiAimRealType_Y::Jitter:
 		should_sidemove = false;
                 if (!AntiAim::bSend)
-                AntiAim::fakeAngle.y = angle.y -= inverted ? 116.f : -116.f;
+                 angle.y -= inverted ? 116.f : -116.f;
 		if (AntiAim::LbyUpdate())
-		AntiAim::fakeAngle.y = angle.y -= inverted ? 116.f : -116.f;
+		 angle.y -= inverted ? 116.f : -116.f;
 
                 break;
 
@@ -410,8 +410,7 @@ if (Settings::AntiAim::RageAntiAim::lbym == LbyMode::Normal){
                         if (st < 2)
                         {
                                 static auto j = false;
-                                AntiAim::fakeAngle.y = angle.y += j ? JitterPercent : -JitterPercent;
-				AntiAim::realAngle.y = AntiAim::fakeAngle.y - j ? JitterPercent : -JitterPercent;
+                                 angle.y += j ? JitterPercent : -JitterPercent;
                                 j = !j;
                         }
                         else
@@ -421,7 +420,7 @@ if (Settings::AntiAim::RageAntiAim::lbym == LbyMode::Normal){
             case AntiAimRealType_Y::JitterSwitch:
                 should_sidemove = true;
                 if (!AntiAim::bSend)
-                       AntiAim::fakeAngle.y = angle.y += sw ? JitterPercent : -JitterPercent;
+                        angle.y += sw ? JitterPercent : -JitterPercent;
                 sw = !sw;
                 break;
         case AntiAimRealType_Y::JitterRandom:
@@ -430,7 +429,7 @@ if (Settings::AntiAim::RageAntiAim::lbym == LbyMode::Normal){
 		float randNum = (rand()%(stuff-(-stuff) + 1) + -stuff);
 
                 if (!AntiAim::bSend)
-                         AntiAim::fakeAngle.y = angle.y += randNum;
+                          angle.y += randNum;
                 break;
 
 
@@ -439,7 +438,7 @@ if (Settings::AntiAim::RageAntiAim::lbym == LbyMode::Normal){
 
    else if (Settings::AntiAim::RageAntiAim::lbym == LbyMode::Opposite){
 if (AntiAim::LbyUpdate()){
-            AntiAim::realAngle.y = angle.y += inverted ? -120 : 120;
+             angle.y += inverted ? -120 : 120;
 }
 
 if (!AntiAim::bSend)
@@ -839,16 +838,16 @@ static void FreeStand(C_BasePlayer *const localplayer, QAngle& angle, CUserCmd* 
             case AntiAimRealType_Y::Static:
 	        should_sidemove = true;
                 if (!AntiAim::bSend)
-                AntiAim::fakeAngle.y = angle.y += inverted ? AntiAim::GetMaxDelta(localplayer->GetAnimState()) : -AntiAim::GetMaxDelta(localplayer->GetAnimState());
+                angle.y += inverted ? AntiAim::GetMaxDelta(localplayer->GetAnimState()) : -AntiAim::GetMaxDelta(localplayer->GetAnimState());
 
                 break;
 
             case AntiAimRealType_Y::Jitter:
                 should_sidemove = false;
                 if (!AntiAim::bSend)
-                AntiAim::fakeAngle.y = angle.y -= inverted ? 116.f : -116.f;
+                angle.y -= inverted ? 116.f : -116.f;
                 if (AntiAim::LbyUpdate())
-                AntiAim::fakeAngle.y = angle.y -= inverted ? 116.f : -116.f;
+                angle.y -= inverted ? 116.f : -116.f;
                 break;
 
             case AntiAimRealType_Y::Randome:
@@ -860,8 +859,8 @@ static void FreeStand(C_BasePlayer *const localplayer, QAngle& angle, CUserCmd* 
                         if (st < 2)
                         {
                                 static auto j = false;
-                                AntiAim::fakeAngle.y = angle.y += j ? JitterPercent : -JitterPercent;
-                                AntiAim::realAngle.y = AntiAim::fakeAngle.y - j ? JitterPercent : -JitterPercent;
+                                 angle.y += j ? JitterPercent : -JitterPercent;
+                                //AntiAim::realAngle.y = AntiAim::fakeAngle.y - j ? JitterPercent : -JitterPercent;
                                 j = !j;
                         }
                         else
@@ -872,7 +871,7 @@ static void FreeStand(C_BasePlayer *const localplayer, QAngle& angle, CUserCmd* 
                 should_sidemove = true;
                 if ( !(cmd->tick_count%16) )
                 sw = !sw;
-                AntiAim::fakeAngle.y = angle.y += sw ? JitterPercent : -JitterPercent;
+                angle.y += sw ? JitterPercent : -JitterPercent;
                 break;
         case AntiAimRealType_Y::JitterRandom:
                 should_sidemove = true;
@@ -880,7 +879,7 @@ static void FreeStand(C_BasePlayer *const localplayer, QAngle& angle, CUserCmd* 
                 float randNum = (rand()%(stuff-(-stuff) + 1) + -stuff);
 
                 if (!AntiAim::bSend)
-                         AntiAim::fakeAngle.y = angle.y += randNum;
+                     angle.y += randNum;
                 break;
 
     }
@@ -1152,7 +1151,7 @@ if( Settings::AntiAim::LBYBreaker::enabled ){
     Math::NormalizeAngles(angle);
     Math::ClampAngles(angle);
 
-    if (AntiAim::bSend) AntiAim::fakeAngle = angle;
+    if (!AntiAim::bSend) AntiAim::fakeAngle = angle;
     else AntiAim::realAngle = angle;
 
     CreateMove::lastTickViewAngles = AntiAim::realAngle;

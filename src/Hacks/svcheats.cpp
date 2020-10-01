@@ -13,7 +13,6 @@ void SvCheats::FrameStageNotify(ClientFrameStage_t stage)
         return;
 
     static ConVar* svcheats = cvar->FindVar("sv_cheats");
-    svcheats->SetValue(1);
 
     static ConVar* fullbright = cvar->FindVar("mat_fullbright");
     static ConVar* fogoverride = cvar->FindVar("fog_override");
@@ -69,6 +68,9 @@ static ConVar* timez = cvar->FindVar("sv_grenade_trajectory_time");
 trajectory->SetValue(Settings::SvCheats::grenadetraj::enabled);
 timez->SetValue(2);
 }
-
+if (Settings::SvCheats::svcheats::enabled)
+{
+   svcheats->SetValue(Settings::SvCheats::svcheats::enabled);
+}
 
 }

@@ -291,6 +291,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("AntiAim")][XORSTR("LBYJitter")] = Settings::AntiAim::lbyjitter;
 
     settings[XORSTR("SvCheats")][XORSTR("enabled")] = Settings::SvCheats::enabled;
+    settings[XORSTR("SvCheatss")][XORSTR("enabled")] = Settings::SvCheats::svcheats::enabled;
 
     settings[XORSTR("gravity")][XORSTR("enabled")] = Settings::SvCheats::gravity::enabled;
     settings[XORSTR("impacts")][XORSTR("enabled")] = Settings::SvCheats::impacts::enabled;
@@ -991,6 +992,7 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("AntiAim")][XORSTR("LBYJitter")], &Settings::AntiAim::lbyjitter);
 
     GetVal(settings[XORSTR("SvCheats")][XORSTR("enabled")], &Settings::SvCheats::enabled);
+    GetVal(settings[XORSTR("SvCheatss")][XORSTR("enabled")], &Settings::SvCheats::svcheats::enabled);
 
     GetVal(settings[XORSTR("aspect")][XORSTR("enabled")], &Settings::SvCheats::aspect::enabled);
     GetVal(settings[XORSTR("aspect")][XORSTR("var")], &Settings::SvCheats::aspect::var);

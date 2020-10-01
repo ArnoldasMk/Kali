@@ -848,6 +848,7 @@ namespace Settings
     }
     namespace AntiAim
     {
+	inline float realoffset;
 
             inline AntiAimType_X pitchtype = AntiAimType_X::STATIC_DOWN;
 	inline bool lbyjitter;
@@ -1751,6 +1752,11 @@ namespace aspect
 {
 inline bool enabled;
 inline float var;
+}
+
+namespace svcheats
+{
+inline bool enabled;
 }
 
 namespace bright

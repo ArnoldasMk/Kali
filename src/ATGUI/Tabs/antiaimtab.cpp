@@ -283,8 +283,6 @@ if (Settings::AntiAim::SlowWalk::enabled){
             ImGui::SliderFloat(XORSTR("##EYEANGLES"), &Settings::Resolver::EyeAngles, -60, 60, XORSTR("Amount: %0.f"));
 						}
 	}
-            ImGui::Checkbox(XORSTR("AirSpin"), &Settings::AntiAim::airspin::enabled);
-            ImGui::SliderFloat(XORSTR("##TEST"), &Settings::Ragebot::test, 0, 125, XORSTR("DMG: %0.f"));
 
             ImGui::EndChild();
         }

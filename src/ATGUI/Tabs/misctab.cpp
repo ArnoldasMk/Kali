@@ -326,7 +326,7 @@ void Misc::RenderTab()
 			}
 			ImGui::Columns(1);
 			ImGui::Separator();
-              ImGui::Checkbox(XORSTR("Force SvCheats"), &Settings::SvCheats::enabled);
+              ImGui::Checkbox(XORSTR("Force cvars"), &Settings::SvCheats::enabled);
                 if(Settings::SvCheats::enabled) {
                     ImGui::Checkbox(XORSTR("Ragdoll Override"), &Settings::SvCheats::gravity::enabled);
                     ImGui::Checkbox(XORSTR("Show Impacts"), &Settings::SvCheats::impacts::enabled);
@@ -335,6 +335,8 @@ void Misc::RenderTab()
                     ImGui::Checkbox(XORSTR("Fullbright"), &Settings::SvCheats::bright::enabled);
                     ImGui::Checkbox(XORSTR("Fog Override"), &Settings::SvCheats::fog::enabled);
 	            ImGui::Checkbox(XORSTR("Show grenade trajectory"), &Settings::SvCheats::grenadetraj::enabled);
+                    ImGui::Checkbox(XORSTR("Force svcheats"), &Settings::SvCheats::svcheats::enabled);
+
                 }
 
                         ImGui::Separator();

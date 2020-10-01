@@ -114,6 +114,7 @@ static void FilterLocalPlayer()
 		ImGui::Checkbox(XORSTR("Box"), &Settings::ESP::FilterLocalPlayer::Boxes::enabled);
 		ImGui::Checkbox(XORSTR("FakeChams"), &Settings::ESP::FilterLocalPlayer::Chams::enabled);
 		ImGui::Checkbox(XORSTR("RealChams"), &Settings::ESP::FilterLocalPlayer::RealChams::enabled);
+                ImGui::SliderFloat(XORSTR("##REALCHAMSOFFSET"), &Settings::AntiAim::realoffset, -180, 180, XORSTR("Real Chams Correction Offset: %0.f"));
 		ImGui::Checkbox(XORSTR("Health"), &Settings::ESP::FilterLocalPlayer::HelthBar::enabled);
 		ImGui::Checkbox(XORSTR("Tracers"), &Settings::ESP::FilterLocalPlayer::Tracers::enabled);
 		
