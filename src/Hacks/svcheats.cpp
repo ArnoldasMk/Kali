@@ -17,6 +17,7 @@ void SvCheats::FrameStageNotify(ClientFrameStage_t stage)
     static ConVar* fullbright = cvar->FindVar("mat_fullbright");
     static ConVar* fogoverride = cvar->FindVar("fog_override");
     static ConVar* impacts = cvar->FindVar("sv_showimpacts");
+    static ConVar* time = cvar->FindVar("host_timescale");
 
     fullbright->SetValue(Settings::SvCheats::bright::enabled);
     fogoverride->SetValue(Settings::SvCheats::fog::enabled);
@@ -71,6 +72,8 @@ timez->SetValue(2);
 if (Settings::SvCheats::svcheats::enabled)
 {
    svcheats->SetValue(Settings::SvCheats::svcheats::enabled);
+}
+else {
 }
 
 }

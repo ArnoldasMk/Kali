@@ -443,6 +443,7 @@ void Visuals::RenderTab()
 							}
 				ImGui::Checkbox(XORSTR("Watermark"), &Settings::ESP::Watermark::enabled);
                                 ImGui::Checkbox(XORSTR("Show Hitbox impacts"), &Settings::ESP::showimpacts);
+                                ImGui::Checkbox(XORSTR("UI Particles"), &Settings::UI::particles);
 
 				if ( ImGui::Button( XORSTR( "Material Config" ), ImVec2( -1, 0 ) ) )
 					ImGui::OpenPopup( XORSTR( "##MaterialConfigWindow" ) );

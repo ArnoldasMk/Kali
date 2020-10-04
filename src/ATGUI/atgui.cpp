@@ -1,7 +1,9 @@
 
 #include "atgui.h"
 
+#include "particles.h"
 
+#include "../SDK/IVModelRender.h"
 #include "../Utils/draw.h"
 #include "../interfaces.h"
 #include "../settings.h"
@@ -66,13 +68,16 @@ void UI::SetupWindows()
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2( (size.x - 960)/2,(size.x - 645)/2));
 //ImGui::ShowStyleEditor();
-
+//if (Settings::UI::particles)
+//dot_draw();
 		//MainHeader::RenderWindow();
+//auto blur = material->FindMaterial("dev/motion_blur", TEXTURE_GROUP_MODEL);
+//blur->DrawScreenSpaceRectangle(blur, 0, 0, 1920, 1080, 0, 0, 1920, 1080, 1920, 1080, nullptr, 1, 1);
+
 		Main::RenderWindow();
 		ImGui::PopStyleVar();
 		Configs::RenderWindow();
 		// Colors::RenderWindow();
-
 	}
 
 	PlayerList::RenderWindow();

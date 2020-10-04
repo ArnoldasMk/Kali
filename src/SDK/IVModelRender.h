@@ -49,4 +49,6 @@ public:
 		typedef void (* oDrawModelExecute)(void*, void* ctx, void *state, const ModelRenderInfo_t &pInfo, matrix3x4_t* pCustomBoneToWorld);
 		return getvfunc<oDrawModelExecute>(this, 21)(this, ctx, state, pInfo, pCustomBoneToWorld);
 	}
+
+
 };

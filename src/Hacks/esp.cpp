@@ -1207,50 +1207,53 @@ return;
 		auto activeeWeapon =  *activeWeapon->GetItemDefinitionIndex();
 		std::string modelName;
 		int offset = ( int ) ( boxSpacing);
-    std::map<ItemDefinitionIndex, std::string> Weaponsi;
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_KNIFE_KARAMBIT, "4"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_DECOY,"m"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_AUG,"U"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_G3SG1,"X"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_MAC10,"K"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_P90,"P"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_SSG08,"a"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_SCAR20,"Y"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_UMP45,"L"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_ELITE,"B"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_FAMAS,"R"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_FIVESEVEN,"C"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_GALILAR,"Q"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_M4A1_SILENCER,"T"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_M4A1,"S"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_P250,"F"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_M249,"g"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_XM1014,"b"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_GLOCK,"D"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_USP_SILENCER,"G"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_HKP2000,"E"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_AK47,"W"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_AWP,"Z"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_BIZON,"M"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_MAG7,"d"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_NEGEV,"f"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_SAWEDOFF,"c"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_TEC9,"H"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_TASER,"h"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_NOVA,"e"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_CZ75A,"I"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_SG556,"V"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_REVOLVER,"J"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_MP7,"N"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_MP9,"O"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_MP5,"L"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_C4,"o"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_FRAG_GRENADE,"j"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_SMOKEGRENADE,"k"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_MOLOTOV,"l"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_INCGRENADE,"n"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_FLASHBANG,"i"));
-Weaponsi.insert(std::make_pair(ItemDefinitionIndex::WEAPON_KNIFE,"1"));
+                const std::map<ItemDefinitionIndex, std::string> Weaponsi = {
+{ ItemDefinitionIndex::WEAPON_DEAGLE, "A" },
+{ ItemDefinitionIndex::WEAPON_KNIFE_KARAMBIT, "4" },
+{ ItemDefinitionIndex::WEAPON_DECOY,"m" },
+{ ItemDefinitionIndex::WEAPON_AUG,"U" },
+{ ItemDefinitionIndex::WEAPON_G3SG1,"X" },
+{ ItemDefinitionIndex::WEAPON_MAC10,"K" },
+{ ItemDefinitionIndex::WEAPON_P90,"P" },
+{ ItemDefinitionIndex::WEAPON_SSG08,"a" },
+{ ItemDefinitionIndex::WEAPON_SCAR20,"Y" },
+{ ItemDefinitionIndex::WEAPON_UMP45,"L" },
+{ ItemDefinitionIndex::WEAPON_ELITE,"B" },
+{ ItemDefinitionIndex::WEAPON_FAMAS,"R" },
+{ ItemDefinitionIndex::WEAPON_FIVESEVEN,"C" },
+{ ItemDefinitionIndex::WEAPON_GALILAR,"Q" },
+{ ItemDefinitionIndex::WEAPON_M4A1_SILENCER,"T" },
+{ ItemDefinitionIndex::WEAPON_M4A1,"S" },
+{ ItemDefinitionIndex::WEAPON_P250,"F" },
+{ ItemDefinitionIndex::WEAPON_M249,"g" },
+{ ItemDefinitionIndex::WEAPON_XM1014,"b" },
+{ ItemDefinitionIndex::WEAPON_GLOCK,"D" },
+{ ItemDefinitionIndex::WEAPON_USP_SILENCER,"G" },
+{ ItemDefinitionIndex::WEAPON_HKP2000,"E" },
+{ ItemDefinitionIndex::WEAPON_AK47,"W" },
+{ ItemDefinitionIndex::WEAPON_AWP,"Z" },
+{ ItemDefinitionIndex::WEAPON_BIZON,"M" },
+{ ItemDefinitionIndex::WEAPON_MAG7,"d" },
+{ ItemDefinitionIndex::WEAPON_NEGEV,"f" },
+{ ItemDefinitionIndex::WEAPON_SAWEDOFF,"c" },
+{ ItemDefinitionIndex::WEAPON_TEC9,"H" },
+{ ItemDefinitionIndex::WEAPON_TASER,"h" },
+{ ItemDefinitionIndex::WEAPON_NOVA,"e" },
+{ ItemDefinitionIndex::WEAPON_CZ75A,"I" },
+{ ItemDefinitionIndex::WEAPON_SG556,"V" },
+{ ItemDefinitionIndex::WEAPON_REVOLVER,"J" },
+{ ItemDefinitionIndex::WEAPON_MP7,"N" },
+{ ItemDefinitionIndex::WEAPON_MP9,"O" },
+{ ItemDefinitionIndex::WEAPON_MP5,"L" },
+{ ItemDefinitionIndex::WEAPON_C4,"o" },
+{ ItemDefinitionIndex::WEAPON_FRAG_GRENADE,"j" },
+{ ItemDefinitionIndex::WEAPON_SMOKEGRENADE,"k" },
+{ ItemDefinitionIndex::WEAPON_MOLOTOV,"l" },
+{ ItemDefinitionIndex::WEAPON_INCGRENADE,"n" },
+{ ItemDefinitionIndex::WEAPON_FLASHBANG,"i" },
+{ ItemDefinitionIndex::WEAPON_KNIFE,"1" },
+                };
+
 if ( Weaponsi.find(activeeWeapon) != Weaponsi.end()){
 modelName = Weaponsi.find(activeeWeapon)->second;
 }
@@ -2047,7 +2050,8 @@ void ESP::Paint()
 		{
 			C_BasePlayer* player = (C_BasePlayer*) entity;
 
-			//if (player->GetDormant() || !player->GetAlive())
+			if (player->GetDormant() &&  !Settings::ESP::showDormant)
+				continue;
 			  if (!player->GetAlive())
 				continue;
 

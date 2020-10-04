@@ -5,7 +5,6 @@
 
 #include "../../ImGUI/imgui_internal.h"
 #include "../../Utils/xorstring.h"
-
 #include "../Tabs/legitbottab.h"
 #include "../Tabs/ragebottab.h"
 #include "../Tabs/antiaimtab.h"

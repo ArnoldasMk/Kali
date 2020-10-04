@@ -469,6 +469,7 @@ namespace Settings
 {
 	namespace UI
 	{
+		inline bool particles;
 		inline ColorVar mainColor = ImColor(42, 45, 42, 255 );
 		inline ColorVar bodyColor = ImColor( 0, 0, 0, 245 );
 		inline ColorVar fontColor = ImColor( 238, 224, 224, 154 );

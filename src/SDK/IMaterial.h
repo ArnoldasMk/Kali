@@ -213,4 +213,11 @@ public:
 
         }
 
+        void DrawScreenSpaceRectangle(IMaterial* pMaterial, int destX, int destY, int width, int height, float srcTextureX0, float srcTextureY0, float srcTextureX1, float srcTextureY1, int srcTextureWidth, int srcTextureHeight, void* pClientRenderable, int nXDice, int nYDice)
+        {
+                typedef void (* oDrawScreenSpaceRectangle)(void*, IMaterial*, int, int, int, int, float, float, float, float, int, int, void*, int, int);
+                return getvfunc<oDrawScreenSpaceRectangle>(this, 114)(this, pMaterial, destX, destY, width, height, srcTextureX0, srcTextureY0, srcTextureX1, srcTextureY1, srcTextureWidth, srcTextureHeight, pClientRenderable, nXDice, nYDice);
+        }
+
+
 };

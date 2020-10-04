@@ -343,6 +343,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
     settings[XORSTR("Ragebot")][XORSTR("impactType")] = (int)Settings::Ragebot::impacttype;
 
+    settings[XORSTR("UI")][XORSTR("particles")] = Settings::UI::particles;
+
     settings[XORSTR("ESP")][XORSTR("KeybindsY")] = Settings::ESP::keybi::y;
     settings[XORSTR("ESP")][XORSTR("KeybindsX")] = Settings::ESP::keybi::x;
     settings[XORSTR("ESP")][XORSTR("showKeybinds")] = Settings::ESP::KeyBinds;
@@ -1048,6 +1050,7 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("color")], &Settings::Ragebot::quickpeek::color);
     GetVal(settings[XORSTR("ESP")][XORSTR("Watermark")][XORSTR("color")], &Settings::ESP::Watermark::color);
     GetVal(settings[XORSTR("ESP")][XORSTR("manualAAColor")], &Settings::ESP::manualAAColor);
+    GetVal(settings[XORSTR("UI")][XORSTR("particles")], &Settings::UI::particles);
 
     GetVal(settings[XORSTR("ESP")][XORSTR("KeybindsY")], &Settings::ESP::keybi::y);
     GetVal(settings[XORSTR("ESP")][XORSTR("KeybindsX")], &Settings::ESP::keybi::x);
