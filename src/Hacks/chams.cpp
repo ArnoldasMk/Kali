@@ -14,6 +14,8 @@ IMaterial *WhiteAdditive,*WhiteAdditiveIgnoreZ;
 IMaterial *AdditiveTwo, *AdditiveTwoIgnoreZ;
 IMaterial* materialChamsPearl;
 IMaterial* materialChamsGlow;
+IMaterial* materialChamsPulse;
+
                 Vector colro = Vector(0.5, 0, 1);
 
 typedef void (*DrawModelExecuteFn) (void*, void*, void*, const ModelRenderInfo_t&, matrix3x4_t*);
@@ -273,6 +275,9 @@ static void DrawWeapon(const ModelRenderInfo_t& pInfo)
                 case ChamsType::PULSE:
                         mat = material->FindMaterial("models/inventory_items/dogtags/dogtags_outline", TEXTURE_GROUP_MODEL);
                         break;
+                case ChamsType::GLOWF:
+                        mat = materialChamsGlow;
+                        break;
 
 		default :
 			return;
@@ -317,9 +322,9 @@ return;
                 material->ColorModulate(color);
                 material->AlphaModulate(Settings::ESP::Chams::Arms::color.Color().Value.w);
 
-                modelRender->ForcedMaterialOverride(materialChamsFlat);
                 modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, (matrix3x4_t *)ticks.bone_matrix);
-                modelRender->ForcedMaterialOverride(nullptr);
+                modelRender->ForcedMaterialOverride(material);
+
             }
         }
     }
@@ -381,6 +386,7 @@ void Chams::DrawModelExecute(void* thisptr, void* context, void *state, const Mo
 	{
 	        materialChamsPearl = Util::CreateMaterial2(XORSTR("VertexLitGeneric"), XORSTR("models/inventory_items/dogtags/dogtags_outline"), false, true, true, true, 1.f);
                 materialChamsGlow = Util::CreateMaterial3(XORSTR("VertexLitGeneric"), XORSTR("csgo/materials/glowOverlay.vmt"), false, true, true, true, 1.f, colro);
+                materialChamsPulse = Util::CreateMaterial4(XORSTR("VertexLitGeneric"), XORSTR("models/inventory_items/dogtags/dogtags_outline"), false, true, true, true, 1.f, colro);
 
 		materialChamsFlat = Util::CreateMaterial(XORSTR("UnlitGeneric"), XORSTR("VGUI/white_additive"), false, true, true, true, true);
 		materialChamsFlatIgnorez = Util::CreateMaterial(XORSTR("UnlitGeneric"), XORSTR("VGUI/white_additive"), true, true, true, true, true);

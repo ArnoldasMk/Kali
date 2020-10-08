@@ -1181,6 +1181,30 @@ IMaterial* Util::CreateMaterial2(std::string type, std::string texture, bool ign
 
     return material->CreateMaterial(materialName.c_str(), keyValues);
 }
+IMaterial* Util::CreateMaterial4(std::string type, std::string texture, bool ignorez, bool nofog, bool model, bool nocull, float alpha, Vector color)
+{
+    static int matNum = 1;
+    std::stringstream materialData;
+    materialData << "\"" + type + "\"\n"
+                 "{\n"
+                 "\t\"$envmaptint\" \"" + "[" + std::to_string(1) + " " + std::to_string(0) + " " + std::to_string(0) + "]" + "\"\n"
+
+                 "\t\"$alpha\" \"" + std::to_string(0.8) + "\"\n"
+                 "}\n" << std::flush;
+
+    char randomLetter = 'a' + rand()%26;
+    std::string time = randomLetter + std::string( __TIME__ ); // compile time XX:XX:XX
+    time.erase( std::remove(time.begin(), time.end(), ':'), time.end() ); // remove colons
+    std::string materialName = time + "_" + std::to_string( matNum );
+    cvar->ConsoleDPrintf("MatName: %s\n", materialName.c_str());
+    matNum++;
+
+    KeyValues* keyValues = new KeyValues(materialName.c_str());
+    InitKeyValues(keyValues, type.c_str());
+    LoadFromBuffer(keyValues, materialName.c_str(), materialData.str().c_str(), nullptr, nullptr, nullptr);
+
+    return material->CreateMaterial(materialName.c_str(), keyValues);
+}
 
 IMaterial* Util::CreateMaterial3(std::string type, std::string texture, bool ignorez, bool nofog, bool model, bool nocull, float alpha, Vector color)
 {

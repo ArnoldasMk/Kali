@@ -951,6 +951,8 @@ static void DoLegitAntiAim(C_BasePlayer *const localplayer, QAngle& angle, bool&
         engine->GetViewAngles( ViewAngle);
 
     static auto OverWatchProof([&](){
+               should_sidemove = true;
+
 if (!CreateMove::sendPacket)
         {
              //localplayer->GetAnimState()->goalFeetYaw = inverted ? maxDelta : -maxDelta;
@@ -960,8 +962,10 @@ if (!CreateMove::sendPacket)
         else{
             //localplayer->GetAnimState()->goalFeetYaw = inverted ? maxDelta*-1 : maxDelta;
             AntiAim::fakeAngle = angle;
+                CreateMove::sendPacket = false;
+
         }
-            
+
         inverted ? LBYBREAK(angle.y+maxDelta-1) : LBYBREAK(angle.y-maxDelta-1); 
     });
     static auto FakeLegitAA([&](){
@@ -976,22 +980,13 @@ if (!CreateMove::sendPacket)
     static auto Experimental([&](){
 bool broke_lby;
 float side = 1.0f;
-                                if (AntiAim::LbyUpdate()) {
-                                        if (!broke_lby && CreateMove::sendPacket)
-                                                return;
+               should_sidemove = false;
+                if (!CreateMove::sendPacket)
+                angle.y -= inverted ? 116.f : -116.f;
+                if (AntiAim::LbyUpdate())
+		CreateMove::sendPacket = false;
+                angle.y -= inverted ? 116.f : -116.f;
 
-                                        broke_lby = false;
-                                       CreateMove::sendPacket = false;
-                                        cmd->viewangles.y += 120.0f * side; //was 120.f and side
-                                }
-                                else {
-                                        broke_lby = true;
-                                       CreateMove::sendPacket = false;
-                                        cmd->viewangles.y += 120.0f * -side; //was 120.f and -side
-                                }
-                        FixAngles(cmd->viewangles);
-                        //math::MovementFix(cmd, OldAngles, cmd->viewangles);
- 
    });
 
     switch (Settings::AntiAim::LegitAntiAim::legitAAtype)

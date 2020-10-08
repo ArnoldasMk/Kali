@@ -1251,13 +1251,14 @@ return;
 { ItemDefinitionIndex::WEAPON_MOLOTOV,"l" },
 { ItemDefinitionIndex::WEAPON_INCGRENADE,"n" },
 { ItemDefinitionIndex::WEAPON_FLASHBANG,"i" },
-{ ItemDefinitionIndex::WEAPON_KNIFE,"1" },
+{ ItemDefinitionIndex::WEAPON_KNIFE,"5" },
                 };
 
 if ( Weaponsi.find(activeeWeapon) != Weaponsi.end()){
 modelName = Weaponsi.find(activeeWeapon)->second;
 }
                                 Vector2D weaponTextSizeF = Draw::GetTextSize(modelName.c_str() , astrium );
+		if (localplayer->GetAlive())
 		Draw::Text( ( x + ( w / 2 ) - ( weaponTextSizeF.x / 2 ) ), y + h + offset, modelName.c_str(), astrium,Color::FromImColor( Entity::IsTeamMate(player, localplayer) ? Settings::ESP::allyInfoColor.Color() : Settings::ESP::enemyInfoColor.Color()) );
 
 
