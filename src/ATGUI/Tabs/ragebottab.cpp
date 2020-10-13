@@ -363,12 +363,12 @@ ImGui::Combo(XORSTR("##ImpactDetection"), (int*)&Settings::Ragebot::impacttype, 
                                 ImGui::SliderFloat(XORSTR("##TRACKTIME"), &Settings::Ragebot::backTrack::time, 0.0f, 0.2f);
 
                                 ImGui::Checkbox(XORSTR("AutoKnife"), &Settings::AutoKnife::enabled);
-                                ImGui::Checkbox(XORSTR("Exploits"), &Settings::Ragebot::exploits::enabled);
-				if (Settings::Ragebot::exploits::enabled){
-                                ImGui::Checkbox(XORSTR("DoubleTap"), &Settings::Ragebot::exploits::doubletap);
-				    UI::KeyBindButton(&Settings::Ragebot::exploits::doubletapKey);
+//                                ImGui::Checkbox(XORSTR("Exploits"), &Settings::Ragebot::exploits::enabled);
+//				if (Settings::Ragebot::exploits::enabled){
+  //                              ImGui::Checkbox(XORSTR("DoubleTap"), &Settings::Ragebot::exploits::doubletap);
+//				    UI::KeyBindButton(&Settings::Ragebot::exploits::doubletapKey);
 
-				}
+//				}
 				if (ImGui::Checkbox(XORSTR("Silent Aim"), &silent))
 					UI::UpdateRageWeaponSettings();
 			}
