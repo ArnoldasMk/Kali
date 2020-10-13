@@ -21,6 +21,7 @@ static void RageAntiAIm()
         "Jitter",
         "Brainfuck Fake Fake AA",
 	"JitterRandom",
+	"P100 SPIN",
     };
 const char* pitchType[] = {
         "Up",
@@ -65,7 +66,7 @@ const char* lbyType[] = {
         {
             ImGui::PushItemWidth(-1);
 
-        if(Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Randome || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::JitterSwitch || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::JitterRandom)
+        if(Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Randome || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::JitterSwitch || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::JitterRandom || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Spin)
             ImGui::SliderFloat(XORSTR("##RealJitterPercentage"), &Settings::AntiAim::RageAntiAim::JitterPercent, 1, 100, "Jitter Ammount : %.0f");
 	ImGui::PopItemWidth();
 	}

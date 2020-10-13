@@ -49,7 +49,7 @@ void SkinChanger::FrameStageNotifyModels(ClientFrameStage_t stage)
 			if (stage == ClientFrameStage_t::FRAME_RENDER_START)
 				originalIdx = *localplayer->GetModelIndex(); 
 			const auto idx = stage == ClientFrameStage_t::FRAME_RENDER_END && originalIdx ? originalIdx : modelInfo->GetModelIndex(Settings::Skinchanger::PlayerModel.c_str());
-    		localplayer->SetModelIndex(idx);
+    		//localplayer->SetModelIndex(idx);
 		}
 		
 		for (size_t i = 0; localplayer->GetWeapons()[i] != (int) 0xFFFFFFFF; i++)
@@ -331,6 +331,11 @@ void SkinChanger::SetViewModelSequence(const CRecvProxyData *pDataConst, void *p
 
 			// Store the current sequence.
 			int m_nSequence = pData->m_Value.m_Int;
+                        if (szModel == "models/weapons/v_pist_deagle.mdl" && Settings::Skinchanger::forcerareanim)
+                        {
+			if (m_nSequence == 7)
+				m_nSequence = 8;
+			}
 			if (szModel == "models/weapons/v_knife_butterfly.mdl")
 			{
 				// Fix animations for the Butterfly Knife.

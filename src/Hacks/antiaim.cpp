@@ -818,7 +818,7 @@ static void FreeStand(C_BasePlayer *const localplayer, QAngle& angle, CUserCmd* 
         angle.y += GetBestHeadAngle(cmd);
             return;
     }
-
+    double factor;
     static bool buttonToggle = false;
     /* Button Function for invert the fake*/
     if ( inputSystem->IsButtonDown(InvertKey) && !buttonToggle )
@@ -873,6 +873,13 @@ static void FreeStand(C_BasePlayer *const localplayer, QAngle& angle, CUserCmd* 
                 sw = !sw;
                 angle.y += sw ? JitterPercent : -JitterPercent;
                 break;
+            case AntiAimRealType_Y::Spin:
+                should_sidemove = true;
+			factor =  360.0 / M_PHI;
+			factor *= JitterPercent;
+			angle.y = fmodf(globalVars->curtime * factor, 360.0);
+                break;
+
         case AntiAimRealType_Y::JitterRandom:
                 should_sidemove = true;
                 int stuff = JitterPercent;

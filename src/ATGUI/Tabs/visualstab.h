@@ -103,6 +103,7 @@ namespace Colors
 			{ "Chams - Arms", &Settings::ESP::Chams::Arms::color },
 			{ "Chams - Weapon", &Settings::ESP::Chams::Weapon::color },
 			{ "Chams - Fake", &Settings::ESP::Chams::FakeColor },
+                        { "Chams - Sleeves", &Settings::ESP::Chams::Sleeves::color },
 			{ "Grenade Helper - Aim Line", &Settings::GrenadeHelper::aimLine },
 			{ "Grenade Helper - Aim Dot", &Settings::GrenadeHelper::aimDot },
 			{ "Grenade Helper - HE Info", &Settings::GrenadeHelper::infoHE },

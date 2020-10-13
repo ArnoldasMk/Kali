@@ -128,6 +128,7 @@ enum class ChamsType : int
 	GLOW,
 	GLOWF,
 	PULSE,
+        ANIMATED,
 	NONE,
 };
 
@@ -241,6 +242,7 @@ enum class AntiAimRealType_Y : int
 	Randome,
 	JitterSwitch,
 	JitterRandom,
+	Spin,
 };
 
 enum class AntiAimFakeType_y : int
@@ -1306,6 +1308,13 @@ namespace Settings
 				inline ColorVar color = ImColor( 255, 255, 255, 255 );
 				inline ChamsType type = ChamsType::WHITEADDTIVE;
 			}
+                        namespace Sleeves
+                        {
+                                inline bool enabled = false;
+                                inline ColorVar color = ImColor( 255, 255, 255, 255 );
+                                inline ChamsType type = ChamsType::WHITEADDTIVE;
+                        }
+
 		}
 
 		// sound esp
@@ -1549,6 +1558,8 @@ inline ButtonCode_t key;
 			inline bool enabled = false;
 			inline bool perTeam = false;
 		}
+
+		inline bool forcerareanim;
 
 		namespace Models
 		{

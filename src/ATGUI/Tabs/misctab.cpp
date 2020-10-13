@@ -219,8 +219,8 @@ void Misc::RenderTab()
 			}
 			ImGui::Columns(1);
 			ImGui::Separator();
-			ImGui::Checkbox(XORSTR("Enable"), &Settings::ThirdPerson::enabled);
-			ImGui::SameLine(0.0f, -1.0f);{ImGui::Text(XORSTR("Third Person"));}
+			ImGui::Checkbox(XORSTR("Enable Third Person"), &Settings::ThirdPerson::enabled);
+			//ImGui::SameLine(0.0f, -1.0f);{ImGui::Text(XORSTR("Third Person"));}
 			ImGui::Separator();
 			if (Settings::ThirdPerson::enabled) {
 				ImGui::Columns(1, nullptr, true);

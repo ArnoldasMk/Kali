@@ -228,6 +228,7 @@ void Models::RenderTab()
 		SkinChanger::glovesUpdated = true;
 	}
 	ImGui::Columns(1);
+    ImGui::Checkbox(XORSTR("Force rare animations"), &Settings::Skinchanger::forcerareanim);
 
 	ImGui::Separator();
 }

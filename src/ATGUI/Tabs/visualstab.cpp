@@ -20,6 +20,7 @@
 								"GLOW",
 								"GLOWF",
 								"PULSE",
+                                                                "ANIMATED",
 								"NONE",
 								};
 
@@ -427,6 +428,8 @@ void Visuals::RenderTab()
 			// ImGui::Text(XORSTR("Other Visual Settings"));
 			ImGui::Columns(2, nullptr, false);
 			{
+                                ImGui::Checkbox(XORSTR("Sleeves"), &Settings::ESP::Chams::Sleeves::enabled);
+
 				ImGui::Checkbox(XORSTR("Arms"), &Settings::ESP::Chams::Arms::enabled);
 				ImGui::Checkbox(XORSTR("Weapons"), &Settings::ESP::Chams::Weapon::enabled);
 				ImGui::Checkbox(XORSTR("Dlights"), &Settings::Dlights::enabled);
@@ -616,6 +619,7 @@ void Visuals::RenderTab()
 			ImGui::NextColumn();
 			{
 				ImGui::PushItemWidth(-1);
+                                ImGui::Combo(XORSTR("##SLEEVESTYPE"), (int*)& Settings::ESP::Chams::Sleeves::type, chamsTypes, IM_ARRAYSIZE(chamsTypes));
 				ImGui::Combo(XORSTR("##ARMSTYPE"), (int*)& Settings::ESP::Chams::Arms::type, chamsTypes, IM_ARRAYSIZE(chamsTypes));
 				ImGui::Combo(XORSTR("##WEAPONTYPE"), (int*)& Settings::ESP::Chams::Weapon::type, chamsTypes, IM_ARRAYSIZE(chamsTypes));
 				ImGui::SliderFloat(XORSTR("##DLIGHTRADIUS"), &Settings::Dlights::radius, 0, 1000, XORSTR("Radius: %0.f"));

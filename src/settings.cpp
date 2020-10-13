@@ -493,6 +493,10 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Arms")][XORSTR("type")] = (int)Settings::ESP::Chams::Arms::type;
     settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Weapon")][XORSTR("enabled")] = Settings::ESP::Chams::Weapon::enabled;
     settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Weapon")][XORSTR("type")] = (int)Settings::ESP::Chams::Weapon::type;
+    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Sleeves")][XORSTR("enabled")] = Settings::ESP::Chams::Sleeves::enabled;
+    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Sleeves")][XORSTR("type")] = (int)Settings::ESP::Chams::Sleeves::type;
+    LoadColor(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Sleeves")][XORSTR("color")], Settings::ESP::Chams::Sleeves::color);
+
     LoadColor(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Weapon")][XORSTR("color")], Settings::ESP::Chams::Weapon::color);
     LoadColor(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Arms")][XORSTR("color")], Settings::ESP::Chams::Arms::color);
     LoadColor(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("players_ally_color")], Settings::ESP::Chams::allyColor);
@@ -628,6 +632,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("FOVChanger")][XORSTR("viewmodel_enabled")] = Settings::FOVChanger::viewmodelEnabled;
     settings[XORSTR("FOVChanger")][XORSTR("viewmodel_value")] = Settings::FOVChanger::viewmodelValue;
     settings[XORSTR("FOVChanger")][XORSTR("ignore_scope")] = Settings::FOVChanger::ignoreScope;
+    settings[XORSTR("SkinChanger")][XORSTR("forcerareanim")] = Settings::Skinchanger::forcerareanim;
 
     settings[XORSTR("SkinChanger")][XORSTR("Skins")][XORSTR("enabled")] = Settings::Skinchanger::Skins::enabled;
     settings[XORSTR("SkinChanger")][XORSTR("Models")][XORSTR("enabled")] = Settings::Skinchanger::Models::enabled;
@@ -1189,6 +1194,10 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Weapon")][XORSTR("enabled")], &Settings::ESP::Chams::Weapon::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Weapon")][XORSTR("type")], (int*)&Settings::ESP::Chams::Weapon::type);
     GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Weapon")][XORSTR("color")], &Settings::ESP::Chams::Weapon::color);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Sleeves")][XORSTR("enabled")], &Settings::ESP::Chams::Sleeves::enabled);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Sleeves")][XORSTR("type")], (int*)&Settings::ESP::Chams::Sleeves::type);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Sleeves")][XORSTR("color")], &Settings::ESP::Chams::Sleeves::color);
+
     GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("players_ally_color")], &Settings::ESP::Chams::allyColor);
     GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("players_ally_visible_color")], &Settings::ESP::Chams::allyVisibleColor);
     GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("players_enemy_color")], &Settings::ESP::Chams::enemyColor);
@@ -1402,6 +1411,8 @@ void Settings::LoadConfig(std::string path)
     }
 
     SkinChanger::forceFullUpdate = true;
+
+    GetVal(settings[XORSTR("SkinChanger")][XORSTR("forcerareanim")], &Settings::Skinchanger::forcerareanim);
 
     GetVal(settings[XORSTR("SkinChanger")][XORSTR("Skins")][XORSTR("enabled")], &Settings::Skinchanger::Skins::enabled);
     GetVal(settings[XORSTR("SkinChanger")][XORSTR("Models")][XORSTR("enabled")], &Settings::Skinchanger::Models::enabled);

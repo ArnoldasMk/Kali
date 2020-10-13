@@ -1202,8 +1202,8 @@ static void DrawPlayerText( C_BasePlayer* player, C_BasePlayer* localplayer, int
 	// weapon
 	C_BaseCombatWeapon* activeWeapon = ( C_BaseCombatWeapon* ) entityList->GetClientEntityFromHandle( player->GetActiveWeapon() );
 	if ( Settings::ESP::Info::weapon) {
-	 if (!localplayer->GetAlive())
-return;
+	// if (!localplayer->GetAlive())
+//return;
 		auto activeeWeapon =  *activeWeapon->GetItemDefinitionIndex();
 		std::string modelName;
 		int offset = ( int ) ( boxSpacing);

@@ -24,6 +24,8 @@ void ASUSWalls::FrameStageNotify(ClientFrameStage_t stage)
 
 			mat->ColorModulate(r, g, b);
 			mat->AlphaModulate(a);
+
+
 		}
 
 		worldMaterials.clear();
@@ -53,8 +55,10 @@ void ASUSWalls::FrameStageNotify(ClientFrameStage_t stage)
 		if (worldMaterials.at(i) != color)
 		{
 
+
 			mat->ColorModulate(color);
 			mat->AlphaModulate(color.Value.w);
+
 
 			worldMaterials.at(i) = color;
 		}

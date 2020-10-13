@@ -82,6 +82,19 @@ static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRen
 			overlay_material = materialChamsGlow;
 			wap = true;
 			break;
+
+                case ChamsType::GLOWF:
+                        visible_material = material->FindMaterial("vgui/achievements/glow", TEXTURE_GROUP_MODEL);
+                        hidden_material = materialChamsFlatIgnorez;
+
+                        break;
+
+                case ChamsType::ANIMATED:
+                        visible_material = material->FindMaterial("models/inventory_items/music_kit/darude_01/mp3_detail", TEXTURE_GROUP_MODEL);
+                        hidden_material = materialChamsFlatIgnorez;
+
+                        break;
+
 		case ChamsType::PULSE:
 			visible_material = material->FindMaterial("models/inventory_items/dogtags/dogtags_outline", TEXTURE_GROUP_MODEL);
 			hidden_material = materialChamsFlatIgnorez;
@@ -113,7 +126,6 @@ static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRen
 
 		visible_material->ColorModulate(visColor);
 		hidden_material->ColorModulate(color);
-
 		visible_material->AlphaModulate(Settings::ESP::Chams::allyVisibleColor.Color(entity).Value.w);
 		hidden_material->AlphaModulate(Settings::ESP::Chams::allyColor.Color(entity).Value.w);
 		//colro.x = Settings::ESP::Chams::allyColor.Color(entity).Value.x;
@@ -138,7 +150,8 @@ static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRen
 		hidden_material->AlphaModulate(0.5f);
 	}
 
-	visible_material->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, chamsType == ChamsType::WIREFRAME);
+
+	visible_material->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, chamsType == ChamsType::WIREFRAME || chamsType == ChamsType::ANIMATED);
 	visible_material->SetMaterialVarFlag(MATERIAL_VAR_NO_DRAW, chamsType == ChamsType::NONE);
 	hidden_material->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, chamsType == ChamsType::WIREFRAME);
 	hidden_material->SetMaterialVarFlag(MATERIAL_VAR_NO_DRAW, chamsType == ChamsType::NONE);
@@ -201,6 +214,16 @@ static void DrawFake(void* thisptr, void* context, void *state, const ModelRende
 		case ChamsType::PULSE:
 			Fake_meterial = material->FindMaterial("models/inventory_items/dogtags/dogtags_outline", TEXTURE_GROUP_MODEL);
 			break;
+               case ChamsType::GLOW:
+                        Fake_meterial = material->FindMaterial("vgui/achievements/glow", TEXTURE_GROUP_MODEL);
+
+                        break;
+
+                case ChamsType::ANIMATED:
+                        Fake_meterial = material->FindMaterial("models/inventory_items/music_kit/darude_01/mp3_detail", TEXTURE_GROUP_MODEL);
+                        break;
+
+
 		default:
 			return;
 	}
@@ -276,7 +299,7 @@ static void DrawWeapon(const ModelRenderInfo_t& pInfo)
                         mat = material->FindMaterial("models/inventory_items/dogtags/dogtags_outline", TEXTURE_GROUP_MODEL);
                         break;
                 case ChamsType::GLOWF:
-                        mat = materialChamsGlow;
+                        mat = material->FindMaterial("vgui/achievements/glow", TEXTURE_GROUP_MODEL);
                         break;
 
 		default :
@@ -293,6 +316,51 @@ static void DrawWeapon(const ModelRenderInfo_t& pInfo)
 	mat->SetMaterialVarFlag(MATERIAL_VAR_NO_DRAW, Settings::ESP::Chams::Weapon::type == ChamsType::NONE);
 	modelRender->ForcedMaterialOverride(mat);
 }
+
+static void DrawSleeves(const ModelRenderInfo_t& pInfo)
+{
+    if (!Settings::ESP::Chams::Sleeves::enabled)
+        return;
+
+    std::string modelName = modelInfo->GetModelName(pInfo.pModel);
+
+    IMaterial* mat = nullptr;
+
+        switch(Settings::ESP::Chams::Sleeves::type)
+        {
+                case ChamsType::NONE:
+                case ChamsType::WIREFRAME:
+                case ChamsType::WHITEADDTIVE :
+                        mat = WhiteAdditive;
+                        break;
+                case ChamsType::FLAT:
+                        mat = materialChamsFlat;
+                        break;
+                case ChamsType::ADDITIVETWO:
+                        mat = AdditiveTwo;
+                        break;
+                case ChamsType::PULSE:
+                        mat = material->FindMaterial("models/inventory_items/dogtags/dogtags_outline", TEXTURE_GROUP_MODEL);
+                        break;
+                case ChamsType::GLOWF:
+                        mat = materialChamsGlow;
+                        break;
+
+                default :
+                        return;
+        }
+
+        if (!Settings::ESP::Chams::Sleeves::enabled)
+                mat = material->FindMaterial(modelName.c_str(), TEXTURE_GROUP_MODEL);
+
+    mat->ColorModulate(Settings::ESP::Chams::Sleeves::color.Color());
+    mat->AlphaModulate(Settings::ESP::Chams::Sleeves::color.Color().Value.w);
+       mat->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, true);
+        mat->SetMaterialVarFlag(MATERIAL_VAR_NO_DRAW, Settings::ESP::Chams::Weapon::type == ChamsType::NONE);
+
+    modelRender->ForcedMaterialOverride(mat);
+}
+
 static void DrawRecord(void *thisptr, void *context, void *state, const ModelRenderInfo_t &pInfo, matrix3x4_t *pCustomBoneToWorld)
 {
 
@@ -330,18 +398,20 @@ return;
     }
 }
 
-static void DrawArms(const ModelRenderInfo_t& pInfo)
+static void DrawArms(void *thisptr, void *context, void *state, const ModelRenderInfo_t &pInfo, matrix3x4_t* pCustomBoneToWorld)
 {
 	if (!Settings::ESP::Chams::Arms::enabled)
 		return;
 
 	std::string modelName = modelInfo->GetModelName(pInfo.pModel);
 	IMaterial* mat = nullptr;
+        IMaterial *base_material = nullptr;
 
 	switch(Settings::ESP::Chams::Arms::type)
 	{
 		case ChamsType::NONE:
 		case ChamsType::WIREFRAME :
+                       // mat = material->FindMaterial("dev/glow_armsrace", TEXTURE_GROUP_MODEL);
 		case ChamsType::WHITEADDTIVE :
 			mat = WhiteAdditive;
 			break;
@@ -350,10 +420,18 @@ static void DrawArms(const ModelRenderInfo_t& pInfo)
 			break;
 		case ChamsType::ADDITIVETWO:
 			mat = AdditiveTwo;
+
 			break;
                 case ChamsType::PEARL:
                         mat = materialChamsPearl;
+			break;
 
+                case ChamsType::GLOWF:
+                        mat = material->FindMaterial("dev/glow_armsrace", TEXTURE_GROUP_MODEL);
+                        break;
+		case ChamsType::ANIMATED:
+                        mat = material->FindMaterial("models/inventory_items/music_kit/darude_01/mp3_detail", TEXTURE_GROUP_MODEL);
+			break;
 		default :
 			return;
 	}
@@ -364,10 +442,24 @@ static void DrawArms(const ModelRenderInfo_t& pInfo)
 
 	mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
 	mat->AlphaModulate(Settings::ESP::Chams::Arms::color.Color().Value.w);
+       // mat->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, true);
 
-	mat->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Settings::ESP::Chams::Arms::type == ChamsType::WIREFRAME);
+	mat->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Settings::ESP::Chams::Arms::type == ChamsType::WIREFRAME || Settings::ESP::Chams::Arms::type == ChamsType::ANIMATED);
 	mat->SetMaterialVarFlag(MATERIAL_VAR_NO_DRAW, Settings::ESP::Chams::Arms::type == ChamsType::NONE);
-	modelRender->ForcedMaterialOverride(mat);
+if ( Settings::ESP::Chams::Arms::type == ChamsType::ANIMATED){
+base_material = materialChamsFlat;
+        base_material->ColorModulate(Settings::ASUSWalls::color.Color());
+        base_material->AlphaModulate(Settings::ASUSWalls::color.Color().Value.w);
+
+        modelRender->ForcedMaterialOverride(base_material);
+                modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, pCustomBoneToWorld);
+
+                modelRender->ForcedMaterialOverride(mat);
+}
+else {
+                modelRender->ForcedMaterialOverride(mat);
+
+}
 }
 
 void Chams::DrawModelExecute(void* thisptr, void* context, void *state, const ModelRenderInfo_t &pInfo, matrix3x4_t* pCustomBoneToWorld)
@@ -408,11 +500,14 @@ void Chams::DrawModelExecute(void* thisptr, void* context, void *state, const Mo
 		DrawFake(thisptr, context, state, pInfo, pCustomBoneToWorld);
 		DrawPlayer(thisptr, context, state, pInfo, pCustomBoneToWorld);
                  DrawRecord(thisptr, context, state, pInfo, pCustomBoneToWorld);
-		
+
 	}
-		
+
 	else if (modelName.find(XORSTR("arms")) != std::string::npos)
-		DrawArms(pInfo);
+		DrawArms( thisptr,  context,  state, pInfo, pCustomBoneToWorld);
 	else if (modelName.find(XORSTR("weapon")) != std::string::npos)
 		DrawWeapon(pInfo);
+        else if (modelName.find(XORSTR("v_sleeves")) != std::string::npos)
+    		DrawSleeves(pInfo);
+
 }
