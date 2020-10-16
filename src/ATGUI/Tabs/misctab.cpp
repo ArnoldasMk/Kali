@@ -461,6 +461,7 @@ NameChanger::changeName(false, res.c_str(), 5.0f);
 			ImGui::Separator();
 			ImGui::Columns(2, nullptr, true);
 			{
+				ImGui::Checkbox(XORSTR("AirStuck"), &Settings::Airstuck::enabled);
 				ImGui::Checkbox(XORSTR("Adaptive Fake Lag"), &Settings::FakeLag::adaptive);
 				ImGui::Checkbox(XORSTR("Auto Accept"), &Settings::AutoAccept::enabled);
 				ImGui::Checkbox(XORSTR("Autoblock"), &Settings::Autoblock::enabled);
@@ -474,6 +475,7 @@ NameChanger::changeName(false, res.c_str(), 5.0f);
 			}
 			ImGui::NextColumn();
 			{
+				UI::KeyBindButton(&Settings::Airstuck::key);
 				ImGui::Checkbox(XORSTR("Show Ranks"), &Settings::ShowRanks::enabled);
 				ImGui::Checkbox(XORSTR("Show Votes"), &Settings::voterevealer::enabled);
 				UI::KeyBindButton(&Settings::Autoblock::key);

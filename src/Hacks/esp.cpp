@@ -916,7 +916,7 @@ int y = 520;
         C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
         if (!localplayer)
                 return;
-    if ( !Settings::ESP::indicators )
+    if ( !Settings::ESP::indicators::enabled )
         return;
 
 ImColor Color;
@@ -927,7 +927,12 @@ else {
 Color = ImColor( 255, 0, 0, 255 );
 
 }
+    if ( Settings::ESP::indicators::lby )
+{
 Draw::AddText( x, y + 50, "LBY", Color );
+}
+if ( Settings::ESP::indicators::aa ){
+//Color AColor;
     float desyncAmount = AntiAim::GetMaxDelta(localplayer->GetAnimState());
 
            int desyncGreenPercentage;
@@ -937,15 +942,17 @@ Draw::AddText( x, y + 50, "LBY", Color );
             else
                 desyncGreenPercentage = ((3.4483 * desyncAmount) * -1) / 2;
             int desyncRedPercentage = 100 - desyncGreenPercentage;
-ImColor AColor = ImColor ( GetBlendedColor(desyncRedPercentage), GetBlendedColor(desyncGreenPercentage), 0, 255);
-Draw::AddText( x, y + 60, "AA", AColor );
+//Color AColor = ImColor ( GetBlendedColor(desyncRedPercentage), GetBlendedColor(desyncGreenPercentage), 0, 255);
+//Draw::AddText( x, y + 60, "AA", AColor );
+}
+if ( Settings::ESP::indicators::vel ){
 ImColor DColor;
         float vel2D = localplayer->GetVelocity().Length2D();
 		if (vel2D < 1.02 && localplayer->GetAlive()) // P1000000 MicroMovement Removal
 		vel2D = 0;
 std::string veltext = std::to_string(vel2D);
-Draw::AddText( x, y + 70, veltext.c_str(), AColor );
-
+Draw::AddText( x, y + 70, veltext.c_str(), Color = ImColor( 0, 255, 0, 255 ) );
+}
 }
 static void DrawSounds( C_BasePlayer *player, ImColor playerColor ) {
     std::unique_lock<std::mutex> lock( footstepMutex, std::try_to_lock );

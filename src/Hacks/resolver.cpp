@@ -198,7 +198,7 @@ void Resolver::FrameStageNotify(ClientFrameStage_t stage)
 				Resolver::players[player->GetIndex()].enemy = player;
 			}
 			if (!Settings::Resolver::manual){
-			if (player->GetEyeAngles()->x < 65.f || player->GetEyeAngles()->x > 90.f)
+			if (player->GetEyeAngles()->x < 65.f || player->GetEyeAngles()->x > 89.f)
 			{
 				 //cvar->ConsoleDPrintf(XORSTR("Resolving : Legit AA"));
 				 //cvar->ConsoleDPrintf(XORSTR("MissedShots : %d\n"), players[player->GetIndex()].MissedCount);

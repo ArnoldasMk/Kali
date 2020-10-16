@@ -361,33 +361,32 @@ void RagebotAutoSlow(C_BasePlayer* localplayer, C_BaseCombatWeapon* activeWeapon
 	if (activeWeapon->GetNextPrimaryAttack() > globalVars->curtime ) 
 		return;
 
-	// QAngle ViewAngle;
-	// 	engine->GetViewAngles(ViewAngle);
-	// static Vector oldOrigin = localplayer->GetAbsOrigin( );
-	// Vector velocity = ( localplayer->GetVecOrigin( )-oldOrigin ) * (1.f/globalVars->interval_per_tick);
-	// oldOrigin = localplayer->GetAbsOrigin( );
-	// float speed  = velocity.Length( );
-		
-	// if(speed > 15.f)
-	// {
-	// 	QAngle dir;
-	// 	Math::VectorAngles(velocity, dir);
-	// 	dir.y = ViewAngle.y - dir.x;
-		
-	// 	Vector NewMove = Vector(0);
-	// 	Math::AngleVectors(dir, NewMove);
-	// 	auto max = std::max(forrwordMove, sideMove);
-	// 	auto mult = 450.f/max;
-	// 	NewMove *= -mult;
+	 QAngle ViewAngle;
+	 	engine->GetViewAngles(ViewAngle);
+	 static Vector oldOrigin = localplayer->GetAbsOrigin( );
+	 Vector velocity = ( localplayer->GetVecOrigin( )-oldOrigin ) * (1.f/globalVars->interval_per_tick);
+	 oldOrigin = localplayer->GetAbsOrigin( );
+	 float speed  = velocity.Length( );
+
+	 if(speed > 15.f)
+	 {
+	 	QAngle dir;
+	 	Math::VectorAngles(velocity, dir);
+	 	dir.y = ViewAngle.y - dir.x;
+	 	Vector NewMove = Vector(0);
+	 	Math::AngleVectors(dir, NewMove);
+	 	auto max = std::max(forrwordMove, sideMove);
+	 	auto mult = 450.f/max;
+	 	NewMove *= -mult;
 			
-	// 	forrwordMove = NewMove.x;
-	// 	sideMove = NewMove.y;
-	// }
-	// else 
-	// {	
+	 	forrwordMove = NewMove.x;
+	 	sideMove = NewMove.y;
+	 }
+	 else 
+	{	
 		forrwordMove = 0.f;
 		sideMove = 0.f;
-	// }
+	 }
 	
 	cmd->buttons |= IN_WALK;
 }

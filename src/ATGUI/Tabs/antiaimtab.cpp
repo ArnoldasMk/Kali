@@ -28,6 +28,9 @@ const char* pitchType[] = {
         "Down",
 	"Zero",
 	"Fake Zero",
+        "Fake Up",
+	"Fake Down",
+	"Fake Jitter",
 };
 
 const char* lbyType[] = {
@@ -41,12 +44,12 @@ const char* lbyType[] = {
     ImGui::Columns(1, nullptr, false); // Pick Rage Anti Aim type
     {
         ImGui::PushItemWidth(-1);
-        ImGui::Combo(XORSTR("##RageAntiAimType"), (int*)&Settings::AntiAim::RageAntiAim::Type, RageAntiAimType, IM_ARRAYSIZE(RageAntiAimType));
+//        ImGui::Combo(XORSTR("##RageAntiAimType"), (int*)&Settings::AntiAim::RageAntiAim::Type, RageAntiAimType, IM_ARRAYSIZE(RageAntiAimType));
         ImGui::PopItemWidth();
     }
 
-    if (Settings::AntiAim::RageAntiAim::Type == RageAntiAimType::FreeStand)
-    {
+  //  if (Settings::AntiAim::RageAntiAim::Type == RageAntiAimType::FreeStand)
+   // {
         ImGui::Columns(2, nullptr, false);
         {
             ImGui::ItemSize(ImVec2(0.0f, 0.0f), 0.0f);
@@ -68,37 +71,13 @@ const char* lbyType[] = {
 
         if(Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Randome || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::JitterSwitch || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::JitterRandom || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Spin)
             ImGui::SliderFloat(XORSTR("##RealJitterPercentage"), &Settings::AntiAim::RageAntiAim::JitterPercent, 1, 100, "Jitter Ammount : %.0f");
+
+    ImGui::Text(XORSTR("InvertKey"));
+    ImGui::SameLine();
+    UI::KeyBindButton(&Settings::AntiAim::RageAntiAim::InvertKey);
+
 	ImGui::PopItemWidth();
 	}
-    }
-    else if (Settings::AntiAim::RageAntiAim::Type == RageAntiAimType::DefaultRage)
-    {
-        ImGui::Columns(2, nullptr, false);
-        {
-            ImGui::ItemSize(ImVec2(0.0f, 0.0f), 0.0f);
-            ImGui::Text(XORSTR("Yaw"));
-            ImGui::Text(XORSTR("Pitch"));
-
-        }
-        ImGui::NextColumn();
-        {
-            ImGui::PushItemWidth(-1);
-            ImGui::Combo(XORSTR("##YACTUALTYPE"), (int*)& Settings::AntiAim::Yaw::typeReal, yType, IM_ARRAYSIZE(yType));
-            ImGui::Combo(XORSTR("##PITCHTYPE"), (int*)& Settings::AntiAim::pitchtype, pitchType, IM_ARRAYSIZE(pitchType));
-
-            ImGui::PopItemWidth();
-        }
-        // Real Percentage
-        ImGui::Columns(1);
-        {
-            ImGui::PushItemWidth(-1);
-
-    if(Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Randome || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::JitterSwitch || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::JitterRandom)
-                ImGui::SliderFloat(XORSTR("##JitterPercentage"), &Settings::AntiAim::RageAntiAim::JitterPercent, 0, 100, "Jitter Ammount : %.0f"); 
-         
-            ImGui::PopItemWidth();
-        }
-    }
 
     ImGui::Spacing(); ImGui::Spacing();
     ImGui::Columns(1, nullptr, false);

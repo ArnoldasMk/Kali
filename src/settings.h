@@ -159,6 +159,9 @@ enum class AntiAimType_X : int
     STATIC_DOWN,
     FRONT,
     FRONT_FAKE,
+    DOWN_FAKE,
+    UP_FAKE,
+    FAKE_JITTER,
 };
 enum class Sound : int {
 
@@ -951,7 +954,13 @@ namespace Settings
 
 	namespace ESP
 	{
-		inline bool indicators;
+	namespace indicators
+	{
+		inline bool enabled;
+                inline bool lby;
+                inline bool aa;
+                inline bool vel;
+	}
 		inline bool drawback;
 		inline bool showimpacts;
 		inline bool KeyBinds = false;
@@ -1294,7 +1303,10 @@ namespace Settings
 			inline HealthColorVar FakeColor = ImColor(124,145,25,225);
 
 			inline ChamsType type = ChamsType::WHITEADDTIVE;
-
+			namespace Base
+                        {
+                                inline ColorVar color = ImColor(255, 255, 255, 255);
+			}
 			namespace Arms
 			{
 				inline bool enabled = false;
@@ -1533,6 +1545,12 @@ inline ButtonCode_t key;
 	{
 		inline bool enabled = false;
 		inline bool showOnlyWhenShooting = false;
+	}
+
+	namespace Airstuck
+	{
+		inline bool enabled = false;
+		inline ButtonCode_t key = ButtonCode_t::KEY_F;
 	}
 
 	namespace RagdollGravity

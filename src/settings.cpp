@@ -499,6 +499,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
     LoadColor(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Weapon")][XORSTR("color")], Settings::ESP::Chams::Weapon::color);
     LoadColor(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Arms")][XORSTR("color")], Settings::ESP::Chams::Arms::color);
+    LoadColor(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Base")][XORSTR("color")], Settings::ESP::Chams::Base::color);
+
     LoadColor(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("players_ally_color")], Settings::ESP::Chams::allyColor);
     LoadColor(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("players_ally_visible_color")], Settings::ESP::Chams::allyVisibleColor);
     LoadColor(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("players_enemy_color")], Settings::ESP::Chams::enemyColor);
@@ -524,7 +526,10 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("HitChance")] = Settings::ESP::Spread::spreadLimit;
     LoadColor(settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("color")], Settings::ESP::Spread::color);
     LoadColor(settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("spreadLimitColor")], Settings::ESP::Spread::spreadLimitColor);
-    settings[XORSTR("ESP")][XORSTR("indicators")] = Settings::ESP::indicators;
+    settings[XORSTR("ESP")][XORSTR("indicators")][XORSTR("enabled")] = Settings::ESP::indicators::enabled;
+    settings[XORSTR("ESP")][XORSTR("indicators")][XORSTR("lby")] = Settings::ESP::indicators::lby;
+    settings[XORSTR("ESP")][XORSTR("indicators")][XORSTR("aa")] = Settings::ESP::indicators::aa;
+    settings[XORSTR("ESP")][XORSTR("indicators")][XORSTR("vel")] = Settings::ESP::indicators::vel;
 
     settings[XORSTR("ESP")][XORSTR("DangerZone")][XORSTR("drawDist")] = Settings::ESP::DangerZone::drawDist;
     settings[XORSTR("ESP")][XORSTR("DangerZone")][XORSTR("drawDistEnabled")] = Settings::ESP::DangerZone::drawDistEnabled;
@@ -633,7 +638,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("FOVChanger")][XORSTR("viewmodel_value")] = Settings::FOVChanger::viewmodelValue;
     settings[XORSTR("FOVChanger")][XORSTR("ignore_scope")] = Settings::FOVChanger::ignoreScope;
     settings[XORSTR("SkinChanger")][XORSTR("forcerareanim")] = Settings::Skinchanger::forcerareanim;
-
+	settings[XORSTR("Airstuck")][XORSTR("enabled")] = Settings::Airstuck::enabled;
+	settings[XORSTR("Airstuck")][XORSTR("key")] = Util::GetButtonName(Settings::Airstuck::key);
     settings[XORSTR("SkinChanger")][XORSTR("Skins")][XORSTR("enabled")] = Settings::Skinchanger::Skins::enabled;
     settings[XORSTR("SkinChanger")][XORSTR("Models")][XORSTR("enabled")] = Settings::Skinchanger::Models::enabled;
     settings[XORSTR("SkinChanger")][XORSTR("Skins")][XORSTR("perTeam")] = Settings::Skinchanger::Skins::perTeam;
@@ -1187,6 +1193,7 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Alise")][XORSTR("enabled")], &Settings::ESP::FilterAlise::Chams::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Alise")][XORSTR("type")], (int*)&Settings::ESP::FilterAlise::Chams::type);
     // END Visual Settings
+    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Base")][XORSTR("color")], &Settings::ESP::Chams::Base::color);
 
     GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Arms")][XORSTR("enabled")], &Settings::ESP::Chams::Arms::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Arms")][XORSTR("type")], (int*)&Settings::ESP::Chams::Arms::type);
@@ -1223,7 +1230,10 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("HitChance")], &Settings::ESP::Spread::spreadLimit);
     GetVal(settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("color")], &Settings::ESP::Spread::color);
     GetVal(settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("spreadLimitColor")], &Settings::ESP::Spread::spreadLimitColor);
-    GetVal(settings[XORSTR("ESP")][XORSTR("indicators")], &Settings::ESP::indicators);
+    GetVal(settings[XORSTR("ESP")][XORSTR("indicators")][XORSTR("enabled")], &Settings::ESP::indicators::enabled);
+    GetVal(settings[XORSTR("ESP")][XORSTR("indicators")][XORSTR("lby")], &Settings::ESP::indicators::lby);
+    GetVal(settings[XORSTR("ESP")][XORSTR("indicators")][XORSTR("aa")], &Settings::ESP::indicators::aa);
+    GetVal(settings[XORSTR("ESP")][XORSTR("indicators")][XORSTR("vel")], &Settings::ESP::indicators::vel);
 
     GetVal(settings[XORSTR("ESP")][XORSTR("DangerZone")][XORSTR("drawDist")], &Settings::ESP::DangerZone::drawDist);
     GetVal(settings[XORSTR("ESP")][XORSTR("DangerZone")][XORSTR("drawDistEnabled")], &Settings::ESP::DangerZone::drawDistEnabled);
@@ -1331,7 +1341,8 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("FOVChanger")][XORSTR("viewmodel_enabled")], &Settings::FOVChanger::viewmodelEnabled);
     GetVal(settings[XORSTR("FOVChanger")][XORSTR("viewmodel_value")], &Settings::FOVChanger::viewmodelValue);
     GetVal(settings[XORSTR("FOVChanger")][XORSTR("ignore_scope")], &Settings::FOVChanger::ignoreScope);
-
+GetVal(settings[XORSTR("Airstuck")][XORSTR("enabled")], &Settings::Airstuck::enabled);
+	GetButtonCode(settings[XORSTR("Airstuck")][XORSTR("key")], &Settings::Airstuck::key);
     Settings::Skinchanger::Skins::enabled = false;
     Settings::Skinchanger::skinsCT.clear();
     Settings::Skinchanger::skinsT.clear();

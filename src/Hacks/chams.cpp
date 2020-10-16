@@ -448,8 +448,8 @@ static void DrawArms(void *thisptr, void *context, void *state, const ModelRende
 	mat->SetMaterialVarFlag(MATERIAL_VAR_NO_DRAW, Settings::ESP::Chams::Arms::type == ChamsType::NONE);
 if ( Settings::ESP::Chams::Arms::type == ChamsType::ANIMATED){
 base_material = materialChamsFlat;
-        base_material->ColorModulate(Settings::ASUSWalls::color.Color());
-        base_material->AlphaModulate(Settings::ASUSWalls::color.Color().Value.w);
+        base_material->ColorModulate(Settings::ESP::Chams::Base::color.Color());
+        base_material->AlphaModulate(Settings::ESP::Chams::Base::color.Color().Value.w);
 
         modelRender->ForcedMaterialOverride(base_material);
                 modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, pCustomBoneToWorld);

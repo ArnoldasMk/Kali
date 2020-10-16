@@ -381,7 +381,7 @@ void Visuals::RenderTab()
 					ImGui::Selectable(XORSTR("Only When Shooting"), &Settings::Recoilcrosshair::showOnlyWhenShooting, ImGuiSelectableFlags_DontClosePopups);
 					ImGui::Selectable(XORSTR("Filled"), &Settings::ESP::FOVCrosshair::filled, ImGuiSelectableFlags_DontClosePopups);
 					ImGui::Selectable(XORSTR("Show SpreadLimit"), &Settings::ESP::Spread::spreadLimit, ImGuiSelectableFlags_DontClosePopups);
-                                        ImGui::Selectable(XORSTR("Show Indicators"), &Settings::ESP::indicators, ImGuiSelectableFlags_DontClosePopups);
+                                        ImGui::Selectable(XORSTR("Show Indicators"), &Settings::ESP::indicators::enabled, ImGuiSelectableFlags_DontClosePopups);
 
 				}
 				ImGui::EndCombo();
@@ -705,7 +705,6 @@ ImGui::Separator();
 				ImGui::SliderFloat(XORSTR("##LOGGERDURATION"), &Settings::Eventlog::duration, 1000.f, 5000.f, XORSTR("Log duration: %0.f"));
 				ImGui::SliderFloat(XORSTR("##LOGGERLINES"), &Settings::Eventlog::lines, 5, 15, XORSTR("Log lines: %0.f"));
 				ImGui::Checkbox(XORSTR("Show LocalPlayer"), &Settings::Eventlog::showLocalplayer);
-ImGui::Checkbox(XORSTR("Sprite ESP"), &Settings::ESP::Sprite::enabled);
 				ImGui::PopItemWidth();
 			}
 			ImGui::Columns(1);
