@@ -729,6 +729,8 @@ namespace Settings
 
 	namespace Ragebot
 	{
+			inline bool mindmgoverride;
+			inline ButtonCode_t dmgkey;
 			inline impactType impacttype = impactType::ITSME;
 		namespace exploits
 		{
@@ -855,7 +857,6 @@ namespace Settings
     namespace AntiAim
     {
 	inline float realoffset;
-
             inline AntiAimType_X pitchtype = AntiAimType_X::STATIC_DOWN;
 	inline bool lbyjitter;
 	namespace airspin
@@ -880,6 +881,8 @@ namespace Settings
         }
         namespace RageAntiAim
         {
+
+            inline float bodylean;
 	    inline bool pitchJitter;
 	    inline float offset = 180;
 	    inline bool invertOnHurt = false;
@@ -951,6 +954,10 @@ namespace Settings
                 inline resolverType resolverType = resolverType::NONE;
 
 	}
+                        namespace bullettracers
+                        {
+                                inline bool enabled = false;
+                        }
 
 	namespace ESP
 	{
@@ -1040,15 +1047,15 @@ namespace Settings
 				inline bool enabled = false;
 				inline float size = 2.0f;
 			}
-			namespace BulletTracers
-			{
-				inline bool enabled = false;
-			}
 			namespace Boxes
 			{
 				inline bool enabled = false;
 				inline BoxType type = BoxType::FRAME_2D;
 			}
+		  	namespace BulletTracers
+                        {
+                                inline bool enabled = false;
+                        }
 
 			namespace Chams
 			{

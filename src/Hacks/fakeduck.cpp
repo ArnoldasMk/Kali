@@ -6,6 +6,7 @@
 
 // Find it from nimbus there is no point to wast your time if that is all ready available
 static bool FirstDuck = false;
+int choked;
 void FakeDuck::CreateMove(CUserCmd *cmd)
 {
 	if (!Settings::AntiAim::FakeDuck::enabled)
@@ -24,24 +25,21 @@ void FakeDuck::CreateMove(CUserCmd *cmd)
 		}
 
 if (FirstDuck){
-  static bool counter = false;
-            static int counters = 0;
-            if (counters == 9)
-            {
-                counters = 0;
-                counter = !counter;
-            }
-            counters++;
-            if (counter)
-            {
-                cmd->buttons |= IN_DUCK;
-                CreateMove::sendPacket = true;
-            }
-            else
-            {
-                CreateMove::sendPacket = false;
-                cmd->buttons &= ~IN_DUCK;
-            }
+                cmd->buttons |= IN_BULLRUSH;
+
+                if (choked <= 6)
+                        cmd->buttons &= ~IN_DUCK;
+                else
+                        cmd->buttons |= IN_DUCK;
+
+                if (choked < 14){
+			choked++;
+                        CreateMove::sendPacket = false;   // choke
+		}
+                else{
+                       CreateMove::sendPacket = true;    // send packet
+		       choked = 0;
+		}
 }
 }
 

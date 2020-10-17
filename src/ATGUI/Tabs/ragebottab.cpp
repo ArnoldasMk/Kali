@@ -303,6 +303,8 @@ void RagebotTab::RenderTab()
                                         ImGui::TextWrapped(XORSTR("Miss Detection Type"));
 
 ImGui::Combo(XORSTR("##ImpactDetection"), (int*)&Settings::Ragebot::impacttype, impactType, IM_ARRAYSIZE(impactType) );
+                                ImGui::Checkbox(XORSTR("Override Minimun Damage"), &Settings::Ragebot::mindmgoverride);
+                                UI::KeyBindButton(&Settings::Ragebot::dmgkey);
 
 			//	ImGui::Checkbox(XORSTR("Resolver"), &Settings::Resolver::resolveAll);
 
@@ -370,6 +372,7 @@ ImGui::Combo(XORSTR("##ImpactDetection"), (int*)&Settings::Ragebot::impacttype, 
 
 //				}
 				if (ImGui::Checkbox(XORSTR("Silent Aim"), &silent))
+
 					UI::UpdateRageWeaponSettings();
 			}
 			// END of other Settings

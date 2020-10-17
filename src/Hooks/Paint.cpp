@@ -5,6 +5,7 @@
 #include "../Utils/draw.h"
 #include "../fonts.h"
 
+//#include "../Hacks/bullettracers.h"
 #include "../Hacks/esp.h"
 #include "../Hacks/dlights.h"
 #include "../Hacks/grenadehelper.h"
@@ -49,7 +50,8 @@ void Hooks::Paint(void* thisptr, PaintMode_t mode)
         /* These functions make drawRequests */
         Dlights::Paint();
         ESP::Paint();
-        GrenadeHelper::Paint();
+        //cbullet_tracer::render();
+	GrenadeHelper::Paint();
         Recoilcrosshair::Paint();
         Hitmarkers::Paint();
         //Hitmarkers3D::Paint();

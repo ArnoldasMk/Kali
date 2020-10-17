@@ -1,5 +1,6 @@
 #include "EventListener.h"
 
+//#include "Hacks/bullettracers.h"
 #include "Hacks/legitbot.h"
 #include "Hacks/ragebot.h"
 #include "Hacks/antiaim.h"
@@ -35,6 +36,7 @@ void EventListener::FireGameEvent(IGameEvent* event)
     AntiAim::FireGameEvent(event);
     Hitmarkers::FireGameEvent(event);
     //Hitmarkers3D::FireGameEvent(event);
+    //cbullet_tracer::log(event);
     Eventlog::FireGameEvent(event);
     NameStealer::FireGameEvent(event);
     VoteRevealer::FireGameEvent(event);

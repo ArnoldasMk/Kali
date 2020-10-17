@@ -86,7 +86,8 @@ void Hitmarkers::FireGameEvent(IGameEvent* event)
 		return;
 
 	if (strcmp(event->GetName(), XORSTR("player_hurt")) != 0)
-		{
+		return;
+
 	int hurt_player_id = event->GetInt(XORSTR("userid"));
 	int attacker_id = event->GetInt(XORSTR("attacker"));
 
@@ -160,12 +161,4 @@ void Hitmarkers::FireGameEvent(IGameEvent* event)
 				break;
 		}
 	}
-}else if (strcmp(event->GetName(), XORSTR("bullet_impact")) != 0) {
-        impact_info info;
-        info.x = event->GetFloat("x");
-        info.y = event->GetFloat("y");
-        info.z = event->GetFloat("z");
-        info.time = Util::GetEpochTime();
-
-}
 }

@@ -27,16 +27,15 @@
 bool should_sidemove;
 QAngle AntiAim::LastTickViewAngle;
 static bool needToFlick = false;
-static float NormalizeAsYaw(float flAngle)
+static float NormalizeAsYaw(QAngle& angle)
 {
-        if (flAngle > 180.f || flAngle < -180.f)
-        {
-                if (flAngle < 0.f)
-                        flAngle += round(abs(flAngle));
-                else
-                        flAngle -= round(abs(flAngle));
-        }
-        return flAngle;
+
+        while (angle.y > 180.f)
+                angle.y -= 360.f;
+
+        while (angle.y < -180.f)
+                angle.y += 360.f;
+
 }
 
 float AntiAim::GetMaxDelta( CCSGOAnimState *animState) 
@@ -1127,7 +1126,7 @@ void AntiAim::CreateMove(CUserCmd* cmd)
     }
     
     if (Settings::FakeLag::enabled)
-        CreateMove::sendPacket ? AntiAim::bSend = CreateMove::sendPacket : AntiAim::bSend = cmd->command_number%2;              
+        CreateMove::sendPacket ? AntiAim::bSend = CreateMove::sendPacket : AntiAim::bSend = cmd->command_number%2;
     else
         AntiAim::bSend = cmd->command_number%2;
 Sidemove(cmd);
@@ -1148,20 +1147,6 @@ if( Settings::AntiAim::LBYBreaker::enabled ){
                 angle = Math::CalcAngle(localplayer->GetEyePosition(), lockedTarget->GetEyePosition());
         }
 
-        // cvar->ConsoleDPrintf(XORSTR(" Before Changing : %f : %f \n"), localplayer->GetAnimState()->goalFeetYaw, angle.y);
-     /*   switch (Settings::AntiAim::RageAntiAim::Type)
-        {
-            case RageAntiAimType::DefaultRage:
-                DefaultRageAntiAim(localplayer, angle, cmd);
-                break;
-            case RageAntiAimType::FreeStand:
-                FreeStand(localplayer, angle, cmd);
-                break;
-            default:
-                break;
-        }       
-*/
-	DoAntiAimX(angle, cmd);
         FreeStand(localplayer, angle, cmd);
  if (Settings::AntiAim::airspin::enabled) {
 	AirAntiAim(localplayer,cmd, angle);
@@ -1171,8 +1156,10 @@ if( Settings::AntiAim::LBYBreaker::enabled ){
         DoLegitAntiAim(localplayer, angle, AntiAim::bSend, cmd);
     
         
-    //Math::NormalizeAngles(angle.y);
-   angle.y = NormalizeAsYaw(angle.y);
+   Math::NormalizeAngles(angle);
+        DoAntiAimX(angle, cmd);
+
+   //angle = NormalizeAsYaw(angle);
    Math::ClampAngles(angle);
 
     if (!AntiAim::bSend) AntiAim::fakeAngle = angle;

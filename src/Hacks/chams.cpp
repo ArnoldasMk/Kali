@@ -263,6 +263,8 @@ static void DrawFake(void* thisptr, void* context, void *state, const ModelRende
 	{
 		Fake_meterial->AlphaModulate(0.5f);
 	}
+        Fake_meterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Settings::ESP::FilterLocalPlayer::Chams::type == ChamsType::WIREFRAME);
+
 	modelRender->ForcedMaterialOverride(Fake_meterial);
 	modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, fakeBoneMatrix);
                 if (Settings::ESP::FilterLocalPlayer::Chams::type == ChamsType::GLOW){

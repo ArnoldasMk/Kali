@@ -71,6 +71,7 @@ const char* lbyType[] = {
 
         if(Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Randome || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::JitterSwitch || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::JitterRandom || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Spin)
             ImGui::SliderFloat(XORSTR("##RealJitterPercentage"), &Settings::AntiAim::RageAntiAim::JitterPercent, 1, 100, "Jitter Ammount : %.0f");
+            //ImGui::SliderFloat(XORSTR("##BodyLeanAmmount"), &Settings::AntiAim::RageAntiAim::bodylean, 1, 100, "Body Lean Ammount : %.0f");
 
     ImGui::Text(XORSTR("InvertKey"));
     ImGui::SameLine();

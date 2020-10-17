@@ -289,6 +289,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("offset")] = Settings::AntiAim::RageAntiAim::offset;
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("pitchJitter")] = Settings::AntiAim::RageAntiAim::pitchJitter;
     settings[XORSTR("AntiAim")][XORSTR("LBYJitter")] = Settings::AntiAim::lbyjitter;
+    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("bodylean")] = Settings::AntiAim::RageAntiAim::bodylean;
 
     settings[XORSTR("SvCheats")][XORSTR("enabled")] = Settings::SvCheats::enabled;
     settings[XORSTR("SvCheatss")][XORSTR("enabled")] = Settings::SvCheats::svcheats::enabled;
@@ -342,6 +343,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("Resolver")][XORSTR("Type")] = (int)Settings::Resolver::resolverType;
 
     settings[XORSTR("Ragebot")][XORSTR("impactType")] = (int)Settings::Ragebot::impacttype;
+    settings[XORSTR("Ragebot")][XORSTR("mindmgoverride")] = Settings::Ragebot::mindmgoverride;
+    settings[XORSTR("Ragebot")][XORSTR("dmgkey")] = Util::GetButtonName(Settings::Ragebot::dmgkey);
 
     settings[XORSTR("UI")][XORSTR("particles")] = Settings::UI::particles;
 
@@ -434,6 +437,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("BulletTracers")][XORSTR("enabled")] = Settings::ESP::FilterEnemy::BulletTracers::enabled;
     settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("PlayerInfo")][XORSTR("enabled")] = Settings::ESP::FilterEnemy::playerInfo::enabled;
     
+    settings[XORSTR("bulletstracers")][XORSTR("enabled")] = Settings::bullettracers::enabled;
+
     // For LocalPlayer
     settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("Boxes")][XORSTR("enabled")] = Settings::ESP::FilterLocalPlayer::Boxes::enabled;
     settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("Boxes")][XORSTR("type")] = (int)Settings::ESP::FilterLocalPlayer::Boxes::type;
@@ -1003,6 +1008,7 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Offset")], &Settings::AntiAim::RageAntiAim::offset);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("pitchJitter")], &Settings::AntiAim::RageAntiAim::pitchJitter);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("LBYJitter")], &Settings::AntiAim::lbyjitter);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("bodylean")], &Settings::AntiAim::RageAntiAim::bodylean);
 
     GetVal(settings[XORSTR("SvCheats")][XORSTR("enabled")], &Settings::SvCheats::enabled);
     GetVal(settings[XORSTR("SvCheatss")][XORSTR("enabled")], &Settings::SvCheats::svcheats::enabled);
@@ -1057,6 +1063,8 @@ void Settings::LoadConfig(std::string path)
     GetVal( settings[XORSTR("Resolver")][XORSTR("Type")], (int*)&Settings::Resolver::resolverType);
 
     GetVal( settings[XORSTR("Ragebot")][XORSTR("impactType")], (int*)&Settings::Ragebot::impacttype);
+    GetVal(settings[XORSTR("Ragebot")][XORSTR("mindmgoverride")], &Settings::Ragebot::mindmgoverride);
+    GetButtonCode(settings[XORSTR("Ragebot")][XORSTR("dmgkey")], &Settings::Ragebot::dmgkey);
 
     GetVal(settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("color")], &Settings::Ragebot::quickpeek::color);
     GetVal(settings[XORSTR("ESP")][XORSTR("Watermark")][XORSTR("color")], &Settings::ESP::Watermark::color);
@@ -1135,7 +1143,8 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("ESP")][XORSTR("Info")][XORSTR("rescuing")], &Settings::ESP::Info::rescuing);
     GetVal(settings[XORSTR("ESP")][XORSTR("Info")][XORSTR("location")], &Settings::ESP::Info::location);
     GetVal(settings[XORSTR("ESP")][XORSTR("Info")][XORSTR("money")], &Settings::ESP::Info::money);
-    
+    GetVal(settings[XORSTR("bulletstracers")][XORSTR("enabled")], &Settings::bullettracers::enabled);
+
     // Visual Settings for various players
     // For Enemy
     GetVal(settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("Boxes")][XORSTR("enabled")], &Settings::ESP::FilterEnemy::Boxes::enabled);

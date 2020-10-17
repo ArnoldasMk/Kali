@@ -17,7 +17,6 @@
 #include "Windows/showspectators.h"
 #include "../Hacks/radar.h"
 #include "../Hacks/antiaim.h"
-#include "../Hacks/killLog.h"
 bool UI::isVisible = false;
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
@@ -82,8 +81,6 @@ void UI::SetupWindows()
 
 	PlayerList::RenderWindow();
 	ShowSpectators::RenderWindow();
-        KillLog::RenderWindow();
-
 	Radar::RenderWindow();
 }
 

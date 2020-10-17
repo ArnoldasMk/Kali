@@ -595,7 +595,7 @@ C_BasePlayer* GetBestEnemyAndSpot(C_BasePlayer* localplayer,const RageWeapon_t& 
 		if (lockedEnemy.player->GetAlive() && !lockedEnemy.player->GetDormant() && !Ragebot::lockedEnemy.player->GetImmune())
 		{
 			GetBestSpotAndDamage(lockedEnemy.player,localplayer, bestSpot, bestDamage, currSettings);
-			if (bestDamage >= lockedEnemy.player->GetHealth() || bestDamage >= currSettings.MinDamage)
+			if (bestDamage >= lockedEnemy.player->GetHealth() || bestDamage >= currSettings.MinDamage || (Settings::Ragebot::mindmgoverride && inputSystem->IsButtonDown(Settings::Ragebot::dmgkey)))
 			{
 				BestDamage = bestDamage;
 				BestSpot = bestSpot;
