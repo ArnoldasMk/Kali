@@ -47,6 +47,7 @@ namespace Draw {
 	void Circle( Vector2D position, int segments, float radius, Color color );
 	void OutlinedCircle( int x0, int y0, int segments, int radius, Color col );
 	void FilledCircle( Vector2D position, int segments, float radius, Color color );
+        void FilledCircle3D(  const Vector &position, int segments, float radius, Color color );
 	void Circle3D( const Vector &position, int segments, float radius, Color color  );
 	void FilledRectangle( int x0, int y0, int x1, int y1, Color col );
 	void FilledRectangle( Vector2D start_pos, Vector2D end_pos, Color col );
@@ -57,6 +58,7 @@ namespace Draw {
 	void PolyLine( int* px, int* py, int num_points, Color col );
 	void PolyLine( Vertex_t* vertice, int num_points, Color col );
 	void TexturedPolygon( int n, Vertex_t* vertice, Color col );
+	void triangle(Vector2D point_one, Vector2D point_two, Vector2D point_three, Color color);
 	void TextW( int x, int y, const wchar_t* text, HFont font, Color col );
 	void TextW( Vector2D pos, const wchar_t* text, HFont font, Color col );
 	void Text( int x, int y, const char* text, HFont font, Color col );

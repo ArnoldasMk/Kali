@@ -519,15 +519,19 @@ C_BasePlayer* localPlayer = (C_BasePlayer*)entityList->GetClientEntity(engine->G
     Vector playerLoc = localPlayer->GetAbsOrigin();
 
     float yaw = cmd->viewangles.y;
-    Vector VecForward = playerLoc - quickpeekstartpos;
+    Vector difference = playerLoc - quickpeekstartpos;
+auto velocity = Vector(difference.x * cos(cmd->viewangles.y / 180.0f * M_PI) + difference.y * sin(cmd->viewangles.y / 180.0f * M_PI), difference.y * cos(cmd->viewangles.y / 180.0f * M_PI) - difference.x * sin(cmd->viewangles.y / 180.0f * M_PI), difference.z);
 
-    Vector translatedVelocity = Vector{
-        (float)(VecForward.x * cos(yaw / 180 * (float)M_PI) + VecForward.y * sin(yaw / 180 * (float)M_PI)),
-        (float)(VecForward.y * cos(yaw / 180 * (float)M_PI) - VecForward.x * sin(yaw / 180 * (float)M_PI)),
-        VecForward.z
-    };
-    cmd->forwardmove = -translatedVelocity.x * 20.f;
-    cmd->sidemove = translatedVelocity.y * 20.f;
+                                        cmd->forwardmove = -velocity.x * 20.0f;
+                                        cmd->sidemove = velocity.y * 20.0f;
+
+//    Vector translatedVelocity = Vector{
+  //      (float)(VecForward.x * cos(yaw / 180 * (float)M_PI) + VecForward.y * sin(yaw / 180 * (float)M_PI)),
+   //     (float)(VecForward.y * cos(yaw / 180 * (float)M_PI) - VecForward.x * sin(yaw / 180 * (float)M_PI)),
+  //      VecForward.z
+  //  };
+   // cmd->forwardmove = -translatedVelocity.x * 20.f;
+   // cmd->sidemove = translatedVelocity.y * 20.f;
 }
 void Ragebot::quickpeek(CUserCmd* cmd) {
 C_BasePlayer* localPlayer = (C_BasePlayer*)entityList->GetClientEntity(engine->GetLocalPlayer());
@@ -555,9 +559,9 @@ void Ragebot::drawStartPos() {
 	Vector playerPos;
 debugOverlay->ScreenPosition( quickpeekstartpos, spot2D);
 debugOverlay->ScreenPosition( localPlayer->GetAbsOrigin(), playerPos);
-Draw::AddCircle3D(quickpeekstartpos, 32, Settings::Ragebot::quickpeek::color.Color(), 32);
-//	Draw::AddCircleFilled( spot2D.x, spot2D.y, 32.0f, Settings::Ragebot::quickpeek::color.Color(), 32);
-	Draw::AddLine( playerPos.x, playerPos.y, spot2D.x, spot2D.y, Settings::Ragebot::quickpeek::color.Color() ); 
+Draw::AddLine( playerPos.x, playerPos.y, spot2D.x, spot2D.y, Settings::Ragebot::quickpeek::color.Color() ); 
+
+Draw::FilledCircle3D(quickpeekstartpos, 32, 32, Color::FromImColor(Settings::Ragebot::quickpeek::color.Color()));
 }
 }
 static void FixMouseDeltas(CUserCmd* cmd, C_BasePlayer* player, QAngle& angle, QAngle& oldAngle)
@@ -642,7 +646,7 @@ C_BasePlayer* GetBestEnemyAndSpot(C_BasePlayer* localplayer,const RageWeapon_t& 
 		}
 	}	
 
-	if (BestDamage < currSettings.MinDamage || BestDamage <= 0)
+	if (BestDamage < currSettings.MinDamage || BestDamage <= 0 || !(Settings::Ragebot::mindmgoverride && inputSystem->IsButtonDown(Settings::Ragebot::dmgkey)))
 		return nullptr;
 
 	return clossestEnemy;

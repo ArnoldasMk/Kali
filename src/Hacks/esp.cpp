@@ -26,10 +26,12 @@
 #include <mutex>
 #define TICK_INTERVAL			(globalVars->interval_per_tick)
 #define TIME_TO_TICKS( dt )		( (int)( 0.5f + (float)(dt) / TICK_INTERVAL ) )
+#define M_RADPI 57.295779513082f
+
 /* The engine->WorldToScreenMatrix() function can't be called at all times
  * So this is Updated in the Paint Hook for us */
 VMatrix vMatrix;
-
+int spawntime = 0;
 Vector2D barsSpacing = Vector2D( 0, 0 );
 struct Footstep {
     Footstep( Vector &pos, long expireAt ){
@@ -117,24 +119,17 @@ static void CheckActiveSounds() {
 
 static void DrawManualAntiaim()
 {
-Vector2D indSize = Draw::GetTextSize( "v", astrium );
-int x = 960;
-int y = 520;
+static int width, height;
+engine->GetScreenSize(width, height);
+auto color = Color::FromImColor(Settings::ESP::manualAAColor.Color());
     if (Settings::AntiAim::ManualAntiAim::Enable)
     {
         if (AntiAim::ManualAntiAim::alignLeft) {
-        Draw::AddLine( x - 80 , y + 15, x - 60,  y, Settings::ESP::manualAAColor.Color() ); 
-        Draw::AddLine( x - 80 , y + 15, x - 60,  y + 30, Settings::ESP::manualAAColor.Color() ); 
-
-
+           Draw::triangle(Vector2D(width / 2 - 55, height / 2 + 10), Vector2D(width / 2 - 75, height / 2), Vector2D(width / 2 - 55, height / 2 - 10), color);
         } else if (AntiAim::ManualAntiAim::alignBack) {
-        Draw::AddLine( x, y + 80, x + 15,  y + 60, Settings::ESP::manualAAColor.Color() ); 
-        Draw::AddLine( x, y + 80, x - 15,  y + 60, Settings::ESP::manualAAColor.Color() ); 
-
+          Draw::triangle(Vector2D(width / 2, height / 2 + 80), Vector2D(width / 2 - 10, height / 2 + 60), Vector2D(width / 2 + 10, height / 2 + 60), color);
         } else if (AntiAim::ManualAntiAim::alignRight) {
-        Draw::AddLine( x + 80 , y + 15, x + 60,  y, Settings::ESP::manualAAColor.Color() ); 
-        Draw::AddLine( x + 80 , y + 15, x + 60,  y + 30, Settings::ESP::manualAAColor.Color() ); 
-
+          Draw::triangle(Vector2D(width / 2 + 55, height / 2 - 10), Vector2D(width / 2 + 75, height / 2), Vector2D(width / 2 + 55, height / 2 + 10), color);
         }
     }
 
@@ -159,7 +154,27 @@ static float GetArmourHealth(float flDamage, int ArmorValue)
 
 	return flNew;
 }
+static void renderRange(){
+if (!Settings::ESP::taserrange::enabled)
+	return;
+        C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 
+if (!localplayer)
+	return;
+
+C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
+if (!activeWeapon)
+	return;
+	CCSWeaponInfo* weaponInfo = activeWeapon->GetCSWpnData();
+if (!input->m_fCameraInThirdPerson)
+	return;
+	ItemDefinitionIndex itemDefinitionIndex = *activeWeapon->GetItemDefinitionIndex();
+if (itemDefinitionIndex != ItemDefinitionIndex::WEAPON_TASER)
+	return;
+
+Draw::AddCircle3D(localplayer->GetAbsOrigin(),  weaponInfo->GetRange(), Settings::ESP::taserrange::color.Color(), 32);
+
+}
 static bool GetBox( C_BaseEntity* entity, int& x, int& y, int& w, int& h ) {
 	// Variables
 	Vector vOrigin, min, max;
@@ -507,16 +522,83 @@ std::string name = "eye          | " + fps_string + " fps | " + bombStr + "FL";
 Draw::AddText(1653 + 10 + 73 + 50, 11, name.c_str(), ImColor( 255, 255, 255, 255 ) );
 Draw::AddText(1653 + 8 + 73 + 21 + 50, 11, "hook", ImColor( 255, 166, 14, 255 ) );
 }
+static void drawfire(C_BaseEntity* entity){
+        int x, y, w, h;
+        if ( !GetBox( entity, x, y, w, h ) )
+                return;
+        Vector screen_origin;
+	int factor = 3;
+ debugOverlay->ScreenPosition(entity->GetVecOrigin(), screen_origin);
+        Draw::FilledCircle3D( entity->GetVecOrigin(), 32, 160, Color::FromImColor(ImColor(255, 0, 0, 255)) );
 
-static void DrawEntity( C_BaseEntity* entity, const char* string, ImColor color ) {
+        auto string = "Molotov";
+        Vector2D nameSize = Draw::GetTextSize( string, esp_font );
+        Draw::AddText(( int ) ( x + ( w / 2 ) - ( nameSize.x / 2 ) ), y + h + 2 + nameSize.y, string, ImColor(255, 255, 255, 255) );
+if (spawntime == 0){
+spawntime = globalVars->curtime;
+}else {
+int time = TIME_TO_TICKS(globalVars->curtime - spawntime);
+        Draw::AddText(( int ) ( x + ( w / 2 ) - ( nameSize.x / 2 ) ), y + h + 2, std::to_string(489 - (TIME_TO_TICKS(globalVars->curtime - spawntime))).c_str(), ImColor(255, 255, 255, 255) );
+if (time > 489)
+spawntime = 0;
+}
+
+      //  static auto size = Vector2D(35.0f, 5.0f);
+        //Draw::FilledCircle(Vector2D(screen_origin.x, screen_origin.y - size.y * 0.5f), 60, 20, Color(15, 15, 15, 187));
+
+        //Draw::FilledRectangle(screen_origin.x - size.x * 0.5f, screen_origin.y - size.y * 0.5f - 1.0f, size.x, size.y, Color(37, 37, 37, 255));
+        //Draw::FilledRectangle(screen_origin.x - size.x * 0.5f + 2.0f, screen_origin.y - size.y * 0.5f, (size.x - 4.0f) * factor, size.y - 2.0f, Color ( 255, 0, 0, 255));
+
+        //Draw::Rectangle(screen_origin.x - size.x * 0.5f, screen_origin.y - size.y * 0.5f, size.x, size.y, Color(7, 7, 7, 255));
+       // render::get().text(fonts[ESP], screen_origin.x, screen_origin.y - size.y * 0.5f + 12.0f, g_cfg.esp.molotov_timer_color, HFONT_CENTERED_X | HFONT_CENTERED_Y, "FIRE");
+       // render::get().text(fonts[GRENADES], screen_origin.x + 1.0f, screen_origin.y - size.y * 0.5f - 9.0f, g_cfg.esp.molotov_timer_color, HFONT_CENTERED_X | HFONT_CENTERED_Y, "l");
+
+}
+
+static void DrawEntity( C_BaseEntity* entity, const char* string, ImColor color, int nadetype ) {
 	int x, y, w, h;
 	if ( !GetBox( entity, x, y, w, h ) )
 		return;
 
 	DrawBox( color, x, y, w, h, entity , Settings::ESP::Boxes::type);
 	Vector2D nameSize = Draw::GetTextSize( string, esp_font );
-	Draw::AddText(( int ) ( x + ( w / 2 ) - ( nameSize.x / 2 ) ), y + h + 2, string, color );
+        Draw::AddText(( int ) ( x + ( w / 2 ) - ( nameSize.x / 2 ) ), y + h + 2, string, color );
+
+              switch (nadetype)
+                {
+               case 1:
+			{
+	//	static std::string freeman;
+      //          freeman = std::to_string(globalVars->curtime).c_str();
+    //    Vector2D smokeSize = Draw::GetTextSize( "k", astrium );
+        Draw::AddCircle3D( entity->GetVecOrigin(), 144, ImColor(0,0,0,255), 32 );
+//        Draw::FilledCircle(Vector2D(( int ) ( x), y + 5), 60, 20, Color(15, 15, 15, 187));
+  //      Draw::Text(( int ) ( x - smokeSize.x / 2), y - 10, XORSTR("k"), astrium, Color(255, 255, 255, 187));
+                        break;
+			}
+               case 2:
+        Draw::AddCircle3D( entity->GetVecOrigin(), 150, ImColor(255, 0, 0, 255), 32 );
+                        break;
+	      case 3:
+        Draw::AddCircle3D( entity->GetVecOrigin(), 185, ImColor(255, 0, 0, 255), 18 );
+                        break;
+
+
+
+              }
+
 }
+
+static void DrawEntity( C_BaseEntity* entity, const char* string, ImColor color) {
+        int x, y, w, h;
+        if ( !GetBox( entity, x, y, w, h ) )
+                return;
+
+        DrawBox( color, x, y, w, h, entity , Settings::ESP::Boxes::type);
+        Vector2D nameSize = Draw::GetTextSize( string, esp_font );
+        Draw::AddText(( int ) ( x + ( w / 2 ) - ( nameSize.x / 2 ) ), y + h + 2, string, color );
+}
+
 static void DrawLag(int x, int y, C_BasePlayer* player){
 int lag = TIME_TO_TICKS(player->GetSimulationTime() - player->GetOldSimulationTime());
 		int woop = FakeLag::ticks * 5;
@@ -556,39 +638,46 @@ static void DrawSkeleton( C_BasePlayer* player, C_BasePlayer* localplayer ) {
 	
 	}
 }
-void draw_arrow(float angle, Color color)
-{
-        Vector2D pos[8] =
+        void rotate_triangle(std::array<Vector2D, 3>& points, float rotation)
         {
-                { -7.f, -50.f },
-                { -7.f, -140.f },
+                const auto pointsCenter = (points.at(0) + points.at(1) + points.at(2)) / 3;
+                for (auto& point : points)
+                {
+                        point -= pointsCenter;
 
-                { 7.f, -50.f },
-                { 7.f, -140.f },
+                        const auto tempX = point.x;
+                        const auto tempY = point.y;
 
-                { -20.f, -130.f },
-                { 0.f, -160.f },
+                        const auto theta = DEG2RAD(rotation);
+                        const auto c = cos(theta);
+                        const auto s = sin(theta);
 
-                { 20.f, -130.f },
-                { 0.f, -160.f }
-        };
-        Vector2D center;
-        center.x = Paint::engineWidth / 2;
-        center.y = Paint::engineHeight / 2;
+                        point.x = tempX * c - tempY * s;
+                        point.y = tempX * s + tempY * c;
 
-        for (auto& p : pos)
+                        point += pointsCenter;
+                }
+        }
+        bool world_to_screen(const Vector &origin, Vector &screen)
         {
-                const auto s = sin(angle);
-                const auto c = cos(angle);
-
-                p = Vector2D(p.x * c - p.y * s, p.x * s + p.y * c) + center;
+                return !debugOverlay->ScreenPosition(origin, screen);
         }
 
-        //Draw::Line(pos[0], pos[1], color);
-        //Draw::Line(pos[2], pos[3], color);
-        Draw::Line(pos[4], pos[5], color);
-        Draw::Line(pos[6], pos[7], color);
-}
+        Vector CalcAngle(const Vector src, const Vector dst) {
+                Vector angles;
+
+                Vector delta = src - dst;
+                float hyp = delta.Length2D();
+
+                angles.y = atanf(delta.y / delta.x) * M_RADPI;
+                angles.x = atanf(-delta.z / hyp) * -M_RADPI;
+                angles.z = 0.0f;
+
+                if (delta.x >= 0.0f)
+                        angles.y += 180.0f;
+
+                return angles;
+        }
 
 static void DrawTracer( C_BasePlayer* player, TracerType& tracerType ) {
 	Vector src3D;
@@ -612,10 +701,44 @@ if ( tracerType != TracerType::ARROWS){
 
 	Draw::AddLine( ( int ) ( src.x ), ( int ) ( src.y ), x, y, ESP::GetESPPlayerColor( player, bIsVisible ) );
 }else{
-QAngle viewAngles;
-		engine->GetViewAngles(viewAngles);
-    const auto rot = DEG2RAD(viewAngles.y - Math::CalcAngle(localplayer->GetEyePosition(), player->GetEyePosition()).y);
-draw_arrow(rot, Color::FromImColor(ESP::GetESPPlayerColor( player, bIsVisible )));
+        auto isOnScreen = [](Vector origin, Vector& screen) -> bool
+        {
+                if (!world_to_screen(origin, screen))
+                        return false;
+   static int iScreenWidth, iScreenHeight;
+    engine->GetScreenSize(iScreenWidth, iScreenHeight );
+
+
+                auto xOk = iScreenWidth > screen.x; 
+                auto yOk = iScreenHeight > screen.y;
+
+                return xOk && yOk;
+        };
+        Vector screenPos;
+
+ //       if (isOnScreen(player->GetAbsOrigin(), screenPos))
+ //               return;
+    QAngle ViewAngles;
+        engine->GetViewAngles(ViewAngles);
+        static int width, height;
+    engine->GetScreenSize(width, height );
+        auto screenCenter = Vector2D(width * 0.5f, height * 0.5f);
+        auto angleYawRad = DEG2RAD(ViewAngles.y - CalcAngle(localplayer->GetEyePosition(), player->GetAbsOrigin()).y - 90.0f);
+        auto radius = Settings::ESP::arrows::distance;
+        auto size = Settings::ESP::arrows::size;
+        auto newPointX = screenCenter.x + ((((width - (size * 3)) * 0.5f) * (radius / 100.0f)) * cos(angleYawRad)) + (int)(6.0f * (((float)size - 4.0f) / 16.0f));
+        auto newPointY = screenCenter.y + ((((height - (size * 3)) * 0.5f) * (radius / 100.0f)) * sin(angleYawRad));
+
+        std::array <Vector2D, 3> points
+        {
+                Vector2D(newPointX - size, newPointY - size),
+                Vector2D(newPointX + size, newPointY),
+                Vector2D(newPointX - size, newPointY + size)
+        };
+        rotate_triangle(points, ViewAngles.y - CalcAngle(localplayer->GetEyePosition(), player->GetAbsOrigin()).y - 90.0f);
+        Draw::triangle(points.at(0), points.at(1), points.at(2), Color::FromImColor(Settings::ESP::arrows::color.Color()));
+
+
 }
 }
 static void Drawlc()
@@ -666,6 +789,37 @@ Vector lc;
 
 }
 
+static void CustomFog(){
+	if(!Settings::ESP::customfog::enabled)
+		return;
+	//WHY DOESNT IT FUCKING WORK?!
+       static auto fog_override = cvar->FindVar(XORSTR("fog_override")); //-V807
+		
+                fog_override->SetValue(1);
+
+        static auto fog_start = cvar->FindVar(XORSTR("fog_start"));
+
+        if (fog_start->GetInt())
+                fog_start->SetValue(0);
+
+        static auto fog_end = cvar->FindVar(XORSTR("fog_end"));
+
+        if (fog_end->GetInt() != Settings::ESP::customfog::distance)
+                fog_end->SetValue(Settings::ESP::customfog::distance);
+
+        static auto fog_maxdensity = cvar->FindVar(XORSTR("fog_maxdensity"));
+
+        if (fog_maxdensity->GetFloat() != (float)Settings::ESP::customfog::density * 0.01f) //-V550
+                fog_maxdensity->SetValue((float)Settings::ESP::customfog::density * 0.01f);
+
+        char buffer_color[12];
+        sprintf(buffer_color, "%f %f %f", Settings::ESP::customfog::color.Color().Value.x, Settings::ESP::customfog::color.Color().Value.y, Settings::ESP::customfog::color.Color().Value.z);
+
+        static auto fog_color = cvar->FindVar(XORSTR("fog_color"));
+
+                fog_color->SetValue(buffer_color);
+
+}
 
 static void DrawAimbotSpot( ) {
 	C_BasePlayer* localplayer = ( C_BasePlayer* ) entityList->GetClientEntity( engine->GetLocalPlayer() );
@@ -907,7 +1061,8 @@ int GetBlendedColor(int percentage)
     else
         return 255;
 }
-
+//world_modulation(C_BasePlayer* entity)
+//{}
 static void DrawIndicators() {
 Vector2D indSize = Draw::GetTextSize( "LBY", esp_font );
 int x = 960 - (indSize.x / 2);
@@ -1788,7 +1943,7 @@ static void DrawThrowable(C_BaseEntity* throwable, ClientClass* client, C_BasePl
 
 	ImColor nadeColor = ImColor(255, 255, 255, 255);
 	std::string nadeName = XORSTR("Unknown Grenade");
-
+	int nadetype = -1;
 	IMaterial* mats[32];
 	modelInfo->GetModelMaterials(nadeModel, hdr->numtextures, mats);
 
@@ -1808,12 +1963,14 @@ static void DrawThrowable(C_BaseEntity* throwable, ClientClass* client, C_BasePl
 		{
 			nadeName = XORSTR("HE Grenade");
 			nadeColor = Settings::ESP::grenadeColor.Color();
+			nadetype = 3;
 			break;
 		}
 		else if (strstr(mat->GetName(), XORSTR("smoke")))
 		{
 			nadeName = XORSTR("Smoke");
 			nadeColor = Settings::ESP::smokeColor.Color();
+			nadetype = 1;
 			break;
 		}
 		else if (strstr(mat->GetName(), XORSTR("decoy")))
@@ -1826,6 +1983,7 @@ static void DrawThrowable(C_BaseEntity* throwable, ClientClass* client, C_BasePl
 		{
 			nadeName = XORSTR("Molotov");
 			nadeColor = Settings::ESP::molotovColor.Color();
+			nadetype = 2;
 			break;
 		}
 		else if (strstr(mat->GetName(), XORSTR("bump_mine")))
@@ -1842,7 +2000,7 @@ static void DrawThrowable(C_BaseEntity* throwable, ClientClass* client, C_BasePl
 		}
 	}
 
-	DrawEntity(throwable, nadeName.c_str(), nadeColor);
+	DrawEntity(throwable, nadeName.c_str(), nadeColor, nadetype);
 }
 
 static void DrawGlow()
@@ -2030,7 +2188,21 @@ bool ESP::PrePaintTraverse(VPANEL vgui_panel, bool force_repaint, bool allow_for
 {
 	if (Settings::ESP::enabled && Settings::NoScopeBorder::enabled && strcmp("HudZoom", panel->GetName(vgui_panel)) == 0)
 		return false;
+      // for (int i = 1; i <= entityList->GetHighestEntityIndex(); i++)  //-V807
+      //  {
+    //            auto e = entityList->GetClientEntity(i);
+  //              auto client_class = e->GetClientClass();
+//		if (!client_class)
+//			continue;
+    //           switch (client_class->m_ClassID)
+      //          {
+    //           case EClassIds::CEnvTonemapController:
+        //                world_modulation(e);
+  //                      break;
+//		}
 
+
+//	}
 	return true;
 }
 
@@ -2053,7 +2225,10 @@ void ESP::Paint()
 			continue;
 
 		ClientClass* client = entity->GetClientClass();
-
+               if (client->m_ClassID == EClassIds::CInferno)
+                {
+			drawfire(entity);
+		}
 		if (client->m_ClassID == EClassIds::CCSPlayer)
 		{
 			C_BasePlayer* player = (C_BasePlayer*) entity;
@@ -2151,13 +2326,12 @@ void ESP::Paint()
 		DrawScope();
 
 		DrawWatermark(localplayer);
-	if(Settings::ESP::showimpacts){
-	//ConVar* cvar_name = cvar->FindVar(XORSTR("sv_showimpacts"));
-	//cvar_name->SetValue(1);
-	}
+		CustomFog();
 if (Settings::ThirdPerson::toggled)
 {
 DrawAATrace(AntiAim::fakeAngle, AntiAim::realAngle);
+                renderRange();
+
 }
  if (Settings::AntiAim::ManualAntiAim::Enable)
     {

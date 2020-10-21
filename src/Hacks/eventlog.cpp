@@ -369,7 +369,10 @@ void Eventlog::FireGameEvent(IGameEvent* event)
 	engine->ClientCmd_Unrestricted("buy elite;buy scar20;buy g3sg1;buy vesthelm;buy taser;buy defuser;buy molotov;buy incgrenade;buy hegrenade;buy smokegrenade"); 
         }else if (Settings::buybot::scout){
 	engine->ClientCmd_Unrestricted("buy elite;buy ssg08;buy vesthelm;buy taser;buy defuser;buy molotov;buy incgrenade;buy hegrenade;buy smokegrenade"); 
-	}
+	}else if (Settings::buybot::awp){
+        engine->ClientCmd_Unrestricted("buy elite;buy awp;buy vesthelm;buy taser;buy defuser;buy molotov;buy incgrenade;buy hegrenade;buy smokegrenade"); 
+        }
+
 	}
         }else if (strstr(event->GetName(), XORSTR("vote_cast"))){ 
 

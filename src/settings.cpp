@@ -271,6 +271,12 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
 
     settings[XORSTR("AntiAim")][XORSTR("airspin")][XORSTR("enabled")] = Settings::AntiAim::airspin::enabled;
+    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("lby")][XORSTR("enabled")] = Settings::AntiAim::RageAntiAim::lby::enabled;
+    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("lby")][XORSTR("type")] = (int)Settings::AntiAim::RageAntiAim::lby::type;
+
+    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("legitkey")][XORSTR("enabled")] = Settings::AntiAim::RageAntiAim::legitkey::enabled;
+    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("legitkey")][XORSTR("key")] = Util::GetButtonName(Settings::AntiAim::RageAntiAim::legitkey::key);
+
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("enabled")] = Settings::AntiAim::RageAntiAim::enable;
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("invertonhurt")] = Settings::AntiAim::RageAntiAim::invertOnHurt;
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Fake Percent")] = Settings::AntiAim::RageAntiAim::AntiAImPercent;
@@ -317,6 +323,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("BuyBot")][XORSTR("enabled")] = Settings::buybot::enabled;
     settings[XORSTR("BuyBot")][XORSTR("scout")] = Settings::buybot::scout;
     settings[XORSTR("BuyBot")][XORSTR("autosniper")] = Settings::buybot::autosniper;
+    settings[XORSTR("BuyBot")][XORSTR("AWP")] = Settings::buybot::awp;
+
     /*
     * legit anti aim settings 
     */
@@ -338,6 +346,18 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("Resolver")][XORSTR("goalFeetYaw")] = Settings::Resolver::goalFeetYaw;
     settings[XORSTR("Resolver")][XORSTR("EyeAngles")] = Settings::Resolver::EyeAngles;
     settings[XORSTR("Resolver")][XORSTR("rPitch")] = Settings::Resolver::rPitch;
+
+    LoadColor(settings[XORSTR("ESP")][XORSTR("arrows")][XORSTR("color")], Settings::ESP::arrows::color);
+    settings[XORSTR("ESP")][XORSTR("arrows")][XORSTR("size")] = Settings::ESP::arrows::size;
+    settings[XORSTR("ESP")][XORSTR("arrows")][XORSTR("distance")] = Settings::ESP::arrows::distance;
+
+    LoadColor(settings[XORSTR("ESP")][XORSTR("taserrange")][XORSTR("color")], Settings::ESP::taserrange::color);
+    settings[XORSTR("ESP")][XORSTR("taserrange")][XORSTR("enabled")] = Settings::ESP::taserrange::enabled;
+
+    LoadColor(settings[XORSTR("ESP")][XORSTR("customfog")][XORSTR("color")], Settings::ESP::customfog::color);
+    settings[XORSTR("ESP")][XORSTR("customfog")][XORSTR("enabled")] = Settings::ESP::customfog::enabled;
+    settings[XORSTR("ESP")][XORSTR("customfog")][XORSTR("distance")] = Settings::ESP::customfog::distance;
+    settings[XORSTR("ESP")][XORSTR("customfog")][XORSTR("density")] = Settings::ESP::customfog::density;
 
     LoadColor(settings[XORSTR("ESP")][XORSTR("manualAAColor")], Settings::ESP::manualAAColor);
     settings[XORSTR("Resolver")][XORSTR("Type")] = (int)Settings::Resolver::resolverType;
@@ -996,6 +1016,11 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("inverted")], &Settings::AntiAim::RageAntiAim::inverted);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Type")], (int*)&Settings::AntiAim::RageAntiAim::Type);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("LbyMode")], (int*)&Settings::AntiAim::RageAntiAim::lbym);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("lby")][XORSTR("type")], (int*)&Settings::AntiAim::RageAntiAim::lby::type);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("lby")][XORSTR("enabled")], &Settings::AntiAim::RageAntiAim::lby::enabled);
+
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("legitkey")][XORSTR("enabled")], &Settings::AntiAim::RageAntiAim::legitkey::enabled);
+    GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("legitkey")][XORSTR("key")], &Settings::AntiAim::RageAntiAim::legitkey::key);
 
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("atTheTarget")], &Settings::AntiAim::RageAntiAim::atTheTarget);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("SendReal")], &Settings::AntiAim::RageAntiAim::SendReal);
@@ -1036,6 +1061,7 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("BuyBot")][XORSTR("enabled")], &Settings::buybot::enabled);
     GetVal(settings[XORSTR("BuyBot")][XORSTR("scout")], &Settings::buybot::scout);
     GetVal(settings[XORSTR("BuyBot")][XORSTR("autosniper")], &Settings::buybot::autosniper);
+    GetVal(settings[XORSTR("BuyBot")][XORSTR("AWP")], &Settings::buybot::awp);
 
 
     /* 
@@ -1065,6 +1091,18 @@ void Settings::LoadConfig(std::string path)
     GetVal( settings[XORSTR("Ragebot")][XORSTR("impactType")], (int*)&Settings::Ragebot::impacttype);
     GetVal(settings[XORSTR("Ragebot")][XORSTR("mindmgoverride")], &Settings::Ragebot::mindmgoverride);
     GetButtonCode(settings[XORSTR("Ragebot")][XORSTR("dmgkey")], &Settings::Ragebot::dmgkey);
+
+    GetVal(settings[XORSTR("ESP")][XORSTR("arrows")][XORSTR("color")], &Settings::ESP::arrows::color);
+    GetVal(settings[XORSTR("ESP")][XORSTR("arrows")][XORSTR("distance")], &Settings::ESP::arrows::distance);
+    GetVal(settings[XORSTR("ESP")][XORSTR("arrows")][XORSTR("size")], &Settings::ESP::arrows::size);
+
+    GetVal(settings[XORSTR("ESP")][XORSTR("taserrange")][XORSTR("color")], &Settings::ESP::taserrange::color);
+    GetVal(settings[XORSTR("ESP")][XORSTR("taserrange")][XORSTR("enabled")], &Settings::ESP::taserrange::enabled);
+
+    GetVal(settings[XORSTR("ESP")][XORSTR("customfog")][XORSTR("color")], &Settings::ESP::customfog::color);
+    GetVal(settings[XORSTR("ESP")][XORSTR("customfog")][XORSTR("enabled")], &Settings::ESP::customfog::enabled);
+    GetVal(settings[XORSTR("ESP")][XORSTR("customfog")][XORSTR("distance")], &Settings::ESP::customfog::distance);
+    GetVal(settings[XORSTR("ESP")][XORSTR("customfog")][XORSTR("density")], &Settings::ESP::customfog::density);
 
     GetVal(settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("color")], &Settings::Ragebot::quickpeek::color);
     GetVal(settings[XORSTR("ESP")][XORSTR("Watermark")][XORSTR("color")], &Settings::ESP::Watermark::color);

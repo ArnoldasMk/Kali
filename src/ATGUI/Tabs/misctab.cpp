@@ -20,16 +20,25 @@
 #include "../../Hacks/valvedscheck.h"
 #include "../Windows/playerlist.h"
 #include "../Windows/configs.h"
-
+#include <stdint.h>
 #pragma GCC diagnostic ignored "-Wformat-security"
 
 static char nickname[127] = "";
 
+void draw_combo(const char* name, int variable, const char* labels[], int count)
+{
+        ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 6);
+        ImGui::Text(name);
+        ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 5);
+        ImGui::Combo(std::string(XORSTR("##COMBO__") + std::string(name)).c_str(), &variable, labels, count);
+}
 
 void Misc::RenderTab()
 {
 
-	const char* buyBotWeapons[] = {"buy defuser", "buy p250", "buy vesthelm", "buy mp7", "buy ak47", "buy m4a1", "buy awp", "buy scar20;buy g3sg1", "buy flashbang", "buy hegrenade", "buy smokegrenade", "buy deagle", "buy incgrenade; buy molotov", "buy decoy" };
+	const char* mainwep[] = {"None", "Auto", "AWP", "SSG 08"};
+	const char* secwep[] = {"None", "Dual Berettas", "Deagle/Revolver"};
+	const char* altwep[] = {"Grenades", "Armor", "Taser", "Defuser"};
 	const char* strafeTypes[] = { "Forwards", "Backwards", "Left", "Right", "Rage", "Directional" };
 	const char* animationTypes[] = { "Static", "Marquee", "Words", "Letters" };
         const char* musicType[] = { "CSGO", "CSGO2", "Crimson_Assault", "Sharpened", "Insurgency", "ADB", "High_Moon", "Deaths_Head_Demolition","Desert_Fire","LNOE","Metal","All_I_Want_for_Christmas","IsoRhythm","For_No_Mankind","Hotline_Miami","Total_Domination","The_Talos_Principle","Battlepack","MOLOTOV","Uber_Blasto_Phone","Hazardous_Environments","II-Headshot","The_8-Bit_Kit","I_Am","Diamonds","Invasion!","Lions_Mouth","Sponge_Fingerz","Disgusting","Java_Havana_Funkaloo","Moments_CSGO","Aggressive","The_Good_Youth","FREE","Lifes_Not_Out_to_Get_You","Backbone","GLA","III-Arena","EZ4ENCE" };
@@ -342,9 +351,10 @@ void Misc::RenderTab()
                         ImGui::Separator();
                                         ImGui::Checkbox(XORSTR("BuyBot"), &Settings::buybot::enabled);
 					if ( Settings::buybot::enabled){
-
+                                        //draw_combo(XORSTR("Snipers"), (intptr_t)& Settings::buybot::wep, mainwep, IM_ARRAYSIZE(mainwep));
                                         ImGui::Checkbox(XORSTR("AutoSniper"), &Settings::buybot::autosniper);
                                         ImGui::Checkbox(XORSTR("Scout"), &Settings::buybot::scout);
+					ImGui::Checkbox(XORSTR("AWP"), &Settings::buybot::awp);
 					}
 	                        if (ImGui::Button(XORSTR("Configs")) )
                                 Configs::showWindow = !Configs::showWindow;

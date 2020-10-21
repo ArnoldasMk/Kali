@@ -331,7 +331,6 @@ void GrenadePrediction::Paint( ) {
     C_BasePlayer* pLocal = ( C_BasePlayer* ) entityList->GetClientEntity( engine->GetLocalPlayer() );
     if ( !pLocal || !pLocal->GetAlive() )
         return;
-
     C_BaseCombatWeapon* activeWeapon = ( C_BaseCombatWeapon* ) entityList->GetClientEntityFromHandle(
             pLocal->GetActiveWeapon() );
     if ( !activeWeapon || activeWeapon->GetCSWpnData()->GetWeaponType() != CSWeaponType::WEAPONTYPE_GRENADE )
@@ -350,6 +349,17 @@ void GrenadePrediction::Paint( ) {
                                ( int ) nadeEnd.x, ( int ) nadeEnd.y,
                                Settings::GrenadePrediction::color.Color() );
             }
+		   auto index = *activeWeapon->GetItemDefinitionIndex();
+		   int radius;
+		    if (index == ItemDefinitionIndex::WEAPON_HEGRENADE)
+			radius = 185;
+		    if (index == ItemDefinitionIndex::WEAPON_SMOKEGRENADE)
+		    	radius = 144;
+                    if (index == ItemDefinitionIndex::WEAPON_MOLOTOV || index == ItemDefinitionIndex::WEAPON_INCGRENADE)
+                        radius = 150;
+
+	            Draw::AddCircle3D( *grenadePath.end(), radius, Settings::GrenadePrediction::color.Color(), 32 );
+
             prev = *it;
         }
 

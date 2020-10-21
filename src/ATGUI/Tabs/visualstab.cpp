@@ -318,7 +318,7 @@ void Visuals::RenderTab()
 					ImGui::Selectable(XORSTR("Planting"), &Settings::ESP::Info::planting,ImGuiSelectableFlags_DontClosePopups);
 					ImGui::Selectable(XORSTR("Defusing"), &Settings::ESP::Info::defusing, ImGuiSelectableFlags_DontClosePopups);
 					ImGui::Selectable(XORSTR("Rescuing Hostage"), &Settings::ESP::Info::rescuing, ImGuiSelectableFlags_DontClosePopups);
-                	ImGui::Selectable(XORSTR("Layers Debug"), &Settings::Debug::AnimLayers::draw, ImGuiSelectableFlags_DontClosePopups);
+		                	ImGui::Selectable(XORSTR("Layers Debug"), &Settings::Debug::AnimLayers::draw, ImGuiSelectableFlags_DontClosePopups);
 					ImGui::Selectable(XORSTR("Choked Packets"), &Settings::ESP::Info::money, ImGuiSelectableFlags_DontClosePopups);
 				
 				}
@@ -630,6 +630,7 @@ void Visuals::RenderTab()
 				ImGui::Checkbox( XORSTR( "Grenade Prediction" ), &Settings::GrenadePrediction::enabled );
 				ImGui::Checkbox(XORSTR("No Aim Punch"), &Settings::View::NoAimPunch::enabled);
 				ImGui::Checkbox(XORSTR("ASUS Walls"), &Settings::ASUSWalls::enabled);
+                                ImGui::Checkbox(XORSTR("Draw Taser Range"), &Settings::ESP::taserrange::enabled);
 				ImGui::Checkbox(XORSTR("No Scope Border"), &Settings::NoScopeBorder::enabled);
 				ImGui::Checkbox(XORSTR("Autowall Debug"), &Settings::Debug::AutoWall::debugView);
 				ImGui::Checkbox(XORSTR("AimSpot Debug"), &Settings::Debug::AutoAim::drawTarget);
@@ -691,6 +692,20 @@ if (Settings::ESP::Hitmarker::enabled){
                 ImGui::PopItemWidth();
 }
 			}
+                        ImGui::Separator();
+
+                        ImGui::Text(XORSTR("Fog modulation"));
+                        ImGui::Separator();
+                        ImGui::Columns(1);
+                        {
+                                ImGui::Checkbox(XORSTR("Enabled"), &Settings::ESP::customfog::enabled);
+if (Settings::ESP::customfog::enabled){
+                                ImGui::SliderFloat(XORSTR("##CUSTOMFOGDENSITY"), &Settings::ESP::customfog::density, 0, 100, XORSTR("Density: %0.f"));
+                                ImGui::SliderInt(XORSTR("##CUSTOMFOGDISTANCE"), &Settings::ESP::customfog::distance, 0, 2500, XORSTR("Distance: %0.f"));
+
+}
+            }
+
 ImGui::Separator();
 			ImGui::Text(XORSTR("Event logger"));
 			ImGui::Separator();
@@ -709,6 +724,10 @@ ImGui::Separator();
 			}
 			ImGui::Columns(1);
 			ImGui::Separator();
+                        ImGui::Text(XORSTR("OOV Arrow Settings"));
+                        ImGui::Separator();
+                               ImGui::SliderInt(XORSTR("##ARROWDISTANCE"), &Settings::ESP::arrows::distance, 1, 100, XORSTR("Arrows distance: %0.f"));
+                               ImGui::SliderInt(XORSTR("##ARROWSIZE"), &Settings::ESP::arrows::size, 1, 100, XORSTR("Arrows size: %0.f"));
 
 			ImGui::EndChild();
 		}

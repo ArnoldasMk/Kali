@@ -4,7 +4,6 @@
 #include "../interfaces.h"
 #include "../settings.h"
 
-// Find it from nimbus there is no point to wast your time if that is all ready available
 static bool FirstDuck = false;
 int choked;
 void FakeDuck::CreateMove(CUserCmd *cmd)
@@ -27,12 +26,11 @@ void FakeDuck::CreateMove(CUserCmd *cmd)
 if (FirstDuck){
                 cmd->buttons |= IN_BULLRUSH;
 
-                if (choked <= 6)
+                if (choked <= 6){
                         cmd->buttons &= ~IN_DUCK;
-                else
+                }else{
                         cmd->buttons |= IN_DUCK;
-
-                if (choked < 14){
+               } if (choked < 14){
 			choked++;
                         CreateMove::sendPacket = false;   // choke
 		}
@@ -40,6 +38,9 @@ if (FirstDuck){
                        CreateMove::sendPacket = true;    // send packet
 		       choked = 0;
 		}
+if (input->m_fCameraInThirdPerson)
+localplayer->GetAnimState()->duckProgress = 1.0; //memes
+
 }
 }
 

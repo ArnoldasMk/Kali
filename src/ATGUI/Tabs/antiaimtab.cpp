@@ -36,6 +36,7 @@ const char* pitchType[] = {
 const char* lbyType[] = {
 	"Normal",
 	"Opposite",
+	"Sway",
 };
     const char* RageAntiAimType[] = {
         "Default Rage",
@@ -85,9 +86,23 @@ const char* lbyType[] = {
     
     ImGui::Checkbox(XORSTR("At Targets (alpha)"), &Settings::AntiAim::RageAntiAim::atTheTarget);
     ImGui::Checkbox(XORSTR("Invert on hurt"), &Settings::AntiAim::RageAntiAim::invertOnHurt);
+    ImGui::Checkbox(XORSTR("Legit AA on E"), &Settings::AntiAim::RageAntiAim::legitkey::enabled);
 
     ImGui::Spacing(); ImGui::Spacing();
-    ImGui::Columns(1);
+ 
+    ImGui::Columns(2, nullptr, false);
+    {
+
+    ImGui::Checkbox(XORSTR("Break LBY"), &Settings::AntiAim::RageAntiAim::lby::enabled);
+
+    }
+    ImGui::NextColumn();
+    {
+
+    ImGui::Combo(XORSTR("##LbyType"), (int*)&Settings::AntiAim::RageAntiAim::lby::type, lbyType, IM_ARRAYSIZE(lbyType));
+
+    }
+   ImGui::Columns(1);
     ImGui::Text(XORSTR("Edging(Alfa)"));
     
     ImGui::Columns(2, nullptr, false);
@@ -174,15 +189,58 @@ static void LegitAntiAim()
 
 static void LagacyAntiAim()
 {
-    ImGui::SliderFloat(XORSTR("##LBYOFFSET"), &Settings::AntiAim::LBYBreaker::offset, 0, 360, "LBY Offset(from fake): %0.f");
+const char* pitchType[] = {
+        "Up",
+        "Down",
+        "Zero",
+        "Fake Zero",
+        "Fake Up",
+        "Fake Down",
+        "Fake Jitter",
+};
+const char* aaState[] = {
+        "Stand",
+        "Air",
+        "Move",
+        "Slow Walk",
+        "Fake Duck",
+        "Lby Update",
+};
+
+            ImGui::Combo(XORSTR("##AASTATES"), (int*)Settings::AntiAim::RageAntiAim::customaa::aastate, aaState, IM_ARRAYSIZE(aaState));
+	switch (Settings::AntiAim::RageAntiAim::customaa::aastate)
+	{
+	case AAState::STAND:
+	    ImGui::SliderInt(XORSTR("##YAWANGLE"), &Settings::AntiAim::RageAntiAim::customaa::standang, -180, 180, "Yaw Desync Angle : %.0f");
+	break;
+        case AAState::AIR:
+            ImGui::SliderInt(XORSTR("##YAWANGLE"), &Settings::AntiAim::RageAntiAim::customaa::airang, -180, 180, "Yaw Desync Angle : %.0f");
+        break;
+	}
+        ImGui::Columns(2, nullptr, false);
+        {
+            ImGui::ItemSize(ImVec2(0.0f, 0.0f), 0.0f);
+            ImGui::Text(XORSTR("Pitch"));
+
+        }
+        ImGui::NextColumn();
+        {
+            ImGui::PushItemWidth(-1);
+            ImGui::Combo(XORSTR("##PITCHTYPE"), (int*)& Settings::AntiAim::pitchtype, pitchType, IM_ARRAYSIZE(pitchType));
+            ImGui::PopItemWidth();
+        }
+        ImGui::Columns(1);
+            ImGui::Checkbox(XORSTR("Randomize Yaw"), &Settings::AntiAim::RageAntiAim::customaa::sidemove);
+	    ImGui::Checkbox(XORSTR("Micromovements"), &Settings::AntiAim::RageAntiAim::customaa::sidemove);
+
 }
 void HvH::RenderTab()
 {
     
     static char* AntiAimType[] = {
-        "Legit AntiAIm",
-        "Rage AntiAIm",
-        "LBY Breaker",
+        "Legit AntiAim",
+        "Rage AntiAim",
+        "Custom AntiAim",
     }; 
     
     ImGui::Spacing();
@@ -200,7 +258,9 @@ void HvH::RenderTab()
                 Settings::AntiAim::LegitAntiAim::enable = false;
             break;
         case AntiAimType::Lagacy:
-            ImGui::Checkbox(XORSTR("##ENABLELbyBreaker"), &Settings::AntiAim::LBYBreaker::enabled);
+            ImGui::Checkbox(XORSTR("##ENABLECustomAA"), &Settings::AntiAim::RageAntiAim::customaa::enabled);
+                Settings::AntiAim::LegitAntiAim::enable = false;
+                Settings::AntiAim::RageAntiAim::enable = false;
             break;
         default:
             break;
@@ -264,7 +324,7 @@ if (Settings::AntiAim::SlowWalk::enabled){
             ImGui::SliderFloat(XORSTR("##EYEANGLES"), &Settings::Resolver::EyeAngles, -60, 60, XORSTR("Amount: %0.f"));
 						}
 	}
-
+            ImGui::Checkbox(XORSTR("Spin on air"), &Settings::AntiAim::airspin::enabled);
             ImGui::EndChild();
         }
     }

@@ -43,13 +43,29 @@ void Draw::Circle3D( const Vector &position, int segments, float radius, Color c
 	for ( float a = 0; a < ( M_PI * 2.0f ); a += step ) {
 		Vector start( radius * cosf( a ) + position.x, radius * sinf( a ) + position.y, position.z );
 		Vector end( radius * cosf( a + step ) + position.x, radius * sinf( a + step ) + position.y, position.z );
-
-		Vector start2d, end2d;
-		if ( debugOverlay->ScreenPosition( start, start2d ) || debugOverlay->ScreenPosition( end, end2d ) )
+		
+		Vector start2d, end2d, position2d;
+		if ( debugOverlay->ScreenPosition( start, start2d ) || debugOverlay->ScreenPosition( end, end2d ) || debugOverlay->ScreenPosition(position, position2d) )
 			return;
 
 		Draw::Line( Vector2D( start2d.x, start2d.y ), Vector2D( end2d.x, end2d.y ), color );
 	}
+}
+
+void Draw::FilledCircle3D( const Vector &position, int segments, float radius, Color color ) {
+        float step = ( float ) M_PI * 2.0f / ( float )segments;
+
+        for ( float a = 0; a < ( M_PI * 2.0f ); a += step ) {
+                Vector start( radius * cosf( a ) + position.x, radius * sinf( a ) + position.y, position.z );
+                Vector end( radius * cosf( a + step ) + position.x, radius * sinf( a + step ) + position.y, position.z );
+
+                Vector start2d, end2d, position2d;
+                if ( debugOverlay->ScreenPosition( start, start2d ) || debugOverlay->ScreenPosition( end, end2d ) || debugOverlay->ScreenPosition(position, position2d) )
+                        return;
+
+                Draw::Line( Vector2D( start2d.x, start2d.y ), Vector2D( end2d.x, end2d.y ), color );
+                Draw::triangle( Vector2D( start2d.x, start2d.y ), Vector2D(position2d.x, position2d.y), Vector2D( end2d.x, end2d.y ), Color (color.r, color.g, color.b, color.a / 2));
+        }
 }
 
 void Draw::FilledRectangle( int x0, int y0, int x1, int y1, Color col ) {
@@ -77,6 +93,27 @@ void Draw::Line( int x0, int y0, int x1, int y1, Color col ) {
 
 void Draw::Line( Vector2D start_pos, Vector2D end_pos, Color col ) {
 	Line( start_pos.x, start_pos.y, end_pos.x, end_pos.y, col );
+}
+
+void Draw::triangle(Vector2D point_one, Vector2D point_two, Vector2D point_three, Color color) 
+{
+
+
+        Vertex_t verts[3] = {
+                Vertex_t(point_one),
+                Vertex_t(point_two),
+                Vertex_t(point_three)
+        };
+        static int texture_id;
+        if( !texture_id )
+                texture_id = surface->CreateNewTextureID( true );
+        unsigned char buffer[4] = { 255, 255, 255, 255 };
+
+        surface->DrawSetTextureRGBA(texture_id, buffer, 1, 1);
+        surface->DrawSetColor(color);
+        surface->DrawSetTexture(texture_id);
+
+        surface->DrawTexturedPolygon(3, verts);
 }
 
 void Draw::PolyLine( int* px, int* py, int num_points, Color col ) {

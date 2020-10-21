@@ -6,20 +6,17 @@ std::vector<int64_t> Resolver::Players = {};
 #define RANDOME_FLOAT(x) ( static_cast<float>(static_cast<float>(rand()/ static_cast<float>(RAND_MAX/ ( x ) ))) )
 #define GetPercentVal(val, percent) (val * (percent/100.f))
 
-//static float NormalizeAsYaw(float flAngle)
-//{
-//	if (flAngle > 180.f || flAngle < -180.f)
-//	{
-//		auto revolutions = round(abs(flAngle / 360.f));
-//
-//		if (flAngle < 0.f)
-//			flAngle += 360.f * revolutions;
-//		else
-//			flAngle -= 360.f * revolutions;
-//	}
-//
-//	return flAngle;
-//}
+        float normalize_pitch(float pitch)
+        {
+                while (pitch > 89.0f)
+                        pitch -= 180.0f;
+
+                while (pitch < -89.0f)
+                        pitch += 180.0f;
+
+                return pitch;
+        }
+
 Vector CalculateAngle(Vector src, Vector dst)
 {
         Vector angles;
@@ -235,6 +232,7 @@ void Resolver::FrameStageNotify(ClientFrameStage_t stage)
 				        float angle = GetAngle(player);
 				float fuck = 90;
                 bool forward = fabsf(NormalizeAsYaw(GetAngle(player) - GetForwardYaw(player))) < 90.f;
+							player->GetEyeAngles()->x = normalize_pitch(player->GetEyeAngles()->x);
 				                        if (forward) {
 											switch(Resolver::players[player->GetIndex()].MissedCount)
 				{

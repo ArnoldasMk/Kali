@@ -39,7 +39,7 @@ public:
 
 	virtual bool ShouldDrawParticles() = 0;
 
-	virtual bool ShouldDrawFog(void) = 0;
+	//virtual bool ShouldDrawFog(void) = 0;
 
 	virtual void OverrideView(CViewSetup *pSetup) = 0; // 19
 

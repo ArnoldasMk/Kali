@@ -16,6 +16,8 @@
 #include "../Hacks/lagcomp.h"
 #include "../Hacks/antiaim.h"
 #include "../Hacks/svcheats.h"
+#include "../Hacks/memeangle.h"
+
 
 typedef void (*FrameStageNotifyFn) (void*, ClientFrameStage_t);
 
@@ -27,13 +29,14 @@ void Hooks::FrameStageNotify(void* thisptr, ClientFrameStage_t stage)
 	SkinChanger::FrameStageNotifySkins(stage);
 	Noflash::FrameStageNotify(stage);
 	View::FrameStageNotify(stage);
+        memeangles::FrameStageNotify(stage);
 	Resolver::FrameStageNotify(stage);
 	ResolverAP::FrameStageNotify(stage);
 	SkyBox::FrameStageNotify(stage);
 	ASUSWalls::FrameStageNotify(stage);
 	NoSmoke::FrameStageNotify(stage);
 	ThirdPerson::FrameStageNotify(stage);
-SvCheats::FrameStageNotify(stage);
+	SvCheats::FrameStageNotify(stage);
 	if (SkinChanger::forceFullUpdate)
 	{
 		GetLocalClient(-1)->m_nDeltaTick = -1;

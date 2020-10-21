@@ -59,6 +59,16 @@ enum class ClanTagType : int
 	LETTERS,
 };
 
+enum class AAState : int
+{
+        STAND,
+        AIR,
+	MOVE,
+	SLOLWWALK,
+	FAKEDUCK,
+	LBY,
+};
+
 enum class impactType : int
 {
         ITSME,
@@ -248,6 +258,29 @@ enum class AntiAimRealType_Y : int
 	Spin,
 };
 
+enum class MainWep : int
+{
+        NONE,
+        AUTO,
+        AWP,
+        SCOUT,
+};
+
+enum class SecWep : int
+{
+        NONE,
+        DUAL,
+        DEAGLE,
+};
+
+enum class AltWep : int
+{
+        GRENADES,
+        ARMOR,
+        TASER,
+	DEFUSER,
+};
+
 enum class AntiAimFakeType_y : int
 {
 	NONE,
@@ -267,6 +300,7 @@ enum class LbyMode : int
 {
 	Normal,
 	Opposite,
+	Sway,
 };
 
 enum class RageAntiAimType : int
@@ -882,6 +916,26 @@ namespace Settings
         namespace RageAntiAim
         {
 
+	namespace customaa
+	{
+	    inline AAState aastate = AAState::STAND;
+	    inline bool enabled;
+	    inline bool randang;
+	    inline bool sidemove;
+	    inline int baseAngle;
+	    inline int standang;
+	    inline int airang;
+	inline int moveang;
+	inline int slowang;
+	inline int duckang;
+	inline int lbyang;
+	}
+
+	namespace legitkey
+	{
+	    inline bool enabled;
+            inline ButtonCode_t key;
+	}
             inline float bodylean;
 	    inline bool pitchJitter;
 	    inline float offset = 180;
@@ -895,6 +949,11 @@ namespace Settings
 			inline bool SendReal = false;
 			inline RageAntiAimType Type = RageAntiAimType::DefaultRage;
         		inline LbyMode lbym = LbyMode::Normal;
+		namespace lby
+		{
+                        inline LbyMode type = LbyMode::Normal;
+			inline bool enabled;
+		}
 	}
 		namespace LegitAntiAim 
 		{
@@ -961,6 +1020,25 @@ namespace Settings
 
 	namespace ESP
 	{
+	namespace arrows
+	{
+		inline int distance;
+		inline int size;
+                inline ColorVar color;
+	}
+	namespace taserrange
+	{
+		inline bool enabled;
+		inline ColorVar color;
+	}
+	namespace customfog
+	{
+		inline bool enabled;
+                inline ColorVar color;
+		inline int distance;
+		inline float density;
+
+	}
 	namespace indicators
 	{
 		inline bool enabled;
@@ -1894,9 +1972,13 @@ inline bool enabled;
 	}
 	namespace buybot
 	{
+	inline MainWep wep;
+	inline SecWep sec;
+	inline AltWep alt;
 	inline bool enabled = false;
 	inline bool scout = false;
 	inline bool autosniper = false;
+        inline bool awp = false;
 	}
     namespace Debug
     {

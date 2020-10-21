@@ -95,6 +95,8 @@ namespace Colors
 			{ "ESP - Watermark", &Settings::ESP::Watermark::color },
 		        { "ESP - QuickPeek", &Settings::Ragebot::quickpeek::color },
                         { "ESP - Manual AA indicators", &Settings::ESP::manualAAColor },
+                        { "ESP - Taser Range", &Settings::ESP::taserrange::color },
+                        { "ESP - OOV Arrows", &Settings::ESP::arrows::color },
 			{ "Chams - Team", &Settings::ESP::Chams::allyColor },
 			{ "Chams - Team Visible", &Settings::ESP::Chams::allyVisibleColor },
 			{ "Chams - Enemy", &Settings::ESP::Chams::enemyColor },
@@ -133,6 +135,8 @@ namespace Colors
 			{ "Glow - Chicken", &Settings::ESP::Glow::chickenColor },
 			{ "Sky", &Settings::NoSky::color },
 			{ "Walls", &Settings::ASUSWalls::color },
+                        { "Fog", &Settings::ESP::customfog::color },
+
 	};
 
 }
