@@ -38,8 +38,8 @@ if (FirstDuck){
                        CreateMove::sendPacket = true;    // send packet
 		       choked = 0;
 		}
-if (input->m_fCameraInThirdPerson)
-localplayer->GetAnimState()->duckProgress = 1.0; //memes
+//if (input->m_fCameraInThirdPerson)
+//localplayer->GetAnimState()->duckProgress = 1.0; //memes
 
 }
 }
