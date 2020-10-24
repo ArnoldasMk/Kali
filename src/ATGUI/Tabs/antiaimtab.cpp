@@ -27,6 +27,7 @@ const char* pitchType[] = {
         "Up",
         "Down",
 	"Zero",
+	"Emotion",
 	"Fake Zero",
         "Fake Up",
 	"Fake Down",
@@ -325,6 +326,11 @@ if (Settings::AntiAim::SlowWalk::enabled){
 						}
 	}
             ImGui::Checkbox(XORSTR("Spin on air"), &Settings::AntiAim::airspin::enabled);
+            ImGui::Checkbox(XORSTR("Animation Memes"), &Settings::AnimMemes::enabled);
+            ImGui::Checkbox(XORSTR("Fake Peek"), &Settings::AntiAim::RageAntiAim::fakepeek);
+		if (Settings::AntiAim::RageAntiAim::fakepeek)
+		  UI::KeyBindButton(&Settings::AntiAim::RageAntiAim::fakeheadkey);
+
             ImGui::EndChild();
         }
     }

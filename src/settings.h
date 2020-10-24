@@ -168,6 +168,7 @@ enum class AntiAimType_X : int
     STATIC_UP,
     STATIC_DOWN,
     FRONT,
+    EMOTION,
     FRONT_FAKE,
     DOWN_FAKE,
     UP_FAKE,
@@ -888,6 +889,12 @@ namespace Settings
 	inline bool enabled;
 	inline ButtonCode_t key = ButtonCode_t::KEY_Z;
     }
+
+    namespace AnimMemes
+    {
+	inline bool enabled;
+    }
+
     namespace AntiAim
     {
 	inline float realoffset;
@@ -915,7 +922,9 @@ namespace Settings
         }
         namespace RageAntiAim
         {
-
+	    inline bool head;
+            inline ButtonCode_t fakeheadkey;
+	    inline bool fakepeek;
 	namespace customaa
 	{
 	    inline AAState aastate = AAState::STAND;
@@ -1857,7 +1866,7 @@ inline ButtonCode_t key;
 namespace SvCheats
 {
 inline bool enabled;
-
+inline bool fakelat;
 namespace gravity {
 inline bool enabled;
 inline int amount;

@@ -26,12 +26,17 @@
 #include <mutex>
 #define TICK_INTERVAL			(globalVars->interval_per_tick)
 #define TIME_TO_TICKS( dt )		( (int)( 0.5f + (float)(dt) / TICK_INTERVAL ) )
+#define TICKS_TO_TIME( t )              ( TICK_INTERVAL *( t ) )
+
 #define M_RADPI 57.295779513082f
 
 /* The engine->WorldToScreenMatrix() function can't be called at all times
  * So this is Updated in the Paint Hook for us */
+static float next_break = 0.f;
 VMatrix vMatrix;
 int spawntime = 0;
+int oldtrig = 0;
+int currtrig = 0;
 Vector2D barsSpacing = Vector2D( 0, 0 );
 struct Footstep {
     Footstep( Vector &pos, long expireAt ){
@@ -612,6 +617,58 @@ Draw::AddRectFilled(x, y, x + woop, y + 20, ImColor(0, 40, 0, 255));
 
 
 }
+
+bool fakeass_head()
+{
+        C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+
+        if (!localplayer)
+                return false;
+
+        float server_time = TICKS_TO_TIME(localplayer->GetTickBase());
+
+        auto animstate = localplayer->GetAnimState();
+        if (!animstate)
+                return false;
+
+        if (localplayer->GetVelocity().Length2D() > 6.0f || (fabs(animstate->verticalVelocity) > 100.f))
+                next_break = server_time + 1.1f;
+
+        if (next_break < server_time)
+        {
+                next_break = server_time + 1.1f;
+                return true;
+        }
+
+        return false;
+}
+
+void DrawFH(int x, int y){
+if (!Settings::AntiAim::RageAntiAim::head || !Settings::AntiAim::RageAntiAim::fakepeek)
+	return;
+
+C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+
+if (!localplayer->GetAlive())
+	return;
+
+float server_time = TICKS_TO_TIME(localplayer->GetTickBase());
+
+Vector2D tsize = Draw::GetTextSize(XORSTR("Fake Head") , esp_font);
+Draw::AddText(x , y + 35, XORSTR("Fake Head")  ,fakeass_head() ? ImColor( 0, 255, 0, 255 ) : ImColor( 255, 0, 0, 255 ) );
+float woop = (next_break - server_time);
+Draw::AddRectFilled(x, y + 50, x + (woop * 11), y + 60, fakeass_head() ? ImColor( 0, 255, 0, 255 ) : ImColor( 255, 0, 0, 255 ) );
+
+//if (Settings::AntiAim::RageAntiAim::inverted)
+//Draw::AddText(x + tsize.x - 5, y + 45, XORSTR(">")  ,fakeass_head() ? ImColor( 0, 255, 0, 255 ) : ImColor( 255, 0, 0, 255 ) );
+//else
+//Draw::AddText(x, y + 45, XORSTR("<")  ,fakeass_head() ? ImColor( 0, 255, 0, 255 ) : ImColor( 255, 0, 0, 255 ) );
+
+//NON INVERTED = LEFT
+//INVERTED = RIGHT
+
+}
+
 static void DrawSkeleton( C_BasePlayer* player, C_BasePlayer* localplayer ) {
 	studiohdr_t* pStudioModel = modelInfo->GetStudioModel( player->GetModel() );
 	if ( !pStudioModel )
@@ -2315,6 +2372,7 @@ void ESP::Paint()
 		}
 	}
 	Drawlc();
+        DrawFH(Settings::ESP::keybi::x, Settings::ESP::keybi::y + 85);
 	DrawLag(Settings::ESP::keybi::x, Settings::ESP::keybi::y + 90, localplayer);
 	if (Settings::ESP::KeyBinds)
         	DrawKeyBinds(Settings::ESP::keybi::x, Settings::ESP::keybi::y);

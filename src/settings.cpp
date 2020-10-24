@@ -269,10 +269,16 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("SilentWalk")][XORSTR("Key")] = Util::GetButtonName(Settings::SilentWalk::key);
     settings[XORSTR("SilentWalk")][XORSTR("enabled")] = Settings::SilentWalk::enabled;
 
+    settings[XORSTR("AnimationMemes")][XORSTR("enabled")] = Settings::AnimMemes::enabled;
 
     settings[XORSTR("AntiAim")][XORSTR("airspin")][XORSTR("enabled")] = Settings::AntiAim::airspin::enabled;
+
+    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("fakepeek")] = Settings::AntiAim::RageAntiAim::fakepeek;
+    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("fakeheadkey")] = Util::GetButtonName(Settings::AntiAim::RageAntiAim::fakeheadkey);
+
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("lby")][XORSTR("enabled")] = Settings::AntiAim::RageAntiAim::lby::enabled;
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("lby")][XORSTR("type")] = (int)Settings::AntiAim::RageAntiAim::lby::type;
+
 
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("legitkey")][XORSTR("enabled")] = Settings::AntiAim::RageAntiAim::legitkey::enabled;
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("legitkey")][XORSTR("key")] = Util::GetButtonName(Settings::AntiAim::RageAntiAim::legitkey::key);
@@ -299,6 +305,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
     settings[XORSTR("SvCheats")][XORSTR("enabled")] = Settings::SvCheats::enabled;
     settings[XORSTR("SvCheatss")][XORSTR("enabled")] = Settings::SvCheats::svcheats::enabled;
+    settings[XORSTR("SvCheats")][XORSTR("fakelat")] = Settings::SvCheats::fakelat;
 
     settings[XORSTR("gravity")][XORSTR("enabled")] = Settings::SvCheats::gravity::enabled;
     settings[XORSTR("impacts")][XORSTR("enabled")] = Settings::SvCheats::impacts::enabled;
@@ -1003,6 +1010,8 @@ void Settings::LoadConfig(std::string path)
     	GetVal(settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("enabled")], &Settings::Ragebot::quickpeek::enabled);
         GetButtonCode(settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("key")], &Settings::Ragebot::quickpeek::key);
 
+        GetVal(settings[XORSTR("AnimationMemes")][XORSTR("enabled")], &Settings::AnimMemes::enabled);
+
         GetVal(settings[XORSTR("SilentWalk")][XORSTR("enabled")], &Settings::SilentWalk::enabled);
         GetButtonCode(settings[XORSTR("SilentWalk")][XORSTR("Key")], &Settings::SilentWalk::key);
 
@@ -1018,6 +1027,9 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("LbyMode")], (int*)&Settings::AntiAim::RageAntiAim::lbym);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("lby")][XORSTR("type")], (int*)&Settings::AntiAim::RageAntiAim::lby::type);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("lby")][XORSTR("enabled")], &Settings::AntiAim::RageAntiAim::lby::enabled);
+
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("fakepeek")], &Settings::AntiAim::RageAntiAim::fakepeek);
+    GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("fakeheadkey")], &Settings::AntiAim::RageAntiAim::fakeheadkey);
 
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("legitkey")][XORSTR("enabled")], &Settings::AntiAim::RageAntiAim::legitkey::enabled);
     GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("legitkey")][XORSTR("key")], &Settings::AntiAim::RageAntiAim::legitkey::key);
@@ -1037,6 +1049,7 @@ void Settings::LoadConfig(std::string path)
 
     GetVal(settings[XORSTR("SvCheats")][XORSTR("enabled")], &Settings::SvCheats::enabled);
     GetVal(settings[XORSTR("SvCheatss")][XORSTR("enabled")], &Settings::SvCheats::svcheats::enabled);
+    GetVal(settings[XORSTR("SvCheats")][XORSTR("fakelat")], &Settings::SvCheats::fakelat);
 
     GetVal(settings[XORSTR("aspect")][XORSTR("enabled")], &Settings::SvCheats::aspect::enabled);
     GetVal(settings[XORSTR("aspect")][XORSTR("var")], &Settings::SvCheats::aspect::var);

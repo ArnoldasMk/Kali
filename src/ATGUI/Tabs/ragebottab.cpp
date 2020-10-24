@@ -360,9 +360,17 @@ ImGui::Combo(XORSTR("##ImpactDetection"), (int*)&Settings::Ragebot::impacttype, 
 				}
 					
 				ImGui::Checkbox(XORSTR("Auto Crouch"), &Settings::Ragebot::AutoCrouch::enable);
-				ImGui::Checkbox(XORSTR("LagCom"), &Settings::Ragebot::backTrack::enabled);
-				if (Settings::Ragebot::backTrack::enabled)
-                                ImGui::SliderFloat(XORSTR("##TRACKTIME"), &Settings::Ragebot::backTrack::time, 0.0f, 0.2f);
+				ImGui::Checkbox(XORSTR("Backtrack"), &Settings::Ragebot::backTrack::enabled);
+				float time;
+				if (Settings::SvCheats::fakelat)
+					time = 0.4f;
+				else
+					time = 0.2f;
+				if (Settings::Ragebot::backTrack::enabled){
+                                ImGui::SliderFloat(XORSTR("##TRACKTIME"), &Settings::Ragebot::backTrack::time, 0.0f, time);
+				if ( Settings::Ragebot::backTrack::time > time)
+				Settings::Ragebot::backTrack::time = 0.2f;
+				}
 
                                 ImGui::Checkbox(XORSTR("AutoKnife"), &Settings::AutoKnife::enabled);
 //                                ImGui::Checkbox(XORSTR("Exploits"), &Settings::Ragebot::exploits::enabled);

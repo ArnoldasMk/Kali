@@ -274,6 +274,32 @@ int bestDamage = localplayer->GetHealth();
 	return true;
 }
 
+bool fake_head()
+{
+        C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+
+        if (!localplayer)
+                return false;
+
+        float server_time = TICKS_TO_TIME(localplayer->GetTickBase());
+        static float next_break = 0.f;
+
+        auto animstate = localplayer->GetAnimState();
+        if (!animstate)
+                return false;
+
+        if (localplayer->GetVelocity().Length2D() > 6.0f || fabs(animstate->verticalVelocity) > 100.f)
+                next_break = server_time + 1.1f;
+
+        if (next_break < server_time)
+        {
+                next_break = server_time + 1.1f;
+                return true;
+        }
+
+        return false;
+}
+
 static bool LBYBreak(float offset, QAngle& angle,C_BasePlayer* localplayer)
 {
     static bool lbyBreak = false;
@@ -934,6 +960,28 @@ if (CreateMove::sendPacket){
 	}
 	else if ( !inputSystem->IsButtonDown(InvertKey) && buttonToggle)
 		buttonToggle = false;
+       if (fakepeek)
+        {
+    static bool battonToggle = false;
+    if ( inputSystem->IsButtonDown(fakeheadkey) && !battonToggle )
+        {
+                battonToggle = true;
+                head = !head;
+        }
+        else if ( !inputSystem->IsButtonDown(fakeheadkey) && battonToggle)
+                battonToggle = false;
+
+
+                if (fake_head() && localplayer->GetVelocity().Length2D() < 6.0f && head)
+                {
+                        if (inverted)
+                                angle.y += 90.f;
+                        else
+                                angle.y -= 90.f;
+                        CreateMove::sendPacket = true;
+
+                }
+        }
 
     switch (Settings::AntiAim::Yaw::typeReal)
     {
@@ -996,6 +1044,7 @@ if (CreateMove::sendPacket){
                 break;
 
     }
+
 }
 
 static void DoAntiAimX(QAngle& angle, CUserCmd* cmd)
@@ -1027,6 +1076,10 @@ static void DoAntiAimX(QAngle& angle, CUserCmd* cmd)
 
 	case AntiAimType_X::FRONT:
             angle.x = cmd->viewangles.x = 0.0f;
+            break;
+
+        case AntiAimType_X::EMOTION:
+            angle.x = cmd->viewangles.x = 89.9999999999999999999999999999999;
             break;
 
         case AntiAimType_X::FRONT_FAKE:
@@ -1282,7 +1335,11 @@ if( Settings::AntiAim::LBYBreaker::enabled ){
    Math::ClampAngles(angle);
 
     if (!AntiAim::bSend) AntiAim::fakeAngle = angle;
-    else AntiAim::realAngle = angle;
+    else{
+	 AntiAim::realAngle = angle;
+	}
+    if (CreateMove::sendPacket)
+	AntiAim::realDuck = localplayer->GetAnimState()->duckProgress;
     CreateMove::lastTickViewAngles = AntiAim::realAngle;
 
     cmd->viewangles = angle;

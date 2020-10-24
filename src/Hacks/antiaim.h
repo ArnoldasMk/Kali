@@ -9,7 +9,7 @@ namespace AntiAim
     inline QAngle realAngle;
     inline QAngle fakeAngle;
     extern QAngle LastTickViewAngle;
-
+    inline float realDuck;
     float GetMaxDelta( CCSGOAnimState *animState );
     namespace ManualAntiAim
     {

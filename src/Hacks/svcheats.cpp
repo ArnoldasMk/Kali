@@ -18,6 +18,7 @@ void SvCheats::FrameStageNotify(ClientFrameStage_t stage)
     static ConVar* fogoverride = cvar->FindVar("fog_override");
     static ConVar* impacts = cvar->FindVar("sv_showimpacts");
     static ConVar* time = cvar->FindVar("host_timescale");
+    static ConVar* fakelat = cvar->FindVar("net_fakelag");
 
     fullbright->SetValue(Settings::SvCheats::bright::enabled);
     fogoverride->SetValue(Settings::SvCheats::fog::enabled);
@@ -62,6 +63,13 @@ void SvCheats::FrameStageNotify(ClientFrameStage_t stage)
         else
             aspect->SetValue((35 * 0.1f) / 2);
     }
+if (Settings::SvCheats::fakelat)
+{
+fakelat->SetValue(100);
+}
+else {
+fakelat->SetValue(0);
+}
 if (Settings::SvCheats::grenadetraj::enabled)
 {
 static ConVar* trajectory = cvar->FindVar("sv_grenade_trajectory");

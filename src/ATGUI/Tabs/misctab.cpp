@@ -345,7 +345,7 @@ void Misc::RenderTab()
                     ImGui::Checkbox(XORSTR("Fog Override"), &Settings::SvCheats::fog::enabled);
 	            ImGui::Checkbox(XORSTR("Show grenade trajectory"), &Settings::SvCheats::grenadetraj::enabled);
                     ImGui::Checkbox(XORSTR("Force svcheats"), &Settings::SvCheats::svcheats::enabled);
-
+                    ImGui::Checkbox(XORSTR("Fake latency"), &Settings::SvCheats::fakelat);
                 }
 
                         ImGui::Separator();

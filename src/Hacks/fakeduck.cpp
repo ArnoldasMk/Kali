@@ -3,6 +3,7 @@
 #include "../Hooks/hooks.h"
 #include "../interfaces.h"
 #include "../settings.h"
+#include "antiaim.h"
 
 static bool FirstDuck = false;
 int choked;
@@ -25,12 +26,17 @@ void FakeDuck::CreateMove(CUserCmd *cmd)
 
 if (FirstDuck){
                 cmd->buttons |= IN_BULLRUSH;
-
-                if (choked <= 6){
+		int amount = 14;
+                if (choked <= amount / 2){
                         cmd->buttons &= ~IN_DUCK;
+			if (choked > (amount / 3) + 1 )
+				localplayer->GetAnimState()->duckProgress = 0.f;
+			else
+				localplayer->GetAnimState()->duckProgress = 1.0;
                 }else{
                         cmd->buttons |= IN_DUCK;
-               } if (choked < 14){
+			localplayer->GetAnimState()->duckProgress = 1.0;
+               } if (choked < amount){
 			choked++;
                         CreateMove::sendPacket = false;   // choke
 		}
@@ -38,7 +44,9 @@ if (FirstDuck){
                        CreateMove::sendPacket = true;    // send packet
 		       choked = 0;
 		}
-//if (input->m_fCameraInThirdPerson)
+if (input->m_fCameraInThirdPerson && Settings::AnimMemes::enabled)
+                                localplayer->GetAnimState()->duckProgress = AntiAim::realDuck;
+
 //localplayer->GetAnimState()->duckProgress = 1.0; //memes
 
 }
