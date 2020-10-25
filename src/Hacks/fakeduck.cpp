@@ -4,6 +4,8 @@
 #include "../interfaces.h"
 #include "../settings.h"
 #include "antiaim.h"
+#include "valvedscheck.h"
+#include "../../Utils/xorstring.h"
 
 static bool FirstDuck = false;
 int choked;
@@ -25,8 +27,12 @@ void FakeDuck::CreateMove(CUserCmd *cmd)
 		}
 
 if (FirstDuck){
+		int amount;
                 cmd->buttons |= IN_BULLRUSH;
-		int amount = 14;
+		if ((*csGameRules)->IsValveDS())
+		    amount = 7;
+		else
+		    amount = 14;
                 if (choked <= amount / 2){
                         cmd->buttons &= ~IN_DUCK;
 			if (choked > (amount / 3) + 1 )

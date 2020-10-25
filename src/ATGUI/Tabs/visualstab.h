@@ -97,6 +97,8 @@ namespace Colors
                         { "ESP - Manual AA indicators", &Settings::ESP::manualAAColor },
                         { "ESP - Taser Range", &Settings::ESP::taserrange::color },
                         { "ESP - OOV Arrows", &Settings::ESP::arrows::color },
+                        { "Bullet Tracers - Friendly", &Settings::ESP::tracebullet::friendcolor },
+                        { "Bullet Tracers - Enemy", &Settings::ESP::tracebullet::enemycolor },
 			{ "Chams - Team", &Settings::ESP::Chams::allyColor },
 			{ "Chams - Team Visible", &Settings::ESP::Chams::allyVisibleColor },
 			{ "Chams - Enemy", &Settings::ESP::Chams::enemyColor },

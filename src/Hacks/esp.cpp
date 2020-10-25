@@ -533,7 +533,7 @@ static void drawfire(C_BaseEntity* entity){
                 return;
         Vector screen_origin;
 	int factor = 3;
- debugOverlay->ScreenPosition(entity->GetVecOrigin(), screen_origin);
+ 	debugOverlay->ScreenPosition(entity->GetVecOrigin(), screen_origin);
         Draw::FilledCircle3D( entity->GetVecOrigin(), 32, 160, Color::FromImColor(ImColor(255, 0, 0, 255)) );
 
         auto string = "Molotov";
@@ -605,17 +605,19 @@ static void DrawEntity( C_BaseEntity* entity, const char* string, ImColor color)
 }
 
 static void DrawLag(int x, int y, C_BasePlayer* player){
-int lag = TIME_TO_TICKS(player->GetSimulationTime() - player->GetOldSimulationTime());
+		int lag = TIME_TO_TICKS(player->GetSimulationTime() - player->GetOldSimulationTime());
 		int woop = FakeLag::ticks * 5;
-	//	int woop = INetChannel::GetAvgChoke * 10;
 		std::string bombStr = std::to_string(woop );
                 Vector2D nameSize = Draw::GetTextSize(bombStr.c_str(), esp_font);
-                
-Draw::AddRectFilled(x, y, x + woop, y + 20, ImColor(0, 40, 0, 255));
+		float shite = 10.f;
+		Vector sent;
+	//	if (CreateMove::sendPacket)
+	//		sent = player->GetAbsOrigin();
+	//	if (!(player->GetFlags() & FL_ONGROUND))
+	  //      debugOverlay->DrawPill(player->GetAbsOrigin(),sent, shite, 255, 0, 255, 100, 3 );
+
+		Draw::AddRectFilled(x, y, x + woop, y + 20, ImColor(0, 40, 0, 255));
                 Draw::AddText(x + woop - nameSize.x, y + 5, bombStr.c_str()  , ImColor( 255, 255, 255, 255 ) );
-
-
-
 }
 
 bool fakeass_head()
@@ -1662,6 +1664,33 @@ static void DrawPlayer(C_BasePlayer* player)
 	}
 	
 }
+static void DrawBulletTracers(IGameEvent* event)
+{
+        C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+        if (!localplayer)
+        return;
+        if (!Settings::ESP::tracebullet::enabled)
+        return;
+        if (!(strstr(event->GetName(), XORSTR("bullet_impact"))))
+                return;
+	if (!event->GetInt(XORSTR("userid")))
+		return;
+	float x = event->GetFloat(XORSTR("x"));
+        float y = event->GetFloat(XORSTR("y"));
+        float z = event->GetFloat(XORSTR("z"));
+        C_BasePlayer* attacker = (C_BasePlayer*) entityList->GetClientEntity(engine->GetPlayerForUserID(event->GetInt(XORSTR("userid"))));
+	if (attacker != localplayer && Settings::ESP::tracebullet::local)
+		return;
+	float shite = 0.5f;
+	ImColor color;
+                           if (!Entity::IsTeamMate(attacker, localplayer))
+                                        color = Settings::ESP::tracebullet::enemycolor.Color();
+                                else
+                                        color = Settings::ESP::tracebullet::friendcolor.Color();
+
+	debugOverlay->DrawPill( attacker->GetEyePosition(), Vector(x, y, z), shite, color.Value.x * 255, color.Value.y * 255, color.Value.z * 255, 100, 3 );
+
+ }
 static void DrawImpacts(IGameEvent* event)
 {
         C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
@@ -2403,6 +2432,7 @@ void ESP::FireGameEvent(IGameEvent* event)
         if(!event)      
 	return;
 DrawImpacts(event);
+DrawBulletTracers(event);
 }
 void ESP::DrawModelExecute()
 {

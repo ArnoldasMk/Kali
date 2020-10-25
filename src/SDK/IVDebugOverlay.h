@@ -8,6 +8,7 @@ public:
 		typedef bool (* oScreenPosition)(void*, const Vector&, Vector&);
 		return getvfunc<oScreenPosition>(this, 11)(this, vIn, vOut);
 	}
+
 	void DrawPill(const Vector& mins, const Vector& max, float& diameter, int r, int g, int b, int a, float duration)
 	{
 		typedef void(* OriginalFn)(void*, const Vector&, const Vector&, float&, int, int, int, int, float);

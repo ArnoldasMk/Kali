@@ -446,8 +446,10 @@ void Visuals::RenderTab()
 							}
 				ImGui::Checkbox(XORSTR("Watermark"), &Settings::ESP::Watermark::enabled);
                                 ImGui::Checkbox(XORSTR("Show Hitbox impacts"), &Settings::ESP::showimpacts);
-                                ImGui::Checkbox(XORSTR("UI Particles"), &Settings::UI::particles);
-
+                                ImGui::Checkbox(XORSTR("Draw Bullet Tracers"), &Settings::ESP::tracebullet::enabled);
+				if( Settings::ESP::tracebullet::enabled){
+                                ImGui::Checkbox(XORSTR("Localplayer only"), &Settings::ESP::tracebullet::local);
+				}
 				if ( ImGui::Button( XORSTR( "Material Config" ), ImVec2( -1, 0 ) ) )
 					ImGui::OpenPopup( XORSTR( "##MaterialConfigWindow" ) );
 				SetTooltip( XORSTR( "Advanced CSGO Gfx Settings\nExperimental" ) );

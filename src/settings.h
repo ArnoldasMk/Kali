@@ -1029,6 +1029,13 @@ namespace Settings
 
 	namespace ESP
 	{
+	namespace tracebullet
+	{
+		inline bool local;
+		inline bool enabled;
+		inline ColorVar enemycolor;
+		inline ColorVar friendcolor;
+	}
 	namespace arrows
 	{
 		inline int distance;

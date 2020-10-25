@@ -32,6 +32,7 @@ VMT* uiEngineVMT = nullptr;
 MsgFunc_ServerRankRevealAllFn MsgFunc_ServerRankRevealAll;
 SendClanTagFn SendClanTag;
  WriteUserCmdFn WriteUserCmd;
+//FindHudElementFn FindHudElement;
 SetLocalPlayerReadyFn SetLocalPlayerReady;
 
 RecvVarProxyFn fnSequenceProxyFn;
@@ -529,6 +530,7 @@ void Hooker::FindItemSystem()
 	itemSys += sizeof(void*); // 2nd vtable
     itemSystem = (CItemSystem*)itemSys;
 }
+
 
 void Hooker::FindWriteUserCmd(){
 //                 push    ebp
