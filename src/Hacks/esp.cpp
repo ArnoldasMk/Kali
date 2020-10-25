@@ -1681,6 +1681,9 @@ static void DrawBulletTracers(IGameEvent* event)
         C_BasePlayer* attacker = (C_BasePlayer*) entityList->GetClientEntity(engine->GetPlayerForUserID(event->GetInt(XORSTR("userid"))));
 	if (attacker != localplayer && Settings::ESP::tracebullet::local)
 		return;
+	if (!attacker || attacker->GetDormant())
+		return;
+
 	float shite = 0.5f;
 	ImColor color;
                            if (!Entity::IsTeamMate(attacker, localplayer))
