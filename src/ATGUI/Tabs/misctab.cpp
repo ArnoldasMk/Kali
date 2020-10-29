@@ -346,6 +346,11 @@ void Misc::RenderTab()
 	            ImGui::Checkbox(XORSTR("Show grenade trajectory"), &Settings::SvCheats::grenadetraj::enabled);
                     ImGui::Checkbox(XORSTR("Force svcheats"), &Settings::SvCheats::svcheats::enabled);
                     ImGui::Checkbox(XORSTR("Fake latency"), &Settings::SvCheats::fakelat);
+                    ImGui::Checkbox(XORSTR("Bloom"), &Settings::SvCheats::bloom::enabled);
+	            if (Settings::SvCheats::bloom::enabled){
+                                ImGui::SliderFloat(XORSTR("##BLOOMFACTOR"), &Settings::SvCheats::bloom::factor, -10, 100);
+                                ImGui::SliderFloat(XORSTR("##BLOOMSCALE"), &Settings::SvCheats::bloom::scale, -30, 100);
+		   }
                 }
 
                         ImGui::Separator();

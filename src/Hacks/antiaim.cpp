@@ -302,29 +302,33 @@ bool fake_head()
 
 static bool LBYBreak(float offset, QAngle& angle,C_BasePlayer* localplayer)
 {
-    static bool lbyBreak = false;
+
+    static bool lbyBreak;
+    lbyBreak = false;
     static float lastCheck = 0.f;
     float vel2D = localplayer->GetVelocity().Length2D();
     if( vel2D >= 0.1f || !(localplayer->GetFlags() & FL_ONGROUND) || localplayer->GetFlags() & FL_FROZEN ){
+        lbyBreak = false;
+        lastCheck = globalVars->curtime;
+    } 
+    else {
+        if( !lbyBreak && ( globalVars->curtime - lastCheck ) > 0.22 ){
+            angle.y = offset;
+            angle.x = CreateMove::lastTickViewAngles.x;
+            // AntiAim::realAngle = angle;
+            lbyBreak = true;
+            // cvar->ConsoleDPrintf(XORSTR("Lby Break"));
+            lastCheck = globalVars->curtime;
+            CreateMove::sendPacket = AntiAim::bSend = false;
+        } else if( lbyBreak && ( globalVars->curtime - lastCheck ) > 1.1 ){
             lbyBreak = false;
             lastCheck = globalVars->curtime;
-        } 
-        else {
-            if( !lbyBreak && ( globalVars->curtime - lastCheck ) > 0.22 ){
-                angle.y -= offset;
-                CreateMove::sendPacket = AntiAim::bSend = false;
-                lbyBreak = true;
-                lastCheck = globalVars->curtime;
-                needToFlick = true;
-            } else if( lbyBreak && ( globalVars->curtime - lastCheck ) > 1.1 ){
-                CreateMove::sendPacket = AntiAim::bSend = false;
-                lbyBreak = true;
-                lastCheck = globalVars->curtime;
-                needToFlick = true;
-            }
-        } 
+        }
+    }
+    
     return lbyBreak;
 }
+
 bool AntiAim::LbyUpdate()
 {
     C_BasePlayer* localplayer = (C_BasePlayer*)entityList->GetClientEntity(engine->GetLocalPlayer());
@@ -1326,8 +1330,7 @@ if( Settings::AntiAim::LBYBreaker::enabled ){
 	}
     else if (Settings::AntiAim::LegitAntiAim::enable) // Responsible for legit anti aim activated when the legit anti aim is enabled
         DoLegitAntiAim(localplayer, angle, AntiAim::bSend, cmd);
-    
-        
+  //          LBYBreak(CreateMove::lastTickViewAngles.y, angle, localplayer);
    Math::NormalizeAngles(angle);
         DoAntiAimX(angle, cmd);
 

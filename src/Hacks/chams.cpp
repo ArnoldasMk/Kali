@@ -370,8 +370,10 @@ static void DrawRecord(void *thisptr, void *context, void *state, const ModelRen
 
     if (!localplayer)
         return;
-if (!localplayer->GetAlive())
-return;
+    if (!localplayer->GetAlive())
+	return;
+   if (!Settings::Ragebot::backTrack::enabled)
+	return;
         Color lag_color = Color::FromImColor(Settings::ESP::Chams::Arms::color.Color());
 
     IMaterial *material = materialChamsFlat;

@@ -50,8 +50,8 @@ if (FirstDuck){
                        CreateMove::sendPacket = true;    // send packet
 		       choked = 0;
 		}
-if (input->m_fCameraInThirdPerson && Settings::AnimMemes::enabled)
-                                localplayer->GetAnimState()->duckProgress = AntiAim::realDuck;
+//if (input->m_fCameraInThirdPerson && Settings::AnimMemes::enabled)
+//                                localplayer->GetAnimState()->duckProgress = AntiAim::realDuck;
 
 //localplayer->GetAnimState()->duckProgress = 1.0; //memes
 

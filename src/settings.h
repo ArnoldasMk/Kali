@@ -1874,6 +1874,12 @@ namespace SvCheats
 {
 inline bool enabled;
 inline bool fakelat;
+namespace bloom {
+inline bool enabled;
+inline float scale;
+inline float factor;
+
+}
 namespace gravity {
 inline bool enabled;
 inline int amount;

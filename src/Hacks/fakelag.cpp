@@ -7,7 +7,7 @@
 #ifndef absol
         #define absol(x) x < 0 ? x*-1 : x
 #endif
-int ticksMax = 16;
+int ticksMax = 14;
 
 bool CheckPeaking(CUserCmd* cmd){
         float forMove = absol(cmd->forwardmove);
@@ -36,70 +36,34 @@ void LagSpike(CUserCmd* cmd, int lagTick){
 }
 void FakeLag::CreateMove(CUserCmd* cmd)
 {
-        // fakeDuck( cmd ); // for fake ducking don't ask my why here
+	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+	if (!localplayer || !localplayer->GetAlive())
+		return;
 
-        if (!Settings::FakeLag::enabled)
-                return;
+	if ( FakeLag::ticks > ticksMax){
+		FakeLag::ticks = 0;
+	}
 
-        C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
-        if (!localplayer || !localplayer->GetAlive())
-                return;
+	if (Settings::FakeLag::adaptive)
+	{
+		int packetsToChoke;
+		if (localplayer->GetVelocity().Length() > 0.f)
+		{
+			packetsToChoke = (int)((64.f / globalVars->interval_per_tick) / localplayer->GetVelocity().Length()) + 1;
+			if (packetsToChoke >= 15)
+				packetsToChoke = 14;
+			if (packetsToChoke < Settings::FakeLag::value)
+				packetsToChoke = Settings::FakeLag::value;
+		}
+		else
+			packetsToChoke = 0;
+		
+		CreateMove::sendPacket = FakeLag::ticks < (16 - packetsToChoke);
+	}
+	else{
+		CreateMove::sendPacket = FakeLag::ticks >= Settings::FakeLag::value;
+	}
 
-        if (localplayer->GetFlags() & FL_ONGROUND && Settings::FakeLag::adaptive)
-                return;
-
-        if (cmd->buttons & IN_ATTACK)
-        {
-                CreateMove::sendPacket = true;
-                return;
-        }
-
-        if (Settings::FakeLag::adaptive)
-        {
-                if (FakeLag::ticks >= ticksMax)
-                {
-                        CreateMove::sendPacket = true;
-                        FakeLag::ticks = 0;
-                }
-                int packetsToChoke;
-                if (localplayer->GetVelocity().Length() > 0.f)
-                {
-                        packetsToChoke = (int)((64.f / globalVars->interval_per_tick) / localplayer->GetVelocity().Length()) + 1;
-                        if (packetsToChoke >= 15)
-                                packetsToChoke = 14;
-                        if (packetsToChoke < Settings::FakeLag::value)
-                                packetsToChoke = Settings::FakeLag::value;
-                }
-                else
-                        packetsToChoke = 0;
-
-                CreateMove::sendPacket = FakeLag::ticks < (16 - packetsToChoke);
-        }
-        else{
-                if (FakeLag::ticks > Settings::FakeLag::value)
-                {
-                        CreateMove::sendPacket = true;
-                        FakeLag::ticks = 0;
-                }
-
-if (!inputSystem->IsButtonDown(Settings::FakeLag::ckey)){
-
-                CreateMove::sendPacket = FakeLag::ticks < Settings::FakeLag::value;
-}else {
-
-    if (!localplayer || !localplayer->GetAlive())
-        return;
-    Tickbase::tick->commandNumber = cmd->command_number;
-    Tickbase::tick->tickbase = localplayer->GetTickBase();
-    Tickbase::tick->tickshift = 16;
-    Tickbase::lastShift = cmd->command_number;
-    //Teleport kinda buggy
-    //tick->chokedPackets += ticks;
-    //recalculateTicks();
-
+	FakeLag::ticks++;
 }
-        }
 
-
-        FakeLag::ticks++;
-}
