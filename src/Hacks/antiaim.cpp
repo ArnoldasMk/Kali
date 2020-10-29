@@ -1055,7 +1055,8 @@ static void DoAntiAimX(QAngle& angle, CUserCmd* cmd)
 { 
         static auto invert_jitter = false;
         static auto should_invert = false;
-
+if (Settings::AntiAim::LegitAntiAim::enable)
+	return;
                        static auto std = 0;
                         std++;
                         if (std < 2)
