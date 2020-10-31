@@ -272,7 +272,7 @@ static void Resolve(C_BasePlayer* player, float feetYaw, float angleYaw, CCSGOAn
         return;
 
     C_BasePlayer* localplayer = (C_BasePlayer*)entityList->GetClientEntity(engine->GetLocalPlayer());
-    if (!localplayer || Settings::Resolver::resolveAllAP == false)
+    if (!localplayer)
         return;
 
     if (stage == ClientFrameStage_t::FRAME_NET_UPDATE_POSTDATAUPDATE_START)
@@ -294,7 +294,7 @@ static void Resolve(C_BasePlayer* player, float feetYaw, float angleYaw, CCSGOAn
 
             //printout(player);
 
-            if (!Settings::Resolver::resolveAllAP && std::find(ResolverAP::Players.begin(), ResolverAP::Players.end(), entityInformation.xuid) == ResolverAP::Players.end())
+            if (std::find(ResolverAP::Players.begin(), ResolverAP::Players.end(), entityInformation.xuid) == ResolverAP::Players.end())
                 continue;
 
             player_data.push_back(std::pair<C_BasePlayer*, QAngle>(player, *player->GetEyeAngles()));

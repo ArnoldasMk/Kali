@@ -450,6 +450,8 @@ void Visuals::RenderTab()
 				if( Settings::ESP::tracebullet::enabled){
                                 ImGui::Checkbox(XORSTR("Localplayer only"), &Settings::ESP::tracebullet::local);
 				}
+                                ImGui::Checkbox(XORSTR("Sync fake chams with fakelag"), &Settings::ESP::SyncFake);
+
 				if ( ImGui::Button( XORSTR( "Material Config" ), ImVec2( -1, 0 ) ) )
 					ImGui::OpenPopup( XORSTR( "##MaterialConfigWindow" ) );
 				SetTooltip( XORSTR( "Advanced CSGO Gfx Settings\nExperimental" ) );

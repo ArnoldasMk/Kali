@@ -31,7 +31,7 @@ void Hooks::FrameStageNotify(void* thisptr, ClientFrameStage_t stage)
 	View::FrameStageNotify(stage);
         memeangles::FrameStageNotify(stage);
 	Resolver::FrameStageNotify(stage);
-	ResolverAP::FrameStageNotify(stage);
+	//ResolverAP::FrameStageNotify(stage);
 	SkyBox::FrameStageNotify(stage);
 	ASUSWalls::FrameStageNotify(stage);
 	NoSmoke::FrameStageNotify(stage);

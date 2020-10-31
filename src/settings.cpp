@@ -462,11 +462,12 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("Tracers")][XORSTR("enabled")] = Settings::ESP::FilterEnemy::Tracers::enabled;
     settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("Tracers")][XORSTR("type")] = (int)Settings::ESP::FilterEnemy::Tracers::type;
     settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("BulletTracers")][XORSTR("enabled")] = Settings::ESP::FilterEnemy::BulletTracers::enabled;
-    settings[XORSTR("ESP")][XORSTR("PlayerInfo")][XORSTR("enabled")] = Settings::ESP::FilterEnemy::playerInfo::enabled;
+    settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("PlayerInfo")][XORSTR("enabled")] = Settings::ESP::FilterEnemy::playerInfo::enabled;
     settings[XORSTR("ESP")][XORSTR("tracebullet")][XORSTR("enabled")] = Settings::ESP::tracebullet::enabled;
     settings[XORSTR("ESP")][XORSTR("tracebullet")][XORSTR("local")] = Settings::ESP::tracebullet::local;
     LoadColor(settings[XORSTR("ESP")][XORSTR("tracebullet")][XORSTR("friendcolor")], Settings::ESP::tracebullet::friendcolor);
     LoadColor(settings[XORSTR("ESP")][XORSTR("tracebullet")][XORSTR("enemycolor")], Settings::ESP::tracebullet::enemycolor);
+    settings[XORSTR("ESP")][XORSTR("SyncFake")] = Settings::ESP::SyncFake;
 
     settings[XORSTR("bulletstracers")][XORSTR("enabled")] = Settings::bullettracers::enabled;
 
@@ -1203,6 +1204,7 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("ESP")][XORSTR("tracebullet")][XORSTR("local")], &Settings::ESP::tracebullet::local);
     GetVal(settings[XORSTR("ESP")][XORSTR("tracebullet")][XORSTR("friendcolor")], &Settings::ESP::tracebullet::friendcolor);
     GetVal(settings[XORSTR("ESP")][XORSTR("tracebullet")][XORSTR("enemycolor")], &Settings::ESP::tracebullet::enemycolor);
+    GetVal(settings[XORSTR("ESP")][XORSTR("SyncFake")], &Settings::ESP::SyncFake);
 
     // Visual Settings for various players
     // For Enemy

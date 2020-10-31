@@ -1,6 +1,7 @@
 #include "resolver.h"
 
 #include "../ImGUI/imgui.h"
+#include "resolverAP.h"
 std::vector<int64_t> Resolver::Players = {};
 //int indx;
 #define RANDOME_FLOAT(x) ( static_cast<float>(static_cast<float>(rand()/ static_cast<float>(RAND_MAX/ ( x ) ))) )
@@ -162,6 +163,11 @@ void Resolver::FrameStageNotify(ClientFrameStage_t stage)
 	if (!localplayer || !localplayer->GetAlive())
 		return;
 
+if (Settings::Resolver::resolveAllAP){
+ResolverAP::FrameStageNotify(stage); 
+return;
+}
+
 	if (stage == ClientFrameStage_t::FRAME_NET_UPDATE_POSTDATAUPDATE_START)
 	{
 
@@ -240,8 +246,7 @@ void Resolver::FrameStageNotify(ClientFrameStage_t stage)
   						 player->GetAnimState()->goalFeetYaw = NormalizeAsYaw(GetAngle(player) - fuck);
 						break;
 					case 1:
-						//if (Pitch)
-						//player->GetEyeAngles()->x -= 89.f
+						ResolverAP::FrameStageNotify(stage);
 						break;
 					case 2:
 						player->GetAnimState()->goalFeetYaw = trueDelta == 0 ? player->GetEyeAngles( )->y - 30.f :  player->GetEyeAngles( )->y + GetPercentVal(trueDelta, 60);
@@ -264,6 +269,7 @@ void Resolver::FrameStageNotify(ClientFrameStage_t stage)
   						 player->GetAnimState()->goalFeetYaw = NormalizeAsYaw(GetAngle(player) + fuck);
 						break;
 					case 1:
+                                                ResolverAP::FrameStageNotify(stage);
 						break;
 					case 2:
 						player->GetAnimState()->goalFeetYaw = trueDelta == 0 ? player->GetEyeAngles( )->y - 30.f :  player->GetEyeAngles( )->y + GetPercentVal(trueDelta, 60);

@@ -51,8 +51,5 @@ void AngleIndicator::Paint( ) {
     {
         Draw::AddLine( centerX, centerY, realX, realY, realColor ); // Real Line
     }
-    if( Settings::AntiAim::LBYBreaker::enabled )
-    {
         Draw::AddLine( centerX, centerY, lbyX, lbyY, lbyColor ); // LBY Line
-    }
 }

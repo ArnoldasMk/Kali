@@ -297,7 +297,7 @@ void HvH::RenderTab()
             ImGui::Checkbox(XORSTR("Angle Indicator"), &Settings::AngleIndicator::enabled);
             ImGui::Checkbox(XORSTR("Fake Lag"), &Settings::FakeLag::enabled);
             ImGui::SameLine();
-            ImGui::SliderInt(XORSTR("##FAKELAGAMOUNT"), &Settings::FakeLag::value, 0, 100, XORSTR("Amount: %0.f"));
+            ImGui::SliderInt(XORSTR("##FAKELAGAMOUNT"), &Settings::FakeLag::value, 0, 15, XORSTR("Amount: %0.f"));
 //			ImGui::Checkbox(XORSTR("Adaptive Fake Lag"), &Settings::FakeLag::adaptive);
 //ImGui::Checkbox(XORSTR("Random Fake Lag"), &Settings::AntiAim::randomLag::enabled);
            //UI::KeyBindButton(&Settings::FakeLag::ckey);

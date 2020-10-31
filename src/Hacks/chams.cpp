@@ -263,10 +263,27 @@ static void DrawFake(void* thisptr, void* context, void *state, const ModelRende
 	{
 		Fake_meterial->AlphaModulate(0.5f);
 	}
+	static matrix3x4_t BodyBoneMatrix[128];
+	if ( Settings::AntiAim::FakeDuck::enabled && inputSystem->IsButtonDown(Settings::AntiAim::FakeDuck::fakeDuckKey)){
+		if (CreateMove::sendPacket){
+			for (size_t i = 0; i < 128; i++)
+				BodyBoneMatrix[i] = fakeBoneMatrix[i];
+		}
+	}
+	 if (Settings::FakeLag::enabled){
+		if(CreateMove::sendPacket){
+			for (size_t i = 0; i < 128; i++)
+				BodyBoneMatrix[i] = fakeBoneMatrix[i];
+		}
+	}
         Fake_meterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Settings::ESP::FilterLocalPlayer::Chams::type == ChamsType::WIREFRAME);
 
 	modelRender->ForcedMaterialOverride(Fake_meterial);
-	modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, fakeBoneMatrix);
+	if (Settings::ESP::SyncFake || localplayer->GetVelocity().Length2D() < 2.0f || ( Settings::AntiAim::FakeDuck::enabled && inputSystem->IsButtonDown(Settings::AntiAim::FakeDuck::fakeDuckKey)))
+	modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, BodyBoneMatrix);
+	else
+        modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, fakeBoneMatrix);
+
                 if (Settings::ESP::FilterLocalPlayer::Chams::type == ChamsType::GLOW){
                 modelRender->ForcedMaterialOverride(faoverlay_material);
 }else {

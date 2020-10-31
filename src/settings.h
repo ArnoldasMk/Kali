@@ -1029,6 +1029,7 @@ namespace Settings
 
 	namespace ESP
 	{
+	inline bool SyncFake;
 	namespace tracebullet
 	{
 		inline bool local;

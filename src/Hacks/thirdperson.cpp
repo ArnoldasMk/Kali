@@ -63,8 +63,8 @@ void ThirdPerson::OverrideView(CViewSetup *pSetup)
 
        	 	input->m_fCameraInThirdPerson = true;
 			input->m_vecCameraOffset = Vector(viewAngles.x, viewAngles.y, Settings::ThirdPerson::distance * ((tr.fraction < 1.0f) ? tr.fraction : 1.0f) );
-	        static ConVar* jiggle = cvar->FindVar("r_jiggle_bones");
-		jiggle->SetValue(0);
+	       // static ConVar* jiggle = cvar->FindVar("r_jiggle_bones");
+		//jiggle->SetValue(0);
 
 		}
 		else

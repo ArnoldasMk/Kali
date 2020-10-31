@@ -7,7 +7,7 @@
 #ifndef absol
         #define absol(x) x < 0 ? x*-1 : x
 #endif
-int ticksMax = 14;
+int ticksMax = 50;
 
 bool CheckPeaking(CUserCmd* cmd){
         float forMove = absol(cmd->forwardmove);
@@ -40,10 +40,6 @@ void FakeLag::CreateMove(CUserCmd* cmd)
 	if (!localplayer || !localplayer->GetAlive())
 		return;
 
-	if ( FakeLag::ticks > ticksMax){
-		FakeLag::ticks = 0;
-	}
-
 	if (Settings::FakeLag::adaptive)
 	{
 		int packetsToChoke;
@@ -61,7 +57,12 @@ void FakeLag::CreateMove(CUserCmd* cmd)
 		CreateMove::sendPacket = FakeLag::ticks < (16 - packetsToChoke);
 	}
 	else{
-		CreateMove::sendPacket = FakeLag::ticks >= Settings::FakeLag::value;
+	if (FakeLag::ticks >= Settings::FakeLag::value){
+			CreateMove::sendPacket = true;
+			FakeLag::ticks = -1;
+		}else{
+			CreateMove::sendPacket = false;
+		}
 	}
 
 	FakeLag::ticks++;

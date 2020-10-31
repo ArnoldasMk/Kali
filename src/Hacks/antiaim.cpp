@@ -933,7 +933,11 @@ if (CreateMove::sendPacket){
 
                 if (lby::type != LbyMode::Sway || sway_counter > 3)
                 {
+				if (inverted)
                                 angle.y += 116.0f;
+				else
+                                angle.y -= 116.0f;
+
                 }
 
                 if (sway_counter < 8)
@@ -1338,8 +1342,10 @@ if( Settings::AntiAim::LBYBreaker::enabled ){
    //angle = NormalizeAsYaw(angle);
    Math::ClampAngles(angle);
 
-    if (!AntiAim::bSend) AntiAim::fakeAngle = angle;
-    else{
+    if (!AntiAim::bSend){
+ AntiAim::fakeAngle = angle;
+	}
+    else {
 	 AntiAim::realAngle = angle;
 	}
     if (CreateMove::sendPacket)

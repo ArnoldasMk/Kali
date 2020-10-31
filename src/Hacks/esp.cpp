@@ -514,18 +514,18 @@ int lag = TIME_TO_TICKS(player->GetSimulationTime() - player->GetOldSimulationTi
                 int woop = lag;
 std::string bombStr = std::to_string(woop );
 
-                Draw::AddRectFilled(1653 + 73 + 50, 2, 1653 + 260 , 30, ImColor(40, 40, 40, 225));
-                Draw::AddRectFilled(1653 + 5 + 73 + 50, 1 + 5, 1653 + 255 , 30 - 5, ImColor(10, 10, 10, 225));
-                Draw::AddRect(1653 - 1 + 73 + 50, 1, 1653 + 261 , 31, ImColor(200, 200, 200, 50));
-                Draw::AddRect(1652 + 5 + 73 + 50, 1 + 5, 1653 + 256  , 31 - 5, ImColor(200, 200, 200, 50));
-                Draw::AddLine(1653 + 6 + 73 + 50 , 1 + 5, 1653 + 254 , 1 + 5, Settings::ESP::Watermark::color.Color());
+                Draw::AddRectFilled(1653 + 73 + 22, 2, 1653 + 260 , 30, ImColor(40, 40, 40, 225));
+                Draw::AddRectFilled(1653 + 5 + 73 + 22, 1 + 5, 1653 + 255 , 30 - 5, ImColor(10, 10, 10, 225));
+                Draw::AddRect(1653 - 1 + 73 + 22, 1, 1653 + 261 , 31, ImColor(200, 200, 200, 50));
+                Draw::AddRect(1652 + 5 + 73 + 22, 1 + 5, 1653 + 256  , 31 - 5, ImColor(200, 200, 200, 50));
+                Draw::AddLine(1653 + 6 + 73 + 22 , 1 + 5, 1653 + 254 , 1 + 5, Settings::ESP::Watermark::color.Color());
                 int fps = static_cast< int >( 1.f / globalVars->frametime );
                 std::string fps_string = std::to_string(fps);
 //std::string name = "eyehook | " + fps_string + " fps | 39ms";
-std::string name = "eye          | " + fps_string + " fps | " + bombStr + "FL";
+std::string name = "eye     | " + fps_string + " fps | " + bombStr + "FL";
 
-Draw::AddText(1653 + 10 + 73 + 50, 11, name.c_str(), ImColor( 255, 255, 255, 255 ) );
-Draw::AddText(1653 + 8 + 73 + 21 + 50, 11, "hook", ImColor( 255, 166, 14, 255 ) );
+Draw::AddText(1653 + 10 + 73 + 22, 10.8, name.c_str(), ImColor( 255, 255, 255, 255 ) );
+Draw::AddText(1653 + 8 + 73 + 21 + 22, 10.8, "hook", ImColor( 255, 166, 14, 255 ) );
 }
 static void drawfire(C_BaseEntity* entity){
         int x, y, w, h;
@@ -1246,12 +1246,23 @@ if ( Settings::Ragebot::exploits::doubletapToggle){
                 Draw::AddText( x + 2, y + 5, "Double Tap [TOGGLED]", ImColor( 255, 255, 255, 255 ) );
 y = y + 10;
 }
+/*if (Settings::AntiAim::RageAntiAim::head && Settings::AntiAim::RageAntiAim::fakepeek){
 
+float server_time = TICKS_TO_TIME(localplayer->GetTickBase());
 
-//    Draw::AddRectFilled(x - 5, c - 5, x + nameSize.x , y + 10, ImColor(40, 40, 40, 225));
-//    Draw::AddLine(x - 2.5, c - 5, x + nameSize.x , c + 5, Settings::ESP::Watermark::color.Color());
+Vector2D tsize = Draw::GetTextSize(XORSTR("Fake Head [       ]") , esp_font);
+//Draw::AddText(x , y + 35, XORSTR("Fake Head")  ,fakeass_head() ? ImColor( 0, 255, 0, 255 ) : ImColor( 255, 0, 0, 255 ) );
+float woop = (next_break - server_time);
+Draw::AddRectFilled(x + tsize.x - 10, y + 5, x + tsize.x - 10 + (woop * 11), y + 5 + nameSize.y, fakeass_head() ? ImColor( 0, 255, 0, 255 ) : ImColor( 255, 0, 0, 255 ) );
 
-               // Draw::AddRectFilled(1653 + 5 + 73, 1 + 5, 1653 + 255, 30 - 5, ImColor(10, 10, 10, 225));
+                Draw::AddText( x + 2, y + 5, "Fake Head [       ]", ImColor( 255, 255, 255, 255 ) );
+y = y + 10;
+
+//NON INVERTED = LEFT
+//INVERTED = RIGHT
+
+}
+*/
 
 
 }
