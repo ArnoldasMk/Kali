@@ -279,7 +279,7 @@ static void DrawFake(void* thisptr, void* context, void *state, const ModelRende
         Fake_meterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Settings::ESP::FilterLocalPlayer::Chams::type == ChamsType::WIREFRAME);
 
 	modelRender->ForcedMaterialOverride(Fake_meterial);
-	if (Settings::ESP::SyncFake || localplayer->GetVelocity().Length2D() < 2.0f || ( Settings::AntiAim::FakeDuck::enabled && inputSystem->IsButtonDown(Settings::AntiAim::FakeDuck::fakeDuckKey)))
+	if (Settings::ESP::SyncFake || (localplayer->GetVelocity().Length2D() < 2.0f && Settings::FakeLag::enabled) || ( Settings::AntiAim::FakeDuck::enabled && inputSystem->IsButtonDown(Settings::AntiAim::FakeDuck::fakeDuckKey)))
 	modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, BodyBoneMatrix);
 	else
         modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, fakeBoneMatrix);

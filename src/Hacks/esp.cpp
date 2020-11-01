@@ -853,7 +853,7 @@ static void CustomFog(){
 		return;
 	//WHY DOESNT IT FUCKING WORK?!
        static auto fog_override = cvar->FindVar(XORSTR("fog_override")); //-V807
-		
+
                 fog_override->SetValue(1);
 
         static auto fog_start = cvar->FindVar(XORSTR("fog_start"));
@@ -872,14 +872,13 @@ static void CustomFog(){
                 fog_maxdensity->SetValue((float)Settings::ESP::customfog::density * 0.01f);
 
         char buffer_color[12];
-        sprintf(buffer_color, "%f %f %f", Settings::ESP::customfog::color.Color().Value.x, Settings::ESP::customfog::color.Color().Value.y, Settings::ESP::customfog::color.Color().Value.z);
+        sprintf(buffer_color, "%i %i %i", Settings::ESP::customfog::color.Color().Value.x, Settings::ESP::customfog::color.Color().Value.y, Settings::ESP::customfog::color.Color().Value.z);
 
         static auto fog_color = cvar->FindVar(XORSTR("fog_color"));
 
                 fog_color->SetValue(buffer_color);
 
 }
-
 static void DrawAimbotSpot( ) {
 	C_BasePlayer* localplayer = ( C_BasePlayer* ) entityList->GetClientEntity( engine->GetLocalPlayer() );
 	if ( !localplayer || !localplayer->GetAlive() ){
