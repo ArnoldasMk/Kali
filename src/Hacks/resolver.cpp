@@ -263,7 +263,7 @@ return;
                 	previous_ticks[player->GetIndex()] = ticks;
                 	wap = ticks;
                 	}
-                	if (wap > 3000)
+                	if (wap > 30000)
                 	Resolver::players[player->GetIndex()].choke = true;
                 	else
                 	Resolver::players[player->GetIndex()].choke = false;
@@ -280,10 +280,10 @@ return;
 				switch(Resolver::players[player->GetIndex()].MissedCount)
 				{
 					case 0:
-						player->GetEyeAngles()->y += 115;
+						player->GetAnimState()->goalFeetYaw += 115;
 						break;
 					case 1:
-                                                player->GetEyeAngles()->y -= 115;
+                                               	player->GetAnimState()->goalFeetYaw -= 115;
 						break;
 					case 2:
 						player->GetEyeAngles()->y = trueDelta == 0 ? player->GetEyeAngles()->y - 30.f :  player->GetEyeAngles()->y + trueDelta;
