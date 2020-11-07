@@ -156,7 +156,6 @@ void PlayerList::RenderWindow()
 					ImGui::NextColumn();
 
 					ImGui::Text("%d", *(*csPlayerResource)->GetCompetitiveWins(it));
-					ImGui::NextColumn();
 				}
 			}
 		}
@@ -216,6 +215,10 @@ void PlayerList::RenderWindow()
 					Settings::ClanTagChanger::type = ClanTagType::STATIC;
 
 					ClanTagChanger::UpdateClanTagCallback();
+				}
+                                if (ImGui::Button(XORSTR("Reset misses")))
+                                {
+				Resolver::players[currentPlayer].MissedCount = 0;
 				}
 			}
 			ImGui::NextColumn();

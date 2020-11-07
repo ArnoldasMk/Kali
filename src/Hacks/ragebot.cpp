@@ -289,14 +289,42 @@ void GetBestSpotAndDamage(C_BasePlayer* player,C_BasePlayer* localplayer, Vector
 		GetDamageAndSpots(player, spot, damage, playerHelth, i, modelType, currSettings);
 		if (damage >= playerHelth)
 		{
+               if (!Settings::Ragebot::onshot::enabled || !(inputSystem->IsButtonDown(Settings::Ragebot::onshot::button))){
 			Damage = damage;
 			Spot = spot;
 			return;
 		}
+                else if (Settings::Ragebot::onshot::enabled && inputSystem->IsButtonDown(Settings::Ragebot::onshot::button)){
+                CUtlVector<AnimationLayer> *layers = player->GetAnimOverlay();
+                for (int i = 0; i <= layers->Count(); i++)
+                {
+                        if (player->GetSequenceActivity(layers->operator[](i).m_nSequence) == (int)CCSGOAnimStatePoses::ACT_CSGO_FIRE_PRIMARY && layers->operator[](i).m_flWeight != 0.f){
+	                       Damage = damage;
+        	                Spot = spot;
+                	        return;
+                        }else
+                                return;
+                }
+                }
+		}
 		else if (damage > Damage)
 		{
+               if (!Settings::Ragebot::onshot::enabled || !(inputSystem->IsButtonDown(Settings::Ragebot::onshot::button))){
 			Damage = damage;
 			Spot = spot;
+			}
+                else if (Settings::Ragebot::onshot::enabled && inputSystem->IsButtonDown(Settings::Ragebot::onshot::button)){
+                CUtlVector<AnimationLayer> *layers = player->GetAnimOverlay();
+                for (int i = 0; i <= layers->Count(); i++)
+                {
+                        if (player->GetSequenceActivity(layers->operator[](i).m_nSequence) == (int)CCSGOAnimStatePoses::ACT_CSGO_FIRE_PRIMARY && layers->operator[](i).m_flWeight != 0.f){
+                               Damage = damage;
+                                Spot = spot;
+                        }else
+                                return;
+                }
+                }
+
 		}
 	}	
 }
@@ -686,7 +714,8 @@ void Ragebot::CreateMove(CUserCmd* cmd)
 
 
                 if (Ragebot::lockedEnemy.playerhelth == lockedEnemy.player->GetHealth() && lockedEnemy.player->GetAlive()){
-    if (tr.m_pEntityHit == lockedEnemy.player){
+        float spred = activeWeapon->GetSpread() + activeWeapon->GetInaccuracy();
+    if (tr.m_pEntityHit == lockedEnemy.player || spred > 0.003300 ){ //We arent gonna miss due to spread while standing still scoped in and crouched ;-;
 
                         Resolver::players[Resolver::TargetID].MissedCount++;
                                          cvar->ConsoleDPrintf("[eyehook] Missed shot due to bad resolve [RESOLVER: ");

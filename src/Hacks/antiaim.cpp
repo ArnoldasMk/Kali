@@ -931,14 +931,19 @@ if (CreateMove::sendPacket){
 
                 switch_move = !switch_move;
 
-                if (lby::type != LbyMode::Sway || sway_counter > 3)
+                if (lby::type == LbyMode::Opposite || sway_counter > 3)
                 {
 				if (inverted)
                                 angle.y += 116.0f;
 				else
                                 angle.y -= 116.0f;
 
-                }
+                }else if (lby::type == LbyMode::Normal){
+                               if (inverted)
+                                angle.y += 22.0f;
+                                else
+                                angle.y -= 22.0f;
+		}
 
                 if (sway_counter < 8)
                         ++sway_counter;
@@ -959,6 +964,8 @@ if (CreateMove::sendPacket){
         angle.y -= GetBestHeadAngle(cmd);
     }
     double factor;
+                       bool side;
+
     static bool buttonToggle = false;
     /* Button Function for invert the fake*/
     if ( inputSystem->IsButtonDown(InvertKey) && !buttonToggle )
@@ -1046,9 +1053,11 @@ if (CreateMove::sendPacket){
                 should_sidemove = true;
                 int stuff = JitterPercent;
                 float randNum = (rand()%(stuff-(-stuff) + 1) + -stuff);
-
-                if (!AntiAim::bSend)
+                if (!AntiAim::bSend){
                      angle.y += randNum;
+                if (angle.y > maxDelta)
+		     angle.y = maxDelta;
+		     }
                 break;
 
     }
@@ -1321,7 +1330,7 @@ if( Settings::AntiAim::LBYBreaker::enabled ){
         if (Settings::AntiAim::RageAntiAim::atTheTarget)
         {
             C_BasePlayer* lockedTarget = GetClosestEnemy(cmd);
-            if (lockedTarget)
+            if (lockedTarget && Settings::AntiAim::RageAntiAim::legitkey::enabled && !(cmd->buttons & IN_USE))
                 angle = Math::CalcAngle(localplayer->GetEyePosition(), lockedTarget->GetEyePosition());
         }
 	if (!Settings::AntiAim::RageAntiAim::customaa::enabled)

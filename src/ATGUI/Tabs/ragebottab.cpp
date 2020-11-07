@@ -277,6 +277,8 @@ void RagebotTab::RenderTab()
 		        "NONE",
 		        "Experimental",
 		        "ApuWare",
+			"EXP (LegitAA)",
+			"EXP (Rage)",
 		    };
 	                                ImGui::TextWrapped(XORSTR("Resolver Type"));
 
@@ -290,6 +292,14 @@ void RagebotTab::RenderTab()
         case resolverType::ApuWare:
                 Settings::Resolver::resolveAll = false;
                 Settings::Resolver::resolveAllAP = true;
+            break;
+        case resolverType::Legit:
+                Settings::Resolver::resolveAll = true;
+                Settings::Resolver::resolveAllAP = false;
+            break;
+        case resolverType::Rage:
+                Settings::Resolver::resolveAll = true;
+                Settings::Resolver::resolveAllAP = false;
             break;
         case resolverType::NONE:
                 Settings::Resolver::resolveAll = false;
@@ -305,6 +315,8 @@ void RagebotTab::RenderTab()
 ImGui::Combo(XORSTR("##ImpactDetection"), (int*)&Settings::Ragebot::impacttype, impactType, IM_ARRAYSIZE(impactType) );
                                 ImGui::Checkbox(XORSTR("Override Minimun Damage"), &Settings::Ragebot::mindmgoverride);
                                 UI::KeyBindButton(&Settings::Ragebot::dmgkey);
+                                ImGui::Checkbox(XORSTR("Wait for onshot"), &Settings::Ragebot::onshot::enabled);
+                                UI::KeyBindButton(&Settings::Ragebot::onshot::button);
 
 			//	ImGui::Checkbox(XORSTR("Resolver"), &Settings::Resolver::resolveAll);
 

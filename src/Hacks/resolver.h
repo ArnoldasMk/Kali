@@ -15,12 +15,26 @@
 
 namespace Resolver
 {
+enum class rflag : int
+{
+	NONE,
+        LBY,
+        LOW,
+	NOTIME,
+	AP,
+	BRUTE,
+	LAA,
+};
 
     struct resolvedPlayers
     {
         C_BasePlayer* enemy;
         int PrevTrueDelta = 0;
         int MissedCount = 0;
+	float delta = 0;
+	rflag flags = rflag::NONE;
+	bool choke = false;
+	float oldpitch;
     };
 
     inline resolvedPlayers players[1000];

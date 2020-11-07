@@ -16,7 +16,9 @@ void Hooks::DrawModelExecute(void* thisptr, void* context, void *state, const Mo
 	}
 
  	static matrix3x4_t BodyBoneMatrix[128];
-	if ((Settings::FakeLag::enabled && Settings::AnimMemes::enabled) || (Settings::AntiAim::FakeDuck::enabled && inputSystem->IsButtonDown(Settings::AntiAim::FakeDuck::fakeDuckKey))){
+        C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+
+	if ((Settings::FakeLag::enabled && Settings::AnimMemes::enabled) || (Settings::AntiAim::FakeDuck::enabled && inputSystem->IsButtonDown(Settings::AntiAim::FakeDuck::fakeDuckKey)) /*|| (Settings::FakeLag::enabled && localplayer->GetVelocity().Length2D() < 2.0f)*/){
 		if(!CreateMove::sendPacket && pInfo.entity_index == engine->GetLocalPlayer()){
 			for (size_t i = 0; i < 128; i++)
 			{
@@ -29,7 +31,7 @@ void Hooks::DrawModelExecute(void* thisptr, void* context, void *state, const Mo
 		}
 	}
 	modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, pCustomBoneToWorld);
-	
+
 	modelRender->ForcedMaterialOverride(nullptr);
 
 	if (!Settings::ScreenshotCleaner::enabled || !engine->IsTakingScreenshot())

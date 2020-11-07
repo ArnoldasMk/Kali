@@ -16,7 +16,9 @@
 #include "autowall.h"
 #include "lagcomp.h"
 #pragma once
-
+#define TICK_INTERVAL			(globalVars->interval_per_tick)
+#define TIME_TO_TICKS( dt )		( (int)( 0.5f + (float)(dt) / TICK_INTERVAL ) )
+#define TICKS_TO_TIME( t )		( TICK_INTERVAL *( t ) )
 #include "autowall.h"
 #include "lagcomp.h"
 
@@ -26,93 +28,111 @@ public :
 
     RagebotPredictionSystem(){}
 
-    void BestHeadPoint(C_BasePlayer* player, int &BoneIndex, int& Damage, Vector& Spot)
-    {
-	    if (!player || !player->GetAlive())
-		    return;
+void BestHeadPoint(C_BasePlayer* player, const int &BoneIndex, int& Damage, Vector& Spot)
+{
+	matrix3x4_t matrix[128];
 
-	    model_t* pModel = player->GetModel();
-        if (!pModel)
-		    return;
-        studiohdr_t* hdr = modelInfo->GetStudioModel(pModel);
-        if (!hdr)
-		    return;
-	    mstudiobbox_t* bbox = hdr->pHitbox((int)BoneIndex, 0);
-	    if (!bbox)
-		    return;
+	if( !player->SetupBones(matrix, 128, 0x100, 0.f) )
+		return;
+	model_t *pModel = player->GetModel();
+	if( !pModel )
+		return;
 
-	    // 0 - center, 1 - skullcap,
-	    // 2 - leftear, 3 - rightear, 4 - backofhead
-	    Vector center = Spot;
-	    Vector points[5] = {center,center,center,center,center};
+	studiohdr_t *hdr = modelInfo->GetStudioModel(pModel);
+	if( !hdr )
+		return;
+	mstudiobbox_t *bbox = hdr->pHitbox((int)Hitbox::HITBOX_HEAD, 0);
+	if( !bbox )
+		return;
 
-	    points[1].y -= bbox->radius * 0.65f;
-	    points[1].z += bbox->radius * 0.90f;
-	    points[2].x += bbox->radius * 0.80f;
-	    points[3].x -= bbox->radius * 0.80f;
-	    points[4].y += bbox->radius * 0.80f;
+	Vector mins, maxs;
+	Math::VectorTransform(bbox->bbmin, matrix[bbox->bone], mins);
+	Math::VectorTransform(bbox->bbmax, matrix[bbox->bone], maxs);
 
-	    for (int i = 0; i < 5; i++)
-	    {
-		    float bestDamage = AutoWall::GetDamage(points[i], true);
-		    if (bestDamage >= player->GetHealth())
-		    {
-		    	Damage = bestDamage;
-		    	Spot = points[i];
-		    	return;
-		    }
-		    if (bestDamage > Damage)
-		    {
-		    	Damage = bestDamage;
-		    	Spot = points[i];
-		    }
-	    }
-    }
+	Vector center = ( mins + maxs ) * 0.5f;
+	static Vector points[7] = { center, center, center, center, center, center, center};
+	// 0 - center, 1 - skullcap, 3 - upperbackofhead
+	// 4 - leftear, 5 - rightear, 6 - backofhead
+	for( int i = 0; i < 7; i++ ) // set all points initially to center mass of head.
+		points[i] = center;
 
-    void BestMultiPoint(C_BasePlayer* player, int &BoneIndex, int& Damage, Vector& Spot)
-    {
-	    if (!player || !player->GetAlive())
-		    return;
-	    model_t* pModel = player->GetModel();
-        if (!pModel)
-		    return;
-        studiohdr_t* hdr = modelInfo->GetStudioModel(pModel);
-        if (!hdr)
-		    return;
-	    mstudiobbox_t* bbox = hdr->pHitbox((int)BoneIndex, 0);
-	    if (!bbox)
-		    return;
-	    // 0 - center 1 - left, 2 - right, 3 - back
-	    Vector center = Spot;
-	    Vector points[4] = { center,center,center,center };
+	points[1].z += bbox->radius * 1.25f; // ...
+	points[3].y -= bbox->radius * 0.80f;
+	points[3].z += bbox->radius * 0.90f;
+	points[4].x += bbox->radius * 0.80f;
+	points[5].x -= bbox->radius * 0.80f;
+	points[6].y -= bbox->radius * 0.80f;
 
-        points[1].x += bbox->radius * 0.95f; // morph each point.
-	    points[2].x -= bbox->radius * 0.95f;
-	    points[3].y -= bbox->radius * 0.95f;
+	for (int i = 0; i < 7; i++)
+	{
+		float bestDamage = AutoWall::GetDamage(points[i], true);
+		if (bestDamage >= player->GetHealth())
+		{
+			Damage = bestDamage;
+			Spot = points[i];
+			return;
+		}
+		else if (bestDamage > Damage)
+		{
+		 	Damage = bestDamage;
+			Spot = points[i];
+		}
+	}
+}
+ void BestMultiPoint(C_BasePlayer* player, int &BoneIndex, int& Damage, Vector& Spot)
+{
+	model_t* pModel = player->GetModel();
+    if (!pModel)
+		return;
+    studiohdr_t* hdr = modelInfo->GetStudioModel(pModel);
+    if (!hdr)
+		 return;
+	mstudiobbox_t* bbox = hdr->pHitbox((int)BoneIndex, 0);
+	if (!bbox)
+		return;
+	
+	matrix3x4_t matrix[128];
+	Vector mins, maxs;
+	Math::VectorTransform(bbox->bbmin, matrix[bbox->bone], mins);
+	Math::VectorTransform(bbox->bbmax, matrix[bbox->bone], maxs);
+	// 0 - center 1 - left, 2 - right, 3 - back
+	Vector center = ( mins + maxs ) * 0.5f;
+	Vector points[4] = { center,center,center,center };
 
-	    for (int i = 0; i < 4; i++)
-	    {
-		    int bestDamage = AutoWall::GetDamage(points[i], true);
-		    if (bestDamage >= player->GetHealth())
-		    {
-			    Damage = bestDamage;
-			    Spot = points[i];
-			    return;
-		    }
-		    else if (bestDamage > Damage)
-		    {   
-			    Damage = bestDamage;
-			    Spot = points[i];
-		    }
-	    }
-    }
+    points[1].x += bbox->radius * 0.95f; // morph each point.
+	points[2].x -= bbox->radius * 0.95f;
+	points[3].y -= bbox->radius * 0.95f;
+
+	for (int i = 0; i < 4; i++)
+	{
+		int bestDamage = AutoWall::GetDamage(points[i], true);
+		if (bestDamage >= player->GetHealth())
+		{
+			Damage = bestDamage;
+			Spot = points[i];
+			return;
+		}
+		else if (bestDamage > Damage)
+		{   
+			Damage = bestDamage;
+			Spot = points[i];
+		}
+	}
+}
 
     bool canShoot(CUserCmd* cmd, C_BasePlayer* localplayer, C_BaseCombatWeapon* activeWeapon,Vector &bestSpot, C_BasePlayer* enemy,const RageWeapon_t& currentSettings)
 	{
-		if (currentSettings.HitChance == 0)
-			return true;
 		if (!enemy || !enemy->GetAlive())
 			return false;
+		if ( (*csGameRules)->IsFreezeTime())
+			return false;
+		auto servertime = TICKS_TO_TIME(localplayer->GetTickBase());
+		if ( servertime < activeWeapon->GetNextPrimaryAttack())
+			return false;
+		if (*activeWeapon->GetItemDefinitionIndex() == ItemDefinitionIndex::WEAPON_REVOLVER && activeWeapon->GetPostPoneReadyTime() > servertime)
+			return false;
+                if (currentSettings.HitChance == 0)
+                        return true;
 
     	Vector src = localplayer->GetEyePosition();
     	QAngle angle = Math::CalcAngle(src, bestSpot);

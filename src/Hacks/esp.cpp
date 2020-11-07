@@ -429,7 +429,7 @@ static void DrawBox( ImColor color, int x, int y, int w, int h, C_BaseEntity* en
 		Draw::AddRect( x + w - squareLine, y + h - 2, x + w - squareLine + 1, y + h + 1, ImColor( 10, 10, 10, 190 ) );
 		Draw::AddRect( x + w - 2, y + h - squareLine - 1, x + w + 1, y + h - squareLine, ImColor( 10, 10, 10, 190 ) );
 
-		Draw::AddRectFilled( x, y, x + w, y + h, ImColor( color.Value.x, color.Value.y, color.Value.z, 21 * (1.0f/255.0f) ) );
+		Draw::AddRect( x, y, x + w, y + h, ImColor( 10, 10, 10, 190 ) );
 	} else if ( boxtype == BoxType::BOX_3D ) {
 		Vector vOrigin = entity->GetVecOrigin();
 		Vector min = entity->GetCollideable()->OBBMins() + vOrigin;
@@ -1122,30 +1122,36 @@ int GetBlendedColor(int percentage)
 //world_modulation(C_BasePlayer* entity)
 //{}
 static void DrawIndicators() {
+   static int x, y;
+    engine->GetScreenSize(x, y );
 Vector2D indSize = Draw::GetTextSize( "LBY", esp_font );
-int x = 960 - (indSize.x / 2);
-int y = 520;
+x = x - (indSize.x / 2);
+//int x = 960 - (indSize.x / 2);
+//int y = 520;
 
         C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+    C_BaseCombatWeapon* activeWeapon = ( C_BaseCombatWeapon* ) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon() );
+
         if (!localplayer)
-                return;
+               return;
+
     if ( !Settings::ESP::indicators::enabled )
-        return;
+	        return;
 
-ImColor Color;
-if (AntiAim::LbyUpdate()){
-Color = ImColor( 0, 255, 0, 255 );
-}
-else {
-Color = ImColor( 255, 0, 0, 255 );
+        float vel2D = localplayer->GetVelocity().Length2D();
+		static Vector sent_origin;
+		static Vector oldOrigin;
+		bool canBreakLC;
 
-}
-    if ( Settings::ESP::indicators::lby )
-{
-Draw::AddText( x, y + 50, "LBY", Color );
-}
-if ( Settings::ESP::indicators::aa ){
-//Color AColor;
+     if (!(localplayer->GetFlags() & FL_ONGROUND) && (Settings::FakeLag::value >= 14 || Settings::FakeLag::adaptive)) {
+			if (vel2D >= 5.0f)
+                        canBreakLC = true;
+                }
+                else
+                        canBreakLC = false;
+
+Draw::AddText( x /2 , (y / 2) + 50, "LC", canBreakLC ? ImColor (255, 0, 0, 255) : ImColor (0, 255, 0, 255) );
+
     float desyncAmount = AntiAim::GetMaxDelta(localplayer->GetAnimState());
 
            int desyncGreenPercentage;
@@ -1155,17 +1161,15 @@ if ( Settings::ESP::indicators::aa ){
             else
                 desyncGreenPercentage = ((3.4483 * desyncAmount) * -1) / 2;
             int desyncRedPercentage = 100 - desyncGreenPercentage;
-//Color AColor = ImColor ( GetBlendedColor(desyncRedPercentage), GetBlendedColor(desyncGreenPercentage), 0, 255);
-//Draw::AddText( x, y + 60, "AA", AColor );
-}
-if ( Settings::ESP::indicators::vel ){
+ImColor AColor = ImColor ( GetBlendedColor(desyncRedPercentage), GetBlendedColor(desyncGreenPercentage), 0, 255);
+Draw::AddText( x /2 , (y / 2) + 60, "AA", AColor );
+
 ImColor DColor;
-        float vel2D = localplayer->GetVelocity().Length2D();
-		if (vel2D < 1.02 && localplayer->GetAlive()) // P1000000 MicroMovement Removal
+		if (vel2D < 1.02 && localplayer->GetAlive() || (vel2D < 2.05 && localplayer->GetAnimState()->duckProgress == 1.0f)) // P1000000 MicroMovement Removal
 		vel2D = 0;
 std::string veltext = std::to_string(vel2D);
-Draw::AddText( x, y + 70, veltext.c_str(), Color = ImColor( 0, 255, 0, 255 ) );
-}
+Draw::AddText( x / 2, (y / 2) + 70, veltext.c_str(), ImColor(0,255,0,255)/*Color*/);
+
 }
 static void DrawSounds( C_BasePlayer *player, ImColor playerColor ) {
     std::unique_lock<std::mutex> lock( footstepMutex, std::try_to_lock );
@@ -1180,7 +1184,7 @@ static void DrawSounds( C_BasePlayer *player, ImColor playerColor ) {
                 playerFootsteps[player->GetIndex()].pop_front(); // This works because footsteps are a trail.
                 continue;
             }
-
+            //const Vector* magic;
             float percent = ( float ) diff / ( float ) Settings::ESP::Sounds::time;
             Color drawColor = Color::FromImColor( playerColor );
             drawColor.a = std::min( powf( percent * 2, 0.6f ), 1.f ) * drawColor.a; // fades out alpha when its below 0.5
@@ -1189,6 +1193,10 @@ static void DrawSounds( C_BasePlayer *player, ImColor playerColor ) {
             float points = std::max(12.0f, circleRadius * 0.75f);
 
             Draw::AddCircle3D( it->position, circleRadius, ImColor(drawColor.r, drawColor.g, drawColor.b, drawColor.a ), (int)points );
+	    //const Vector magic = Vector(it->position.x, it->position.y, it->position.z);
+	    //magic = it->position;
+	    //if (player->GetDormant())
+		//player->SetAbsOrigin(magic);
         }
         footstepMutex.unlock();
     }
@@ -1241,8 +1249,8 @@ if ( Settings::Resolver::resolveAll && Settings::Resolver::manual && Settings::R
                 Draw::AddText( x + 2, y + 5, "Resolver Override [BRUTE]", ImColor( 255, 255, 255, 255 ) );
 y = y + 10;
 }
-if ( Settings::Ragebot::exploits::doubletapToggle){
-                Draw::AddText( x + 2, y + 5, "Double Tap [TOGGLED]", ImColor( 255, 255, 255, 255 ) );
+if ( Settings::Ragebot::onshot::enabled && inputSystem->IsButtonDown(Settings::Ragebot::onshot::button)){
+                Draw::AddText( x + 2, y + 5, "Wait for onshot [Holding]", ImColor( 255, 255, 255, 255 ) );
 y = y + 10;
 }
 /*if (Settings::AntiAim::RageAntiAim::head && Settings::AntiAim::RageAntiAim::fakepeek){
@@ -1391,9 +1399,9 @@ static void DrawPlayerText( C_BasePlayer* player, C_BasePlayer* localplayer, int
         //Draw::AddText( ( x + ( w / 2 ) - ( rankSize.x / 2 ) ),( y - ( textSize.y * lineNum ) - nameOffset ), "Manual Resolver", Entity::IsTeamMate(player, localplayer) ? Settings::ESP::allyInfoColor.Color() : Settings::ESP::enemyInfoColor.Color() );	
 	//}
 	//}
-	if( Settings::Resolver::resolveAll && !(Entity::IsTeamMate(player,localplayer)) && Settings::Resolver::manual){
- 		                std::string bombStr = "Max Desync Delta " + std::to_string(AntiAim::GetMaxDelta(player->GetAnimState()));
-
+	if( Settings::Resolver::resolveAll && /*!(Entity::IsTeamMate(player,localplayer)) &&*/ Settings::Resolver::manual){
+ 		                std::string bombStr = "Max Desync Delta " + std::to_string(player->GetAnimState()->feetCycle/*AntiAim::GetMaxDelta(player->GetAnimState())*/);
+		
 		Vector2D rankSize = Draw::GetTextSize( bombStr.c_str(), esp_font );
                 Draw::AddText( ( x + ( w / 2 ) - ( rankSize.x / 2 ) ),( y - ( textSize.y * lineNum ) - nameOffset ), bombStr.c_str(), Entity::IsTeamMate(player, localplayer) ? Settings::ESP::allyInfoColor.Color() : Settings::ESP::enemyInfoColor.Color() );
                 lineNum++;
@@ -1438,55 +1446,8 @@ static void DrawPlayerText( C_BasePlayer* player, C_BasePlayer* localplayer, int
 		auto activeeWeapon =  *activeWeapon->GetItemDefinitionIndex();
 		std::string modelName;
 		int offset = ( int ) ( boxSpacing);
-                const std::map<ItemDefinitionIndex, std::string> Weaponsi = {
-{ ItemDefinitionIndex::WEAPON_DEAGLE, "A" },
-{ ItemDefinitionIndex::WEAPON_KNIFE_KARAMBIT, "4" },
-{ ItemDefinitionIndex::WEAPON_DECOY,"m" },
-{ ItemDefinitionIndex::WEAPON_AUG,"U" },
-{ ItemDefinitionIndex::WEAPON_G3SG1,"X" },
-{ ItemDefinitionIndex::WEAPON_MAC10,"K" },
-{ ItemDefinitionIndex::WEAPON_P90,"P" },
-{ ItemDefinitionIndex::WEAPON_SSG08,"a" },
-{ ItemDefinitionIndex::WEAPON_SCAR20,"Y" },
-{ ItemDefinitionIndex::WEAPON_UMP45,"L" },
-{ ItemDefinitionIndex::WEAPON_ELITE,"B" },
-{ ItemDefinitionIndex::WEAPON_FAMAS,"R" },
-{ ItemDefinitionIndex::WEAPON_FIVESEVEN,"C" },
-{ ItemDefinitionIndex::WEAPON_GALILAR,"Q" },
-{ ItemDefinitionIndex::WEAPON_M4A1_SILENCER,"T" },
-{ ItemDefinitionIndex::WEAPON_M4A1,"S" },
-{ ItemDefinitionIndex::WEAPON_P250,"F" },
-{ ItemDefinitionIndex::WEAPON_M249,"g" },
-{ ItemDefinitionIndex::WEAPON_XM1014,"b" },
-{ ItemDefinitionIndex::WEAPON_GLOCK,"D" },
-{ ItemDefinitionIndex::WEAPON_USP_SILENCER,"G" },
-{ ItemDefinitionIndex::WEAPON_HKP2000,"E" },
-{ ItemDefinitionIndex::WEAPON_AK47,"W" },
-{ ItemDefinitionIndex::WEAPON_AWP,"Z" },
-{ ItemDefinitionIndex::WEAPON_BIZON,"M" },
-{ ItemDefinitionIndex::WEAPON_MAG7,"d" },
-{ ItemDefinitionIndex::WEAPON_NEGEV,"f" },
-{ ItemDefinitionIndex::WEAPON_SAWEDOFF,"c" },
-{ ItemDefinitionIndex::WEAPON_TEC9,"H" },
-{ ItemDefinitionIndex::WEAPON_TASER,"h" },
-{ ItemDefinitionIndex::WEAPON_NOVA,"e" },
-{ ItemDefinitionIndex::WEAPON_CZ75A,"I" },
-{ ItemDefinitionIndex::WEAPON_SG556,"V" },
-{ ItemDefinitionIndex::WEAPON_REVOLVER,"J" },
-{ ItemDefinitionIndex::WEAPON_MP7,"N" },
-{ ItemDefinitionIndex::WEAPON_MP9,"O" },
-{ ItemDefinitionIndex::WEAPON_MP5,"L" },
-{ ItemDefinitionIndex::WEAPON_C4,"o" },
-{ ItemDefinitionIndex::WEAPON_FRAG_GRENADE,"j" },
-{ ItemDefinitionIndex::WEAPON_SMOKEGRENADE,"k" },
-{ ItemDefinitionIndex::WEAPON_MOLOTOV,"l" },
-{ ItemDefinitionIndex::WEAPON_INCGRENADE,"n" },
-{ ItemDefinitionIndex::WEAPON_FLASHBANG,"i" },
-{ ItemDefinitionIndex::WEAPON_KNIFE,"5" },
-                };
-
-if ( Weaponsi.find(activeeWeapon) != Weaponsi.end()){
-modelName = Weaponsi.find(activeeWeapon)->second;
+if ( ESP::Weaponsi.find(activeeWeapon) != ESP::Weaponsi.end()){
+modelName = ESP::Weaponsi.find(activeeWeapon)->second;
 }
                                 Vector2D weaponTextSizeF = Draw::GetTextSize(modelName.c_str() , astrium );
 		if (localplayer->GetAlive())
@@ -1536,8 +1497,39 @@ if (wap > 2)
 		stringsToShow.push_back( XORSTR( "Defusing" ) );
 	if ( Settings::ESP::Info::grabbingHostage && player->IsGrabbingHostage() )
 		stringsToShow.push_back( XORSTR( "Hostage Carrier" ) );
-	if ( Settings::ESP::Info::rescuing && player->IsRescuing() )
-		stringsToShow.push_back( XORSTR( "Rescuing" ) );
+	if ( Settings::ESP::Info::rescuing && !Entity::IsTeamMate(player, localplayer) && localplayer->GetAlive()){
+		stringsToShow.push_back( std::to_string(Resolver::players[player->GetIndex()].delta).c_str() );
+		std::string flagst;
+		switch (Resolver::players[player->GetIndex()].flags)
+		{
+			case Resolver::rflag::LBY:
+				flagst = "LBY";
+				break;
+			case Resolver::rflag::LOW:
+				flagst = "LOW";
+				break;
+			case Resolver::rflag::NOTIME:
+				flagst = "NONE";
+				break;
+                        case Resolver::rflag::AP:
+                                flagst = "AP(1)";
+                                break;
+                        case Resolver::rflag::BRUTE:
+                                flagst = "BRUTE(";
+				flagst += std::to_string(Resolver::players[player->GetIndex()].MissedCount);
+				flagst +=+ ")";
+                                break;
+                        case Resolver::rflag::LAA:
+                                flagst = "Legit AA";
+                                break;
+
+
+		}
+                stringsToShow.push_back(flagst.c_str());
+
+	}
+	if (player->GetDormant())
+		stringsToShow.push_back(XORSTR("Dormant"));
 	if ( Settings::ESP::Info::location )
 		stringsToShow.push_back( player->GetLastPlaceName() );
 	if (Settings::Debug::AnimLayers::draw){
@@ -2462,7 +2454,7 @@ void ESP::DrawModelExecute()
 void ESP::CreateMove(CUserCmd* cmd)
 {
 	viewanglesBackup = cmd->viewangles;
-    if( Settings::ESP::enabled && Settings::ESP::Sounds::enabled && (Settings::ESP::Filters::allies || Settings::ESP::Filters::enemies || Settings::ESP::Filters::localplayer) ){
+    if( Settings::ESP::enabled && Settings::ESP::Sounds::enabled ){
         CheckActiveSounds();
     }
 

@@ -356,10 +356,16 @@ void Misc::RenderTab()
                         ImGui::Separator();
                                         ImGui::Checkbox(XORSTR("BuyBot"), &Settings::buybot::enabled);
 					if ( Settings::buybot::enabled){
-                                        //draw_combo(XORSTR("Snipers"), (intptr_t)& Settings::buybot::wep, mainwep, IM_ARRAYSIZE(mainwep));
-                                        ImGui::Checkbox(XORSTR("AutoSniper"), &Settings::buybot::autosniper);
-                                        ImGui::Checkbox(XORSTR("Scout"), &Settings::buybot::scout);
-					ImGui::Checkbox(XORSTR("AWP"), &Settings::buybot::awp);
+                                                ImGui::Combo(XORSTR("###MAINWAEP"), (int*)&Settings::buybot::wep, mainwep, IM_ARRAYSIZE(mainwep));
+                                                ImGui::Combo(XORSTR("###SECWAEP"), (int*)&Settings::buybot::sec, secwep, IM_ARRAYSIZE(secwep));
+		                       if ( ImGui::BeginCombo(XORSTR("##FilterOptions"), XORSTR("Other")) )
+			                        {
+                                ImGui::Selectable(XORSTR("Grenades"), &Settings::buybot::scout, ImGuiSelectableFlags_DontClosePopups);
+                                ImGui::Selectable(XORSTR("Armor"), &Settings::buybot::autosniper, ImGuiSelectableFlags_DontClosePopups);
+                                ImGui::Selectable(XORSTR("Taser"), &Settings::buybot::awp, ImGuiSelectableFlags_DontClosePopups);
+                                ImGui::EndCombo();
+						}
+
 					}
 	                        if (ImGui::Button(XORSTR("Configs")) )
                                 Configs::showWindow = !Configs::showWindow;
@@ -485,7 +491,7 @@ NameChanger::changeName(false, res.c_str(), 5.0f);
 				ImGui::Checkbox(XORSTR("Sniper Crosshair"), &Settings::SniperCrosshair::enabled);
 				ImGui::Checkbox(XORSTR("Disable post-processing"), &Settings::DisablePostProcessing::enabled);
 				ImGui::Checkbox(XORSTR("No Duck Cooldown"), &Settings::NoDuckCooldown::enabled);
-                                ImGui::Checkbox(XORSTR("Silent Walk"), &Settings::SilentWalk::enabled);
+                                ImGui::Checkbox(XORSTR("Fast Walk"), &Settings::SilentWalk::enabled);
 
 			}
 			ImGui::NextColumn();

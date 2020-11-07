@@ -21,17 +21,38 @@ void FakeWalk::CreateMove(CUserCmd* cmd)
         return;
 
     C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
-        if (activeWeapon) {
+    QAngle ViewAngle;
+        engine->GetViewAngles(ViewAngle);
+if ( Settings::AntiAim::SlowWalk::mode == SlowMode::SAFETY){
+    static Vector oldOrigin = localplayer->GetAbsOrigin( );
+        Vector velocity = ( localplayer->GetVecOrigin( )-oldOrigin )    
+                                                        * (1.f/globalVars->interval_per_tick);
+        oldOrigin = localplayer->GetAbsOrigin( );
+        float speed  = velocity.Length( );
+
+    if(speed > Settings::AntiAim::SlowWalk::Speed )
+        {
+                cmd->forwardmove = 0;
+                cmd->sidemove = 0;
+                CreateMove::sendPacket = false;
+        }
+        else {
+                CreateMove::sendPacket = true;
+        }
+}else {
+   if (activeWeapon) {
 
 
                         float speed = 0.1f;
                                 float max_speed = activeWeapon->GetCSWpnData()->GetMaxPlayerSpeed();
                                 float ratio = max_speed / 250.0f;
                                 speed *= ratio;
-                        
 
 
                         cmd->forwardmove *= speed;
                         cmd->sidemove *= speed;
         }
 }
+
+}
+

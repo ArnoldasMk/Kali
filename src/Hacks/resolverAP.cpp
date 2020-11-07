@@ -7,7 +7,7 @@
 #include "../settings.h"
 #include "antiaim.h"
 #include <math.h>
-
+#include "resolver.h"
 //bool Settings::Resolver::resolveAllAP = false;
 // Settings::Resolver::resolveDelt = 0.5f;
 std::vector<int64_t> ResolverAP::Players = {};
@@ -300,6 +300,7 @@ static void Resolve(C_BasePlayer* player, float feetYaw, float angleYaw, CCSGOAn
             player_data.push_back(std::pair<C_BasePlayer*, QAngle>(player, *player->GetEyeAngles()));
 
             Resolve(player, player->GetAnimState()->currentFeetYaw, player->GetEyeAngles()->y, *player->GetAnimState());
+            Resolver::players[player->GetIndex()].flags = Resolver::rflag::AP;
         }
     }
     else if (stage == ClientFrameStage_t::FRAME_RENDER_END)

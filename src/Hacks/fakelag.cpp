@@ -39,32 +39,37 @@ void FakeLag::CreateMove(CUserCmd* cmd)
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 	if (!localplayer || !localplayer->GetAlive())
 		return;
+	if (!Settings::FakeLag::enabled)
+		return;
+		int velocity2d = localplayer->GetVelocity().Length2D();
+                int max_choke;
+	        if (cmd->buttons & IN_ATTACK)
+	        {
+                CreateMove::sendPacket = true;
+		if (Settings::AntiAim::ChokeOnShot)
+		max_choke = 25;
+    		}
 
-	if (Settings::FakeLag::adaptive)
-	{
-		int packetsToChoke;
-		if (localplayer->GetVelocity().Length() > 0.f)
-		{
-			packetsToChoke = (int)((64.f / globalVars->interval_per_tick) / localplayer->GetVelocity().Length()) + 1;
-			if (packetsToChoke >= 15)
-				packetsToChoke = 14;
-			if (packetsToChoke < Settings::FakeLag::value)
-				packetsToChoke = Settings::FakeLag::value;
-		}
-		else
-			packetsToChoke = 0;
-		
-		CreateMove::sendPacket = FakeLag::ticks < (16 - packetsToChoke);
-	}
-	else{
-	if (FakeLag::ticks >= Settings::FakeLag::value){
+		if (Settings::FakeLag::adaptive){
+		if (velocity2d >= 5.0f)
+                {
+                        auto dynamic_factor = std::ceil(64.0f / (velocity2d * globalVars->interval_per_tick));
+
+                        if (dynamic_factor > 16)
+                                dynamic_factor = Settings::FakeLag::value;
+
+                        max_choke = dynamic_factor;
+                }
+                else
+                        max_choke = Settings::FakeLag::value;
+		}else if ( !(cmd->buttons & IN_ATTACK) || !(Settings::AntiAim::ChokeOnShot) ) max_choke = Settings::FakeLag::value;
+
+		 if (FakeLag::ticks >= max_choke){
 			CreateMove::sendPacket = true;
 			FakeLag::ticks = -1;
 		}else{
 			CreateMove::sendPacket = false;
 		}
-	}
-
 	FakeLag::ticks++;
 }
 

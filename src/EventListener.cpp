@@ -14,6 +14,7 @@
 #include "Hacks/valvedscheck.h"
 #include "Hacks/voterevealer.h"
 #include "Hacks/esp.h"
+#include "Hacks/buybot.h"
 #include "interfaces.h"
 #include "SDK/IGameEvent.h"
 #include "settings.h"
@@ -35,8 +36,7 @@ void EventListener::FireGameEvent(IGameEvent* event)
     Ragebot::FireGameEvent(event);
     AntiAim::FireGameEvent(event);
     Hitmarkers::FireGameEvent(event);
-    //Hitmarkers3D::FireGameEvent(event);
-    //cbullet_tracer::log(event);
+    buybot::FireGameEvent(event);
     Eventlog::FireGameEvent(event);
     NameStealer::FireGameEvent(event);
     VoteRevealer::FireGameEvent(event);

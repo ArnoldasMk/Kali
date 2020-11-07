@@ -31,6 +31,7 @@ enum class DesireBones : int {
 	BONE_HIP,
 	LOWER_BODY,
 };
+
 enum class DrawingBackend : int {
     SURFACE = 0,
     IMGUI,
@@ -42,6 +43,12 @@ enum class SmoothType : int
 	SLOW_END,
 	CONSTANT,
 	FAST_END,
+};
+
+enum class SlowMode : int
+{
+        SAFETY,
+        ACCURATE,
 };
 
 enum class TracerType : int
@@ -246,6 +253,8 @@ enum class resolverType : int
         NONE,
         Experimental,
         ApuWare,
+	Legit,
+	Rage,
 };
 
 enum class AntiAimRealType_Y : int
@@ -326,6 +335,12 @@ enum class SkinAndModel : int
 struct LegitWeapon_t
 {
 	bool silent,
+		 autoWallEnabled,
+		 autoWallValue,
+		 scopeControlEnabled,
+		 autoAimRealDistance,
+		 smokeCheck,
+		 flashCheck,
 		 autoShoot,
 		 aimkeyOnly,
 		 smoothEnabled,
@@ -764,6 +779,11 @@ namespace Settings
 
 	namespace Ragebot
 	{
+			namespace onshot
+			{
+			inline bool enabled;
+			inline ButtonCode_t button;
+			}
 			inline bool mindmgoverride;
 			inline ButtonCode_t dmgkey;
 			inline impactType impacttype = impactType::ITSME;
@@ -842,6 +862,7 @@ namespace Settings
 		{
 			inline bool enabled = false;
 			inline float time = 0.2f;
+			inline bool draw;
 		}
 
 		inline std::unordered_map<ItemDefinitionIndex, RageWeapon_t, Util::IntHash<ItemDefinitionIndex>> weapons = {
@@ -897,6 +918,7 @@ namespace Settings
 
     namespace AntiAim
     {
+	inline bool ChokeOnShot;
 	inline float realoffset;
             inline AntiAimType_X pitchtype = AntiAimType_X::STATIC_DOWN;
 	inline bool lbyjitter;
@@ -906,6 +928,7 @@ namespace Settings
 		}
 	namespace SlowWalk 
 		{
+	inline SlowMode mode = SlowMode::ACCURATE;
 	inline float Speed;
 	inline bool enabled;
 	inline ButtonCode_t key;
@@ -1010,6 +1033,7 @@ namespace Settings
 
 	namespace Resolver
 	{
+		inline bool lby;
 		inline bool rPitch;
 		inline float Pitch;
 		inline float resolveDelt = 0.5f;

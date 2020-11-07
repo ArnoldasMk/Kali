@@ -243,7 +243,12 @@ void HvH::RenderTab()
         "Rage AntiAim",
         "Custom AntiAim",
     }; 
+      static char* slowType[] = {
+        "Safety",
+        "Accuracy",
+    }; 
     
+
     ImGui::Spacing();
 
     ImGui::Columns(2, nullptr, false);
@@ -298,7 +303,7 @@ void HvH::RenderTab()
             ImGui::Checkbox(XORSTR("Fake Lag"), &Settings::FakeLag::enabled);
             ImGui::SameLine();
             ImGui::SliderInt(XORSTR("##FAKELAGAMOUNT"), &Settings::FakeLag::value, 0, 15, XORSTR("Amount: %0.f"));
-//			ImGui::Checkbox(XORSTR("Adaptive Fake Lag"), &Settings::FakeLag::adaptive);
+			ImGui::Checkbox(XORSTR("Adaptive Fake Lag"), &Settings::FakeLag::adaptive);
 //ImGui::Checkbox(XORSTR("Random Fake Lag"), &Settings::AntiAim::randomLag::enabled);
            //UI::KeyBindButton(&Settings::FakeLag::ckey);
 
@@ -306,7 +311,9 @@ void HvH::RenderTab()
 if (Settings::AntiAim::SlowWalk::enabled){
             ImGui::SameLine(); 
             UI::KeyBindButton(&Settings::AntiAim::SlowWalk::key);
-
+            ImGui::Combo(XORSTR("##SLOWTYPE"), (int*)& Settings::AntiAim::SlowWalk::mode, slowType, IM_ARRAYSIZE(slowType));
+if (Settings::AntiAim::SlowWalk::mode == SlowMode::SAFETY)
+    ImGui::SliderFloat(XORSTR("##SlowWalkSPeed"), &Settings::AntiAim::SlowWalk::Speed, 0, 100, XORSTR("Amount: %0.f"));
 }
                         ImGui::Checkbox(XORSTR("QuickPeek"), &Settings::Ragebot::quickpeek::enabled);
 			if(Settings::Ragebot::quickpeek::enabled){
@@ -327,6 +334,8 @@ if (Settings::AntiAim::SlowWalk::enabled){
 	}
             ImGui::Checkbox(XORSTR("Spin on air"), &Settings::AntiAim::airspin::enabled);
             ImGui::Checkbox(XORSTR("Animation Memes"), &Settings::AnimMemes::enabled);
+            ImGui::Checkbox(XORSTR("Choke OnShot"), &Settings::AntiAim::ChokeOnShot);
+
             ImGui::Checkbox(XORSTR("Fake Peek"), &Settings::AntiAim::RageAntiAim::fakepeek);
 		if (Settings::AntiAim::RageAntiAim::fakepeek)
 		  UI::KeyBindButton(&Settings::AntiAim::RageAntiAim::fakeheadkey);

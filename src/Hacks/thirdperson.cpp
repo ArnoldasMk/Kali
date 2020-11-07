@@ -21,7 +21,10 @@ void ThirdPerson::OverrideView(CViewSetup *pSetup)
 		input->m_fCameraInThirdPerson = false;
 		return;
 	}
-
+			if (!localplayer->GetAlive() && Settings::ThirdPerson::enabled && !engine->IsTakingScreenshot()){
+				*localplayer->GetObserverMode() = ObserverMode_t::OBS_MODE_CHASE;
+				// obs = (C_BasePlayer*)localplayer->GetObserverTarget();
+			}
 	if(localplayer->GetAlive() && Settings::ThirdPerson::enabled && !engine->IsTakingScreenshot())
 	{
 		/* Code For Toggle

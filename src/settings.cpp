@@ -240,6 +240,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("Legitbot")][XORSTR("AutoCrouch")][XORSTR("enabled")] = Settings::Legitbot::AutoCrouch::enabled;
     settings[XORSTR("Ragebot")][XORSTR("AUtoAcrouth")][XORSTR("enable")] = Settings::Ragebot::AutoCrouch::enable;
     settings[XORSTR("Ragebot")][XORSTR("BackTrack")][XORSTR("enable")] = Settings::Ragebot::backTrack::enabled;
+    settings[XORSTR("Ragebot")][XORSTR("BackTrack")][XORSTR("draw")] = Settings::Ragebot::backTrack::draw;
     settings[XORSTR("Ragebot")][XORSTR("BackTrack")][XORSTR("time")] = Settings::Ragebot::backTrack::time;
     settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("key")] = Util::GetButtonName(Settings::Ragebot::quickpeek::key);
     settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("enabled")] = Settings::Ragebot::quickpeek::enabled;
@@ -258,6 +259,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("Triggerbot")][XORSTR("RandomDelay")][XORSTR("enabled")] = Settings::Triggerbot::RandomDelay::enabled;
 	settings[XORSTR("Triggerbot")][XORSTR("RandomDelay")][XORSTR("lowBound")] = Settings::Triggerbot::RandomDelay::lowBound;
 	settings[XORSTR("Triggerbot")][XORSTR("RandomDelay")][XORSTR("highBound")] = Settings::Triggerbot::RandomDelay::highBound;
+    settings[XORSTR("AntiAim")][XORSTR("chokeonshot")] = Settings::AntiAim::ChokeOnShot;
 
 	settings[XORSTR("AntiAim")][XORSTR("pitchtype")] = (int) Settings::AntiAim::pitchtype;
     settings[XORSTR("AntiAim")][XORSTR("Type")] = (int)Settings::AntiAim::Type::antiaimType;
@@ -331,6 +333,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("BuyBot")][XORSTR("scout")] = Settings::buybot::scout;
     settings[XORSTR("BuyBot")][XORSTR("autosniper")] = Settings::buybot::autosniper;
     settings[XORSTR("BuyBot")][XORSTR("AWP")] = Settings::buybot::awp;
+    settings[XORSTR("BuyBot")][XORSTR("wep")] = (int) Settings::buybot::wep;
+    settings[XORSTR("BuyBot")][XORSTR("sec")] = (int) Settings::buybot::sec;
 
     /*
     * legit anti aim settings 
@@ -372,6 +376,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("Ragebot")][XORSTR("impactType")] = (int)Settings::Ragebot::impacttype;
     settings[XORSTR("Ragebot")][XORSTR("mindmgoverride")] = Settings::Ragebot::mindmgoverride;
     settings[XORSTR("Ragebot")][XORSTR("dmgkey")] = Util::GetButtonName(Settings::Ragebot::dmgkey);
+    settings[XORSTR("Ragebot")][XORSTR("onshot")][XORSTR("enabled")] = Settings::Ragebot::onshot::enabled;
+    settings[XORSTR("Ragebot")][XORSTR("onshot")][XORSTR("key")] = Util::GetButtonName(Settings::Ragebot::onshot::button);
 
     settings[XORSTR("UI")][XORSTR("particles")] = Settings::UI::particles;
 
@@ -767,6 +773,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
     settings[XORSTR("SlowWalk")][XORSTR("enabled")] = Settings::AntiAim::SlowWalk::enabled;
     settings[XORSTR("SlowWalk")][XORSTR("key")] = Settings::AntiAim::SlowWalk::key;
+    settings[XORSTR("SlowWalk")][XORSTR("mode")] = (int)Settings::AntiAim::SlowWalk::mode;
+    settings[XORSTR("SlowWalk")][XORSTR("Speed")] = Settings::AntiAim::SlowWalk::Speed;
 
     settings[XORSTR("AutoAccept")][XORSTR("enabled")] = Settings::AutoAccept::enabled;
 
@@ -987,7 +995,10 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("Ragebot")][XORSTR("enabled")], &Settings::Ragebot::enabled);
     GetVal(settings[XORSTR("Ragebot")][XORSTR("AUtoAcrouth")][XORSTR("enable")], &Settings::Ragebot::AutoCrouch::enable);
     GetVal(settings[XORSTR("Ragebot")][XORSTR("BackTrack")][XORSTR("enable")], &Settings::Ragebot::backTrack::enabled);
+    GetVal(settings[XORSTR("Ragebot")][XORSTR("BackTrack")][XORSTR("draw")], &Settings::Ragebot::backTrack::draw);
     GetVal(settings[XORSTR("Ragebot")][XORSTR("BackTrack")][XORSTR("time")], &Settings::Ragebot::backTrack::time);
+    GetVal(settings[XORSTR("Ragebot")][XORSTR("onshot")][XORSTR("enabled")], &Settings::Ragebot::onshot::enabled);
+    GetButtonCode(settings[XORSTR("Ragebot")][XORSTR("onshot")][XORSTR("key")], &Settings::Ragebot::onshot::button);
 
     GetVal(settings[XORSTR("Triggerbot")][XORSTR("enabled")], &Settings::Triggerbot::enabled);
 	GetButtonCode(settings[XORSTR("Triggerbot")][XORSTR("key")], &Settings::Triggerbot::key);
@@ -1004,7 +1015,7 @@ void Settings::LoadConfig(std::string path)
 	GetVal(settings[XORSTR("Triggerbot")][XORSTR("RandomDelay")][XORSTR("enabled")], &Settings::Triggerbot::RandomDelay::enabled);
 	GetVal(settings[XORSTR("Triggerbot")][XORSTR("RandomDelay")][XORSTR("lowBound")], &Settings::Triggerbot::RandomDelay::lowBound);
 	GetVal(settings[XORSTR("Triggerbot")][XORSTR("RandomDelay")][XORSTR("highBound")], &Settings::Triggerbot::RandomDelay::highBound);
-    
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("chokeonshot")], &Settings::AntiAim::ChokeOnShot);
     GetVal( settings[XORSTR("AntiAim")][XORSTR("Type")], (int*)&Settings::AntiAim::Type::antiaimType );
     GetVal( settings[XORSTR("AntiAim")][XORSTR("Yaw")][XORSTR("type")], (int*)&Settings::AntiAim::Yaw::typeReal);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("Pitchtype")], (int*)&Settings::AntiAim::pitchtype);
@@ -1080,6 +1091,8 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("BuyBot")][XORSTR("scout")], &Settings::buybot::scout);
     GetVal(settings[XORSTR("BuyBot")][XORSTR("autosniper")], &Settings::buybot::autosniper);
     GetVal(settings[XORSTR("BuyBot")][XORSTR("AWP")], &Settings::buybot::awp);
+    GetVal(settings[XORSTR("BuyBot")][XORSTR("wep")], (int*)&Settings::buybot::wep);
+    GetVal(settings[XORSTR("BuyBot")][XORSTR("sec")], (int*)&Settings::buybot::sec);
 
 
     /* 
@@ -1563,6 +1576,8 @@ GetVal(settings[XORSTR("Airstuck")][XORSTR("enabled")], &Settings::Airstuck::ena
 
     GetVal(settings[XORSTR("SlowWalk")][XORSTR("enabled")], &Settings::AntiAim::SlowWalk::enabled);
     GetButtonCode(settings[XORSTR("SlowWalk")][XORSTR("key")], &Settings::AntiAim::SlowWalk::key);
+    GetVal(settings[XORSTR("SlowWalk")][XORSTR("mode")], (int*)&Settings::AntiAim::SlowWalk::mode);
+    GetVal(settings[XORSTR("SlowWalk")][XORSTR("Speed")], &Settings::AntiAim::SlowWalk::Speed);
 
     GetVal(settings[XORSTR("AutoAccept")][XORSTR("enabled")], &Settings::AutoAccept::enabled);
 

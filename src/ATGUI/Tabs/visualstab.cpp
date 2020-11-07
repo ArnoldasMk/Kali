@@ -317,7 +317,7 @@ void Visuals::RenderTab()
 					ImGui::Selectable(XORSTR("Reloading"), &Settings::ESP::Info::reloading, ImGuiSelectableFlags_DontClosePopups);
 					ImGui::Selectable(XORSTR("Planting"), &Settings::ESP::Info::planting,ImGuiSelectableFlags_DontClosePopups);
 					ImGui::Selectable(XORSTR("Defusing"), &Settings::ESP::Info::defusing, ImGuiSelectableFlags_DontClosePopups);
-					ImGui::Selectable(XORSTR("Rescuing Hostage"), &Settings::ESP::Info::rescuing, ImGuiSelectableFlags_DontClosePopups);
+					ImGui::Selectable(XORSTR("Resolver Flags"), &Settings::ESP::Info::rescuing, ImGuiSelectableFlags_DontClosePopups);
 		                	ImGui::Selectable(XORSTR("Layers Debug"), &Settings::Debug::AnimLayers::draw, ImGuiSelectableFlags_DontClosePopups);
 					ImGui::Selectable(XORSTR("Choked Packets"), &Settings::ESP::Info::money, ImGuiSelectableFlags_DontClosePopups);
 				
@@ -451,6 +451,7 @@ void Visuals::RenderTab()
                                 ImGui::Checkbox(XORSTR("Localplayer only"), &Settings::ESP::tracebullet::local);
 				}
                                 ImGui::Checkbox(XORSTR("Sync fake chams with fakelag"), &Settings::ESP::SyncFake);
+                                ImGui::Checkbox(XORSTR("Draw Backtrack Chams"), &Settings::Ragebot::backTrack::draw);
 
 				if ( ImGui::Button( XORSTR( "Material Config" ), ImVec2( -1, 0 ) ) )
 					ImGui::OpenPopup( XORSTR( "##MaterialConfigWindow" ) );

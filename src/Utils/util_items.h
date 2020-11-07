@@ -12,7 +12,6 @@ namespace Util
 		 * using an internal map
 		 */
 		enum ItemDefinitionIndex GetItemIndex(const std::string);
-
 		/*
 		 * Look up the symbolic name of a ItemDefinitionIndex ordinal value
 		 * using an internal map

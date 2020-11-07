@@ -3,7 +3,8 @@
 #include "../ImGUI/imgui.h"
 #include "resolverAP.h"
 std::vector<int64_t> Resolver::Players = {};
-//int indx;
+bool hasDesyncHadTimeToDesync = false;
+bool hasDesyncHadTimeToLBY = false;
 #define RANDOME_FLOAT(x) ( static_cast<float>(static_cast<float>(rand()/ static_cast<float>(RAND_MAX/ ( x ) ))) )
 #define GetPercentVal(val, percent) (val * (percent/100.f))
 
@@ -71,6 +72,15 @@ float GetRightYaw(C_BasePlayer* player) {
         C_BasePlayer *local = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
         return NormalizeAsYaw(CalculateAngle(local->GetAbsOrigin(), player->GetAbsOrigin()).y + 90.f);
 }
+
+/*bool CheckMM(C_BasePlayer* player){
+                auto animstate = player->GetAnimState();
+             if ((player->GetVelocity().Length() > 0.1f || fabs(animstate->verticalVelocity) > 100.f) && animstate->timeSinceStartedMoving > 0)
+				return false;
+	     if (player->GetVelocity().Length() > 0.1f && player->GetVelocity().Length() < 0.2f)
+				return true;
+}
+*/
 void DetectSide(C_BasePlayer* player, int *side)
 {
         Vector src3D, dst3D, forward, right, up, src, dst;
@@ -108,8 +118,32 @@ void DetectSide(C_BasePlayer* player, int *side)
                 *side = 0;
 }
 
+bool CheckDesync (CCSGOAnimState* Animstate, C_BasePlayer* player){
+ float Velocity = player->GetVelocity().Length2D();
+    bool PresumedNoDesync = false;
+    if ((Velocity < 140) && (Animstate->timeSinceStartedMoving <= 1.2f)) {
+        if (Animstate->timeSinceStartedMoving <= 1.2f) {
+            if (Animstate->timeSinceStoppedMoving >= .22f) {
+                hasDesyncHadTimeToLBY = true;
+                if (Animstate->timeSinceStoppedMoving >= .8f) {
+                    hasDesyncHadTimeToDesync = true;
+                }
+            }
+        } else if (Animstate->timeSinceStartedMoving > 0) {
+            if (Velocity > 100) {
+                hasDesyncHadTimeToDesync = true;
+            }
+        }
+    }
+    else{
+
+        PresumedNoDesync = true;
+    }
+	return PresumedNoDesync;
+    }
 void Resolver::AnimationFix(C_BasePlayer *player)
 {
+/*
 	// player->ClientAnimations(true);
 	static auto cl_interp = cvar->FindVar("cl_interp");
 
@@ -150,7 +184,33 @@ void Resolver::AnimationFix(C_BasePlayer *player)
 //	pEnt->SetAbsAngles(Vector3(0, player_animation_state->m_flGoalFeetYaw, 0));
 
 	player->ClientAnimations(false);
+*/
 }
+
+bool PitchCheck(C_BasePlayer* player)
+{
+        // we should not set stored pitch if enemy shotting.
+     //   const auto m_on_shot = xxxtentacion_detection(record);
+
+        // if enemy pressing e, cant be more than 3 seconds right?
+        static float timer = globalVars->curtime + 250.f / 100.f;
+        if (timer <= globalVars->curtime)
+        {
+                // store the old down/up pitch in every 3 seconds.
+       //         if (!m_on_shot)
+                        Resolver::players[player->GetIndex()].oldpitch = player->GetEyeAngles()->x;
+
+                // reset the timer.
+                timer = globalVars->curtime + 250.f / 100.f;
+        }
+
+        // it should not be the same if enemy using no pitch desync, rage pitches are always the same.
+        if (fabsf(Resolver::players[player->GetIndex()].oldpitch - player->GetEyeAngles()->x) > 10.f)
+                return true;
+
+        return false;
+}
+
 void Resolver::FrameStageNotify(ClientFrameStage_t stage)
 {
 	if (!engine->IsInGame())
@@ -164,7 +224,7 @@ void Resolver::FrameStageNotify(ClientFrameStage_t stage)
 		return;
 
 if (Settings::Resolver::resolveAllAP){
-ResolverAP::FrameStageNotify(stage); 
+ResolverAP::FrameStageNotify(stage);
 return;
 }
 
@@ -188,7 +248,7 @@ return;
 
 			IEngineClient::player_info_t entityInformation;
 			engine->GetPlayerInfo(i, &entityInformation);
-	if ( Resolver::players[player->GetIndex()].enemy )
+		if ( Resolver::players[player->GetIndex()].enemy )
 			{
 				if (player != Resolver::players[player->GetIndex()].enemy) // It means player discoennected or player sequence changed better to reset out miss shots count
 				{
@@ -201,19 +261,37 @@ return;
 				Resolver::players[player->GetIndex()].enemy = player;
 			}
 			if (!Settings::Resolver::manual){
-			if (player->GetEyeAngles()->x < 65.f || player->GetEyeAngles()->x > 89.f)
+        	        int wap;
+                	int previous_ticks[128];
+                	auto ticks = TIME_TO_TICKS(player->GetSimulationTime() - player->GetOldSimulationTime());
+	                if (ticks == 0 && previous_ticks[player->GetIndex()] > 0) {
+                	wap = previous_ticks[player->GetIndex()] - 1;
+                	}
+                	else {
+                	previous_ticks[player->GetIndex()] = ticks;
+                	wap = ticks;
+                	}
+                	if (wap > 3000)
+                	Resolver::players[player->GetIndex()].choke = true;
+                	else
+                	Resolver::players[player->GetIndex()].choke = false;
+			if (player->GetEyeAngles()->x < 65.f || player->GetEyeAngles()->x > 89.f && !(Resolver::players[player->GetIndex()].choke))
+                                Resolver::players[player->GetIndex()].flags = rflag::NONE;
+
+
+			if (player->GetEyeAngles()->x < 65.f || player->GetEyeAngles()->x > 89.f && PitchCheck(player) || Settings::Resolver::resolverType == resolverType::Legit)
 			{
-				 //cvar->ConsoleDPrintf(XORSTR("Resolving : Legit AA"));
-				 //cvar->ConsoleDPrintf(XORSTR("MissedShots : %d\n"), players[player->GetIndex()].MissedCount);
+				if (Resolver::players[player->GetIndex()].choke){
 				float trueDelta = NormalizeAsYaw(*player->GetLowerBodyYawTarget() - player->GetEyeAngles()->y);
+		                Resolver::players[player->GetIndex()].flags = rflag::LAA;
 
 				switch(Resolver::players[player->GetIndex()].MissedCount)
 				{
 					case 0:
-						//player->GetEyeAngles()->y += 115;
+						player->GetEyeAngles()->y += 115;
 						break;
 					case 1:
-		               player->GetAnimState()->goalFeetYaw = trueDelta == 0 ? player->GetEyeAngles()->y - 30.f: GetPercentVal(trueDelta, 60) + player->GetEyeAngles()->y;
+                                                player->GetEyeAngles()->y -= 115;
 						break;
 					case 2:
 						player->GetEyeAngles()->y = trueDelta == 0 ? player->GetEyeAngles()->y - 30.f :  player->GetEyeAngles()->y + trueDelta;
@@ -227,82 +305,89 @@ return;
 					default:
 						break;
 				}
+										}
 			}
-			else
+			else if (Resolver::players[player->GetIndex()].choke || Settings::Resolver::resolverType == resolverType::Rage)
             {
+		auto animstate = player->GetAnimState();
                 float trueDelta = NormalizeAsYaw(*player->GetLowerBodyYawTarget() - player->GetEyeAngles()->y);
-
-
-				//cvar->ConsoleDPrintf(XORSTR("Resolving : Rage AA\n"));
-				//cvar->ConsoleDPrintf(XORSTR("MissedShots : %d\n"), players[player->GetIndex()].MissedCount);
-				        float angle = GetAngle(player);
-				float fuck = 90;
+		float angle = GetAngle(player);
+		float fuck = 90;
                 bool forward = fabsf(NormalizeAsYaw(GetAngle(player) - GetForwardYaw(player))) < 90.f;
-							player->GetEyeAngles()->x = normalize_pitch(player->GetEyeAngles()->x);
-				                        if (forward) {
-											switch(Resolver::players[player->GetIndex()].MissedCount)
+		player->GetEyeAngles()->x = normalize_pitch(player->GetEyeAngles()->x);
+                float delta = NormalizeAsYaw(player->GetEyeAngles()->y - player->GetAnimState()->goalFeetYaw);
+	        auto valid_lby = true;
+		float initialyaw = 0.f;
+		bool desynctime = CheckDesync(animstate , player);
+	        if (player->GetVelocity().Length() > 0.1f || fabs(animstate->verticalVelocity) > 100.f)
+       		         valid_lby = animstate->timeSinceStartedMoving < 0.22f;
+		if (localplayer->GetAlive())
+		Resolver::players[player->GetIndex()].delta = delta;
+		else
+                Resolver::players[player->GetIndex()].delta = 0;
+		if (hasDesyncHadTimeToDesync || hasDesyncHadTimeToLBY){
+	        if (fabs(delta) > 30.0f && valid_lby)
+	        {
+				Resolver::players[player->GetIndex()].flags = rflag::LBY;
+                if (delta > 30.0f)
+                {
+			initialyaw = NormalizeAsYaw(player->GetEyeAngles()->y + 60.0f);
+                }
+                else if (delta < -30.0f)
+                {
+			initialyaw = NormalizeAsYaw(player->GetEyeAngles()->y - 60.0f);
+                }
+   		}
+		else{
+		if (delta > 0.0f)
+		initialyaw = NormalizeAsYaw(player->GetEyeAngles()->y + 30.0f);
+		else
+                initialyaw = NormalizeAsYaw(player->GetEyeAngles()->y - 30.0f);
+
+                                Resolver::players[player->GetIndex()].flags = rflag::LOW;
+
+		}
+		}else if (desynctime && !(hasDesyncHadTimeToDesync || hasDesyncHadTimeToLBY)){
+		 initialyaw = 0;
+		Resolver::players[player->GetIndex()].flags = rflag::NOTIME;
+		}
+				switch(Resolver::players[player->GetIndex()].MissedCount)
 				{
 					case 0:
-  						 player->GetAnimState()->goalFeetYaw = NormalizeAsYaw(GetAngle(player) - fuck);
+  						player->GetAnimState()->goalFeetYaw = NormalizeAsYaw(initialyaw);
 						break;
 					case 1:
 						ResolverAP::FrameStageNotify(stage);
+                                                Resolver::players[player->GetIndex()].flags = rflag::AP;
 						break;
 					case 2:
 						player->GetAnimState()->goalFeetYaw = trueDelta == 0 ? player->GetEyeAngles( )->y - 30.f :  player->GetEyeAngles( )->y + GetPercentVal(trueDelta, 60);
-
+                                                Resolver::players[player->GetIndex()].flags = rflag::BRUTE;
 						break;
 					case 3:
 						player->GetEyeAngles()->y = trueDelta <= 0 ? player->GetEyeAngles( )->y - 30.f : player->GetEyeAngles( )->y + 30.f;
+                                                Resolver::players[player->GetIndex()].flags = rflag::BRUTE;
 						break;
 					case 4:
 						player->GetEyeAngles()->y += trueDelta <= 0 ? player->GetEyeAngles( )->y - RANDOME_FLOAT(35.f) : player->GetEyeAngles( )->y + RANDOME_FLOAT(35.f);
+                                                Resolver::players[player->GetIndex()].flags = rflag::BRUTE;
 						break;
 					default:
 						break;
 				}
-										}
-										else{
-																						switch(Resolver::players[player->GetIndex()].MissedCount)
-										{
-					case 0:
-  						 player->GetAnimState()->goalFeetYaw = NormalizeAsYaw(GetAngle(player) + fuck);
-						break;
-					case 1:
-                                                ResolverAP::FrameStageNotify(stage);
-						break;
-					case 2:
-						player->GetAnimState()->goalFeetYaw = trueDelta == 0 ? player->GetEyeAngles( )->y - 30.f :  player->GetEyeAngles( )->y + GetPercentVal(trueDelta, 60);
-						break;
-					case 3:
-						player->GetEyeAngles()->y = trueDelta <= 0 ? player->GetEyeAngles( )->y - 30.f : player->GetEyeAngles( )->y + 30.f;
-						break;
-					case 4:
-						player->GetEyeAngles()->y += trueDelta <= 0 ? player->GetEyeAngles( )->y - RANDOME_FLOAT(35.f) : player->GetEyeAngles( )->y + RANDOME_FLOAT(35.f);
-						break;
-					default:
-						break;
-										}
-										}
 
-            }	
+            		}
 			}
 			else {
 			if ( !Settings::Resolver::forcebrute){
-			//cvar->ConsoleDPrintf(XORSTR("Manual Resolver\n"));
 			player->GetAnimState()->goalFeetYaw += Settings::Resolver::goalFeetYaw;
 			player->GetEyeAngles()->y += Settings::Resolver::EyeAngles;
 			 player->GetEyeAngles()->x = Settings::Resolver::Pitch;
 			}else if ( Settings::Resolver::forcebrute){
- float trueDelta = NormalizeAsYaw(*player->GetLowerBodyYawTarget() - player->GetEyeAngles()->y);
- float maxDesync = AntiAim::GetMaxDelta(player->GetAnimState());
- int mD = (int) maxDesync;
-                                        float randNum = rand()%(mD-(-mD) + 1) + -mD;
-			                      //  cvar->ConsoleDPrintf(XORSTR("Forcing bruteforce resolver\n"));
-//cvar->ConsoleDPrintf(XORSTR("Current Yaw: "));
-//cvar->ConsoleDPrintf(std::to_string(randNum).c_str());
-//cvar->ConsoleDPrintf(XORSTR("\n"));
-
+			float trueDelta = NormalizeAsYaw(*player->GetLowerBodyYawTarget() - player->GetEyeAngles()->y);
+ 			float maxDesync = AntiAim::GetMaxDelta(player->GetAnimState());
+ 			int mD = (int) maxDesync;
+                        float randNum = rand()%(mD-(-mD) + 1) + -mD;
 			player->GetEyeAngles( )->y += randNum;
 			}
 			}
@@ -310,15 +395,11 @@ return;
 	}
 	else if (stage == ClientFrameStage_t::FRAME_RENDER_END)
 	{
-		// for (auto &i : Resolver::players)
-		// {
-		// 	i.MissedCount = 0;
-		// }
 	}
 }
 
 void Resolver::FireGameEvent(IGameEvent *event)
-{	
+{
 	// if (!event)
 	// 	return;
 
@@ -333,11 +414,10 @@ void Resolver::FireGameEvent(IGameEvent *event)
 
 	// 	if (attacker_id == deadPlayer_id) // suicide
 	//     	return;
-		
 	// 	if (attacker_id != engine->GetLocalPlayer())
 	// 		return;
 
-	// 	if (strcmp(event->GetName(), "player_hurt") == 0 || strcmp(event->GetName(), "player_hurt") == -1);		
+	// 	if (strcmp(event->GetName(), "player_hurt") == 0 || strcmp(event->GetName(), "player_hurt") == -1);
 			// Resolver::players[TargetID].MissedCount--;
 				// ImGui::TextWrapped(XORSTR("Missed"));
 }

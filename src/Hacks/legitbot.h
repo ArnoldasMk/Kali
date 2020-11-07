@@ -16,4 +16,6 @@ namespace Legitbot
 	//Hooks
 	void CreateMove(CUserCmd* cmd);
 	void FireGameEvent(IGameEvent* event);
+        void UpdateValues();
+
 }

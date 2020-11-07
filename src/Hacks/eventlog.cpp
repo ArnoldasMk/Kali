@@ -363,18 +363,7 @@ void Eventlog::FireGameEvent(IGameEvent* event)
 
 		logToShow.insert(logToShow.begin(), std::pair<std::string, long>(dropLog, now));
 
-	} else if (strstr(event->GetName(), XORSTR("round_start"))){ 
-	if (Settings::buybot::enabled){
-	if (Settings::buybot::autosniper){
-	engine->ClientCmd_Unrestricted("buy elite;buy scar20;buy g3sg1;buy vesthelm;buy taser;buy defuser;buy molotov;buy incgrenade;buy hegrenade;buy smokegrenade"); 
-        }else if (Settings::buybot::scout){
-	engine->ClientCmd_Unrestricted("buy elite;buy ssg08;buy vesthelm;buy taser;buy defuser;buy molotov;buy incgrenade;buy hegrenade;buy smokegrenade"); 
-	}else if (Settings::buybot::awp){
-        engine->ClientCmd_Unrestricted("buy elite;buy awp;buy vesthelm;buy taser;buy defuser;buy molotov;buy incgrenade;buy hegrenade;buy smokegrenade"); 
-        }
-
-	}
-        }else if (strstr(event->GetName(), XORSTR("vote_cast"))){ 
+	} else if (strstr(event->GetName(), XORSTR("vote_cast"))){ 
 
                 std::string drop_player_id = event->GetString(XORSTR("entityid"));
 
