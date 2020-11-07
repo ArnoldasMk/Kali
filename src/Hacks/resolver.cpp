@@ -189,22 +189,14 @@ void Resolver::AnimationFix(C_BasePlayer *player)
 
 bool PitchCheck(C_BasePlayer* player)
 {
-        // we should not set stored pitch if enemy shotting.
-     //   const auto m_on_shot = xxxtentacion_detection(record);
-
-        // if enemy pressing e, cant be more than 3 seconds right?
         static float timer = globalVars->curtime + 250.f / 100.f;
         if (timer <= globalVars->curtime)
         {
-                // store the old down/up pitch in every 3 seconds.
-       //         if (!m_on_shot)
                         Resolver::players[player->GetIndex()].oldpitch = player->GetEyeAngles()->x;
 
-                // reset the timer.
                 timer = globalVars->curtime + 250.f / 100.f;
         }
 
-        // it should not be the same if enemy using no pitch desync, rage pitches are always the same.
         if (fabsf(Resolver::players[player->GetIndex()].oldpitch - player->GetEyeAngles()->x) > 10.f)
                 return true;
 
