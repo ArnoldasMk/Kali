@@ -136,19 +136,24 @@ To add a config, copy the folder containing it to `~/.config/MissedIT/`
 
 ## Screenshots
 
-![LegitBot](Pictures/Screenshot1.png)
-![RageBot](Pictures/Screenshot2.png)
-![esp](Pictures/Screenshot3.png)
-![Misc](Pictures/Screenshot4.png)
+![Visuals](Pictures/visuals.png)
+![LegitBot](Pictures/legitbot.png)
+![RageBot](Pictures/ragebot.png)
+![AntiAim](Pictures/antiaim.png)
+![esp](Pictures/visualstab.png)
+![skinchanger](Pictures/skinchanger.png)
+![Misc](Pictures/misc.png)
 
 ## Media
-https://imgur.com/a/JxWryuy
+https://imgur.com/a/JxWryuy made by Dehumanization » Mass Genocide#3668
 
-https://imgur.com/a/q4KV8PE
+https://imgur.com/a/q4KV8PE made by Dehumanization » Mass Genocide#3668
 
-https://www.youtube.com/watch?v=UXm4ISktAmQ
+https://www.youtube.com/watch?v=UXm4ISktAmQ made by Dehumanization » Mass Genocide#3668
 
-https://cdn.discordapp.com/attachments/774860310703243274/774860348393390123/untitled.mp4
+https://cdn.discordapp.com/attachments/774860310703243274/774860348393390123/untitled.mp4 made by Dehumanization » Mass Genocide#3668
+
+https://www.youtube.com/watch?v=_HiIKhbuhog made by Aαɾσɳ#1883
 
 ## Credits
 
