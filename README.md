@@ -6,16 +6,12 @@
 ===================
 # MissedIT
 
-Want to chat or play with other MissedIT users? Join us on Discord :- <a href = https://discord.gg/PDtg8hd><b>Hacker.Police Discord</b></a>
+Want to chat or play with other MissedIT / eyehook users? Join us on Discord :- <a href = https://discord.gg/PDtg8hd><b>Hacker.Police Discord</b></a>
 
 
 ## What is MissedIT?
 
-A fully featured internal hack for *CounterStrike : Global Offensive* written in C++. Which is a Fork of <a href = ""><b>Aimtux-Fuzion</b></a>
-
-## AUR Installation
-* Load MissedIT by using the command `./load`
-* Unload using `./unload`
+A fully featured internal hack for *CounterStrike : Global Offensive* written in C++. Which is a Fork of <a href = ""><b>MissedIT</b></a>
 
 ## Compiling
 
@@ -45,7 +41,7 @@ sudo dnf install cmake gcc-c++ gdb git libstdc++-static mesa-libGL-devel SDL2-de
 #### Download MissedIT:
 
 ```bash
-git clone --recursive https://github.com/HackerPolice/MissedIT.git -b alfa MissedIT-Alfa
+git clone --recursive https://github.com/itsme2417/MissedIT
 ```
 
 ```bash
@@ -96,7 +92,7 @@ You will need to install this font https://mega.nz/file/omZBlaBQ#AOF2CpAuWTg2Z45
 
 ## Using the hack
 
-Now that MissedIT has been injected into the game, press <kbd>Insert</kbd> on your keyboard to open the hack menu (<kbd>ALT</kbd>+<kbd>I</kbd> if you are using a laptop).
+Now that eyehook has been injected into the game, press <kbd>Insert</kbd> on your keyboard to open the hack menu (<kbd>ALT</kbd>+<kbd>I</kbd> if you are using a laptop).
 
 If you want to change skins, create and load configs or open the player list, you can find those buttons at the top of the screen.
 
@@ -112,12 +108,12 @@ If you wish to unload the hack from the game, you can do so by entering the comm
 
 Configs are stored in a hidden directory in your home folder. Specifically 
 ```
-~/.config/MissedIT/CSGO
+~/.config/MissedIT/
 ```
 
 Each `config.json` is stored in a seperately named folder (The name you see in-game, in the config window). 
 
-To add a config, create a folder inside of the `~/.config/MissedIT/CSGO` folder with a name of your choice, and paste the `config.json` inside of that folder.
+To add a config, create a folder inside of the `~/.config/MissedIT/` folder with a name of your choice, and paste the `config.json` inside of that folder.
 
 To see hidden folders inside your home folder, press <kbd>CTRL</kbd>+<kbd>H</kbd> when using a file manager.
 
@@ -130,12 +126,12 @@ ls -la ~/
 ## Grenade Configs
 
 ```
-~/.config/MissedIT-GH/CSGO
+~/.config/MissedIT/
 ```
 
 Each `config.json` is stored in the folder named after them map name.
 
-To add a config, copy the folder containing it to `~/.config/MissedIT/CSGO`
+To add a config, copy the folder containing it to `~/.config/MissedIT/`
 
 
 ## Screenshots
@@ -145,6 +141,11 @@ To add a config, copy the folder containing it to `~/.config/MissedIT/CSGO`
 ![esp](Pictures/Screenshot3.png)
 ![Misc](Pictures/Screenshot4.png)
 
+## Media
+https://imgur.com/a/JxWryuy
+https://imgur.com/a/q4KV8PE
+https://www.youtube.com/watch?v=UXm4ISktAmQ
+https://cdn.discordapp.com/attachments/774860310703243274/774860348393390123/untitled.mp4
 
 ## Credits
 
@@ -152,7 +153,9 @@ Special thanks to the Original AimTux project: [https://github.com/AimTuxOfficia
 
 Special thanks to the Fuzion For Panaroma Update And For Good Quality Codes: [https://github.com/LWSS/Fuzion](https://github.com/LWSS/Fuzion).
 
-Special thanks to the Nimbus project For The UI and Resolver: [https://github.com/NimbusProjects/Nimbus](https://github.com/NimbusProjects/Nimbus)
+Special thanks to Unknowncheats For Various Things :)
+
+Special thanks to the Nimbus project For The UI: [https://github.com/NimbusProjects/Nimbus](https://github.com/NimbusProjects/Nimbus)
 
 Special thanks to [@aixxe](http://www.github.com/aixxe/) ([aixxe.net](http://www.aixxe.net)) for the skin changer and with the initial project, as well as helping this project with source code (Available on [@aixxe's](http://www.github.com/aixxe/) github page.).
 

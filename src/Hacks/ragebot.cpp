@@ -15,6 +15,7 @@ std::vector<long> RagebotkillTimes = { 0 }; // the Epoch time from when we kill 
 Vector *bulletPosition = new Vector();
 QAngle RCSLastPunch;
 bool hasShot;
+bool shatted;
 void GetDamageAndSpots(C_BasePlayer* player, Vector &Spot, int& Damage, int& playerHelth, int& i,const std::unordered_map<int, int>* modelType, const RageWeapon_t& currentSetting)
 {
 	if (!player || !player->GetAlive() || !currentSetting.desireBones[i])
@@ -420,7 +421,7 @@ void Ragebot::CheckHit(C_BaseCombatWeapon *activeWeapon){
         if (!Ragebot::lockedEnemy.shooted || !Ragebot::lockedEnemy.player)
                 return;
         // cvar->ConsoleDPrintf("2 \n");
-    if (Ragebot::lockedEnemy.playerhelth != Ragebot::lockedEnemy.player->GetHealth() || !Ragebot::lockedEnemy.player->GetAlive())
+        if (Ragebot::lockedEnemy.playerhelth != Ragebot::lockedEnemy.player->GetHealth() || !Ragebot::lockedEnemy.player->GetAlive())
                 return;
         // cvar->ConsoleDPrintf("3 \n");
         // if ( activeWeapon->GetNextPrimaryAttack() > static_cast<float>(localplayer->GetTickBase()) * TICK_INTERVAL)
@@ -499,6 +500,7 @@ void RagebotAutoR8(C_BasePlayer* player, C_BasePlayer* localplayer, C_BaseCombat
     	float postponeFireReadyTime = activeWeapon->GetPostPoneReadyTime();
 		if (player)
 		{
+			cmd->tick_count = TIME_TO_TICKS(player->GetSimulationTime() + LagComp::GetLerpTime());
 			if ( !Ragebot::ragebotPredictionSystem->canShoot(cmd, localplayer, activeWeapon, bestspot, player, currentSettings))
 			{
 				RagebotAutoSlow(localplayer, activeWeapon, cmd, forrwordMove, sideMove, angle, currentSettings);
@@ -794,11 +796,14 @@ else {
 		if (cmd->buttons & IN_ATTACK)
 		{
 			angle = Math::CalcAngle(Ragebot::localEye, Ragebot::BestSpot);
+                        lockedEnemy.playerhelth = lockedEnemy.player->GetHealth();
+			if (shatted){
 			lockedEnemy.shooted = true;
-			lockedEnemy.playerhelth = lockedEnemy.player->GetHealth();
+                        shatted = false;
+			}
 			CreateMove::sendPacket = true;
 		}
-			
+
     }
 	else{
 		Ragebot::lockedEnemy.player = nullptr;
@@ -849,6 +854,7 @@ void Ragebot::FireGameEvent(IGameEvent* event)
 if ( strcmp(event->GetName(), XORSTR("bullet_impact")) == 0 && engine->GetPlayerForUserID(event->GetInt(XORSTR("userid"))) == engine->GetLocalPlayer()){
                 float x = event->GetFloat(XORSTR("x")), y = event->GetFloat(XORSTR("y")), z = event->GetFloat(XORSTR("z"));
                 bulletPosition->x = x; bulletPosition->y = y; bulletPosition->z = z; 
+		shatted = true;
 }
 
 }
