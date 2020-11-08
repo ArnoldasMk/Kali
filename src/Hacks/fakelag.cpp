@@ -63,7 +63,10 @@ void FakeLag::CreateMove(CUserCmd* cmd)
                 else
                         max_choke = Settings::FakeLag::value;
 		}else if ( !(cmd->buttons & IN_ATTACK) || !(Settings::AntiAim::ChokeOnShot) ) max_choke = Settings::FakeLag::value;
-
+		if ((*csGameRules)->IsValveDS()){
+		if (max_choke >= 7)
+			max_choke = 7;
+		}
 		 if (FakeLag::ticks >= max_choke){
 			CreateMove::sendPacket = true;
 			FakeLag::ticks = -1;

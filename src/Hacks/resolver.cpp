@@ -189,9 +189,12 @@ void Resolver::AnimationFix(C_BasePlayer *player)
 
 bool PitchCheck(C_BasePlayer* player)
 {
+        CUtlVector<AnimationLayer> *layers = player->GetAnimOverlay();
+        const bool m_on_shot = player->GetSequenceActivity(layers->operator[](1).m_nSequence) == (int)CCSGOAnimStatePoses::ACT_CSGO_FIRE_PRIMARY;
         static float timer = globalVars->curtime + 250.f / 100.f;
         if (timer <= globalVars->curtime)
         {
+			if (!m_on_shot)
                         Resolver::players[player->GetIndex()].oldpitch = player->GetEyeAngles()->x;
 
                 timer = globalVars->curtime + 250.f / 100.f;
@@ -301,6 +304,8 @@ return;
 			}
 			else if (Resolver::players[player->GetIndex()].choke || Settings::Resolver::resolverType == resolverType::Rage)
             {
+       CUtlVector<AnimationLayer> *layers = player->GetAnimOverlay();
+        const bool m_on_shot = player->GetSequenceActivity(layers->operator[](1).m_nSequence) == (int)CCSGOAnimStatePoses::ACT_CSGO_FIRE_PRIMARY;
 		auto animstate = player->GetAnimState();
                 float trueDelta = NormalizeAsYaw(*player->GetLowerBodyYawTarget() - player->GetEyeAngles()->y);
 		float angle = GetAngle(player);
@@ -339,7 +344,7 @@ return;
                                 Resolver::players[player->GetIndex()].flags = rflag::LOW;
 
 		}
-		}else if (desynctime && !(hasDesyncHadTimeToDesync || hasDesyncHadTimeToLBY)){
+		}else if (desynctime && !(hasDesyncHadTimeToDesync || hasDesyncHadTimeToLBY) || m_on_shot){
 		 initialyaw = 0;
 		Resolver::players[player->GetIndex()].flags = rflag::NOTIME;
 		}

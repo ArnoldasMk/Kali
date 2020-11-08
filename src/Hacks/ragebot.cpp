@@ -296,15 +296,12 @@ void GetBestSpotAndDamage(C_BasePlayer* player,C_BasePlayer* localplayer, Vector
 		}
                 else if (Settings::Ragebot::onshot::enabled && inputSystem->IsButtonDown(Settings::Ragebot::onshot::button)){
                 CUtlVector<AnimationLayer> *layers = player->GetAnimOverlay();
-                for (int i = 0; i <= layers->Count(); i++)
-                {
-                        if (player->GetSequenceActivity(layers->operator[](i).m_nSequence) == (int)CCSGOAnimStatePoses::ACT_CSGO_FIRE_PRIMARY && layers->operator[](i).m_flWeight != 0.f){
+                        if (player->GetSequenceActivity(layers->operator[](1).m_nSequence) == (int)CCSGOAnimStatePoses::ACT_CSGO_FIRE_PRIMARY){
 	                       Damage = damage;
         	                Spot = spot;
                 	        return;
                         }else
                                 return;
-                }
                 }
 		}
 		else if (damage > Damage)
@@ -315,14 +312,11 @@ void GetBestSpotAndDamage(C_BasePlayer* player,C_BasePlayer* localplayer, Vector
 			}
                 else if (Settings::Ragebot::onshot::enabled && inputSystem->IsButtonDown(Settings::Ragebot::onshot::button)){
                 CUtlVector<AnimationLayer> *layers = player->GetAnimOverlay();
-                for (int i = 0; i <= layers->Count(); i++)
-                {
-                        if (player->GetSequenceActivity(layers->operator[](i).m_nSequence) == (int)CCSGOAnimStatePoses::ACT_CSGO_FIRE_PRIMARY && layers->operator[](i).m_flWeight != 0.f){
+                        if (player->GetSequenceActivity(layers->operator[](1).m_nSequence) == (int)CCSGOAnimStatePoses::ACT_CSGO_FIRE_PRIMARY){
                                Damage = damage;
                                 Spot = spot;
                         }else
                                 return;
-                }
                 }
 
 		}

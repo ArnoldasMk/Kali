@@ -18,8 +18,10 @@
 #include "../../Hacks/grenadehelper.h"
 #include "../../Hacks/clantagchanger.h"
 #include "../../Hacks/valvedscheck.h"
+#include "../../Hacks/resolver.h"
 #include "../Windows/playerlist.h"
 #include "../Windows/configs.h"
+#include "../../Utils/entity.h"
 #include <stdint.h>
 #pragma GCC diagnostic ignored "-Wformat-security"
 
@@ -509,6 +511,22 @@ NameChanger::changeName(false, res.c_str(), 5.0f);
 
 			}
 			ImGui::Columns(1);
+			ImGui::Separator();
+                                if (ImGui::Button(XORSTR("Reset resolver misses"))){
+	        C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
+                int maxClient = engine->GetMaxClients();
+	               for (int i = 1; i < maxClient; ++i)
+       			         {
+                    		//indx = i;
+                        	C_BasePlayer *player = (C_BasePlayer *)entityList->GetClientEntity(i);
+
+                        	if (!player 
+                        	|| player == localplayer 
+                        	|| Entity::IsTeamMate(player, localplayer))
+                                	continue;
+				Resolver::players[player->GetIndex()].MissedCount = 0;
+			}
+			}
 			ImGui::Separator();
 			ImGui::Text(XORSTR("Profile Changer"));
 			ImGui::Separator();
