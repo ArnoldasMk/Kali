@@ -143,8 +143,11 @@ To add a config, copy the folder containing it to `~/.config/MissedIT/`
 
 ## Media
 https://imgur.com/a/JxWryuy
+
 https://imgur.com/a/q4KV8PE
+
 https://www.youtube.com/watch?v=UXm4ISktAmQ
+
 https://cdn.discordapp.com/attachments/774860310703243274/774860348393390123/untitled.mp4
 
 ## Credits
