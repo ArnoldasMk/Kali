@@ -30,7 +30,7 @@ typedef CGlowObjectManager* (*GlowObjectManagerFn) (void);
 typedef bool (*MsgFunc_ServerRankRevealAllFn) (void*);
 typedef void (*SendClanTagFn) (const char*, const char*);
  typedef void (*WriteUserCmdFn) (bf_write *buf, const CUserCmd *to, const CUserCmd *from); // write user cmd fr function
-typedef bool(*WriteUsercmdDeltaToBufferFn)(void*, int, void*, int, int, bool);
+typedef bool(*WriteUsercmdDeltaToBufferFn)(void*, int, bf_write*, int, int, bool);
 typedef void (*SetLocalPlayerReadyFn) (const char*);
 typedef ILauncherMgr* (*ILauncherMgrCreateFn) (void);
 typedef void (*StartDrawingFn) (void*);

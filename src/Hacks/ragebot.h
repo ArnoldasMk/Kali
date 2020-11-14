@@ -131,9 +131,12 @@ void BestHeadPoint(C_BasePlayer* player, const int &BoneIndex, int& Damage, Vect
 			return false;
 		if (*activeWeapon->GetItemDefinitionIndex() == ItemDefinitionIndex::WEAPON_REVOLVER && activeWeapon->GetPostPoneReadyTime() > servertime)
 			return false;
+                if (activeWeapon->GetAmmo() == 0)
+                        return false;
                 if (currentSettings.HitChance == 0)
                         return true;
-
+		if (*activeWeapon->GetItemDefinitionIndex() == ItemDefinitionIndex::WEAPON_SSG08 && !(localplayer->GetFlags() & FL_ONGROUND) && fabs(localplayer->GetVelocity().z) < 5.0f && localplayer->GetVelocity().Length2D() < 5.0f)
+			return true;
     	Vector src = localplayer->GetEyePosition();
     	QAngle angle = Math::CalcAngle(src, bestSpot);
     	Math::NormalizeAngles(angle);

@@ -15,6 +15,7 @@
 #include "ragebot.h"
 #include "../Utils/draw.h"
 #include "../SDK/vector.h"
+#include "fakelag.h"
 #define GetPercentVal(val, percent) (val * (percent/100.f))
 #define TICK_INTERVAL			(globalVars->interval_per_tick)
 #define TICKS_TO_TIME( t )		( TICK_INTERVAL *( t ) )
@@ -40,6 +41,19 @@ static float NormalizeAsYaw(QAngle& angle)
 
 }
 
+bool AntiAim::casualcheck()
+{
+    static ConVar* gaem = cvar->FindVar("game_mode");
+    static int gamemode = gaem->GetInt();
+
+//	if (!gamemode)
+//		return true;
+
+//        if ((*csGameRules)->IsValveDS() && gamemode != 1 && gamemode != 2)
+//                return true;
+	return false;
+}
+
 float AntiAim::GetMaxDelta( CCSGOAnimState *animState) 
 {
     float speedFraction = std::max(0.0f, std::min(animState->feetShuffleSpeed, 1.0f));
@@ -56,7 +70,8 @@ float AntiAim::GetMaxDelta( CCSGOAnimState *animState)
     }
 
     delta = *(float*)((uintptr_t)animState + 0x3A4) * unk2;
-
+		if (AntiAim::casualcheck())
+		return 29.0f;
     return delta - 0.5f;
 }
 
@@ -181,6 +196,42 @@ static float GetBestHeadAngle(CUserCmd* cmd)
 	
 }
 
+       void angle_vectors(const QAngle& angles, Vector* forward, Vector* right, Vector* up)
+        {
+                auto sin_cos = [](float radian, float* sin, float* cos)
+                {
+                        *sin = std::sin(radian);
+                        *cos = std::cos(radian);
+                };
+
+                float sp, sy, sr, cp, cy, cr;
+
+                sin_cos(M_PI / 180.0f * angles.x, &sp, &cp);
+                sin_cos(M_PI / 180.0f * angles.y, &sy, &cy);
+                sin_cos(M_PI / 180.0f * angles.z, &sr, &cr);
+
+                if (forward)
+                {
+                        forward->x = cp * cy;
+                        forward->y = cp * sy;
+                        forward->z = -sp;
+                }
+
+                if (right)
+                {
+                        right->x = -1.0f * sr * sp * cy + -1.0f * cr * -sy;
+                        right->y = -1.0f * sr * sp * sy + -1.0f * cr * cy;
+                        right->z = -1.0f * sr * cp;
+                }
+
+                if (up)
+                {
+                        up->x = cr * sp * cy + -sr * -sy;
+                        up->y = cr * sp * sy + -sr * cy;
+                        up->z = cr * cp;
+                }
+        }
+
 static bool GetBestHeadAngle(CUserCmd* cmd, QAngle& angle)
 {
     float b, r, l;
@@ -273,6 +324,70 @@ int bestDamage = localplayer->GetHealth();
 
 	return true;
 }
+bool automatic_direction()
+{
+
+	float Right, Left;
+	Vector src3D, dst3D, forward, right, up;
+	trace_t tr;
+	Ray_t ray_right, ray_left;
+	CTraceFilter filter;
+
+	QAngle engineViewAngles;
+	engine->GetViewAngles(engineViewAngles);
+	engineViewAngles.x = 0.0f;
+        C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+
+	angle_vectors(engineViewAngles, &forward, &right, &up);
+
+	filter.pSkip = localplayer;
+	src3D = localplayer->GetEyePosition();
+	dst3D = src3D + forward * 100.0f;
+
+	ray_right.Init(src3D + right * 35.0f, dst3D + right * 35.0f);
+
+	trace->TraceRay(ray_right, MASK_SOLID & ~CONTENTS_MONSTER, &filter, &tr);
+
+
+	Right = (tr.endpos - tr.startpos).Length();
+
+	ray_left.Init(src3D - right * 35.0f, dst3D - right * 35.0f);
+
+	trace->TraceRay(ray_left, MASK_SOLID & ~CONTENTS_MONSTER, &filter, &tr);
+
+	Left = (tr.endpos - tr.startpos).Length();
+
+	static auto left_ticks = 0;
+	static auto right_ticks = 0;
+
+	if (Left - Right > 10.0f)
+		left_ticks++;
+
+	else
+		left_ticks = 0;
+
+
+
+	if (Right - Left > 10.0f)
+		right_ticks++;
+
+	else
+		right_ticks = 0;
+
+
+
+	if (right_ticks > 10)
+		return true;
+
+	else if (left_ticks > 10)
+		return false;
+
+
+
+	return false;
+
+}
+
 
 bool fake_head()
 {
@@ -914,7 +1029,7 @@ return;
         {
        angle.y -= 180.f;
 
-        if (should_break_lby(cmd)){
+        if (should_break_lby(cmd) && !(AntiAim::casualcheck())){
 if (CreateMove::sendPacket){
                auto speed = 1.01f;
      static auto sway_counter = 0;
@@ -924,10 +1039,10 @@ if (CreateMove::sendPacket){
 
                 static auto switch_move = false;
 
-//                if (switch_move)
-//                        cmd->sidemove += speed;
-//                else
-//                        cmd->sidemove -= speed;
+                if (switch_move)
+                        cmd->sidemove += speed;
+                else
+                        cmd->sidemove -= speed;
 
                 switch_move = !switch_move;
 
@@ -1001,25 +1116,29 @@ if (CreateMove::sendPacket){
     switch (Settings::AntiAim::Yaw::typeReal)
     {
             case AntiAimRealType_Y::NONE:
-                //AntiAim::fakeAngle = AntiAim::realAngle = angle;
+                should_sidemove = false;
                 break;
 
             case AntiAimRealType_Y::Static:
+		if (!(should_break_lby(cmd) && lby::enabled)){
 	        should_sidemove = true;
                 if (!AntiAim::bSend)
                 angle.y += inverted ? AntiAim::GetMaxDelta(localplayer->GetAnimState()) : -AntiAim::GetMaxDelta(localplayer->GetAnimState());
-
+		}
                 break;
 
             case AntiAimRealType_Y::Jitter:
+                if (!(should_break_lby(cmd) && lby::enabled)){
                 should_sidemove = true;
                 if (!CreateMove::sendPacket)
                 angle.y = inverted ? AntiAim::realAngle.y - (AntiAim::GetMaxDelta(localplayer->GetAnimState()) + 30) : -(AntiAim::realAngle.y - (AntiAim::GetMaxDelta(localplayer->GetAnimState()) + 30));
                 if (AntiAim::LbyUpdate())
                 angle.y = inverted ? AntiAim::realAngle.y - (AntiAim::GetMaxDelta(localplayer->GetAnimState()) + 30) : -(AntiAim::realAngle.y - (AntiAim::GetMaxDelta(localplayer->GetAnimState()) + 30));
+		}
                 break;
 
             case AntiAimRealType_Y::Randome:
+                if (!(should_break_lby(cmd) && lby::enabled)){
                 should_sidemove = true;
                 if (!AntiAim::bSend)
                 {
@@ -1035,32 +1154,42 @@ if (CreateMove::sendPacket){
                         else
                                 st = 0;
                 }
+		}
                 break;
             case AntiAimRealType_Y::JitterSwitch:
+                if (!(should_break_lby(cmd) && lby::enabled)){
                 should_sidemove = true;
                 if ( !(cmd->tick_count%16) )
                 sw = !sw;
                 angle.y += sw ? JitterPercent : -JitterPercent;
+		}
                 break;
             case AntiAimRealType_Y::Spin:
+                if (!(should_break_lby(cmd) && lby::enabled)){
                 should_sidemove = true;
 			factor =  360.0 / M_PHI;
 			factor *= JitterPercent;
 			angle.y = fmodf(globalVars->curtime * factor, 360.0);
+		}
                 break;
 
         case AntiAimRealType_Y::JitterRandom:
+                if (!(should_break_lby(cmd) && lby::enabled)){
                 should_sidemove = true;
                 int stuff = JitterPercent;
                 float randNum = (rand()%(stuff-(-stuff) + 1) + -stuff);
                 if (!AntiAim::bSend){
                      angle.y += randNum;
-                if (angle.y > maxDelta)
-		     angle.y = maxDelta;
+		if (angle.y > maxDelta)
+                     angle.y = maxDelta;
+
 		     }
+		}
                 break;
 
     }
+               if (AntiAim::casualcheck() && angle.y > maxDelta)
+                     angle.y = maxDelta;
 
 }
 
@@ -1135,7 +1264,8 @@ static void DoLegitAntiAim(C_BasePlayer *const localplayer, QAngle& angle, bool&
 		buttonToggle = false;
     
     float maxDelta = AntiAim::GetMaxDelta(localplayer->GetAnimState());
-
+	if(Settings::AntiAim::AutoInvert)
+	inverted = !automatic_direction();
     static auto LBYBREAK([&](const float& offset){
         static bool lbyBreak = false;
         static float lastCheck = 0.f;
@@ -1189,17 +1319,31 @@ if (!CreateMove::sendPacket)
             AntiAim::fakeAngle = angle;
     });
     static auto Experimental([&](){
-bool broke_lby;
-float side = 1.0f;
-               should_sidemove = false;
-                if (!CreateMove::sendPacket)
-                angle.y -= inverted ? 116.f : -116.f;
-                if (AntiAim::LbyUpdate())
-               if (!Settings::FakeLag::enabled)
-		CreateMove::sendPacket = false;
+                auto speed = 1.01f;
 
-                angle.y -= inverted ? 116.f : -116.f;
+                if (cmd->buttons & IN_DUCK)
+                        speed *= 2.94117647f;
 
+                static auto switch_move = false;
+
+                if (switch_move)
+                        cmd->sidemove += speed;
+                else
+                        cmd->sidemove -= speed;
+
+                switch_move = !switch_move;
+
+	if (should_break_lby && !CreateMove::sendPacket)
+	angle.y -= inverted ? maxDelta * 2 : maxDelta * -2;
+               if (!Settings::FakeLag::enabled){
+                if (FakeLag::ticks >= 1){
+                        CreateMove::sendPacket = true;
+                        FakeLag::ticks = -1;
+                }else{
+                        CreateMove::sendPacket = false;
+                }
+        FakeLag::ticks++;
+	}
    });
 
     switch (Settings::AntiAim::LegitAntiAim::legitAAtype)
@@ -1350,13 +1494,22 @@ if( Settings::AntiAim::LBYBreaker::enabled ){
 
    //angle = NormalizeAsYaw(angle);
    Math::ClampAngles(angle);
-
+if (!Settings::AntiAim::LegitAntiAim::enable){
     if (!AntiAim::bSend){
  AntiAim::fakeAngle = angle;
 	}
     else {
 	 AntiAim::realAngle = angle;
 	}
+}
+else {
+    if (AntiAim::bSend){
+         AntiAim::realAngle = angle;
+        }
+    else {
+ AntiAim::fakeAngle = angle;
+        }
+}
     if (CreateMove::sendPacket)
 	AntiAim::realDuck = localplayer->GetAnimState()->duckProgress;
     CreateMove::lastTickViewAngles = AntiAim::realAngle;

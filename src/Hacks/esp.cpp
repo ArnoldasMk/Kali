@@ -136,7 +136,13 @@ auto color = Color::FromImColor(Settings::ESP::manualAAColor.Color());
         } else if (AntiAim::ManualAntiAim::alignRight) {
           Draw::triangle(Vector2D(width / 2 + 55, height / 2 - 10), Vector2D(width / 2 + 75, height / 2), Vector2D(width / 2 + 55, height / 2 + 10), color);
         }
-    }
+    }else if (Settings::AntiAim::LegitAntiAim::enable)
+    {
+   	if (Settings::AntiAim::LegitAntiAim::inverted) //right
+          Draw::triangle(Vector2D(width / 2 + 55, height / 2 - 10), Vector2D(width / 2 + 75, height / 2), Vector2D(width / 2 + 55, height / 2 + 10), color);
+	else
+	           Draw::triangle(Vector2D(width / 2 - 55, height / 2 + 10), Vector2D(width / 2 - 75, height / 2), Vector2D(width / 2 - 55, height / 2 - 10), color);
+   }
 
 }
 static float GetArmourHealth(float flDamage, int ArmorValue)
@@ -187,7 +193,18 @@ static bool GetBox( C_BaseEntity* entity, int& x, int& y, int& w, int& h ) {
 	float left, top, right, bottom;
 
 	// Get the locations
+	if (!entity->GetDormant())
 	vOrigin = entity->GetVecOrigin();
+	else {
+	for ( auto it = playerFootsteps[entity->GetIndex()].begin(); it != playerFootsteps[entity->GetIndex()].end(); it++ ){
+        if ( !playerFootsteps[entity->GetIndex()].empty() ){
+	vOrigin = it->position;
+	entity->GetVecOrigin() = it->position;
+	}else
+        vOrigin = entity->GetVecOrigin();
+
+	}
+	}
 	min = entity->GetCollideable()->OBBMins() + vOrigin;
 	max = entity->GetCollideable()->OBBMaxs() + vOrigin;
 
@@ -341,55 +358,19 @@ void DrawDormant (C_BaseEntity* entity, ImColor color){
        // Draw::AddText(( int ) ( x + ( w / 2 ) - ( nameSize.x / 2 ) ), y + h + 2, string, color );
 
 }
+
+
 static void DrawBox( ImColor color, int x, int y, int w, int h, C_BaseEntity* entity, BoxType& boxtype ) {
  
-	if ( boxtype == BoxType::FRAME_2D ) {
-		int VertLine = w / 3;
-		int HorzLine = h / 3;
-		int squareLine = std::min( VertLine, HorzLine );
-
-		// top-left corner / color
-		Draw::AddRect( x, y, x + squareLine, y + 1, color );
-		Draw::AddRect( x, y, x + 1, y + squareLine, color );
-
-
-
-		// top-left corner / missing edges
-		Draw::AddRect( x + squareLine, y - 1, x + squareLine + 1, y + 2, ImColor( 10, 10, 10, 190 ) );
-		Draw::AddRect( x - 1, y + squareLine, x + 2, y + squareLine + 1, ImColor( 10, 10, 10, 190 ) );
-
-
-		// top-right corner / color
-		Draw::AddRect( x + w - squareLine, y, x + w, y + 1, color );
-		Draw::AddRect( x + w - 1, y, x + w, y + squareLine, color );
-
-
-
-		// top-right corner / missing edges
-		Draw::AddRect( x + w - squareLine - 1, y - 1, x + w - squareLine, y + 2, ImColor( 10, 10, 10, 190 ) );
-		Draw::AddRect( x + w - 2, y + squareLine, x + w + 1, y + squareLine + 1, ImColor( 10, 10, 10, 190 ) );
-
-
-		// bottom-left corner / color
-		Draw::AddRect( x, y + h - 1, x + squareLine, y + h, color );
-		Draw::AddRect( x, y + h - squareLine, x + 1, y + h, color );
-
-
-
-		// bottom-left corner / missing edges
-		Draw::AddRect( x + squareLine, y + h - 2, x + squareLine + 1, y + h + 1, ImColor( 10, 10, 10, 190 ) );
-		Draw::AddRect( x - 1, y + h - squareLine - 1, x + 2, y + h - squareLine, ImColor( 10, 10, 10, 190 ) );
-
-
-		// bottom-right corner / color
-		Draw::AddRect( x + w - squareLine, y + h - 1, x + w, y + h, color );
-		Draw::AddRect( x + w - 1, y + h - squareLine, x + w, y + h, color );
-
-
-		// bottom-right corner / missing edges
-		Draw::AddRect( x + w - squareLine, y + h - 2, x + w - squareLine + 1, y + h + 1, ImColor( 10, 10, 10, 190 ) );
-		Draw::AddRect( x + w - 2, y + h - squareLine - 1, x + w + 1, y + h - squareLine, ImColor( 10, 10, 10, 190 ) );
-	} else if ( boxtype == BoxType::FLAT_2D ) {
+	if ( boxtype == BoxType::FRAME_2D ) 
+	{
+		Draw::AddLine(x,y,x+w, y, color);
+		Draw::AddLine(x+w,y,x+w, y+h, color);
+		Draw::AddLine(x+w,y+h,x, y+h, color);
+		Draw::AddLine(x,y+h,x, y, color);	
+	} 
+	else if ( boxtype == BoxType::FLAT_2D ) 
+	{
 		int VertLine = ( int ) ( w * 0.33f );
 		int HorzLine = ( int ) ( h * 0.33f );
 		int squareLine = std::min( VertLine, HorzLine );
@@ -429,8 +410,10 @@ static void DrawBox( ImColor color, int x, int y, int w, int h, C_BaseEntity* en
 		Draw::AddRect( x + w - squareLine, y + h - 2, x + w - squareLine + 1, y + h + 1, ImColor( 10, 10, 10, 190 ) );
 		Draw::AddRect( x + w - 2, y + h - squareLine - 1, x + w + 1, y + h - squareLine, ImColor( 10, 10, 10, 190 ) );
 
-		Draw::AddRect( x, y, x + w, y + h, ImColor( 10, 10, 10, 190 ) );
-	} else if ( boxtype == BoxType::BOX_3D ) {
+		Draw::AddRectFilled( x, y, x + w, y + h, ImColor( color.Value.x, color.Value.y, color.Value.z, 21 * (1.0f/255.0f) ) );
+	} 
+	else if ( boxtype == BoxType::BOX_3D ) 
+	{
 		Vector vOrigin = entity->GetVecOrigin();
 		Vector min = entity->GetCollideable()->OBBMins() + vOrigin;
 		Vector max = entity->GetCollideable()->OBBMaxs() + vOrigin;
@@ -471,15 +454,11 @@ static void DrawBox( ImColor color, int x, int y, int w, int h, C_BaseEntity* en
     if ( playerDrawTimes.find( entity->GetIndex() ) == playerDrawTimes.end() ) { // haven't drawn this player yet
         playerDrawTimes[entity->GetIndex()] = Util::GetEpochTime();
     }
-
     matrix3x4_t matrix[128];
-
     if ( !entity->SetupBones( matrix, 128, 0x00000100, globalVars->curtime ) )
         return;
-
     studiohdr_t* hdr = modelInfo->GetStudioModel( entity->GetModel() );
     mstudiohitboxset_t* set = hdr->pHitboxSet( 0 ); // :^)
-
     long diffTime = Util::GetEpochTime() - playerDrawTimes.at( entity->GetIndex() );
     if ( diffTime >= 12 ) {
         for ( int i = 0; i < set->numhitboxes; i++ ) {
@@ -490,14 +469,12 @@ static void DrawBox( ImColor color, int x, int y, int w, int h, C_BaseEntity* en
             Vector vMin, vMax;
             Math::VectorTransform( hitbox->bbmin, matrix[hitbox->bone], vMin );
             Math::VectorTransform( hitbox->bbmax, matrix[hitbox->bone], vMax );
-
             debugOverlay->DrawPill( vMin, vMax, hitbox->radius, color.r, color.g, color.b, 0.025f, color.a, false );
         }
         playerDrawTimes[entity->GetIndex()] = Util::GetEpochTime();
     }
 }*/
 }
-
 static void DrawSprite( int x, int y, int w, int h, C_BaseEntity* entity ){
 	if ( Settings::ESP::Sprite::type == SpriteType::SPRITE_TUX ) {
 		static Texture sprite(tux_rgba, tux_width, tux_height);
@@ -1179,6 +1156,9 @@ static void DrawSounds( C_BasePlayer *player, ImColor playerColor ) {
 
         for ( auto it = playerFootsteps[player->GetIndex()].begin(); it != playerFootsteps[player->GetIndex()].end(); it++ ){
             long diff = it->expiration - Util::GetEpochTime();
+	    const Vector magci = Vector(0,0,0);
+            //if (player->GetDormant())
+              //  player->GetVecOrigin() = it->position;
 
             if ( diff <= 0 ){
                 playerFootsteps[player->GetIndex()].pop_front(); // This works because footsteps are a trail.
@@ -1193,10 +1173,8 @@ static void DrawSounds( C_BasePlayer *player, ImColor playerColor ) {
             float points = std::max(12.0f, circleRadius * 0.75f);
 
             Draw::AddCircle3D( it->position, circleRadius, ImColor(drawColor.r, drawColor.g, drawColor.b, drawColor.a ), (int)points );
-	    //const Vector magic = Vector(it->position.x, it->position.y, it->position.z);
+	    const Vector magic = Vector(it->position.x, it->position.y, it->position.z);
 	    //magic = it->position;
-	    //if (player->GetDormant())
-		//player->SetAbsOrigin(magic);
         }
         footstepMutex.unlock();
     }
@@ -1440,16 +1418,23 @@ static void DrawPlayerText( C_BasePlayer* player, C_BasePlayer* localplayer, int
 
 	// weapon
 	C_BaseCombatWeapon* activeWeapon = ( C_BaseCombatWeapon* ) entityList->GetClientEntityFromHandle( player->GetActiveWeapon() );
-	if ( Settings::ESP::Info::weapon) {
+	if ( Settings::ESP::Info::weapon || Settings::ESP::Info::tweapon) {
 	// if (!localplayer->GetAlive())
 //return;
 		auto activeeWeapon =  *activeWeapon->GetItemDefinitionIndex();
 		std::string modelName;
 		int offset = ( int ) ( boxSpacing);
+Vector2D weaponTextSizeF;
+if (Settings::ESP::Info::weapon){
 if ( ESP::Weaponsi.find(activeeWeapon) != ESP::Weaponsi.end()){
 modelName = ESP::Weaponsi.find(activeeWeapon)->second;
 }
-                                Vector2D weaponTextSizeF = Draw::GetTextSize(modelName.c_str() , astrium );
+                                 weaponTextSizeF = Draw::GetTextSize(modelName.c_str() , astrium );
+
+}else{
+                                weaponTextSizeF = Draw::GetTextSize(modelName.c_str() , esp_font );
+		std::string modelName = Util::Items::GetItemDisplayName( *activeWeapon->GetItemDefinitionIndex() );
+}
 		if (localplayer->GetAlive())
 		Draw::Text( ( x + ( w / 2 ) - ( weaponTextSizeF.x / 2 ) ), y + h + offset, modelName.c_str(), astrium,Color::FromImColor( Entity::IsTeamMate(player, localplayer) ? Settings::ESP::allyInfoColor.Color() : Settings::ESP::enemyInfoColor.Color()) );
 
@@ -2425,7 +2410,7 @@ DrawAATrace(AntiAim::fakeAngle, AntiAim::realAngle);
                 renderRange();
 
 }
- if (Settings::AntiAim::ManualAntiAim::Enable)
+ if (Settings::AntiAim::ManualAntiAim::Enable || Settings::AntiAim::LegitAntiAim::enable)
     {
 
 		DrawManualAntiaim();
@@ -2454,7 +2439,7 @@ void ESP::DrawModelExecute()
 void ESP::CreateMove(CUserCmd* cmd)
 {
 	viewanglesBackup = cmd->viewangles;
-    if( Settings::ESP::enabled && Settings::ESP::Sounds::enabled ){
+    if( Settings::ESP::enabled){
         CheckActiveSounds();
     }
 

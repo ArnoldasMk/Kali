@@ -10,6 +10,7 @@
 #include "offsets.h"
 #include "Utils/GlobalVars.h"
 #include "Hacks/Tickbase.h"
+#include "Hacks/fakelag.h"
 //#include "SDK/CInput.h"
 int* nPredictionRandomSeed = nullptr;
 CMoveData* g_MoveData = nullptr;
@@ -553,15 +554,19 @@ uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("/client_clie
     func_address = GetAbsoluteAddress(func_address, 1, 6);
     WriteUserCmd = reinterpret_cast<WriteUserCmdFn>(func_address);
 }
-static bool WriteUsercmdDeltaToBuffer(void* ecx, void* edx, int slot, bf_write* buffer, int from, int to, bool isnewcommand)
+bool  Hooker::WriteUsercmdDeltaToBuffer(void* edx, int slot, bf_write* buffer, int from, int to, bool isnewcommand)
 {
-   // auto original = clientModeVMT->GetOriginalMethod<bool, 24>(slot, buffer, from, to, isnewcommand);
-    if (Tickbase::tick->tickshift <= 0)
-	return false;
-     //   return original(ecx, slot, buffer, from, to, isnewcommand);
 
-    if (from != -1)
-        return true;
+   auto original = clientVMT->GetOriginalMethod<WriteUsercmdDeltaToBufferFn>(23)(edx, slot, buffer, from, to, isnewcommand);
+//     cvar->ConsoleDPrintf(std::to_string(from).c_str());
+//        cvar->ConsoleDPrintf(XORSTR("|"));
+//     cvar->ConsoleDPrintf(std::to_string(to).c_str());
+
+//        cvar->ConsoleDPrintf(XORSTR("\n"));
+if (FakeLag::shift <= 0)
+     return original;
+   if (from != -1)
+      return true;
 
     int* numBackupCommands = (int*)(reinterpret_cast <uintptr_t> (buffer) - 0x30);
     int* numNewCommands = (int*)(reinterpret_cast <uintptr_t> (buffer) - 0x2C);
@@ -569,8 +574,8 @@ static bool WriteUsercmdDeltaToBuffer(void* ecx, void* edx, int slot, bf_write* 
     int32_t newcommands = *numNewCommands;
 
     int nextcommmand; //= memory->clientState->lastOutgoingCommand + memory->clientState->chokedCommands + 1;
-    int totalcommands = std::min(Tickbase::tick->tickshift, Tickbase::tick->maxUsercmdProcessticks);
-    Tickbase::tick->tickshift = 0;
+    int totalcommands = std::min(FakeLag::shift, 14);
+    FakeLag::shift = 0;
 
     from = -1;
     *numNewCommands = totalcommands;
@@ -578,15 +583,15 @@ static bool WriteUsercmdDeltaToBuffer(void* ecx, void* edx, int slot, bf_write* 
 
     for (to = nextcommmand - newcommands + 1; to <= nextcommmand; to++)
     {
-       //if (!(original(ecx, slot, buffer, from, to, true)))
-       //     return false;
+       if (!(original))
+            return false;
 
         from = to;
     }
 
-    CUserCmd lastRealCmd = input->GetUserCmd(slot, from);
+    CUserCmd lastRealCmd = inputSystem->GetUserCmd(slot, from);
+        cvar->ConsoleDPrintf(XORSTR("ye\n"));
     CUserCmd fromcmd;
-
         fromcmd = lastRealCmd;
 
     CUserCmd tocmd = fromcmd;
@@ -595,7 +600,7 @@ static bool WriteUsercmdDeltaToBuffer(void* ecx, void* edx, int slot, bf_write* 
 
     for (int i = newcommands; i <= totalcommands; i++)
     {
-//        WriteUserCmd(buffer, &tocmd, &fromcmd);
+        WriteUserCmd(buffer, &tocmd, &fromcmd);
         fromcmd = tocmd;
         tocmd.command_number++;
         tocmd.tick_count++;

@@ -35,6 +35,10 @@ enum class rflag : int
 	rflag flags = rflag::NONE;
 	bool choke = false;
 	float oldpitch;
+	float fakeng;
+	matrix3x4_t ogmatrix[128];
+	bool boned = false;
+	int safepoints;
     };
 
     inline resolvedPlayers players[1000];

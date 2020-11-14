@@ -106,6 +106,7 @@ enum MaterialFogMode_t
 #define CREATERENDERTARGETFLAGS_TEMP	0x00000010 // only allocates memory upon first resolve, destroyed at level end
 
 
+
 class IMatRenderContext {
 public:
 	void *GetThisPtr( ){

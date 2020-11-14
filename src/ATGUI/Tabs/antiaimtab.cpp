@@ -182,6 +182,7 @@ static void LegitAntiAim()
     ImGui::Text(XORSTR("InvertKey"));
     ImGui::SameLine();
     UI::KeyBindButton(&Settings::AntiAim::LegitAntiAim::InvertKey); 
+    ImGui::Checkbox(XORSTR("Legit freestand"), &Settings::AntiAim::AutoInvert);
     ImGui::PopItemWidth();
     /*
     * End of legit antiaim
@@ -305,7 +306,7 @@ void HvH::RenderTab()
             ImGui::SliderInt(XORSTR("##FAKELAGAMOUNT"), &Settings::FakeLag::value, 0, 15, XORSTR("Amount: %0.f"));
 			ImGui::Checkbox(XORSTR("Adaptive Fake Lag"), &Settings::FakeLag::adaptive);
 //ImGui::Checkbox(XORSTR("Random Fake Lag"), &Settings::AntiAim::randomLag::enabled);
-           //UI::KeyBindButton(&Settings::FakeLag::ckey);
+           UI::KeyBindButton(&Settings::FakeLag::ckey);
 
                         ImGui::Checkbox(XORSTR("Slow Walk"), &Settings::AntiAim::SlowWalk::enabled);
 if (Settings::AntiAim::SlowWalk::enabled){

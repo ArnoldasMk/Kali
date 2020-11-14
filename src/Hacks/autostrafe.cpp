@@ -65,133 +65,133 @@ float NormalizeYaw( const float& yaw ) {
 	while ( yaw < -180.0f )
 	return	yaw + 360.0f;
 }
+
+void anglevectors(const Vector& angles, Vector& forward)
+{
+          float sp, sy, cp, cy;
+
+          sy = sin(DEG2RAD(angles[1]));
+          cy = cos(DEG2RAD(angles[1]));
+
+          sp = sin(DEG2RAD(angles[0]));
+          cp = cos(DEG2RAD(angles[0]));
+
+          forward.x = cp * cy;
+          forward.y = cp * sy;
+          forward.z = -sp;
+}
+
 static void DirectionalStrafe(C_BasePlayer* localplayer, CUserCmd* cmd){
-bool is_bhopping;
-bool in_transition;
-int calculated_direction;
-float true_direction;
-float wish_direction;
-float step;
-int rough_direction;
-	// Define rough directions
-	enum directions {
-		FORWARDS = 0,
-		BACKWARDS = 180,
-		LEFT = 90,
-		RIGHT = -90
-	};
- 
-	// Reset direction when player is not strafing
-	is_bhopping = cmd->buttons & IN_JUMP;
-	if ( !is_bhopping && localplayer->GetFlags() & FL_ONGROUND ) {
-		calculated_direction = directions::FORWARDS;
-		in_transition = false;
-		return;
-	}
- 
-	// Get true view angles
-	QAngle base{ };
-	engine->GetViewAngles( base );
- 
-	// Calculate the rough direction closest to the player's true direction
-	auto get_rough_direction = [ & ]( float true_direction ) -> float {
-		// Make array with our four rough directions
-		std::array< float, 4 > minimum = { directions::FORWARDS, directions::BACKWARDS, directions::LEFT, directions::RIGHT };
-		float best_angle, best_delta = 181.f;
- 
-		// Loop through our rough directions and find which one is closest to our true direction
-		for ( size_t i = 0; i < minimum.size( ); ++i ) {
-			float rough_direction = base.y + minimum.at( i );
-			float delta = fabsf( NormalizeYaw( true_direction - rough_direction ) );
- 
-			// Only the smallest delta wins out
-			if ( delta < best_delta ) {
-				best_angle = rough_direction;
-				best_delta = delta;
-			}
-		}
- 
-		return best_angle;
-	};
- 
-	// Get true direction based on player velocity
-	true_direction = localplayer->GetVelocity().y;
- 
-	// Detect wish direction based on movement keypresses
-	if ( cmd->buttons & IN_FORWARD ) {
-		wish_direction = base.y + directions::FORWARDS;
-	}
-	else if ( cmd->buttons & IN_BACK ) {
-		wish_direction = base.y + directions::BACKWARDS;
-	}
-	else if ( cmd->buttons & IN_MOVELEFT ) {
-		wish_direction = base.y + directions::LEFT;
-	}
-	else if ( cmd->buttons & IN_MOVERIGHT ) {
-		wish_direction = base.y + directions::RIGHT;
-	}
-	else {
-		// Reset to forward when not pressing a movement key, then fix anti-aim strafing by setting IN_FORWARD
-		cmd->buttons |= IN_FORWARD;
-		wish_direction = base.y + directions::FORWARDS;
-	}
- 
-	// Calculate the ideal strafe rotation based on player speed (c) navewindre
-	float speed_rotation = std::min( RAD2DEG( std::asinh( 30.f / localplayer->GetVelocity().Length2D()) ) * 0.5f, 45.f );
-	if ( in_transition ) {
-		// Calculate the step by using our ideal strafe rotation
-		float ideal_step = speed_rotation + calculated_direction;
-		step = fabsf( NormalizeYaw( calculated_direction - ideal_step ) );
- 
-		// Check when the calculated direction arrives close to the wish direction
-		if ( fabsf( NormalizeYaw( wish_direction - calculated_direction ) ) > step ) {
-			float add = NormalizeYaw( calculated_direction + step );
-			float sub = NormalizeYaw( calculated_direction - step );
- 
-			// Step in direction that gets us closer to our wish direction
-			if ( fabsf( NormalizeYaw( wish_direction - add ) ) >= fabsf( NormalizeYaw( wish_direction - sub ) ) ) {
-				calculated_direction -= step;
-			}
-			else {
-				calculated_direction += step;
-			}
-		}
-		else {
-			in_transition = false;
-		}
-	}
-	else {
-		// Get rough direction and setup calculated direction only when not transitioning
-		rough_direction = get_rough_direction( true_direction );
-		calculated_direction = rough_direction;
- 
-		// When we have a difference between our current (rough) direction and our wish direction, then transition
-		if ( rough_direction != wish_direction ) {
-			in_transition = true;
-		}
-	}
- 
-	// Set movement up to be rotated
-	cmd->forwardmove = 0.f;
-	cmd->sidemove = cmd->command_number % 2 ? 450.f : -450.f;
- 
-	// Calculate ideal rotation based on our newly calculated direction
-	float direction = ( cmd->command_number % 2 ? speed_rotation : -speed_rotation ) + calculated_direction;
- 
-	// Rotate our direction based on our new, defininite direction
-	float rotation = DEG2RAD( base.y - direction );
- 
-	float cos_rot = cos( rotation );
-	float sin_rot = sin( rotation );
- 
-	float forwardmove = ( cos_rot * cmd->forwardmove ) - ( sin_rot * cmd->sidemove );
-	float sidemove = ( sin_rot * cmd->forwardmove ) + ( cos_rot * cmd->sidemove );
- 
-	// Apply newly rotated movement
-	cmd->forwardmove = forwardmove;
-	cmd->sidemove = sidemove;
+
+        static auto cl_sidespeed = cvar->FindVar("cl_sidespeed");
+        auto side_speed = cl_sidespeed->GetFloat();
+                static auto old_yaw = 0.0f;
+        if (localplayer->GetFlags() & FL_ONGROUND)
+                return;
+
+                auto get_velocity_degree = [](float velocity)
+                {
+                        auto tmp = RAD2DEG(atan(30.0f / velocity));
+
+                        if (CheckIfNonValidNumber(tmp) || tmp > 90.0f)
+                                return 90.0f;
+
+                        else if (tmp < 0.0f)
+                                return 0.0f;
+                        else
+                                return tmp;
+                };
+
+                if (localplayer->GetMoveType() == MOVETYPE_WALK)
+                        return;
+
+                auto velocity = localplayer->GetVelocity();
+                velocity.z = 0.0f;
+
+                static auto flip = false;
+                flip = !flip;
+
+                auto turn_direction_modifier = flip ? 1.0f : -1.0f;
+                auto forwardmove = cmd->forwardmove;
+                auto sidemove = cmd->sidemove;
+                if (velocity.Length2D() < 5.0f && !forwardmove && !sidemove)
+                        return;
+                auto viewangles = cmd->viewangles;
+                if (forwardmove || sidemove)
+                {
+                        cmd->forwardmove = 0.0f;
+                        cmd->sidemove = 0.0f;
+
+                        auto turn_angle = atan2(-sidemove, forwardmove);
+                        viewangles.y += turn_angle * M_RADPI;
+                }
+                else if (forwardmove) //-V550
+                        cmd->forwardmove = 0.0f;
+                auto strafe_angle = RAD2DEG(atan(15.0f / velocity.Length2D()));
+                if (strafe_angle > 90.0f)
+                        strafe_angle = 90.0f;
+                else if (strafe_angle < 0.0f)
+                        strafe_angle = 0.0f;
+
+               auto temp = Vector(0.0f, viewangles.y - old_yaw, 0.0f);
+                temp.y = NormalizeYaw(temp.y);
+                auto yaw_delta = temp.y;
+                old_yaw = viewangles.y;
+                auto abs_yaw_delta = fabs(yaw_delta);
+                if (abs_yaw_delta <= strafe_angle || abs_yaw_delta >= 30.0f)
+                {
+                        Vector velocity_angles;
+                        anglevectors(velocity, velocity_angles);
+
+                        temp = Vector(0.0f, viewangles.y - velocity_angles.y, 0.0f);
+                        temp.y = NormalizeYaw(temp.y);
+
+                        auto velocityangle_yawdelta = temp.y;
+                        auto velocity_degree = get_velocity_degree(velocity.Length2D());
+
+                        if (velocityangle_yawdelta <= velocity_degree || velocity.Length2D() <= 15.0f)
+                        {
+                                if (-velocity_degree <= velocityangle_yawdelta || velocity.Length2D() <= 15.0f)
+                                {
+                                        viewangles.y += strafe_angle * turn_direction_modifier;
+                                        cmd->sidemove = side_speed * turn_direction_modifier;
+                                }
+                                else
+                                {
+                                        viewangles.y = velocity_angles.y - velocity_degree;
+                                        cmd->sidemove = side_speed;
+                                }
+                        }
+                        else
+                        {
+                                viewangles.y = velocity_angles.y + velocity_degree;
+                                cmd->sidemove = -side_speed;
+                        }
+                }
+                else if (yaw_delta > 0.0f)
+                        cmd->sidemove = -side_speed;
+                else if (yaw_delta < 0.0f)
+                        cmd->sidemove = side_speed;
+
+                auto move = Vector(cmd->forwardmove, cmd->sidemove, 0.0f);
+                auto speed = move.Length();
+                Vector angles_move;
+                anglevectors(move, angles_move);
+
+                auto normalized_x = fmod(cmd->viewangles.x + 180.0f, 360.0f) - 180.0f;
+                auto normalized_y = fmod(cmd->viewangles.y + 180.0f, 360.0f) - 180.0f;
+
+                auto yaw = DEG2RAD(normalized_y - viewangles.y + angles_move.y);
+
+                if (normalized_x >= 90.0f || normalized_x <= -90.0f || cmd->viewangles.x >= 90.0f && cmd->viewangles.x <= 200.0f || cmd->viewangles.x <= -90.0f && cmd->viewangles.x <= 200.0f) //-V648
+                        cmd->forwardmove = -cos(yaw) * speed;
+                else
+                        cmd->forwardmove = cos(yaw) * speed;
+
+                cmd->sidemove = sin(yaw) * speed;
 
 }
+
 
 static void RageStrafe(C_BasePlayer* localplayer, CUserCmd* cmd)
 {

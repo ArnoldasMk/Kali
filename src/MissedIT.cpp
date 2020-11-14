@@ -80,6 +80,7 @@ void MainThread()
 
     clientVMT = new VMT(client);
     clientVMT->HookVM(Hooks::LevelInitPostEntity, 6);
+    clientVMT->HookVM(Hooker::WriteUsercmdDeltaToBuffer, 23);
     clientVMT->HookVM(Hooks::FrameStageNotify, 37);
 	clientVMT->ApplyVMT();
 

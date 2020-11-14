@@ -338,11 +338,11 @@ public:
 		typedef int (* oButtonCodeToVirtualKey)(void*, ButtonCode_t);
 		return getvfunc<oButtonCodeToVirtualKey>(this, 45)(this, code);
 	}
-//	CUserCmd* GetUserCmd(int nSlot, int sequence_number)
-//    	{
-//        	typedef CUserCmd OriginalFn = (* UserCmd)(void*, int, int);
-//        	return getvfunc<OriginalFn>(this, 8)(this, nSlot, sequence_number);
- //   	}
+	CUserCmd GetUserCmd(int nSlot, int sequence_number)
+    	{
+        	typedef CUserCmd (* oGetUserCmd)(void*, int, int);
+        	return getvfunc<oGetUserCmd>(this, 8)(this, nSlot, sequence_number);
+   	}
 
 	void GetCursorPosition(int* m_pX, int* m_pY)
 	{

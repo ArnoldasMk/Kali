@@ -1158,7 +1158,7 @@ IMaterial* Util::CreateMaterial2(std::string type, std::string texture, bool ign
 
                  "\t\"$halflambert\" \"" + std::to_string(1) + "\"\n"
                  "\t\"$phong\" \"" + std::to_string(1) + "\"\n"
-                 "\t\"$pearlescent\" \"" + std::to_string(16) + "\"\n"
+                 "\t\"$pearlescent\" \"" + std::to_string(36) + "\"\n"
                  "\t\"$phongboost\" \"" + std::to_string(0.1) + "\"\n"
                  "\t\"$envmap\" \"" + ("env_cubemap") + "\"\n"
                  //"\t\"$phongboost\" \"" + std::to_string(4) + "\"\n"

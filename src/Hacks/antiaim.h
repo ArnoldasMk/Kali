@@ -20,6 +20,7 @@ namespace AntiAim
     
     inline bool bSend = true;
     inline bool LbyUpdate();
+    inline bool casualcheck();
     //Hooks
     void CreateMove(CUserCmd* cmd);
     void FrameStageNotify(ClientFrameStage_t stage);

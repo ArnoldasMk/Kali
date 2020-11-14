@@ -27,10 +27,10 @@ static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRen
 		return;
 
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
-	
+
 	if (!localplayer)
 		return;
-	
+
 	ChamsType chamsType = ChamsType::NONE;
 	C_BasePlayer* entity = (C_BasePlayer*) entityList->GetClientEntity(pInfo.entity_index);
 	if (!entity
@@ -44,7 +44,7 @@ static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRen
 		chamsType = Settings::ESP::FilterEnemy::Chams::type;
 	else if ( entity == localplayer && FilterLocalPlayer::RealChams::enabled)
 		chamsType = FilterLocalPlayer::RealChams::type;
-	else 
+	else
 		return;
 
 	IMaterial *visible_material = nullptr;
@@ -115,7 +115,8 @@ static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRen
 		
 		visible_material->ColorModulate(visColor);
 		hidden_material->ColorModulate(color);
-
+		auto var = overlay_material->FindVar("$envmaptint");
+//		var.SetVecValue(Settings::ESP::Chams::localplayerColor.Color(entity).Value.x, Settings::ESP::Chams::localplayerColor.Color(entity).Value.y, Settings::ESP::Chams::localplayerColor.Color(entity).Value.z);
 		visible_material->AlphaModulate(Settings::ESP::Chams::localplayerColor.Color(entity).Value.w);
 		hidden_material->AlphaModulate(Settings::ESP::Chams::localplayerColor.Color(entity).Value.w);
 	}
@@ -165,6 +166,7 @@ static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRen
 
 	modelRender->ForcedMaterialOverride(visible_material);
 		if (wap){
+
                 modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, pCustomBoneToWorld);
 
 	        modelRender->ForcedMaterialOverride(overlay_material);
@@ -245,7 +247,7 @@ static void DrawFake(void* thisptr, void* context, void *state, const ModelRende
 	static matrix3x4_t fakeBoneMatrix[128];
 	float fakeangle = AntiAim::fakeAngle.y - AntiAim::realAngle.y;
         float fakeanglex = 0;
-
+	CCSGOAnimState fakestate; // One day....
 	static Vector OutPos;
 	for (int i = 0; i < 128; i++)
 	{
@@ -276,6 +278,7 @@ static void DrawFake(void* thisptr, void* context, void *state, const ModelRende
 				BodyBoneMatrix[i] = fakeBoneMatrix[i];
 		}
 	}
+
         Fake_meterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Settings::ESP::FilterLocalPlayer::Chams::type == ChamsType::WIREFRAME);
 
 	modelRender->ForcedMaterialOverride(Fake_meterial);
@@ -317,6 +320,9 @@ static void DrawWeapon(const ModelRenderInfo_t& pInfo)
                 case ChamsType::PULSE:
                         mat = material->FindMaterial("models/inventory_items/dogtags/dogtags_outline", TEXTURE_GROUP_MODEL);
                         break;
+                case ChamsType::GLOW:
+			mat = material->FindMaterial("dev/glow_armsrace", TEXTURE_GROUP_MODEL);
+			break;
                 case ChamsType::GLOWF:
                         mat = material->FindMaterial("vgui/achievements/glow", TEXTURE_GROUP_MODEL);
                         break;
@@ -520,18 +526,17 @@ void Chams::DrawModelExecute(void* thisptr, void* context, void *state, const Mo
 
 	if (modelName.find(XORSTR("models/player")) != std::string::npos)
 	{
-//                DrawLag(thisptr, context, state, pInfo, pCustomBoneToWorld);
+                 DrawRecord(thisptr, context, state, pInfo, pCustomBoneToWorld);
 		DrawFake(thisptr, context, state, pInfo, pCustomBoneToWorld);
 		DrawPlayer(thisptr, context, state, pInfo, pCustomBoneToWorld);
-                 DrawRecord(thisptr, context, state, pInfo, pCustomBoneToWorld);
 
 	}
 
+        else if (modelName.find(XORSTR("v_sleeves")) != std::string::npos)
+                DrawSleeves(pInfo);
 	else if (modelName.find(XORSTR("arms")) != std::string::npos)
 		DrawArms( thisptr,  context,  state, pInfo, pCustomBoneToWorld);
-	else if (modelName.find(XORSTR("weapon")) != std::string::npos)
-		DrawWeapon(pInfo);
-        else if (modelName.find(XORSTR("v_sleeves")) != std::string::npos)
-    		DrawSleeves(pInfo);
+        else if (modelName.find(XORSTR("weapon")) != std::string::npos)
+                DrawWeapon(pInfo);
 
 }

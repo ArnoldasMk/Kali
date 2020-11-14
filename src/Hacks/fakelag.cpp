@@ -4,11 +4,12 @@
 #include "../interfaces.h"
 #include "../Hooks/hooks.h"
 #include "Tickbase.h"
+#include <climits>
 #ifndef absol
         #define absol(x) x < 0 ? x*-1 : x
 #endif
 int ticksMax = 50;
-
+int ticks_allowed = 0;
 bool CheckPeaking(CUserCmd* cmd){
         float forMove = absol(cmd->forwardmove);
         float sideMove = absol(cmd->sidemove);
@@ -43,6 +44,35 @@ void FakeLag::CreateMove(CUserCmd* cmd)
 		return;
 		int velocity2d = localplayer->GetVelocity().Length2D();
                 int max_choke;
+		if (inputSystem->IsButtonDown(Settings::FakeLag::ckey)){
+       static auto should_recharge = true;
+
+        if (should_recharge)
+        {
+                ++ticks_allowed;
+                CreateMove::sendPacket = true;
+
+                cmd->tick_count = INT_MAX;
+                cmd->forwardmove = 0.0f;
+                cmd->sidemove = 0.0f;
+                cmd->upmove = 0.0f;
+                cmd->buttons &= ~IN_ATTACK;
+                cmd->buttons &= ~IN_ATTACK2;
+
+                if (ticks_allowed >= 16)
+                {
+			cvar->ConsoleDPrintf(XORSTR("we charged bois"));
+                        should_recharge = false;
+                       // *(bool*)(*frame_ptr - 0x1C) = true; 
+                }
+
+        }
+
+
+		FakeLag::shift = 16;
+		should_recharge = true;
+		}else
+		FakeLag::shift = 0;
 	        if (cmd->buttons & IN_ATTACK)
 	        {
                 CreateMove::sendPacket = true;

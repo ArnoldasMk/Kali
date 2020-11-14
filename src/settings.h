@@ -531,7 +531,7 @@ namespace Settings
 		inline ColorVar accentColor = ImColor( 0, 171, 178, 255 );
 		inline bool imGuiAliasedLines = false;
 		inline bool imGuiAliasedFill = true;
-
+		inline int playertype;
         /* Window Position/Size Defaults */
         namespace Windows
 		{
@@ -918,6 +918,7 @@ namespace Settings
 
     namespace AntiAim
     {
+	inline bool AutoInvert;
 	inline bool ChokeOnShot;
 	inline float realoffset;
             inline AntiAimType_X pitchtype = AntiAimType_X::STATIC_DOWN;
@@ -1357,6 +1358,7 @@ namespace Settings
 			inline bool health = false;
 			inline bool armor = false;
 			inline bool weapon = false;
+                        inline bool tweapon = false;
 			inline bool scoped = false;
 			inline bool reloading = false;
 			inline bool flashed = false;

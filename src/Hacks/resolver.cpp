@@ -255,10 +255,40 @@ return;
 			{
 				Resolver::players[player->GetIndex()].enemy = player;
 			}
+		        studiohdr_t* pStudioModel = modelInfo->GetStudioModel( player->GetModel() );
+		        if ( !pStudioModel )
+		                return;
+			Resolver::players[player->GetIndex()].boned = true;
+       for ( int i = 0; i < pStudioModel->numbones; i++ ) {
+                mstudiobone_t* pBone = pStudioModel->pBone( i );
+                if ( !pBone || !( pBone->flags & 256 ) || pBone->parent == -1 )
+                        continue;
+      Vector traceStart, traceEnd;
+                Vector spot = Vector( Resolver::players[player->GetIndex()].ogmatrix[i][0][3], Resolver::players[player->GetIndex()].ogmatrix[i][1][3], Resolver::players[player->GetIndex()].ogmatrix[i][2][3]);
+        traceStart = Ragebot::localEye;
+        traceEnd = spot;
+            Ray_t ray;
+    trace_t tr;
+
+    ray.Init(traceStart, traceEnd);
+ CTraceFilter traceFilter;
+                //traceFilter.pSkip = localplayer;
+
+    trace->TraceRay(ray, MASK_SHOT, &traceFilter, &tr);
+        float shite = 0.5f;
+
+if (tr.m_pEntityHit == player)
+Resolver::players[player->GetIndex()].safepoints = i;
+//        debugOverlay->DrawPill( localplayer->GetEyePosition(), spot, shite, 1 * 255, 1 * 255, 1 * 255, 100, 1 );
+
+        }
+
 			if (!Settings::Resolver::manual){
+			Resolver::players[player->GetIndex()].fakeng = player->GetEyeAngles()->y;
         	        int wap;
                 	int previous_ticks[128];
                 	auto ticks = TIME_TO_TICKS(player->GetSimulationTime() - player->GetOldSimulationTime());
+	                auto valid_lby = true;
 	                if (ticks == 0 && previous_ticks[player->GetIndex()] > 0) {
                 	wap = previous_ticks[player->GetIndex()] - 1;
                 	}
@@ -279,14 +309,22 @@ return;
 				if (Resolver::players[player->GetIndex()].choke){
 				float trueDelta = NormalizeAsYaw(*player->GetLowerBodyYawTarget() - player->GetEyeAngles()->y);
 		                Resolver::players[player->GetIndex()].flags = rflag::LAA;
-
+	                if (player->GetVelocity().Length() > 0.1f || fabs(player->GetAnimState()->verticalVelocity) > 100.f)
+	                         valid_lby = player->GetAnimState()->timeSinceStartedMoving < 0.22f;
+player->SetupBones( Resolver::players[player->GetIndex()].ogmatrix, 128, BONE_USED_BY_HITBOX, globalVars->curtime );
 				switch(Resolver::players[player->GetIndex()].MissedCount)
 				{
 					case 0:
+						if (valid_lby)
 						player->GetAnimState()->goalFeetYaw += 115;
+						else
+						player->GetEyeAngles()->y += AntiAim::GetMaxDelta(player->GetAnimState());
 						break;
 					case 1:
+						if (valid_lby)
                                                	player->GetAnimState()->goalFeetYaw -= 115;
+						else
+                                                player->GetEyeAngles()->y -= AntiAim::GetMaxDelta(player->GetAnimState());
 						break;
 					case 2:
 						player->GetEyeAngles()->y = trueDelta == 0 ? player->GetEyeAngles()->y - 30.f :  player->GetEyeAngles()->y + trueDelta;
@@ -302,7 +340,7 @@ return;
 				}
 										}
 			}
-			else if (Resolver::players[player->GetIndex()].choke || Settings::Resolver::resolverType == resolverType::Rage)
+			else if (/*Resolver::players[player->GetIndex()].choke ||*/ Settings::Resolver::resolverType == resolverType::Rage)
             {
        CUtlVector<AnimationLayer> *layers = player->GetAnimOverlay();
         const bool m_on_shot = player->GetSequenceActivity(layers->operator[](1).m_nSequence) == (int)CCSGOAnimStatePoses::ACT_CSGO_FIRE_PRIMARY;
@@ -313,7 +351,6 @@ return;
                 bool forward = fabsf(NormalizeAsYaw(GetAngle(player) - GetForwardYaw(player))) < 90.f;
 		player->GetEyeAngles()->x = normalize_pitch(player->GetEyeAngles()->x);
                 float delta = NormalizeAsYaw(player->GetEyeAngles()->y - player->GetAnimState()->goalFeetYaw);
-	        auto valid_lby = true;
 		float initialyaw = 0.f;
 		bool desynctime = CheckDesync(animstate , player);
 	        if (player->GetVelocity().Length() > 0.1f || fabs(animstate->verticalVelocity) > 100.f)
@@ -348,18 +385,18 @@ return;
 		 initialyaw = 0;
 		Resolver::players[player->GetIndex()].flags = rflag::NOTIME;
 		}
+player->SetupBones( Resolver::players[player->GetIndex()].ogmatrix, 128, BONE_USED_BY_HITBOX, globalVars->curtime );
 				switch(Resolver::players[player->GetIndex()].MissedCount)
 				{
 					case 0:
   						player->GetAnimState()->goalFeetYaw = NormalizeAsYaw(initialyaw);
 						break;
 					case 1:
-						ResolverAP::FrameStageNotify(stage);
-                                                Resolver::players[player->GetIndex()].flags = rflag::AP;
+                                                player->GetAnimState()->goalFeetYaw = NormalizeAsYaw(-initialyaw);
 						break;
 					case 2:
-						player->GetAnimState()->goalFeetYaw = trueDelta == 0 ? player->GetEyeAngles( )->y - 30.f :  player->GetEyeAngles( )->y + GetPercentVal(trueDelta, 60);
-                                                Resolver::players[player->GetIndex()].flags = rflag::BRUTE;
+                                                ResolverAP::FrameStageNotify(stage);
+                                                Resolver::players[player->GetIndex()].flags = rflag::AP;
 						break;
 					case 3:
 						player->GetEyeAngles()->y = trueDelta <= 0 ? player->GetEyeAngles( )->y - 30.f : player->GetEyeAngles( )->y + 30.f;

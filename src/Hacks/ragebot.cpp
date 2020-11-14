@@ -3,6 +3,7 @@
 
 #include "ragebot.h"
 #include "resolver.h"
+#include "lagcomp.h"
 #include "../Utils/draw.h"
 #define absolute(x) ( x = x < 0 ? x * -1 : x)
 #define RandomeFloat(x) (static_cast<double>( static_cast<double>(std::rand())/ static_cast<double>(RAND_MAX/x)))
@@ -16,6 +17,39 @@ Vector *bulletPosition = new Vector();
 QAngle RCSLastPunch;
 bool hasShot;
 bool shatted;
+#define clamp(x, upper, lower) (std::min(upper, std::max(x, lower)))
+
+void angle_vectors(const Vector& angles, Vector& forward)
+{
+         float sp, sy, cp, cy;
+
+         sy = sin(DEG2RAD(angles[1]));
+         cy = cos(DEG2RAD(angles[1]));
+
+         sp = sin(DEG2RAD(angles[0]));
+         cp = cos(DEG2RAD(angles[0]));
+
+         forward.x = cp * cy;
+         forward.y = cp * sy;
+         forward.z = -sp;
+}
+
+float get_interpolation()
+{
+        static auto cl_interp = cvar->FindVar("cl_interp"); //-V807
+        static auto cl_interp_ratio = cvar->FindVar("cl_interp_ratio");
+        static auto sv_client_min_interp_ratio = cvar->FindVar("sv_client_min_interp_ratio");
+        static auto sv_client_max_interp_ratio = cvar->FindVar("sv_client_max_interp_ratio");
+        static auto cl_updaterate = cvar->FindVar("cl_updaterate");
+        static auto sv_minupdaterate = cvar->FindVar("sv_minupdaterate");
+        static auto sv_maxupdaterate = cvar->FindVar("sv_maxupdaterate");
+
+        auto updaterate = clamp(cl_updaterate->GetFloat(), sv_minupdaterate->GetFloat(), sv_maxupdaterate->GetFloat());
+        auto lerp_ratio = clamp(cl_interp_ratio->GetFloat(), sv_client_min_interp_ratio->GetFloat(), sv_client_max_interp_ratio->GetFloat());
+
+        return clamp(lerp_ratio / updaterate, cl_interp->GetFloat(), 1.0f);
+}
+
 void GetDamageAndSpots(C_BasePlayer* player, Vector &Spot, int& Damage, int& playerHelth, int& i,const std::unordered_map<int, int>* modelType, const RageWeapon_t& currentSetting)
 {
 	if (!player || !player->GetAlive() || !currentSetting.desireBones[i])
@@ -364,7 +398,7 @@ void RagebotAutoCrouch(C_BasePlayer* localplayer, CUserCmd* cmd, C_BaseCombatWea
 
 void RagebotAutoSlow(C_BasePlayer* localplayer, C_BaseCombatWeapon* activeWeapon, CUserCmd* cmd, float& forrwordMove, float& sideMove, QAngle& angle, const RageWeapon_t& currentSettings)
 {
-	if (!currentSettings.autoSlow)
+if (!currentSettings.autoSlow)
 		return;
 	if (!localplayer || !localplayer->GetAlive())
 		return;
@@ -401,16 +435,16 @@ void RagebotAutoSlow(C_BasePlayer* localplayer, C_BaseCombatWeapon* activeWeapon
 	 	auto max = std::max(forrwordMove, sideMove);
 	 	auto mult = 450.f/max;
 	 	NewMove *= -mult;
-			
+
 	 	forrwordMove = NewMove.x;
 	 	sideMove = NewMove.y;
 	 }
-	 else 
-	{	
+	 else
+	{
 		forrwordMove = 0.f;
 		sideMove = 0.f;
 	 }
-	
+
 	cmd->buttons |= IN_WALK;
 }
 void Ragebot::CheckHit(C_BaseCombatWeapon *activeWeapon){
@@ -492,25 +526,24 @@ void RagebotAutoR8(C_BasePlayer* player, C_BasePlayer* localplayer, C_BaseCombat
 		return;
 	if (!activeWeapon || activeWeapon->GetInReload())
 		return;
-
-	if (*activeWeapon->GetItemDefinitionIndex() == ItemDefinitionIndex::WEAPON_REVOLVER)
-	{		
-		cmd->buttons |= IN_ATTACK;
-
-    	float postponeFireReadyTime = activeWeapon->GetPostPoneReadyTime();
-		if (player)
-		{
-			cmd->tick_count = TIME_TO_TICKS(player->GetSimulationTime() + LagComp::GetLerpTime());
-			if ( !Ragebot::ragebotPredictionSystem->canShoot(cmd, localplayer, activeWeapon, bestspot, player, currentSettings))
-			{
-				RagebotAutoSlow(localplayer, activeWeapon, cmd, forrwordMove, sideMove, angle, currentSettings);
-				cmd->buttons &= ~IN_ATTACK;
-			}
-		}
-		else if (postponeFireReadyTime < globalVars->curtime )
-			cmd->buttons &= ~IN_ATTACK;
-
+	if (*activeWeapon->GetItemDefinitionIndex() != ItemDefinitionIndex::WEAPON_REVOLVER)
 		return;
+	if (activeWeapon->GetAmmo() == 0)
+		return;
+	if (cmd->buttons & IN_USE)
+		return;
+        if (cmd->buttons & IN_ATTACK)
+                return;
+
+	cmd->buttons |= IN_ATTACK;
+	float postponeFireReadyTime = activeWeapon->GetPostPoneReadyTime();
+
+	if (postponeFireReadyTime > 0)
+	{
+		if (postponeFireReadyTime < globalVars->curtime)
+		{
+			cmd->buttons &= ~IN_ATTACK;
+		}
 	}
 }
 
@@ -520,12 +553,11 @@ void RagebotAutoShoot(C_BasePlayer* player, C_BasePlayer* localplayer, C_BaseCom
 		return;
 	if (!activeWeapon || activeWeapon->GetInReload() || activeWeapon->GetAmmo() == 0)
 		return;
-    CSWeaponType weaponType = activeWeapon->GetCSWpnData()->GetWeaponType();
-    if (weaponType == CSWeaponType::WEAPONTYPE_KNIFE || weaponType == CSWeaponType::WEAPONTYPE_C4 || weaponType == CSWeaponType::WEAPONTYPE_GRENADE)
+        CSWeaponType weaponType = activeWeapon->GetCSWpnData()->GetWeaponType();
+        if (weaponType == CSWeaponType::WEAPONTYPE_KNIFE || weaponType == CSWeaponType::WEAPONTYPE_C4 || weaponType == CSWeaponType::WEAPONTYPE_GRENADE)
 		return;
 	if (*activeWeapon->GetItemDefinitionIndex() == ItemDefinitionIndex::WEAPON_REVOLVER)
 		return;
-		
 	if ( Ragebot::ragebotPredictionSystem->canShoot(cmd, localplayer, activeWeapon, bestspot, player, currentSettings) )
 	{
 		if (activeWeapon->GetNextPrimaryAttack() > globalVars->curtime)
@@ -534,8 +566,7 @@ void RagebotAutoShoot(C_BasePlayer* player, C_BasePlayer* localplayer, C_BaseCom
 			cmd->buttons |= IN_ATTACK;
 		return;
 	}
-
-	RagebotAutoSlow(localplayer, activeWeapon, cmd, forrwordMove, sideMove, angle, currentSettings);
+RagebotAutoSlow(localplayer, activeWeapon, cmd, forrwordMove, sideMove, angle, currentSettings);
 }
 void Ragebot::gotoStart(CUserCmd* cmd) {
 C_BasePlayer* localPlayer = (C_BasePlayer*)entityList->GetClientEntity(engine->GetLocalPlayer());
@@ -622,6 +653,9 @@ C_BasePlayer* GetBestEnemyAndSpot(C_BasePlayer* localplayer,const RageWeapon_t& 
 	{
 		if (lockedEnemy.player->GetAlive() && !lockedEnemy.player->GetDormant() && !Ragebot::lockedEnemy.player->GetImmune())
 		{
+                        //studiohdr_t* pStudioModel = modelInfo->GetStudioModel( lockedEnemy.player->GetModel() );
+                        //if ( pStudioModel )
+			//bestSpot = Vector( Resolver::players[lockedEnemy.player->GetIndex()].ogmatrix[Resolver::players[lockedEnemy.player->GetIndex()].safepoints][0][3], Resolver::players[lockedEnemy.player->GetIndex()].ogmatrix[Resolver::players[lockedEnemy.player->GetIndex()].safepoints][1][3], Resolver::players[lockedEnemy.player->GetIndex()].ogmatrix[Resolver::players[lockedEnemy.player->GetIndex()].safepoints][2][3]);
 			GetBestSpotAndDamage(lockedEnemy.player,localplayer, bestSpot, bestDamage, currSettings);
 			if (bestDamage >= lockedEnemy.player->GetHealth() || bestDamage >= currSettings.MinDamage || (Settings::Ragebot::mindmgoverride && inputSystem->IsButtonDown(Settings::Ragebot::dmgkey)))
 			{
@@ -674,6 +708,11 @@ C_BasePlayer* GetBestEnemyAndSpot(C_BasePlayer* localplayer,const RageWeapon_t& 
 		return nullptr;
 
 	return clossestEnemy;
+}
+
+static Vector VelocityExtrapolate(C_BasePlayer* player, Vector aimPos)
+{
+        return aimPos + (player->GetVelocity() * globalVars->interval_per_tick);
 }
 
 void Ragebot::CreateMove(CUserCmd* cmd)
@@ -764,7 +803,6 @@ else {
     if (Settings::Ragebot::weapons.find(*activeWeapon->GetItemDefinitionIndex()) != Settings::Ragebot::weapons.end())
 		  index = *activeWeapon->GetItemDefinitionIndex();
     const RageWeapon_t &currentWeaponSetting = Settings::Ragebot::weapons.at(index);
-		
 
 	Ragebot::localEye = localplayer->GetEyePosition();
     Ragebot::BestSpot = Vector(0);
@@ -772,17 +810,17 @@ else {
 
 	C_BasePlayer* player = nullptr;
 	player = GetBestEnemyAndSpot(localplayer, currentWeaponSetting);
-
-    if (player && Ragebot::BestDamage > 0)
+        RagebotAutoR8(player, localplayer, activeWeapon, cmd, Ragebot::BestSpot, angle, oldForward, oldSideMove, currentWeaponSetting);
+	if (player)
+        cmd->tick_count = TIME_TO_TICKS(player->GetSimulationTime() + get_interpolation());
+   if (player && Ragebot::BestDamage > 0)
     {
 		Resolver::TargetID = player->GetIndex();
 		Ragebot::lockedEnemy.player = player;
 		Ragebot::lockedEnemy.lockedSpot = Ragebot::BestSpot;
 		Ragebot::lockedEnemy.bestDamage = Ragebot::BestDamage;
 		Settings::Debug::AutoAim::target = Ragebot::BestSpot;
-
 		RagebotAutoShoot(player, localplayer, activeWeapon, cmd, Ragebot::BestSpot, angle, oldForward, oldSideMove, currentWeaponSetting);
-    	RagebotAutoR8(player, localplayer, activeWeapon, cmd, Ragebot::BestSpot, angle, oldForward, oldSideMove, currentWeaponSetting);
 		RagebotAutoCrouch(player, cmd, activeWeapon, currentWeaponSetting);
 
 		// bf_write* buf;
@@ -795,7 +833,9 @@ else {
 
 		if (cmd->buttons & IN_ATTACK)
 		{
-			angle = Math::CalcAngle(Ragebot::localEye, Ragebot::BestSpot);
+
+			Vector Finangle = VelocityExtrapolate(player, Ragebot::BestSpot);
+			angle = Math::CalcAngle(Ragebot::localEye, Finangle);
                         lockedEnemy.playerhelth = lockedEnemy.player->GetHealth();
 			if (shatted){
 			lockedEnemy.shooted = true;

@@ -22,7 +22,7 @@ void ThirdPerson::OverrideView(CViewSetup *pSetup)
 		return;
 	}
 			if (!localplayer->GetAlive() && Settings::ThirdPerson::enabled && !engine->IsTakingScreenshot()){
-				*localplayer->GetObserverMode() = ObserverMode_t::OBS_MODE_CHASE;
+				//*localplayer->GetObserverMode() = ObserverMode_t::OBS_MODE_CHASE;
 				// obs = (C_BasePlayer*)localplayer->GetObserverTarget();
 			}
 	if(localplayer->GetAlive() && Settings::ThirdPerson::enabled && !engine->IsTakingScreenshot())
@@ -96,7 +96,7 @@ void ThirdPerson::FrameStageNotify(ClientFrameStage_t stage)
 
 		if (localplayer && localplayer->GetAlive() && Settings::ThirdPerson::enabled && input->m_fCameraInThirdPerson)
 		{
-			if (Settings::AntiAim::RageAntiAim::enable)
+			if (Settings::AntiAim::RageAntiAim::enable || Settings::AntiAim::LegitAntiAim::enable)
 				*localplayer->GetVAngles() = AntiAim::realAngle;
 		}
 	}
