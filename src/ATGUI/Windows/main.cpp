@@ -61,16 +61,15 @@ void Main::RenderWindow()
 		{
 			int distance = i == page ? 0 : i > page ? i - page : page - i;
 
-			if (ImGui::Button(tabs[i], ImVec2(ImGui::GetWindowSize().x / IM_ARRAYSIZE(tabs) - 9,50))){
                         ImGui::GetStyle().Colors[ImGuiCol_Button] = ImVec4(
                                 Settings::UI::mainColor.Color().Value.x - (distance * 0.035f),
                                 Settings::UI::mainColor.Color().Value.y - (distance * 0.035f),
                                 Settings::UI::mainColor.Color().Value.z - (distance * 0.035f),
                                 Settings::UI::mainColor.Color().Value.w);
-
+			if (ImGui::Button(tabs[i], ImVec2(ImGui::GetWindowSize().x / IM_ARRAYSIZE(tabs) - 9,50)))
 				page = i;
 
-			}
+
 
 			ImGui::GetStyle().Colors[ImGuiCol_Button] = Settings::UI::accentColor.Color();
 
