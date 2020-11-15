@@ -1426,7 +1426,7 @@ if ( (*csGameRules)->IsFreezeTime())
 return false;
    if ( localplayer->GetFlags() & FL_FROZEN )
 	return false;
-   if (cmd->buttons & IN_ATTACK && Ragebot::r8p == false)
+   if (cmd->buttons & IN_ATTACK)
         return false;
     if (!(Settings::AntiAim::RageAntiAim::legitkey::enabled) && cmd->buttons & IN_USE )
         return false;

@@ -115,7 +115,7 @@ static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRen
 		
 		visible_material->ColorModulate(visColor);
 		hidden_material->ColorModulate(color);
-		auto var = overlay_material->FindVar("$envmaptint");
+//		auto var = overlay_material->FindVar("$envmaptint");
 //		var.SetVecValue(Settings::ESP::Chams::localplayerColor.Color(entity).Value.x, Settings::ESP::Chams::localplayerColor.Color(entity).Value.y, Settings::ESP::Chams::localplayerColor.Color(entity).Value.z);
 		visible_material->AlphaModulate(Settings::ESP::Chams::localplayerColor.Color(entity).Value.w);
 		hidden_material->AlphaModulate(Settings::ESP::Chams::localplayerColor.Color(entity).Value.w);
@@ -246,6 +246,8 @@ static void DrawFake(void* thisptr, void* context, void *state, const ModelRende
                 int maxClient = engine->GetMaxClients();
 	static matrix3x4_t fakeBoneMatrix[128];
 	float fakeangle = AntiAim::fakeAngle.y - AntiAim::realAngle.y;
+	if (Settings::AntiAim::aaoff)
+	fakeangle = Settings::AntiAim::offsat;
         float fakeanglex = 0;
 	CCSGOAnimState fakestate; // One day....
 	static Vector OutPos;

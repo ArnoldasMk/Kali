@@ -31,7 +31,7 @@
 #include "../Hacks/silentWalk.h"
 #include "../Hacks/quickswitch.h"
 #include "../Hacks/fakewalk.h"
-
+#include "../Hacks/memeangle.h"
 bool CreateMove::sendPacket = true;
 QAngle CreateMove::lastTickViewAngles = QAngle(0);
 
@@ -72,6 +72,7 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
 		Tickbase::run(cmd, CreateMove::sendPacket);
 		Triggerbot::CreateMove(cmd);
 		AutoKnife::CreateMove(cmd);
+        memeangles::CreateMove(cmd);
     	AntiAim::CreateMove(cmd);
 		FakeDuck::CreateMove(cmd);
 		FakeWalk::CreateMove(cmd);

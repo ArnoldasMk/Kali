@@ -121,9 +121,9 @@ void LagComp::CreateMove(CUserCmd *cmd)
 	engine->GetViewAngles(angle);
 	QAngle rcsAngle = angle + *localplayer->GetAimPunchAngle();
 
-	if (cmd->buttons & IN_ATTACK && weapon->GetNextPrimaryAttack() <= serverTime)
-	{
-		float fov = 180.0f;
+//	if (cmd->buttons & IN_ATTACK && weapon->GetNextPrimaryAttack() <= serverTime)
+//	{
+		float fov = 3.0f;
 
 		static int tickcount = cmd->tick_count;
 		bool has_target = false;
@@ -144,5 +144,5 @@ void LagComp::CreateMove(CUserCmd *cmd)
 		}
 
 		if (has_target)	cmd->tick_count = tickcount;
-	}
+//	}
 }

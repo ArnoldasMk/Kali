@@ -918,6 +918,8 @@ namespace Settings
 
     namespace AntiAim
     {
+	inline bool aaoff;
+	inline float offsat;
 	inline bool AutoInvert;
 	inline bool ChokeOnShot;
 	inline float realoffset;

@@ -183,6 +183,9 @@ static void LegitAntiAim()
     ImGui::SameLine();
     UI::KeyBindButton(&Settings::AntiAim::LegitAntiAim::InvertKey); 
     ImGui::Checkbox(XORSTR("Legit freestand"), &Settings::AntiAim::AutoInvert);
+//    ImGui::SliderFloat(XORSTR("##mEES"), &Settings::AntiAim::offsat, -180, 180, "Yaw Desync Angle : %.0f");
+//    ImGui::Checkbox(XORSTR("aaoff"), &Settings::AntiAim::aaoff);
+
     ImGui::PopItemWidth();
     /*
     * End of legit antiaim

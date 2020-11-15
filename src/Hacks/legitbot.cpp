@@ -840,6 +840,8 @@ void Legitbot::UpdateValues()
 	Settings::Legitbot::AutoWall::value = currentWeaponSetting.autoWallValue;
 	Settings::Legitbot::AutoSlow::enabled = currentWeaponSetting.autoSlow;
 	Settings::Legitbot::ScopeControl::enabled = currentWeaponSetting.scopeControlEnabled;
+	Settings::Legitbot::ShootAssist::Hitchance::enabled = currentWeaponSetting.hitchanceEnaled;
+        Settings::Legitbot::ShootAssist::Hitchance::value = currentWeaponSetting.hitchance;
 
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 		Settings::Legitbot::AutoAim::desiredBones[bone] = currentWeaponSetting.desiredBones[bone];

@@ -343,7 +343,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("enabled")] = Settings::AntiAim::LegitAntiAim::enable;
     settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("togglekey")] = Util::GetButtonName(Settings::AntiAim::LegitAntiAim::InvertKey);
     settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("inverted")] = Settings::AntiAim::LegitAntiAim::inverted;
-    // settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("OverWatchProof")] = (int)Settings::AntiAim::LegitAntiAim::legitAAtype;
+    settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("type")] = (int)Settings::AntiAim::LegitAntiAim::legitAAtype;
     // END
 
 	settings[XORSTR("AntiAim")][XORSTR("Yaw")][XORSTR("type")] = (int) Settings::AntiAim::Yaw::typeReal;
@@ -1106,7 +1106,7 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("inverted")], &Settings::AntiAim::LegitAntiAim::inverted);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("RealPercentage")], &Settings::AntiAim::LegitAntiAim::RealPercentage);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("RealPercentageInCroutch")], &Settings::AntiAim::LegitAntiAim::RealPercentageInCroutch);
-    // GetVal(settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("OverWatchProof")], (int*)&Settings::AntiAim::LegitAntiAim::legitAAtype);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("type")], (int*)&Settings::AntiAim::LegitAntiAim::legitAAtype);
     // End legit Anti aim settings Features
 
     GetVal(settings[XORSTR("AntiAim")][XORSTR("HeadEdge")][XORSTR("enabled")], &Settings::AntiAim::HeadEdge::enabled);
