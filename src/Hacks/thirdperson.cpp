@@ -90,12 +90,15 @@ void ThirdPerson::OverrideView(CViewSetup *pSetup)
 
 void ThirdPerson::FrameStageNotify(ClientFrameStage_t stage)
 {
+// static CUtlVector<AnimationLayer>* realoverlay;
 	if (stage == ClientFrameStage_t::FRAME_RENDER_START && engine->IsInGame())
 	{
 		C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 
 		if (localplayer && localplayer->GetAlive() && Settings::ThirdPerson::enabled && input->m_fCameraInThirdPerson)
 		{
+		//	if (!CreateMove::sendPacket)
+				//realoverlay = localplayer->GetAnimOverlay();
 			if (Settings::AntiAim::RageAntiAim::enable || Settings::AntiAim::LegitAntiAim::enable)
 				*localplayer->GetVAngles() = AntiAim::realAngle;
 		}

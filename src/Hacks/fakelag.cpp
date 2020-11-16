@@ -76,7 +76,9 @@ void FakeLag::CreateMove(CUserCmd* cmd)
 	        if (cmd->buttons & IN_ATTACK)
 	        {
                 CreateMove::sendPacket = true;
-		if (Settings::AntiAim::ChokeOnShot)
+   		C_BaseCombatWeapon* activeWeapon = ( C_BaseCombatWeapon* ) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon() );
+
+		if (Settings::AntiAim::ChokeOnShot && activeWeapon->GetCSWpnData()->GetWeaponType() != CSWeaponType::WEAPONTYPE_GRENADE)
 		max_choke = 25;
     		}
 

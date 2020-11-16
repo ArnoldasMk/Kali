@@ -7,10 +7,10 @@
 class IMaterialVar
 {
 public:
-        void SetVecValue(float r, float g, float b)
+        void SetVecValue(float x, float y, float z, float w)
         {
-                typedef void (* oSetVecValue)(void*, float, float, float);
-               return getvfunc<oSetVecValue>(this, 19)(this, r, g, b);
+                typedef void (* oSetVecValue)(void*, float, float, float, float);
+               return getvfunc<oSetVecValue>(this, 12)(this, x, y, z, w);
        }
 
 };

@@ -193,18 +193,18 @@ static bool GetBox( C_BaseEntity* entity, int& x, int& y, int& w, int& h ) {
 	float left, top, right, bottom;
 
 	// Get the locations
-	if (!entity->GetDormant())
+//	if (!entity->GetDormant())
 	vOrigin = entity->GetVecOrigin();
-	else {
-	for ( auto it = playerFootsteps[entity->GetIndex()].begin(); it != playerFootsteps[entity->GetIndex()].end(); it++ ){
-        if ( !playerFootsteps[entity->GetIndex()].empty() ){
-	vOrigin = it->position;
-	entity->GetVecOrigin() = it->position;
-	}else
-        vOrigin = entity->GetVecOrigin();
+//	else {
+//	for ( auto it = playerFootsteps[entity->GetIndex()].begin(); it != playerFootsteps[entity->GetIndex()].end(); it++ ){
+//      if ( !playerFootsteps[entity->GetIndex()].empty() ){
+//	vOrigin = it->position;
+//	entity->GetVecOrigin() = it->position;
+//	}else
+//      vOrigin = entity->GetVecOrigin();
 
-	}
-	}
+//	}
+//	}
 	min = entity->GetCollideable()->OBBMins() + vOrigin;
 	max = entity->GetCollideable()->OBBMaxs() + vOrigin;
 

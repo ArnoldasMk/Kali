@@ -255,11 +255,11 @@ return;
 			{
 				Resolver::players[player->GetIndex()].enemy = player;
 			}
-		        studiohdr_t* pStudioModel = modelInfo->GetStudioModel( player->GetModel() );
-		        if ( !pStudioModel )
-		                return;
-			Resolver::players[player->GetIndex()].boned = true;
-       for ( int i = 0; i < pStudioModel->numbones; i++ ) {
+//		        studiohdr_t* pStudioModel = modelInfo->GetStudioModel( player->GetModel() );
+//		        if ( !pStudioModel )
+//		                return;
+//			Resolver::players[player->GetIndex()].boned = true;
+/*       for ( int i = 0; i < pStudioModel->numbones; i++ ) {
                 mstudiobone_t* pBone = pStudioModel->pBone( i );
                 if ( !pBone || !( pBone->flags & 256 ) || pBone->parent == -1 )
                         continue;
@@ -281,8 +281,8 @@ if (tr.m_pEntityHit == player)
 Resolver::players[player->GetIndex()].safepoints = i;
 //        debugOverlay->DrawPill( localplayer->GetEyePosition(), spot, shite, 1 * 255, 1 * 255, 1 * 255, 100, 1 );
 
-        }
-
+//        }
+*/
 			if (!Settings::Resolver::manual){
 			Resolver::players[player->GetIndex()].fakeng = player->GetEyeAngles()->y;
         	        int wap;
