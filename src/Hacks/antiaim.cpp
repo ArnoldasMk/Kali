@@ -1320,6 +1320,8 @@ if (!CreateMove::sendPacket)
             AntiAim::fakeAngle = angle;
     });
     static auto Experimental([&](){
+	if (AntiAim::casualcheck())
+		return;
                 auto speed = 1.01f;
 
                 if (cmd->buttons & IN_DUCK)
