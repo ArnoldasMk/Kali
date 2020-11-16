@@ -48,9 +48,10 @@ bool AntiAim::casualcheck()
 
 //	if (!gamemode)
 //		return true;
-
-//        if ((*csGameRules)->IsValveDS() && gamemode != 1 && gamemode != 2)
-//                return true;
+	if (!(*csGameRules)->IsValveDS())
+		return false;
+        if ((*csGameRules)->IsValveDS() && gamemode != 1 && gamemode != 2)
+                return true;
 	return false;
 }
 
