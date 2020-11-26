@@ -918,6 +918,7 @@ namespace Settings
 
     namespace AntiAim
     {
+	inline bool arms;
 	inline bool aaoff;
 	inline float offsat;
 	inline bool AutoInvert;
@@ -1811,6 +1812,7 @@ inline ButtonCode_t key;
 
 	namespace FakeLag
 	{
+		inline bool shiftshot = false;
 		inline bool enabled = false;
 		inline int value = 9;
 		inline bool adaptive = false;

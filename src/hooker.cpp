@@ -15,6 +15,14 @@
 int* nPredictionRandomSeed = nullptr;
 CMoveData* g_MoveData = nullptr;
 bool* s_bOverridePostProcessingDisable = nullptr;
+/*
+template <typename T>
+static constexpr auto relativeToAbsolute(uintptr_t address) noexcept
+{
+    return (T)(address + 4 + *reinterpret_cast<std::int32_t*>(address));
+}
+int*(FindHudElement)(uintptr_t, const char*);
+*/
 
 VMT* panelVMT = nullptr;
 VMT* clientVMT = nullptr;
@@ -531,6 +539,18 @@ void Hooker::FindItemSystem()
 	itemSys += sizeof(void*); // 2nd vtable
     itemSystem = (CItemSystem*)itemSys;
 }
+void Hooker::FindSendMove(){
+//"E8 ? ? ? ? E8 ? ? ? ? F2 0F 10 0D ? ? ? ? 45 84 E4 F2 0F 5C 0D ? ? ? ? F2 0F 58 C8 F2 0F 11 0D ? ? ? ? 75 12"
+//meme or legit?
+uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
+                                                                (unsigned char*) XORSTR("\xE8\x00\x00\x00\x00\xE8\x00\x00\x00\x00\xF2\x0F\x10\x0D\x00\x00\x00\x00\x45\x84\xE4\xF2\x0F\x5C\x0D\x00\x00\x00\x00\xF2\x0F\x58\xC8\xF2\x0F\x11\x0D\x00\x00\x00\x00\x75\x12"),
+                                                                XORSTR("x????x????xxxx????xxxxxxx????xxxxxxxx????xx"));
+/*
+    func_address += 6;
+    func_address = GetAbsoluteAddress(func_address, 1, 6);
+    WriteUserCmd = reinterpret_cast<WriteUserCmdFn>(func_address);
+*/
+}
 
 
 void Hooker::FindWriteUserCmd(){
@@ -554,57 +574,68 @@ uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("/client_clie
     func_address = GetAbsoluteAddress(func_address, 1, 6);
     WriteUserCmd = reinterpret_cast<WriteUserCmdFn>(func_address);
 }
-bool  Hooker::WriteUsercmdDeltaToBuffer(void* edx, int slot, bf_write* buffer, int from, int to, bool isnewcommand)
-{
+#include "Hooks/hooks.h"
+#include "interfaces.h"
+#include "Hacks/fakelag.h"
+#include "Utils/xorstring.h"
 
-   auto original = clientVMT->GetOriginalMethod<WriteUsercmdDeltaToBufferFn>(23)(edx, slot, buffer, from, to, isnewcommand);
-//     cvar->ConsoleDPrintf(std::to_string(from).c_str());
-//        cvar->ConsoleDPrintf(XORSTR("|"));
-//     cvar->ConsoleDPrintf(std::to_string(to).c_str());
+typedef bool (*WriteUserCmdDeltFn) (void* thisptr, int slot, bf_write *buf, int from, int to, bool isnewcommand );
 
-//        cvar->ConsoleDPrintf(XORSTR("\n"));
+bool Hooks::WriteUsercmdDeltaToBuffer(void* thisptr, int slot, bf_write *buf, int from, int to, bool isnewcommand){
+
+    static auto funcAdd = clientVMT->GetOriginalMethod<WriteUserCmdDeltFn>(24);
+//    funcAdd(thisptr,slot, buf, from, to, isnewcommand );
+
 if (FakeLag::shift <= 0)
-     return original;
+     return funcAdd(thisptr, slot, buf, from, to, isnewcommand );
    if (from != -1)
       return true;
+if (FakeLag::should_recharge)
+	return funcAdd(thisptr, slot, buf, from, to, isnewcommand );
+//        cvar->ConsoleDPrintf(XORSTR("ye\n"));
 
-    int* numBackupCommands = (int*)(reinterpret_cast <uintptr_t> (buffer) - 0x30);
-    int* numNewCommands = (int*)(reinterpret_cast <uintptr_t> (buffer) - 0x2C);
-
+    int* numBackupCommands = (int*)(reinterpret_cast <uintptr_t> (buf) - 0x30);
+    int* numNewCommands = (int*)(reinterpret_cast <uintptr_t> (buf) - 0x2C);
     int32_t newcommands = *numNewCommands;
 
     int nextcommmand; //= memory->clientState->lastOutgoingCommand + memory->clientState->chokedCommands + 1;
     int totalcommands = std::min(FakeLag::shift, 14);
-    FakeLag::shift = 0;
-
     from = -1;
     *numNewCommands = totalcommands;
     *numBackupCommands = 0;
-
     for (to = nextcommmand - newcommands + 1; to <= nextcommmand; to++)
     {
-       if (!(original))
+       if (!(funcAdd(thisptr, slot, buf, from, to, isnewcommand ))){
+        cvar->ConsoleDPrintf(XORSTR("ye\n"));
             return false;
-
+	}
         from = to;
     }
 
     CUserCmd lastRealCmd = inputSystem->GetUserCmd(slot, from);
-        cvar->ConsoleDPrintf(XORSTR("ye\n"));
     CUserCmd fromcmd;
         fromcmd = lastRealCmd;
-
-    CUserCmd tocmd = fromcmd;
+   CUserCmd tocmd = fromcmd;
     tocmd.tick_count += 200;
     tocmd.command_number++;
 
     for (int i = newcommands; i <= totalcommands; i++)
     {
-        WriteUserCmd(buffer, &tocmd, &fromcmd);
+        WriteUserCmd(buf, &tocmd, &fromcmd);
         fromcmd = tocmd;
         tocmd.command_number++;
         tocmd.tick_count++;
     }
+    FakeLag::shift = 0;
 
     return true;
 }
+
+/*
+ FindHudElement = (PatternFinder::FindPatternInModule( XORSTR( "/client_client.so" ),( unsigned char* ) XORSTR("\xE8\x00\x00\x00\x00\x48\x8D\x50\xE0"),XORSTR( "x????xxxx" )) + 1);
+auto hud = (PatternFinder::FindPatternInModule( XORSTR( "/client_client.so" ),( unsigned char* ) XORSTR("\x53\x48\x8D\x3D\x00\x00\x00\x00\x48\x83\xEC\x10\xE8"),XORSTR( "xxxx????xxxxx" )) + 1);
+    const auto deathNotice = FindHudElement(hud, "CCSGO_HudDeathNotice");
+    //if (!deathNotice)
+      //  return;
+  //  const auto deathNoticePanel = (*(IVPanel**)(*(deathNotice - 5 + 22) + 4));
+*/

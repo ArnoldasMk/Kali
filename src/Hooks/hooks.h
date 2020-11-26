@@ -9,6 +9,7 @@ namespace Hooks
 	/* Client */
 	void FrameStageNotify(void* thisptr, ClientFrameStage_t stage);
 	void LevelInitPostEntity();
+        bool WriteUsercmdDeltaToBuffer(void* thisptr, int slot, bf_write *buf, int from, int to, bool isnewcommand);
 
 	/* ClientMode */
 	void OverrideView(void* thisptr, CViewSetup* pSetup);
@@ -16,7 +17,7 @@ namespace Hooks
 	// bool CreateMove2(void* thisptr, float flInputSampleTime, CUserCmd* cmd);
 	bool ShouldDrawCrosshair(void* thisptr);
 	float GetViewModelFOV(void* thisptr);
-	bool hkdWriteUsercmdDeltaToBuffer(void* ecx, void*, int slot, bf_write* buf, int from, int to, bool isnewcommand);
+//	bool hkdWriteUsercmdDeltaToBuffer(void* ecx, void*, int slot, bf_write* buf, int from, int to, bool isnewcommand);
 	/* GameEvents */
 	bool FireEventClientSide(void* thisptr, IGameEvent* event);
 

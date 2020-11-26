@@ -44,10 +44,17 @@ void FakeLag::CreateMove(CUserCmd* cmd)
 		return;
 		int velocity2d = localplayer->GetVelocity().Length2D();
                 int max_choke;
-		if (inputSystem->IsButtonDown(Settings::FakeLag::ckey)){
-       static auto should_recharge = true;
+		if (cmd->buttons & IN_ATTACK && Settings::FakeLag::shiftshot){
+                FakeLag::shift = 16;
+		cmd->buttons &= IN_ATTACK;
+			ticks_allowed = 0;
+                //cmd->buttons &= ~IN_ATTACK;
 
-        if (should_recharge)
+		}else
+		  FakeLag::shift = 0;
+       		//FakeLag::should_recharge = false;
+
+        if (FakeLag::should_recharge)
         {
                 ++ticks_allowed;
                 CreateMove::sendPacket = true;
@@ -59,20 +66,18 @@ void FakeLag::CreateMove(CUserCmd* cmd)
                 cmd->buttons &= ~IN_ATTACK;
                 cmd->buttons &= ~IN_ATTACK2;
 
-                if (ticks_allowed >= 16)
+                if (ticks_allowed >= 14)
                 {
 			cvar->ConsoleDPrintf(XORSTR("we charged bois"));
-                        should_recharge = false;
+                        FakeLag::should_recharge = false;
                        // *(bool*)(*frame_ptr - 0x1C) = true; 
                 }
 
         }
-
-
-		FakeLag::shift = 16;
-		should_recharge = true;
-		}else
-		FakeLag::shift = 0;
+		if (ticks_allowed < 14)
+		FakeLag::should_recharge = true;
+		if (FakeLag::should_recharge)
+			return;
 	        if (cmd->buttons & IN_ATTACK)
 	        {
                 CreateMove::sendPacket = true;

@@ -1008,6 +1008,14 @@ return;
 }
     if (Settings::AntiAim::ManualAntiAim::Enable)
     {
+        if(Settings::AntiAim::AutoInvert){
+	if (automatic_direction()){
+		alignLeft = true;
+		alignRight = false;
+	}else{
+		alignRight = true;
+		alignLeft = false;
+	}
         if (alignLeft)
         {
             angle.y += 70.f;
@@ -1020,9 +1028,22 @@ return;
         {
             angle.y -= 70.f;
         }
-	else if (!alignLeft && !alignBack && !alignRight)
-	{
-	    angle.y -= GetBestHeadAngle(cmd);
+
+	}
+	else {
+        if (alignLeft)
+        {
+            angle.y += 70.f;
+        }
+        else if (alignBack)
+        {
+            angle.y -= 180.f;
+        }
+        else if (alignRight)
+        {
+            angle.y -= 70.f;
+        }
+
 	}
     }
     else if (!Settings::AntiAim::HeadEdge::enabled) {
@@ -1121,7 +1142,7 @@ if (CreateMove::sendPacket){
                 break;
 
             case AntiAimRealType_Y::Static:
-		if (!(should_break_lby(cmd) && lby::enabled)){
+		if (!(should_break_lby(cmd) && lby::enabled && !Settings::AntiAim::ManualAntiAim::Enable)){
 	        should_sidemove = true;
                 if (!AntiAim::bSend)
                 angle.y += inverted ? AntiAim::GetMaxDelta(localplayer->GetAnimState()) : -AntiAim::GetMaxDelta(localplayer->GetAnimState());
@@ -1129,7 +1150,7 @@ if (CreateMove::sendPacket){
                 break;
 
             case AntiAimRealType_Y::Jitter:
-                if (!(should_break_lby(cmd) && lby::enabled)){
+                if (!(should_break_lby(cmd) && lby::enabled && !Settings::AntiAim::ManualAntiAim::Enable)){
                 should_sidemove = true;
                 if (!CreateMove::sendPacket)
                 angle.y = inverted ? AntiAim::realAngle.y - (AntiAim::GetMaxDelta(localplayer->GetAnimState()) + 30) : -(AntiAim::realAngle.y - (AntiAim::GetMaxDelta(localplayer->GetAnimState()) + 30));
@@ -1139,7 +1160,7 @@ if (CreateMove::sendPacket){
                 break;
 
             case AntiAimRealType_Y::Randome:
-                if (!(should_break_lby(cmd) && lby::enabled)){
+                if (!(should_break_lby(cmd) && lby::enabled && !Settings::AntiAim::ManualAntiAim::Enable)){
                 should_sidemove = true;
                 if (!AntiAim::bSend)
                 {
@@ -1158,7 +1179,7 @@ if (CreateMove::sendPacket){
 		}
                 break;
             case AntiAimRealType_Y::JitterSwitch:
-                if (!(should_break_lby(cmd) && lby::enabled)){
+                if (!(should_break_lby(cmd) && lby::enabled && !Settings::AntiAim::ManualAntiAim::Enable)){
                 should_sidemove = true;
                 if ( !(cmd->tick_count%16) )
                 sw = !sw;
@@ -1166,7 +1187,7 @@ if (CreateMove::sendPacket){
 		}
                 break;
             case AntiAimRealType_Y::Spin:
-                if (!(should_break_lby(cmd) && lby::enabled)){
+                if (!(should_break_lby(cmd) && lby::enabled && !Settings::AntiAim::ManualAntiAim::Enable)){
                 should_sidemove = true;
 			factor =  360.0 / M_PHI;
 			factor *= JitterPercent;
@@ -1175,7 +1196,7 @@ if (CreateMove::sendPacket){
                 break;
 
         case AntiAimRealType_Y::JitterRandom:
-                if (!(should_break_lby(cmd) && lby::enabled)){
+                if (!(should_break_lby(cmd) && lby::enabled && !Settings::AntiAim::ManualAntiAim::Enable)){
                 should_sidemove = true;
                 int stuff = JitterPercent;
                 float randNum = (rand()%(stuff-(-stuff) + 1) + -stuff);
@@ -1263,10 +1284,14 @@ static void DoLegitAntiAim(C_BasePlayer *const localplayer, QAngle& angle, bool&
 	}
 	else if ( !inputSystem->IsButtonDown(InvertKey) && buttonToggle)
 		buttonToggle = false;
-    
+
     float maxDelta = AntiAim::GetMaxDelta(localplayer->GetAnimState());
 	if(Settings::AntiAim::AutoInvert)
 	inverted = !automatic_direction();
+	if (Settings::AntiAim::arms){
+	    static ConVar* hand = cvar->FindVar("cl_righthand");
+	    hand->SetValue(inverted ? 0 : 1);
+	}
     static auto LBYBREAK([&](const float& offset){
         static bool lbyBreak = false;
         static float lastCheck = 0.f;
@@ -1329,23 +1354,23 @@ if (!CreateMove::sendPacket)
 
                 static auto switch_move = false;
 
-                if (switch_move)
-                        cmd->sidemove += speed;
-                else
-                        cmd->sidemove -= speed;
+            //    if (switch_move)
+              //          cmd->sidemove += speed;
+                //else
+                  //      cmd->sidemove -= speed;
 
                 switch_move = !switch_move;
-
+	int chokedticks = 0;
 	if (should_break_lby && !CreateMove::sendPacket)
 	angle.y -= inverted ? maxDelta * 2 : maxDelta * -2;
                if (!Settings::FakeLag::enabled){
-                if (FakeLag::ticks >= 1){
-                        CreateMove::sendPacket = true;
-                        FakeLag::ticks = -1;
-                }else{
+                if (chokedticks < 1){
                         CreateMove::sendPacket = false;
+                        chokedticks++;
+                }else{
+                        CreateMove::sendPacket = true;
+			chokedticks = 0;
                 }
-        FakeLag::ticks++;
 	}
    });
 

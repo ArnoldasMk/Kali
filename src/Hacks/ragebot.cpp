@@ -58,14 +58,12 @@ void GetDamageAndSpots(C_BasePlayer* player, Vector &Spot, int& Damage, int& pla
 	static auto HitboxHead([&](int BoneID){
 		Spot = player->GetBonePosition(BoneID);
 		Ragebot::ragebotPredictionSystem->BestHeadPoint(player, BoneID, Damage, Spot);
-		// BestMultiPointHEADDamage(player, BoneID, Damage, Spot);
 	});
 	static auto UpperSpine([&](int BoneID){
 
 		Spot = player->GetBonePosition(BoneID);
 		Ragebot::ragebotPredictionSystem->BestMultiPoint(player, BoneID, Damage, Spot);
-		// BestMultiPointDamage(player, BoneID, Damage, Spot);
-		if (Damage >= 80 || Damage >= playerHelth)
+		if (Damage >= playerHelth)
 			return;
 			
 		static const int BONE[] = {	BONE_LEFT_COLLARBONE, 
@@ -100,7 +98,7 @@ void GetDamageAndSpots(C_BasePlayer* player, Vector &Spot, int& Damage, int& pla
 		Spot = player->GetBonePosition(BoneID);
 		Ragebot::ragebotPredictionSystem->BestMultiPoint(player, BoneID, Damage, Spot);
 		// BestMultiPointDamage(player, BoneID, Damage, Spot);
-		if (Damage >= 80 || Damage >= playerHelth)
+		if (Damage >= playerHelth)
 			return;
 			
 		static const int BONE[] = {
@@ -138,7 +136,7 @@ void GetDamageAndSpots(C_BasePlayer* player, Vector &Spot, int& Damage, int& pla
 		Spot = player->GetBonePosition(BoneID);
 		Ragebot::ragebotPredictionSystem->BestMultiPoint(player, BoneID, Damage, Spot);
 		// BestMultiPointDamage(player, BoneID, Damage, Spot);
-		if (Damage >= 80 || Damage >= playerHelth)
+		if ( Damage >= playerHelth)
 			return;
 			
 		static const int BONE[] = {	
@@ -174,7 +172,7 @@ void GetDamageAndSpots(C_BasePlayer* player, Vector &Spot, int& Damage, int& pla
 		Spot = player->GetBonePosition(BoneID);
 		Ragebot::ragebotPredictionSystem->BestMultiPoint(player, BoneID, Damage, Spot);
 		// BestMultiPointDamage(player, BoneID, Damage, Spot);
-		if (Damage >= 40 || Damage >= playerHelth)
+		if (Damage >= playerHelth)
 			return;
 			
 		static const int BONE[] = {BONE_LEFT_BUTTCHEEK,
@@ -209,7 +207,7 @@ void GetDamageAndSpots(C_BasePlayer* player, Vector &Spot, int& Damage, int& pla
 		Spot = player->GetBonePosition(BoneID);
 		Ragebot::ragebotPredictionSystem->BestMultiPoint(player, BoneID, Damage, Spot);
 		// BestMultiPointDamage(player, BoneID, Damage, Spot);
-		if (Damage >= 40 || Damage >= playerHelth)
+		if ( Damage >= playerHelth)
 			return;
 			
 		static const int BONE[] = {BONE_LEFT_KNEE, 

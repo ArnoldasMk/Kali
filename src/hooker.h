@@ -12,9 +12,9 @@ struct dlinfo_t
 
 namespace Hooker
 {
+
 	bool GetLibraryInformation(const char* library, uintptr_t* address, size_t* size);
 	bool HookRecvProp(const char* className, const char* propertyName, std::unique_ptr<RecvPropHook>& recvPropHook);
-	bool  WriteUsercmdDeltaToBuffer(void* edx, int slot, bf_write* buffer, int from, int to, bool isnewcommand);
 	void FindIClientMode();
 	void FindGlobalVars();
 	void FindCInput();
@@ -41,6 +41,7 @@ namespace Hooker
 	void FindSequenceActivity();
 	void FindAbsFunctions();
 	void FindItemSystem();
+        void FindSendMove();
  	void FindWriteUserCmd();
         void FindRenderBeams();
 

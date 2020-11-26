@@ -139,7 +139,7 @@ const char* lbyType[] = {
     ImGui::Checkbox(XORSTR("##Manual Anti Aim"), &Settings::AntiAim::ManualAntiAim::Enable);
     ImGui::SameLine();
     ImGui::Text(XORSTR("Manual AntiAim"));
-
+if (Settings::AntiAim::ManualAntiAim::Enable){
     //For player to move right
     ImGui::Text("Align Right");
     ImGui::SameLine();
@@ -161,6 +161,9 @@ const char* lbyType[] = {
     UI::KeyBindButton(&Settings::AntiAim::ManualAntiAim::LeftButton);
     ImGui::PopItemWidth();
     // END
+    ImGui::Checkbox(XORSTR("Auto Direction"), &Settings::AntiAim::AutoInvert);
+
+}
 }
 
 static void LegitAntiAim()
@@ -183,6 +186,8 @@ static void LegitAntiAim()
     ImGui::SameLine();
     UI::KeyBindButton(&Settings::AntiAim::LegitAntiAim::InvertKey); 
     ImGui::Checkbox(XORSTR("Legit freestand"), &Settings::AntiAim::AutoInvert);
+    ImGui::Checkbox(XORSTR("Set arms to fake side"), &Settings::AntiAim::arms);
+
 //    ImGui::SliderFloat(XORSTR("##mEES"), &Settings::AntiAim::offsat, -180, 180, "Yaw Desync Angle : %.0f");
 //    ImGui::Checkbox(XORSTR("aaoff"), &Settings::AntiAim::aaoff);
 

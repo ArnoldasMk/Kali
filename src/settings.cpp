@@ -261,6 +261,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("Triggerbot")][XORSTR("RandomDelay")][XORSTR("highBound")] = Settings::Triggerbot::RandomDelay::highBound;
     settings[XORSTR("AntiAim")][XORSTR("chokeonshot")] = Settings::AntiAim::ChokeOnShot;
     settings[XORSTR("AntiAim")][XORSTR("AutoInvert")] = Settings::AntiAim::AutoInvert;
+    settings[XORSTR("AntiAim")][XORSTR("arms")] = Settings::AntiAim::arms;
 
 	settings[XORSTR("AntiAim")][XORSTR("pitchtype")] = (int) Settings::AntiAim::pitchtype;
     settings[XORSTR("AntiAim")][XORSTR("Type")] = (int)Settings::AntiAim::Type::antiaimType;
@@ -1018,6 +1019,7 @@ void Settings::LoadConfig(std::string path)
 	GetVal(settings[XORSTR("Triggerbot")][XORSTR("RandomDelay")][XORSTR("lowBound")], &Settings::Triggerbot::RandomDelay::lowBound);
 	GetVal(settings[XORSTR("Triggerbot")][XORSTR("RandomDelay")][XORSTR("highBound")], &Settings::Triggerbot::RandomDelay::highBound);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("AutoInvert")], &Settings::AntiAim::AutoInvert);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("arms")], &Settings::AntiAim::arms);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("chokeonshot")], &Settings::AntiAim::ChokeOnShot);
     GetVal( settings[XORSTR("AntiAim")][XORSTR("Type")], (int*)&Settings::AntiAim::Type::antiaimType );
     GetVal( settings[XORSTR("AntiAim")][XORSTR("Yaw")][XORSTR("type")], (int*)&Settings::AntiAim::Yaw::typeReal);

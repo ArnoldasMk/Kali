@@ -20,6 +20,7 @@
 #include "antiaim.h"
 #include "Tickbase.h"
 #include "fakelag.h"
+#include "../Utils/patternfinder.h"
 
 #include <climits>
 #include <deque>
@@ -1249,7 +1250,13 @@ y = y + 10;
 }
 */
 
-
+// FindHudElement = (PatternFinder::FindPatternInModule( XORSTR( "/client_client.so" ),( unsigned char* ) XORSTR("\xE8\x00\x00\x00\x00\x48\x8D\x50\xE0"),XORSTR( "x????xxxx" )) + 1);
+//auto hud = (PatternFinder::FindPatternInModule( XORSTR( "/client_client.so" ),( unsigned char* ) XORSTR("\x53\x48\x8D\x3D\x00\x00\x00\x00\x48\x83\xEC\x10\xE8"),XORSTR( "xxxx????xxxxx" )) + 1);
+  //  const auto deathNotice = FindHudElement(hud, "CCSGO_HudDeathNotice");
+    //if (!deathNotice)
+      //  return;
+  //  const auto deathNoticePanel = (*(IVPanel**)(*(deathNotice - 5 + 22) + 4));
+//    fakePrime = reinterpret_cast<std::uint8_t*>(PatternFinder::FindPatternInModule( XORSTR( "/client_client.so" ),( unsigned char* ) XORSTR("\xE8\x00\x00\x00\x00\x48\x8D\x50\xE0"),XORSTR( "xxxxx" )) - 1);
 }
 static void DrawPlayerHealthBars( C_BasePlayer* player, int x, int y, int w, int h, ImColor color, BarType& bartype ) {
 	
