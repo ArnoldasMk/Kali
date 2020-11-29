@@ -1354,10 +1354,10 @@ if (!CreateMove::sendPacket)
 
                 static auto switch_move = false;
 
-            //    if (switch_move)
-              //          cmd->sidemove += speed;
-                //else
-                  //      cmd->sidemove -= speed;
+                if (switch_move)
+                        cmd->sidemove += speed;
+                else
+                        cmd->sidemove -= speed;
 
                 switch_move = !switch_move;
 	int chokedticks = 0;

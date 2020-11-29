@@ -123,7 +123,7 @@ void LagComp::CreateMove(CUserCmd *cmd)
 
 //	if (cmd->buttons & IN_ATTACK && weapon->GetNextPrimaryAttack() <= serverTime)
 //	{
-		float fov = 3.0f;
+		float fov = 7.0f;
 
 		static int tickcount = cmd->tick_count;
 		bool has_target = false;

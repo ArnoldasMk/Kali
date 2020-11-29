@@ -81,7 +81,6 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
  		QuickSwitch::CreateMove(cmd);
 		RagdollGravity::CreateMove(cvar);
 		PredictionSystem::EndPrediction();
-		
 		EdgeJump::PostPredictionCreateMove(cmd);
 		NoFall::PostPredictionCreateMove(cmd);
 

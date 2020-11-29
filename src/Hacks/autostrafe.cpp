@@ -88,7 +88,8 @@ static void DirectionalStrafe(C_BasePlayer* localplayer, CUserCmd* cmd){
                 static auto old_yaw = 0.0f;
         if (localplayer->GetFlags() & FL_ONGROUND)
                 return;
-
+	if (!(cmd->buttons & IN_JUMP))
+		return;
                 auto get_velocity_degree = [](float velocity)
                 {
                         auto tmp = RAD2DEG(atan(30.0f / velocity));
