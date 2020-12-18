@@ -244,6 +244,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("Ragebot")][XORSTR("BackTrack")][XORSTR("time")] = Settings::Ragebot::backTrack::time;
     settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("key")] = Util::GetButtonName(Settings::Ragebot::quickpeek::key);
     settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("enabled")] = Settings::Ragebot::quickpeek::enabled;
+    settings[XORSTR("Ragebot")][XORSTR("headscale")] = Settings::Ragebot::HeadScale;
+    settings[XORSTR("Ragebot")][XORSTR("bodyscale")] = Settings::Ragebot::BodyScale;
     settings[XORSTR("Triggerbot")][XORSTR("enabled")] = Settings::Triggerbot::enabled;
 	settings[XORSTR("Triggerbot")][XORSTR("key")] = Util::GetButtonName(Settings::Triggerbot::key);
 	settings[XORSTR("Triggerbot")][XORSTR("Filters")][XORSTR("enemies")] = Settings::Triggerbot::Filters::enemies;
@@ -440,6 +442,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("ESP")][XORSTR("Filters")][XORSTR("fishes")] = Settings::ESP::Filters::fishes;
     settings[XORSTR("ESP")][XORSTR("Filters")][XORSTR("throwables")] = Settings::ESP::Filters::throwables;
     settings[XORSTR("ESP")][XORSTR("Filters")][XORSTR("localplayer")] = Settings::ESP::Filters::localplayer;
+    settings[XORSTR("ESP")][XORSTR("Info")][XORSTR("FD")] = Settings::ESP::Info::Fakeduck;
     settings[XORSTR("ESP")][XORSTR("Info")][XORSTR("name")] = Settings::ESP::Info::name;
     settings[XORSTR("ESP")][XORSTR("Info")][XORSTR("clan")] = Settings::ESP::Info::clan;
     settings[XORSTR("ESP")][XORSTR("Info")][XORSTR("steam_id")] = Settings::ESP::Info::steamId;
@@ -477,6 +480,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
     LoadColor(settings[XORSTR("ESP")][XORSTR("tracebullet")][XORSTR("friendcolor")], Settings::ESP::tracebullet::friendcolor);
     LoadColor(settings[XORSTR("ESP")][XORSTR("tracebullet")][XORSTR("enemycolor")], Settings::ESP::tracebullet::enemycolor);
     settings[XORSTR("ESP")][XORSTR("SyncFake")] = Settings::ESP::SyncFake;
+    settings[XORSTR("ESP")][XORSTR("VelGraph")] = Settings::ESP::VelGraph;
 
     settings[XORSTR("bulletstracers")][XORSTR("enabled")] = Settings::bullettracers::enabled;
 
@@ -1029,6 +1033,9 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("AntiAim")][XORSTR("FakeDuck")][XORSTR("enabled")], &Settings::AntiAim::FakeDuck::enabled);
         GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("FakeDuck")][XORSTR("fakeDuckKey")], &Settings::AntiAim::FakeDuck::fakeDuckKey);
     	GetVal(settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("enabled")], &Settings::Ragebot::quickpeek::enabled);
+        GetVal(settings[XORSTR("Ragebot")][XORSTR("headscale")], &Settings::Ragebot::HeadScale);
+        GetVal(settings[XORSTR("Ragebot")][XORSTR("bodyscale")], &Settings::Ragebot::BodyScale);
+
         GetButtonCode(settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("key")], &Settings::Ragebot::quickpeek::key);
 
         GetVal(settings[XORSTR("AnimationMemes")][XORSTR("enabled")], &Settings::AnimMemes::enabled);
@@ -1200,6 +1207,7 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("ESP")][XORSTR("Filters")][XORSTR("fishes")], &Settings::ESP::Filters::fishes);
     GetVal(settings[XORSTR("ESP")][XORSTR("Filters")][XORSTR("throwables")], &Settings::ESP::Filters::throwables);
     GetVal(settings[XORSTR("ESP")][XORSTR("Filters")][XORSTR("localplayer")], &Settings::ESP::Filters::localplayer);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Info")][XORSTR("FD")], &Settings::ESP::Info::Fakeduck);
     GetVal(settings[XORSTR("ESP")][XORSTR("Info")][XORSTR("name")], &Settings::ESP::Info::name);
     GetVal(settings[XORSTR("ESP")][XORSTR("Info")][XORSTR("clan")], &Settings::ESP::Info::clan);
     GetVal(settings[XORSTR("ESP")][XORSTR("Info")][XORSTR("steam_id")], &Settings::ESP::Info::steamId);
@@ -1224,6 +1232,7 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("ESP")][XORSTR("tracebullet")][XORSTR("friendcolor")], &Settings::ESP::tracebullet::friendcolor);
     GetVal(settings[XORSTR("ESP")][XORSTR("tracebullet")][XORSTR("enemycolor")], &Settings::ESP::tracebullet::enemycolor);
     GetVal(settings[XORSTR("ESP")][XORSTR("SyncFake")], &Settings::ESP::SyncFake);
+    GetVal(settings[XORSTR("ESP")][XORSTR("VelGraph")], &Settings::ESP::VelGraph);
 
     // Visual Settings for various players
     // For Enemy

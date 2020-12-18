@@ -46,8 +46,6 @@ bool AntiAim::casualcheck()
     static ConVar* gaem = cvar->FindVar("game_mode");
     static int gamemode = gaem->GetInt();
 
-//	if (!gamemode)
-//		return true;
 	if (!(*csGameRules)->IsValveDS())
 		return false;
         if ((*csGameRules)->IsValveDS() && gamemode != 1 && gamemode != 2)
@@ -484,447 +482,6 @@ static void AirAntiAim(C_BasePlayer *const localplayer, CUserCmd* cmd, QAngle& a
 
 }
 
-static void DefaultRageAntiAim(C_BasePlayer *const localplayer, QAngle& angle, CUserCmd* cmd)
-{
-    using namespace Settings::AntiAim::RageAntiAim;
-
-
-    if (!localplayer || !localplayer->GetAlive())
-        return;
-
-    if (Settings::AntiAim::ManualAntiAim::Enable)
-    {
-        if (AntiAim::ManualAntiAim::alignLeft) {
-            angle.y += 70.f;
-            return;
-        } else if (AntiAim::ManualAntiAim::alignBack) {
-            angle.y -= 180.f;
-            return;
-        } else if (AntiAim::ManualAntiAim::alignRight) {
-            angle.y -= 70.f;
-            return;
-        }
-    }else {
-       angle.y -= 180.f;
-}
-
-    static bool buttonToggle = false;
-    if ( inputSystem->IsButtonDown(InvertKey) && !buttonToggle )
-	{
-		buttonToggle = true;
-		inverted = !inverted;
-	}
-	else if ( !inputSystem->IsButtonDown(InvertKey) && buttonToggle)
-		buttonToggle = false;
-if (Settings::AntiAim::RageAntiAim::lbym == LbyMode::Normal){
-        bool sw = false;
-
-        switch (Settings::AntiAim::Yaw::typeReal)
-        {
-            case AntiAimRealType_Y::NONE:
-                AntiAim::fakeAngle = AntiAim::realAngle = angle;
-                break;
-                
-            case AntiAimRealType_Y::Static:
-		should_sidemove = true;
-                if (!AntiAim::bSend)
-		 angle.y += inverted ? AntiAim::GetMaxDelta(localplayer->GetAnimState()) : -AntiAim::GetMaxDelta(localplayer->GetAnimState());
-
-		break;
-
-            case AntiAimRealType_Y::Jitter:
-		should_sidemove = false;
-                if (!AntiAim::bSend)
-                 angle.y -= inverted ? 116.f : -116.f;
-		if (AntiAim::LbyUpdate())
-		 angle.y -= inverted ? 116.f : -116.f;
-
-                break;
-
-            case AntiAimRealType_Y::Randome:
-		should_sidemove = true;
-                if (!AntiAim::bSend)
-                {
-                        static auto st = 0;
-                        st++;
-                        if (st < 2)
-                        {
-                                static auto j = false;
-                                 angle.y += j ? JitterPercent : -JitterPercent;
-                                j = !j;
-                        }
-                        else
-                                st = 0;
-                }
-                break;
-            case AntiAimRealType_Y::JitterSwitch:
-                should_sidemove = true;
-                if (!AntiAim::bSend)
-                        angle.y += sw ? JitterPercent : -JitterPercent;
-                sw = !sw;
-                break;
-        case AntiAimRealType_Y::JitterRandom:
-                should_sidemove = true;
-		int stuff = JitterPercent;
-		float randNum = (rand()%(stuff-(-stuff) + 1) + -stuff);
-
-                if (!AntiAim::bSend)
-                          angle.y += randNum;
-                break;
-
-
-        }
-}
-
-   else if (Settings::AntiAim::RageAntiAim::lbym == LbyMode::Opposite){
-if (AntiAim::LbyUpdate()){
-             angle.y += inverted ? -120 : 120;
-}
-
-if (!AntiAim::bSend)
-        {
-            AntiAim::fakeAngle.y = angle.y += inverted ? 120 : -120;
-
-}
-
-}
-
-}
-
-static void LJitterAntiAim(C_BasePlayer *const localplayer, QAngle& angle, CUserCmd* cmd)
-{
-
-    if (!localplayer || !localplayer->GetAlive())
-        return;
-    if (localplayer->GetImmune())
-      	return;
-
-	QAngle anglei;
-       	if (Ragebot::lockedEnemy.player)
-               anglei = Math::CalcAngle(localplayer->GetEyePosition(), Ragebot::lockedEnemy.player->GetEyePosition());
-
-
-  if(AntiAim::bSend)
-    {
- float randNum = (rand()%(22-(-22) + 1) + -22);
-
- AntiAim::fakeAngle.y = angle.y = AntiAim::realAngle.y += randNum;
-
-}
-
-else {
-    if (Settings::AntiAim::ManualAntiAim::Enable)
-    {
-        if (AntiAim::ManualAntiAim::alignLeft) {
-AntiAim::realAngle.y = angle.y += 90;
-
-            return;
-        } else if (AntiAim::ManualAntiAim::alignBack) {
-AntiAim::realAngle.y = angle.y += 180;
-
-            return;
-        } else if (AntiAim::ManualAntiAim::alignRight) {
-AntiAim::realAngle.y = angle.y += 270;
-
-            return;
-        } 
-    }
-else {
-if (Settings::AntiAim::lbyjitter){
-if(AntiAim::LbyUpdate()){
- float randNum = (rand()%(22-(-22) + 1) + -22);
-
-AntiAim::realAngle.y = angle.y += Settings::AntiAim::RageAntiAim::offset + randNum;
-}
-else {
-AntiAim::realAngle.y = angle.y += Settings::AntiAim::RageAntiAim::offset;
-
-}
-
-}
-else {
-AntiAim::realAngle.y = angle.y += Settings::AntiAim::RageAntiAim::offset;
-}
-}
-}
-if (Settings::AntiAim::RageAntiAim::lbym == LbyMode::Opposite){
-if (AntiAim::LbyUpdate()){
-            AntiAim::realAngle.y = angle.y += Settings::AntiAim::RageAntiAim::offset + -120;
-    CreateMove::sendPacket = false;
-}else    {
-  //CreateMove::sendPacket = tickcount % 2;
-            AntiAim::fakeAngle.y = angle.y += Settings::AntiAim::RageAntiAim::offset + 120;
-
-}
-
-}
-}
-static void FakeArrondReal(C_BasePlayer *const localplayer, QAngle& angle, CUserCmd* cmd)
-{
-    using namespace Settings::AntiAim::RageAntiAim;
-
-    if (!localplayer || !localplayer->GetAlive())
-        return;
-
-    if (Settings::AntiAim::ManualAntiAim::Enable)
-    {
-        if (AntiAim::ManualAntiAim::alignLeft) {
-            AntiAim::realAngle.y = AntiAim::fakeAngle.y = angle.y += 70.f;
-            return;
-        } else if (AntiAim::ManualAntiAim::alignBack) {
-            AntiAim::realAngle.y = AntiAim::fakeAngle.y = angle.y -= 180.f;
-            return;
-        } else if (AntiAim::ManualAntiAim::alignRight) {
-            AntiAim::realAngle.y = AntiAim::fakeAngle.y = angle.y -= 70.f;
-            return;
-        }
-    }
-
-    
-    if (Settings::AntiAim::HeadEdge::enabled){
-   bool headAngle = GetBestHeadAngle(cmd, angle);
-        if (headAngle) return;
-    }
-    
-    static bool buttonToggle = false;
-
-    /* Button Function for invert the fake*/
-    if ( inputSystem->IsButtonDown(InvertKey) && !buttonToggle )
-	{
-		buttonToggle = true;
-		inverted = !inverted;
-	}
-	else if ( !inputSystem->IsButtonDown(InvertKey) && buttonToggle)
-		buttonToggle = false;
-
-    
-
-    if(AntiAim::bSend)
-    {
-        const float &maxDelta = AntiAim::GetMaxDelta(localplayer->GetAnimState());
-        switch (Settings::AntiAim::Yaw::typeFake)
-        {
-            case AntiAimFakeType_y::NONE:
-               AntiAim::fakeAngle = AntiAim::realAngle = angle;
-                break;
-
-            case AntiAimFakeType_y::Static:
-                AntiAim::fakeAngle.y = angle.y = inverted ? (angle.y-180.f)+GetPercentVal(maxDelta, AntiAImPercent) : (angle.y-180.f)-GetPercentVal(maxDelta, AntiAImPercent); 
-                break;
-
-            case AntiAimFakeType_y::Jitter:
-                static bool bFlip = false;
-                bFlip = !bFlip;
-                AntiAim::fakeAngle.y = angle.y = bFlip ? angle.y-GetPercentVal(180.f, JitterPercent) : angle.y+GetPercentVal(180.f, JitterPercent);
-                break;
-
-            case AntiAimFakeType_y::Randome:
-                AntiAim::fakeAngle.y = angle.y = (angle.y-180.f) - static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX/360.f);
-                break;
-        }          
-    }     
-    
-    else
-    {     
-        switch (Settings::AntiAim::Yaw::typeReal)
-        {
-            case AntiAimRealType_Y::NONE:
-                AntiAim::fakeAngle = AntiAim::realAngle = angle;
-                break;
-                
-            case AntiAimRealType_Y::Static:
-                AntiAim::realAngle.y = angle.y -= 180.f;
-                break;
-
-            case AntiAimRealType_Y::Jitter:
-                static bool bFlip = false;
-                bFlip = !bFlip;
-                AntiAim::realAngle.y = angle.y = bFlip ? angle.y+GetPercentVal(180.f, JitterPercent) : angle.y-GetPercentVal(180.f, JitterPercent);
-                break;
-
-            case AntiAimRealType_Y::Randome:
-                AntiAim::realAngle.y = angle.y = angle.y - static_cast<float>(static_cast<float>(std::rand())/static_cast<float>(RAND_MAX/180.f));;
-                break;
-        }       
-    }
-    LBYBreak(AntiAim::realAngle.y, angle, localplayer);
-
-}
-
-static void RealArrondFake(C_BasePlayer *const localplayer, QAngle& angle, CUserCmd* cmd)
-{
-    if (!localplayer || !localplayer->GetAlive())
-        return;
-
-    using namespace Settings::AntiAim::RageAntiAim; using namespace AntiAim::ManualAntiAim;
-
-    if (Settings::AntiAim::ManualAntiAim::Enable)
-    {
-        if (alignLeft) {
-            AntiAim::realAngle.y = AntiAim::fakeAngle.y = angle.y += 90.f;
-            return;
-        } else if (alignBack) {
-            AntiAim::realAngle.y = AntiAim::fakeAngle.y = angle.y -= 180.f;
-            return;
-        } else if (alignRight) {
-            AntiAim::realAngle.y = AntiAim::fakeAngle.y = angle.y -= 90.f;
-            return;
-        }
-    }
-
-    const float &maxDelta = AntiAim::GetMaxDelta(localplayer->GetAnimState());
-    if (Settings::AntiAim::HeadEdge::enabled)    {
-        // if (GetBestHeadAngle(cmd, angle))
-        float headAngle = GetBestHeadAngle(cmd);
-        if (headAngle > 0)
-            AntiAim::fakeAngle.y = AntiAim::realAngle.y = angle.y = GetBestHeadAngle(cmd);
-            return;
-    }
-    
-    static bool buttonToggle = false;
-
-    /* Button Function for invert the fake*/
-    if ( inputSystem->IsButtonDown(InvertKey) && !buttonToggle )
-	{
-		buttonToggle = true;
-		inverted = !inverted;
-	}
-	else if ( !inputSystem->IsButtonDown(InvertKey) && buttonToggle)
-		buttonToggle = false;
-
-    if(AntiAim::bSend)
-    {
-        switch (Settings::AntiAim::Yaw::typeFake)
-        {
-            case AntiAimFakeType_y::NONE:
-                AntiAim::fakeAngle = AntiAim::realAngle = angle;
-                break;
-            case AntiAimFakeType_y::Static:
-                AntiAim::fakeAngle.y = angle.y -= 180.f;
-                break;
-            case AntiAimFakeType_y::Jitter:
-                static bool bFlip = false;
-                bFlip = !bFlip;
-                AntiAim::fakeAngle.y = angle.y = bFlip ? angle.y-GetPercentVal(180.f, JitterPercent) : angle.y+GetPercentVal(180.f, JitterPercent);
-                break;
-            case AntiAimFakeType_y::Randome:
-                AntiAim::fakeAngle.y = angle.y = (angle.y-180.f) - static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX/360.f);
-                break;
-        }  
-    }     
-    else
-    {     
-        switch (Settings::AntiAim::Yaw::typeReal)
-        {
-            case AntiAimRealType_Y::NONE:
-                AntiAim::fakeAngle = AntiAim::realAngle = angle;
-                break;
-
-            case AntiAimRealType_Y::Static:
-                 AntiAim::realAngle.y = angle.y = inverted ? (angle.y-180.f)+GetPercentVal(maxDelta, AntiAImPercent) : (angle.y-180.f)-GetPercentVal(maxDelta, AntiAImPercent);
-                break;
-
-            case AntiAimRealType_Y::Jitter:
-                static bool bFlip = false;
-                bFlip = !bFlip;
-                AntiAim::realAngle.y = angle.y = bFlip ? angle.y-GetPercentVal(180.f, JitterPercent) : angle.y+GetPercentVal(180.f, JitterPercent);
-                break;
-
-            case AntiAimRealType_Y::Randome:
-                 AntiAim::realAngle.y = angle.y = angle.y - static_cast<float>(static_cast<float>(std::rand())/static_cast<float>(RAND_MAX/360.f));
-                    break;
-        }
-    }
-    LBYBreak(AntiAim::realAngle.y, angle, localplayer);
-}
-
-static void SemiDirectionRageAntiAIim(C_BasePlayer *const localplayer, QAngle& angle, CUserCmd* cmd)
-{
-    using namespace Settings::AntiAim::RageAntiAim;
-
-    if (Settings::AntiAim::ManualAntiAim::Enable)
-    {
-        if (AntiAim::ManualAntiAim::alignLeft) {
-            AntiAim::realAngle.y = AntiAim::fakeAngle.y = angle.y += 70.f;
-            return;
-        } else if (AntiAim::ManualAntiAim::alignBack) {
-            AntiAim::realAngle.y = AntiAim::fakeAngle.y = angle.y -= 180.f;
-            return;
-        } else if (AntiAim::ManualAntiAim::alignRight) {
-            AntiAim::realAngle.y = AntiAim::fakeAngle.y = angle.y -= 70.f;
-            return;
-        }
-    }
-
-    const float &maxDelta = AntiAim::GetMaxDelta(localplayer->GetAnimState());
-    if (Settings::AntiAim::HeadEdge::enabled)    {
-        // if (GetBestHeadAngle(cmd, angle))
-        float headAngle = GetBestHeadAngle(cmd);
-        if (headAngle > 0)
-            AntiAim::fakeAngle.y = AntiAim::realAngle.y = angle.y = GetBestHeadAngle(cmd);
-            return;
-    }
-    
-    static bool buttonToggle = false;
-
-    /* Button Function for invert the fake*/
-    if ( inputSystem->IsButtonDown(InvertKey) && !buttonToggle )
-	{
-		buttonToggle = true;
-		inverted = !inverted;
-	}
-	else if ( !inputSystem->IsButtonDown(InvertKey) && buttonToggle)
-		buttonToggle = false;
-
-    if(AntiAim::bSend)
-    {
-        switch (Settings::AntiAim::Yaw::typeFake)
-        {
-            case AntiAimFakeType_y::NONE:
-                AntiAim::fakeAngle = AntiAim::realAngle = angle;
-                break;
-
-            case AntiAimFakeType_y::Static:
-                AntiAim::fakeAngle.y = angle.y = inverted ? AntiAim::realAngle.y-30.f : AntiAim::realAngle.y+30.f;
-                break;
-
-            case AntiAimFakeType_y::Jitter:
-                static bool bFlip = false;
-                bFlip = !bFlip;
-                AntiAim::fakeAngle.y = angle.y = bFlip ?  AntiAim::realAngle.y-25.f : AntiAim::realAngle.y+25.f;
-                break;
-
-            case AntiAimFakeType_y::Randome:
-                AntiAim::fakeAngle.y = angle.y = (angle.y-180.f) - static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX/360.f);
-                break;
-        }   
-    }     
-    else
-    {     
-        switch (Settings::AntiAim::Yaw::typeReal)
-        {
-            case AntiAimRealType_Y::NONE:
-                AntiAim::fakeAngle = AntiAim::realAngle = angle;
-                break;
-
-            case AntiAimRealType_Y::Static:
-                 AntiAim::realAngle.y = angle.y = inverted ? (angle.y-180.f)-GetPercentVal(maxDelta, AntiAImPercent) : (angle.y-180.f)+GetPercentVal(maxDelta, AntiAImPercent);
-                break;
-
-            case AntiAimRealType_Y::Jitter:
-                static bool bFlip = false;
-                bFlip = !bFlip;
-                AntiAim::realAngle.y = angle.y = bFlip ? angle.y-GetPercentVal(180.f, JitterPercent) : angle.y+GetPercentVal(180.f, JitterPercent);
-                break;
-
-            case AntiAimRealType_Y::Randome:
-                 AntiAim::realAngle.y = angle.y = angle.y - static_cast<float>(static_cast<float>(std::rand())/static_cast<float>(RAND_MAX/360.f));
-                    break;
-        }
-    }
-
-    LBYBreak(AntiAim::realAngle.y, angle, localplayer);
-}
 bool should_break_lby(CUserCmd* m_pcmd)
 {
 
@@ -932,7 +489,10 @@ bool should_break_lby(CUserCmd* m_pcmd)
     //    {
   //              CreateMove::sendPacket = true;
 //        }
-
+  const auto netchannel = GetLocalClient(-1)->m_NetChannel;
+  auto packet = netchannel->m_nChokedPackets;
+	if (packet > 14)
+	CreateMove::sendPacket = true;
 	int next_lby_update;
 
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
@@ -1086,7 +646,7 @@ if (CreateMove::sendPacket){
                         ++sway_counter;
                 else
                         sway_counter = 0;
-
+	//	CreateMove::sendPacket = false;
 }
                 }
 }else {
@@ -1134,6 +694,8 @@ if (CreateMove::sendPacket){
 
                 }
         }
+ const auto netchannel = GetLocalClient(-1)->m_NetChannel;
+  int pakets = netchannel->m_nChokedPackets;
 
     switch (Settings::AntiAim::Yaw::typeReal)
     {
@@ -1201,7 +763,10 @@ if (CreateMove::sendPacket){
                 int stuff = JitterPercent;
                 float randNum = (rand()%(stuff-(-stuff) + 1) + -stuff);
                 if (!AntiAim::bSend){
+	//		if (pakets > 6)
                      angle.y += randNum;
+	//		else
+          //           angle.y -= randNum;
 		if (angle.y > maxDelta)
                      angle.y = maxDelta;
 

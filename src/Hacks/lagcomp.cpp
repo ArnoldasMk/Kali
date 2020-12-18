@@ -132,7 +132,7 @@ void LagComp::CreateMove(CUserCmd *cmd)
 		{
 			for (auto &record : Tick.records)
 			{
-				float tmpFOV = Math::GetFov(rcsAngle, Math::CalcAngle(localplayer->GetEyePosition(), record.head));
+				float tmpFOV = Math::GetFov(cmd->viewangles, Math::CalcAngle(localplayer->GetEyePosition(), record.head));
 
 				if (tmpFOV < fov)
 				{

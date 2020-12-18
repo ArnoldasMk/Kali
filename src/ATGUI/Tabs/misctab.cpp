@@ -5,7 +5,7 @@
 
 #include "../../config.h"
 #include "../../interfaces.h"
-
+#include "../../MissedIT.h"
 #include "../../settings.h"
 #include "../../Utils/xorstring.h"
 #include "../imgui.h"
@@ -485,7 +485,6 @@ NameChanger::changeName(false, res.c_str(), 5.0f);
 			ImGui::Columns(2, nullptr, true);
 			{
 				ImGui::Checkbox(XORSTR("AirStuck"), &Settings::Airstuck::enabled);
-				ImGui::Checkbox(XORSTR("Adaptive Fake Lag"), &Settings::FakeLag::adaptive);
 				ImGui::Checkbox(XORSTR("Auto Accept"), &Settings::AutoAccept::enabled);
 				ImGui::Checkbox(XORSTR("Autoblock"), &Settings::Autoblock::enabled);
 				ImGui::Checkbox(XORSTR("Jump Throw"), &Settings::JumpThrow::enabled);
@@ -508,10 +507,14 @@ NameChanger::changeName(false, res.c_str(), 5.0f);
 				ImGui::Checkbox(XORSTR("Show Spectator list"), &Settings::ShowSpectators::enabled);
 				ImGui::Checkbox(XORSTR("Show Player list"), &PlayerList::showWindow);
 			        ImGui::Checkbox(XORSTR("AWP Quick Switch"), &Settings::QuickSwitch::enabled);
+                                ImGui::Checkbox(XORSTR("Disable Anti Untrusted"), &ValveDSCheck::forceUT);
 
 			}
 			ImGui::Columns(1);
 			ImGui::Separator();
+                                if (ImGui::Button(XORSTR("Unload"))){
+					MissedIT::SelfShutdown();
+				}
                                 if (ImGui::Button(XORSTR("Reset resolver misses"))){
 	        C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
                 int maxClient = engine->GetMaxClients();

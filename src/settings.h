@@ -359,7 +359,8 @@ struct LegitWeapon_t
 		 predEnabled,
 		 TriggerBot,
 		 mindamage,
-		 autoWall;
+		 autoWall,
+		 reactionEnabled;
 	Bone bone = BONE_HEAD;
 	SmoothType smoothType = SmoothType::SLOW_END;
 	ButtonCode_t aimkey = ButtonCode_t ::MOUSE_MIDDLE;
@@ -372,6 +373,8 @@ struct LegitWeapon_t
 		  rcsAmountX = 2.0f,
 		  rcsAmountY = 2.0f,
 		  minDamagevalue = 10.0f,
+		  reactionLow = 1.0f,
+		  reactionHigh = 25.0f,
 		  hitchance = 20;
 	bool desiredBones[31];
 
@@ -618,7 +621,9 @@ namespace Settings
         inline Bone bone = BONE_HEAD;
         inline ButtonCode_t aimkey = ButtonCode_t::MOUSE_MIDDLE;
         inline bool aimkeyOnly = false;
-
+	inline bool reactionTime = false;
+	inline float reactionLow;
+	inline float reactionHigh;
 		namespace Smooth
 		{
 			inline bool enabled = false;
@@ -779,6 +784,9 @@ namespace Settings
 
 	namespace Ragebot
 	{
+		inline float HeadScale;
+                inline float BodyScale;
+
 			namespace onshot
 			{
 			inline bool enabled;
@@ -1057,6 +1065,7 @@ namespace Settings
 
 	namespace ESP
 	{
+	inline bool VelGraph;
 	inline bool SyncFake;
 	namespace tracebullet
 	{
@@ -1354,6 +1363,7 @@ namespace Settings
 
 		namespace Info
 		{
+			inline bool Fakeduck = false;
 			inline bool name = false;
 			inline bool clan = false;
 			inline bool steamId = false;

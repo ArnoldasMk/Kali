@@ -15,6 +15,7 @@ namespace Util
 	IMaterial* CreateMaterial( std::string type, std::string texture, bool ignorez, bool nofog, bool model, bool nocull, bool halflambert, std::string envmap, std::string envmaptint, int envmapfresnel, std::string envmapfresnelminmaxexp);
 	IMaterial* CreateMaterial2(std::string type, std::string texture, bool ignorez, bool nofog, bool model, bool nocull, float alpha);
         IMaterial* CreateMaterial3(std::string type, std::string texture, bool ignorez, bool nofog, bool model, bool nocull, float alpha, Vector color);
+        IMaterial* CreateMaterial3(std::string type, std::string texture, bool ignorez, bool nofog, bool model, bool nocull, float alpha, Vector color, bool hasd);
         IMaterial* CreateMaterial4(std::string type, std::string texture, bool ignorez, bool nofog, bool model, bool nocull, float alpha, Vector color);
 
 	const char *GetActivityName(int actNum);

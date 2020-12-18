@@ -21,6 +21,7 @@
 #include "Tickbase.h"
 #include "fakelag.h"
 #include "../Utils/patternfinder.h"
+#include "global.h"
 
 #include <climits>
 #include <deque>
@@ -583,8 +584,9 @@ static void DrawEntity( C_BaseEntity* entity, const char* string, ImColor color)
 }
 
 static void DrawLag(int x, int y, C_BasePlayer* player){
-		int lag = TIME_TO_TICKS(player->GetSimulationTime() - player->GetOldSimulationTime());
-		int woop = FakeLag::ticks * 5;
+  const auto netchannel = GetLocalClient(-1)->m_NetChannel;
+  int lag = netchannel->m_nChokedPackets;
+		int woop = lag * 10;
 		std::string bombStr = std::to_string(woop );
                 Vector2D nameSize = Draw::GetTextSize(bombStr.c_str(), esp_font);
 		float shite = 10.f;
@@ -674,6 +676,23 @@ static void DrawSkeleton( C_BasePlayer* player, C_BasePlayer* localplayer ) {
 		Draw::AddLine( vBonePos1.x, vBonePos1.y, vBonePos2.x, vBonePos2.y, Entity::IsTeamMate(player, localplayer) ? Settings::ESP::Skeleton::allyColor.Color() : Settings::ESP::Skeleton::enemyColor.Color());
 	
 	}
+        for ( int i = 0; i < pStudioModel->numbones; i++ ) {
+                mstudiobone_t* pBone = pStudioModel->pBone( i );
+                if ( !pBone || !( pBone->flags & 256 ) || pBone->parent == -1 )
+                        continue;
+
+                Vector vBonePos1;
+                if ( debugOverlay->ScreenPosition( Vector( Resolver::players[player->GetIndex()].ogmatrix[i][0][3], Resolver::players[player->GetIndex()].ogmatrix[i][1][3], Resolver::players[player->GetIndex()].ogmatrix[i][2][3] ), vBonePos1 ) )
+                        continue;
+
+                Vector vBonePos2;
+                if ( debugOverlay->ScreenPosition( Vector( Resolver::players[player->GetIndex()].ogmatrix[pBone->parent][0][3], Resolver::players[player->GetIndex()].ogmatrix[pBone->parent][1][3], Resolver::players[player->GetIndex()].ogmatrix[pBone->parent][2][3] ), vBonePos2 ) )
+                        continue;
+
+                Draw::AddLine( vBonePos1.x, vBonePos1.y, vBonePos2.x, vBonePos2.y, Entity::IsTeamMate(player, localplayer) ? Settings::ESP::Skeleton::allyColor.Color() : Settings::ESP::Skeleton::enemyColor.Color());
+
+        }
+
 }
         void rotate_triangle(std::array<Vector2D, 3>& points, float rotation)
         {
@@ -1180,6 +1199,35 @@ static void DrawSounds( C_BasePlayer *player, ImColor playerColor ) {
         footstepMutex.unlock();
     }
 }
+
+static void DrawVelGraph(){
+    static std::vector<float> velData(120, 0);
+C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+
+    Vector vecVelocity = localplayer->GetVelocity();
+    float currentVelocity = sqrt(vecVelocity.x * vecVelocity.x + vecVelocity.y * vecVelocity.y);
+
+    velData.erase(velData.begin());
+    velData.push_back(currentVelocity * 2);
+
+    const auto heighth = Paint::engineHeight;
+    const auto widthh = Paint::engineWidth;
+
+    for (auto i = 0; i < velData.size() - 1; i++)
+    {
+        int cur = velData.at(i);
+        int next = velData.at(i + 1);
+
+        Draw::AddLine(
+            widthh / 2 + (velData.size() * 5 / 2) - (i - 1) * 5.f,
+            heighth / 2 - (std::clamp(cur, 0, 450) * .2f) + 200,
+            widthh / 2 + (velData.size() * 5 / 2) - i * 5.f,
+            heighth / 2 - (std::clamp(next, 0, 450) * .2f) + 200,
+            ImColor( 255, 255, 255, 255)
+        );
+    }
+}
+
 static void DrawKeyBinds(int x, int y) {
 int b = x;
 int c = y;
@@ -1232,6 +1280,8 @@ if ( Settings::Ragebot::onshot::enabled && inputSystem->IsButtonDown(Settings::R
                 Draw::AddText( x + 2, y + 5, "Wait for onshot [Holding]", ImColor( 255, 255, 255, 255 ) );
 y = y + 10;
 }
+
+
 /*if (Settings::AntiAim::RageAntiAim::head && Settings::AntiAim::RageAntiAim::fakepeek){
 
 float server_time = TICKS_TO_TIME(localplayer->GetTickBase());
@@ -1258,6 +1308,38 @@ y = y + 10;
   //  const auto deathNoticePanel = (*(IVPanel**)(*(deathNotice - 5 + 22) + 4));
 //    fakePrime = reinterpret_cast<std::uint8_t*>(PatternFinder::FindPatternInModule( XORSTR( "/client_client.so" ),( unsigned char* ) XORSTR("\xE8\x00\x00\x00\x00\x48\x8D\x50\xE0"),XORSTR( "xxxxx" )) - 1);
 }
+
+bool FakeDuckCheck(C_BasePlayer* player){
+auto animstate = player->GetAnimState();
+
+        if (animstate){
+                if (player->GetFlags() & FL_ONGROUND){
+                                static auto stored_tick = 0;
+                                static int crouched_ticks;
+
+                                if (animstate->duckProgress)
+                                {
+                                        if (animstate->duckProgress < 0.9f && animstate->duckProgress > 0.5f)
+                                        {
+                                                if (stored_tick != global::tickcount)
+                                                {
+                                                        crouched_ticks++;
+                                                        stored_tick = global::tickcount;
+                                                }
+
+                                                return crouched_ticks > 16;
+                                        }
+                                        else
+                                                crouched_ticks = 0;
+                                }
+
+                                return false;
+
+                        }
+                }
+        return false;
+}
+
 static void DrawPlayerHealthBars( C_BasePlayer* player, int x, int y, int w, int h, ImColor color, BarType& bartype ) {
 	
 	int boxSpacing = 3;
@@ -1370,22 +1452,8 @@ static void DrawPlayerText( C_BasePlayer* player, C_BasePlayer* localplayer, int
 		Draw::AddText( x + ( w / 2 ) - ( nameSize.x / 2 ), ( y - textSize.y - nameOffset ), displayString.c_str(), Entity::IsTeamMate(player, localplayer) ? Settings::ESP::allyInfoColor.Color() : Settings::ESP::enemyInfoColor.Color() );
 		lineNum++;
 	}
-	//if (player->GetIndex() == Resolver::indx){
-	//if (player->GetEyeAngles()->x < 65.f || player->GetEyeAngles()->x > 90.f && Settings::Resolver::resolveAll && !(Entity::IsTeamMate(player, localplayer)) ){
-	//Vector2D rankSize = Draw::GetTextSize( "Resolving: Legit AA", esp_font );
-        //Draw::AddText( ( x + ( w / 2 ) - ( rankSize.x / 2 ) ),( y - ( textSize.y * lineNum ) - nameOffset ), "Resolving: Legit AA", Entity::IsTeamMate(player, localplayer) ? Settings::ESP::allyInfoColor.Color() : Settings::ESP::enemyInfoColor.Color() );
-	//}
-        //else if (Settings::Resolver::resolveAll && !(Entity::IsTeamMate(player, localplayer))){
-        //Vector2D rankSize = Draw::GetTextSize( "Resolving: Rage AA", esp_font );
-        //Draw::AddText( ( x + ( w / 2 ) - ( rankSize.x / 2 ) ),( y - ( textSize.y * lineNum ) - nameOffset ), "Resolving: Rage AA", Entity::IsTeamMate(player, localplayer) ? Settings::ESP::allyInfoColor.Color() : Settings::ESP::enemyInfoColor.Color() );
-        //}
-	//else if (Settings::Resolver::	manual && !(Entity::IsTeamMate(player, localplayer))){
-	//Vector2D rankSize = Draw::GetTextSize( "Manual Resolver", esp_font );
-        //Draw::AddText( ( x + ( w / 2 ) - ( rankSize.x / 2 ) ),( y - ( textSize.y * lineNum ) - nameOffset ), "Manual Resolver", Entity::IsTeamMate(player, localplayer) ? Settings::ESP::allyInfoColor.Color() : Settings::ESP::enemyInfoColor.Color() );	
-	//}
-	//}
 	if( Settings::Resolver::resolveAll && /*!(Entity::IsTeamMate(player,localplayer)) &&*/ Settings::Resolver::manual){
- 		                std::string bombStr = "Max Desync Delta " + std::to_string(player->GetAnimState()->feetCycle/*AntiAim::GetMaxDelta(player->GetAnimState())*/);
+ 		                std::string bombStr = "Max Desync Delta " + std::to_string(AntiAim::GetMaxDelta(player->GetAnimState()));
 		
 		Vector2D rankSize = Draw::GetTextSize( bombStr.c_str(), esp_font );
                 Draw::AddText( ( x + ( w / 2 ) - ( rankSize.x / 2 ) ),( y - ( textSize.y * lineNum ) - nameOffset ), bombStr.c_str(), Entity::IsTeamMate(player, localplayer) ? Settings::ESP::allyInfoColor.Color() : Settings::ESP::enemyInfoColor.Color() );
@@ -1489,8 +1557,8 @@ if (wap > 2)
 		stringsToShow.push_back( XORSTR( "Defusing" ) );
 	if ( Settings::ESP::Info::grabbingHostage && player->IsGrabbingHostage() )
 		stringsToShow.push_back( XORSTR( "Hostage Carrier" ) );
-	if ( Settings::ESP::Info::rescuing && !Entity::IsTeamMate(player, localplayer) && localplayer->GetAlive()){
-		stringsToShow.push_back( std::to_string(Resolver::players[player->GetIndex()].delta).c_str() );
+	if ( Settings::ESP::Info::rescuing && !Entity::IsTeamMate(player, localplayer) && localplayer->GetAlive() && !player->GetDormant()){
+		//stringsToShow.push_back( std::to_string(Resolver::players[player->GetIndex()].delta).c_str() );
 		std::string flagst;
 		switch (Resolver::players[player->GetIndex()].flags)
 		{
@@ -1520,6 +1588,8 @@ if (wap > 2)
                 stringsToShow.push_back(flagst.c_str());
 
 	}
+        if (FakeDuckCheck(player)  && Settings::ESP::Info::Fakeduck)
+                stringsToShow.push_back(XORSTR("FD"));
 	if (player->GetDormant())
 		stringsToShow.push_back(XORSTR("Dormant"));
 	if ( Settings::ESP::Info::location )
@@ -2271,6 +2341,7 @@ bool ESP::PrePaintTraverse(VPANEL vgui_panel, bool force_repaint, bool allow_for
 {
 	if (Settings::ESP::enabled && Settings::NoScopeBorder::enabled && strcmp("HudZoom", panel->GetName(vgui_panel)) == 0)
 		return false;
+
       // for (int i = 1; i <= entityList->GetHighestEntityIndex(); i++)  //-V807
       //  {
     //            auto e = entityList->GetClientEntity(i);
@@ -2286,6 +2357,7 @@ bool ESP::PrePaintTraverse(VPANEL vgui_panel, bool force_repaint, bool allow_for
 
 
 //	}
+
 	return true;
 }
 
@@ -2400,6 +2472,8 @@ void ESP::Paint()
 	Drawlc();
         DrawFH(Settings::ESP::keybi::x, Settings::ESP::keybi::y + 85);
 	DrawLag(Settings::ESP::keybi::x, Settings::ESP::keybi::y + 90, localplayer);
+	if (Settings::ESP::VelGraph)
+		DrawVelGraph();
 	if (Settings::ESP::KeyBinds)
         	DrawKeyBinds(Settings::ESP::keybi::x, Settings::ESP::keybi::y);
 	if (Settings::ESP::FOVCrosshair::enabled)

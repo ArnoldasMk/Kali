@@ -35,13 +35,13 @@ if (FirstDuck){
 		    amount = 14;
                 if (choked <= amount / 2){
                         cmd->buttons &= ~IN_DUCK;
-			if (choked > (amount / 3) + 1 )
-				localplayer->GetAnimState()->duckProgress = 0.f;
-			else
-				localplayer->GetAnimState()->duckProgress = 1.0;
+			//if (choked > (amount / 3) + 1 )
+			//	localplayer->GetAnimState()->duckProgress = 0.f;
+			//else
+			//	localplayer->GetAnimState()->duckProgress = 1.0;
                 }else{
                         cmd->buttons |= IN_DUCK;
-			localplayer->GetAnimState()->duckProgress = 1.0;
+			//localplayer->GetAnimState()->duckProgress = 1.0;
                } if (choked < amount){
 			choked++;
                         CreateMove::sendPacket = false;   // choke
@@ -50,10 +50,6 @@ if (FirstDuck){
                        CreateMove::sendPacket = true;    // send packet
 		       choked = 0;
 		}
-//if (input->m_fCameraInThirdPerson && Settings::AnimMemes::enabled)
-//                                localplayer->GetAnimState()->duckProgress = AntiAim::realDuck;
-
-//localplayer->GetAnimState()->duckProgress = 1.0; //memes
 
 }
 }

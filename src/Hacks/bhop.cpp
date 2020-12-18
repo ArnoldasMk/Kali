@@ -21,7 +21,6 @@ void BHop::CreateMove(CUserCmd* cmd)
        static auto last_jumped = false;
         static auto should_jump = false;
 
-/*
 
 	if (!bLastJumped && bShouldFake)
 	{
@@ -68,29 +67,5 @@ void BHop::CreateMove(CUserCmd* cmd)
 		bLastJumped = false;
 		bShouldFake = false;
 	}
-*/
-        if (!last_jumped && should_jump)
-        {
-                should_jump = false;
-                cmd->buttons |= IN_JUMP;
-        }
-        else if (cmd->buttons & IN_JUMP)
-        {
-                if (localplayer->GetFlags() & FL_ONGROUND )
-                {
-                        last_jumped = true;
-                        should_jump = true;
-                }
-                else 
-                {
-                        cmd->buttons &= ~IN_JUMP;
-                        last_jumped = false;
-                }
-        }
-        else
-        {
-                last_jumped = false;
-                should_jump = false;
-        }
 
 }

@@ -308,6 +308,7 @@ void Visuals::RenderTab()
 					ImGui::Selectable(XORSTR("Defuse Kit"), &Settings::ESP::Info::hasDefuser, ImGuiSelectableFlags_DontClosePopups);
 					ImGui::Selectable(XORSTR("Grabbing Hostage"), &Settings::ESP::Info::grabbingHostage, ImGuiSelectableFlags_DontClosePopups);
 					ImGui::Selectable(XORSTR("Location"), &Settings::ESP::Info::location, ImGuiSelectableFlags_DontClosePopups);
+                                        ImGui::Selectable(XORSTR("FakeDuck"), &Settings::ESP::Info::Fakeduck, ImGuiSelectableFlags_DontClosePopups);
 				}
 				ImGui::NextColumn();
 				{
@@ -375,6 +376,7 @@ void Visuals::RenderTab()
 					ImGui::Selectable(XORSTR("Recoil Crosshair"), &Settings::Recoilcrosshair::enabled, ImGuiSelectableFlags_DontClosePopups);
 					ImGui::Selectable(XORSTR("FOV Circle"), &Settings::ESP::FOVCrosshair::enabled, ImGuiSelectableFlags_DontClosePopups);
 					ImGui::Selectable(XORSTR("Show Spread"), &Settings::ESP::Spread::enabled, ImGuiSelectableFlags_DontClosePopups);
+                                        ImGui::Selectable(XORSTR("Velocity Graph"), &Settings::ESP::VelGraph, ImGuiSelectableFlags_DontClosePopups);
 				}
 				ImGui::NextColumn();
 				{

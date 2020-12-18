@@ -44,6 +44,9 @@ void FakeLag::CreateMove(CUserCmd* cmd)
 		return;
 		int velocity2d = localplayer->GetVelocity().Length2D();
                 int max_choke;
+ const auto netchannel = GetLocalClient(-1)->m_NetChannel;
+  int pakets = netchannel->m_nChokedPackets;
+
 		if (cmd->buttons & IN_ATTACK && Settings::FakeLag::shiftshot){
                 FakeLag::shift = 16;
 		cmd->buttons &= IN_ATTACK;
@@ -52,7 +55,7 @@ void FakeLag::CreateMove(CUserCmd* cmd)
 
 		}else
 		  FakeLag::shift = 0;
-       		//FakeLag::should_recharge = false;
+       	FakeLag::should_recharge = false;
 
         if (FakeLag::should_recharge)
         {
@@ -68,16 +71,16 @@ void FakeLag::CreateMove(CUserCmd* cmd)
 
                 if (ticks_allowed >= 14)
                 {
-			cvar->ConsoleDPrintf(XORSTR("we charged bois"));
-                        FakeLag::should_recharge = false;
+	//		cvar->ConsoleDPrintf(XORSTR("we charged bois"));
+                  //      FakeLag::should_recharge = false;
                        // *(bool*)(*frame_ptr - 0x1C) = true; 
                 }
 
         }
-		if (ticks_allowed < 14)
-		FakeLag::should_recharge = true;
-		if (FakeLag::should_recharge)
-			return;
+		//if (ticks_allowed < 14)
+		//FakeLag::should_recharge = true;
+		//if (FakeLag::should_recharge)
+		//	return;
 	        if (cmd->buttons & IN_ATTACK)
 	        {
                 CreateMove::sendPacket = true;
@@ -100,11 +103,8 @@ void FakeLag::CreateMove(CUserCmd* cmd)
                 else
                         max_choke = Settings::FakeLag::value;
 		}else if ( !(cmd->buttons & IN_ATTACK) || !(Settings::AntiAim::ChokeOnShot) ) max_choke = Settings::FakeLag::value;
-		if ((*csGameRules)->IsValveDS()){
-		if (max_choke >= 7)
-			max_choke = 7;
-		}
-		 if (FakeLag::ticks >= max_choke){
+
+		 if (FakeLag::ticks >= max_choke || ((*csGameRules)->IsValveDS() && pakets > 6)){
 			CreateMove::sendPacket = true;
 			FakeLag::ticks = -1;
 		}else{

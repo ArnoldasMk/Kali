@@ -17,6 +17,7 @@
 #include "../Hacks/antiaim.h"
 #include "../Hacks/svcheats.h"
 #include "../Hacks/memeangle.h"
+#include "../Hacks/animfix.h"
 
 
 typedef void (*FrameStageNotifyFn) (void*, ClientFrameStage_t);
@@ -31,6 +32,7 @@ void Hooks::FrameStageNotify(void* thisptr, ClientFrameStage_t stage)
 	View::FrameStageNotify(stage);
         memeangles::FrameStageNotify(stage);
 	Resolver::FrameStageNotify(stage);
+	AnimFix::FrameStageNotify(stage);
 	//ResolverAP::FrameStageNotify(stage);
 	SkyBox::FrameStageNotify(stage);
 	ASUSWalls::FrameStageNotify(stage);

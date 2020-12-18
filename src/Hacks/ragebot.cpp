@@ -423,7 +423,7 @@ if (!currentSettings.autoSlow)
 	 oldOrigin = localplayer->GetAbsOrigin( );
 	 float speed  = velocity.Length( );
 
-	 if(speed > 15.f)
+	 if(speed > 43.f)
 	 {
 	 	QAngle dir;
 	 	Math::VectorAngles(velocity, dir);
@@ -439,8 +439,15 @@ if (!currentSettings.autoSlow)
 	 }
 	 else
 	{
-		forrwordMove = 0.f;
-		sideMove = 0.f;
+                        float sped = 0.1f;
+                                float max_speed = activeWeapon->GetCSWpnData()->GetMaxPlayerSpeed();
+                                float ratio = max_speed / 255.0f;
+                                sped *= ratio;
+
+
+                        cmd->forwardmove *= sped;
+                        cmd->sidemove *= sped;
+
 	 }
 
 	cmd->buttons |= IN_WALK;
@@ -472,9 +479,11 @@ void Ragebot::CheckHit(C_BaseCombatWeapon *activeWeapon){
     traceFilter->pSkip = localplayer;
 
     trace->TraceRay(ray, MASK_SHOT, traceFilter, &tr);
+        float spred = activeWeapon->GetSpread() + activeWeapon->GetInaccuracy();
 
     // cvar->ConsoleDPrintf("traced \n");
-    if (tr.m_pEntityHit == Ragebot::lockedEnemy.player){
+ if (Ragebot::lockedEnemy.playerhelth == lockedEnemy.player->GetHealth() && lockedEnemy.player->GetAlive()){
+    if (tr.m_pEntityHit == lockedEnemy.player || spred > 0.003300){
         Resolver::players[Ragebot::lockedEnemy.player->GetIndex()].MissedCount++;
 
     cvar->ConsoleDPrintf("[eyehook] Missed shot due to bad resolve [RESOLVER: ");
@@ -506,7 +515,7 @@ cvar->ConsoleDPrintf("]\n");
 cvar->ConsoleDPrintf("[eyehook] Missed shot due to spread\n");
 
         }
-
+}
         if (Resolver::players[Ragebot::lockedEnemy.player->GetIndex()].MissedCount > 4){
                 Resolver::players[Ragebot::lockedEnemy.player->GetIndex()].MissedCount = 0;
         }
@@ -748,16 +757,27 @@ void Ragebot::CreateMove(CUserCmd* cmd)
 
                 if (Ragebot::lockedEnemy.playerhelth == lockedEnemy.player->GetHealth() && lockedEnemy.player->GetAlive()){
         float spred = activeWeapon->GetSpread() + activeWeapon->GetInaccuracy();
-    if (tr.m_pEntityHit == lockedEnemy.player || spred > 0.003300 ){ //We arent gonna miss due to spread while standing still scoped in and crouched ;-;
+	Ragebot::miss = true;
+    if ((tr.m_pEntityHit == lockedEnemy.player || spred < 0.003300) && (Settings::Resolver::resolveAll /*&&Resolver::players[lockedEnemy.player->GetIndex()].flags != Resolver::rflag::NONE*/)){ //We arent gonna miss due to spread while standing still scoped in and crouched ;-;
 
                         Resolver::players[Resolver::TargetID].MissedCount++;
                                          cvar->ConsoleDPrintf("[eyehook] Missed shot due to bad resolve [RESOLVER: ");
-    switch (Settings::Resolver::resolverType)
+    	Ragebot::misstring = "Missed shot due to bad resolve [RESOLVER: "; //Shit way of doing this but im lazy.
+   	switch (Settings::Resolver::resolverType)
         {
         case resolverType::Experimental:
 	if (!Settings::Resolver::manual){
 	cvar->ConsoleDPrintf("EXP, STEP "); 
+	Ragebot::misstring += "EXP]";
+	Ragebot::misstring += std::to_string(Resolver::players[Resolver::TargetID].MissedCount);
 	cvar->ConsoleDPrintf(std::to_string(Resolver::players[Resolver::TargetID].MissedCount).c_str()); 
+        cvar->ConsoleDPrintf(" , FLAGS: ");
+	if (Resolver::players[lockedEnemy.player->GetIndex()].flags == Resolver::rflag::LAA)
+        cvar->ConsoleDPrintf("LegitAA");
+	else if (Resolver::players[lockedEnemy.player->GetIndex()].flags == Resolver::rflag::LOW)
+        cvar->ConsoleDPrintf("Low");
+        else if (Resolver::players[lockedEnemy.player->GetIndex()].flags == Resolver::rflag::LBY)
+        cvar->ConsoleDPrintf("LBY");
 	}
 	else if (!Settings::Resolver::forcebrute) {
 	        cvar->ConsoleDPrintf("MANUAL, Y: ");
@@ -766,7 +786,7 @@ void Ragebot::CreateMove(CUserCmd* cmd)
                 cvar->ConsoleDPrintf(std::to_string(Settings::Resolver::Pitch).c_str());
 	}else if (Settings::Resolver::forcebrute && Settings::Resolver::manual){
      cvar->ConsoleDPrintf("BRUTEFORCE");}
-	break;        
+	break;
 	case resolverType::ApuWare:
 	                cvar->ConsoleDPrintf("ApuWare");
 
@@ -776,7 +796,9 @@ void Ragebot::CreateMove(CUserCmd* cmd)
 cvar->ConsoleDPrintf("]\n");
 }
 else{
-cvar->ConsoleDPrintf("[eyehook] Missed shot due to spread\n");
+cvar->ConsoleDPrintf("[eyehook] Missed shot due to spread / ragebot\n");
+        Ragebot::misstring += "Missed shot due to spread / ragebot";
+
 }     
                    }
 
@@ -811,7 +833,8 @@ else {
         RagebotAutoR8(player, localplayer, activeWeapon, cmd, Ragebot::BestSpot, angle, oldForward, oldSideMove, currentWeaponSetting);
 	if (player)
         cmd->tick_count = TIME_TO_TICKS(player->GetSimulationTime() + get_interpolation());
-   if (player && Ragebot::BestDamage > 0)
+	bool FD = (Settings::AntiAim::FakeDuck::enabled && inputSystem->IsButtonDown(Settings::AntiAim::FakeDuck::fakeDuckKey) && cmd->buttons & IN_DUCK);
+   if (player && Ragebot::BestDamage > 0 && !FD)
     {
 		Resolver::TargetID = player->GetIndex();
 		Ragebot::lockedEnemy.player = player;

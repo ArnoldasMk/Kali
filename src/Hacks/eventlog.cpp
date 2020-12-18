@@ -376,7 +376,13 @@ void Eventlog::FireGameEvent(IGameEvent* event)
 
                 logToShow.insert(logToShow.begin(), std::pair<std::string, long>(dropLog, now));
 
-        } 
+        } else if (Ragebot::miss) {
+                long now = Util::GetEpochTime();
+                lastLogTimestamp = now;
+
+		logToShow.insert(logToShow.begin(), std::pair<std::string, long>(Ragebot::misstring, now));
+		Ragebot::miss = false;
+	}
 
 
 }

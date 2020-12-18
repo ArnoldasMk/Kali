@@ -27,11 +27,37 @@ class RagebotPredictionSystem{
 public :
 
     RagebotPredictionSystem(){}
+    float normalize_pitch(float pitch)
+        {
+                while (pitch > 89.0f)
+                        pitch -= 180.0f;
+
+                while (pitch < -89.0f)
+                        pitch += 180.0f;
+
+                return pitch;
+        }
+
+    Vector CalculateAngle(Vector src, Vector dst)
+        {
+        Vector angles;
+
+        Vector delta = src - dst;
+        float hyp = delta.Length2D();
+
+        angles.y = std::atanh(delta.y / delta.x) * 57.2957795131f;
+        angles.x = std::atanh(-delta.z / hyp) * -57.2957795131f;
+        angles.z = 0.0f;
+
+        if (delta.x >= 0.0f)
+                angles.y += 180.0f;
+
+        return angles;
+        }
 
 void BestHeadPoint(C_BasePlayer* player, const int &BoneIndex, int& Damage, Vector& Spot)
 {
 	matrix3x4_t matrix[128];
-
 	if( !player->SetupBones(matrix, 128, 0x100, 0.f) )
 		return;
 	model_t *pModel = player->GetModel();
@@ -48,6 +74,7 @@ void BestHeadPoint(C_BasePlayer* player, const int &BoneIndex, int& Damage, Vect
 	Vector mins, maxs;
 	Math::VectorTransform(bbox->bbmin, matrix[bbox->bone], mins);
 	Math::VectorTransform(bbox->bbmax, matrix[bbox->bone], maxs);
+        auto local = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 
 	Vector center = ( mins + maxs ) * 0.5f;
 	static Vector points[7] = { center, center, center, center, center, center, center};
@@ -55,13 +82,20 @@ void BestHeadPoint(C_BasePlayer* player, const int &BoneIndex, int& Damage, Vect
 	// 4 - leftear, 5 - rightear, 6 - backofhead
 	for( int i = 0; i < 7; i++ ) // set all points initially to center mass of head.
 		points[i] = center;
+	float scale = Settings::Ragebot::HeadScale;
+        auto final_radius = bbox->radius * scale;
 
-	points[1].z += bbox->radius * 1.25f; // ...
-	points[3].y -= bbox->radius * 0.80f;
-	points[3].z += bbox->radius * 0.90f;
-	points[4].x += bbox->radius * 0.80f;
-	points[5].x -= bbox->radius * 0.80f;
-	points[6].y -= bbox->radius * 0.80f;
+        auto pitch_down = normalize_pitch(player->GetEyeAngles()->x) > 85.0f;
+	float stuff = Math::CalcAngle(player->GetEyePosition(), local->GetAbsOrigin().y).y;
+        auto backward = fabs(player->GetEyeAngles()->y - stuff) > 120.0f;
+
+	points[1] = Vector(bbox->bbmax.x + 0.70710678f * final_radius, bbox->bbmax.y - 0.70710678f * final_radius, bbox->bbmax.z);
+	points[3] = Vector(bbox->bbmax.x, bbox->bbmax.y, bbox->bbmax.z + final_radius);
+        points[4] = Vector(bbox->bbmax.x, bbox->bbmax.y, bbox->bbmax.z - final_radius);
+	points[5] = Vector(bbox->bbmax.x, bbox->bbmax.y - final_radius, bbox->bbmax.z);
+
+        if (pitch_down && backward)
+            points[6] = Vector(bbox->bbmax.x - final_radius, bbox->bbmax.y, bbox->bbmax.z);
 
 	for (int i = 0; i < 7; i++)
 	{
@@ -90,7 +124,7 @@ void BestHeadPoint(C_BasePlayer* player, const int &BoneIndex, int& Damage, Vect
 	mstudiobbox_t* bbox = hdr->pHitbox((int)BoneIndex, 0);
 	if (!bbox)
 		return;
-	
+
 	matrix3x4_t matrix[128];
 	Vector mins, maxs;
 	Math::VectorTransform(bbox->bbmin, matrix[bbox->bone], mins);
@@ -98,10 +132,12 @@ void BestHeadPoint(C_BasePlayer* player, const int &BoneIndex, int& Damage, Vect
 	// 0 - center 1 - left, 2 - right, 3 - back
 	Vector center = ( mins + maxs ) * 0.5f;
 	Vector points[4] = { center,center,center,center };
+        float scale = Settings::Ragebot::BodyScale;
+        auto final_radius = bbox->radius * scale;
 
-    points[1].x += bbox->radius * 0.95f; // morph each point.
-	points[2].x -= bbox->radius * 0.95f;
-	points[3].y -= bbox->radius * 0.95f;
+	points[1] = Vector(bbox->bbmax.x, bbox->bbmax.y, bbox->bbmax.z + final_radius);
+	points[2] = Vector(bbox->bbmax.x, bbox->bbmax.y, bbox->bbmax.z - final_radius);
+	points[3] = Vector(center.x, bbox->bbmax.y - final_radius, center.z);
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -203,8 +239,9 @@ void BestHeadPoint(C_BasePlayer* player, const int &BoneIndex, int& Damage, Vect
 };
 namespace Ragebot {
 void CheckHit(C_BaseCombatWeapon*);
-
-    struct enemy 
+    inline std::string misstring;
+    inline bool miss = false;
+    struct enemy
     {
         C_BasePlayer* player = nullptr;
         int LockedBone = -1;

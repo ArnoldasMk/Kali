@@ -114,6 +114,8 @@ struct COffsets
 		std::ptrdiff_t m_bHasDefuser;
 		std::ptrdiff_t m_bIsDefusing;
 		std::ptrdiff_t m_bIsGrabbingHostage;
+                std::ptrdiff_t m_vecMaxs;
+                std::ptrdiff_t m_vecMins;
 		std::ptrdiff_t m_bIsScoped;
 		std::ptrdiff_t m_bGunGameImmunity;
 		std::ptrdiff_t m_bIsRescuing;

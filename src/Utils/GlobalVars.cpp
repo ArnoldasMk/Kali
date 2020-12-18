@@ -8,7 +8,7 @@ namespace Util
     bool bInSendMove;
     int nSinceUse;
     bool bFirstSendMovePack;
-
+    int tickCount;
 	}
 
 }

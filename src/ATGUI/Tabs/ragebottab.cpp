@@ -317,6 +317,10 @@ ImGui::Combo(XORSTR("##ImpactDetection"), (int*)&Settings::Ragebot::impacttype, 
                                 UI::KeyBindButton(&Settings::Ragebot::dmgkey);
                                 ImGui::Checkbox(XORSTR("Wait for onshot"), &Settings::Ragebot::onshot::enabled);
                                 UI::KeyBindButton(&Settings::Ragebot::onshot::button);
+                                        ImGui::TextWrapped(XORSTR("Head multipoint scale"));
+                                ImGui::SliderFloat(XORSTR("##HEADSCALE"), &Settings::Ragebot::HeadScale, 0.0f, 1.0f);
+                                        ImGui::TextWrapped(XORSTR("Body multipoint scale"));
+                                ImGui::SliderFloat(XORSTR("##BODYSCALE"), &Settings::Ragebot::BodyScale, 0.0f, 1.0f);
 
 			//	ImGui::Checkbox(XORSTR("Resolver"), &Settings::Resolver::resolveAll);
 
@@ -392,7 +396,6 @@ ImGui::Combo(XORSTR("##ImpactDetection"), (int*)&Settings::Ragebot::impacttype, 
 
 //				}
 				if (ImGui::Checkbox(XORSTR("Silent Aim"), &silent))
-
 					UI::UpdateRageWeaponSettings();
 			}
 			// END of other Settings

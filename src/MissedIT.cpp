@@ -9,7 +9,7 @@
 #include "fonts.h"
 #include "Hooks/hooks.h"
 #include "sdlhook.h"
-
+#include "MissedIT.h"
 #include "EventListener.h"
 #include "Utils/xorstring.h"
 #include "Utils/bonemaps.h"
@@ -179,22 +179,7 @@ void __attribute__((destructor)) Shutdown()
 
 	cvar->ConsoleColorPrintf(ColorRGBA(255, 0, 0), XORSTR("MissedIT Unloaded successfully.\n"));
 }
-/*
-added option to enable / disable backtrack chams
-enhanced resolver:
--More proper legit aa / legit detection
--basic lby, low delta and no desync detection
--attempted to make a more proper legit aa resolver
-fixed legit aa on e still doing at targets
-enhanced legitbot
-attempted to make ragebot's "CanShoot" function more accurate 
-added safety mode to slowwalk
-added option to reset misses to player list
-readded adaptive option to fakelag which should help with breaking lagcomp
-fixed indicators and added lc indicator
-updated multipoint code
-added wait for onshot on key
-added proper buybot
-NOTE: NOT EVERYTHING IS DONE YET. TAKE THIS COMMIT AS A PART 1.
-*/
-
+void MissedIT::SelfShutdown()
+{
+	Shutdown(); //meme
+}

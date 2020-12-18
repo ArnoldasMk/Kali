@@ -59,7 +59,9 @@ static bool scopeControlEnabled = false;
 static bool TriggerBot = false;
 static bool hitchanceEnaled = false;
 static float hitchance = 100.f;
-
+static bool reactionEnabled = false;
+static float reactionHigh = 1.0f;
+static float reactionLow = 25.0f;
 void UI::ReloadWeaponSettings()
 {
 	ItemDefinitionIndex index = ItemDefinitionIndex::INVALID;
@@ -102,6 +104,9 @@ void UI::ReloadWeaponSettings()
 	autoSlow = Settings::Legitbot::weapons.at(index).autoSlow;
 	predEnabled = Settings::Legitbot::weapons.at(index).predEnabled;
 	scopeControlEnabled = Settings::Legitbot::weapons.at(index).scopeControlEnabled;
+	reactionEnabled = Settings::Legitbot::reactionTime;
+	reactionLow = Settings::Legitbot::reactionLow;
+        reactionHigh = Settings::Legitbot::reactionHigh;
 
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 		desiredBones[bone] = Settings::Legitbot::weapons.at(index).desiredBones[bone];
@@ -139,6 +144,7 @@ void UI::UpdateWeaponSettings()
                         .TriggerBot = TriggerBot,
 			.mindamage = 0,
 			.autoWall = false,
+			.reactionEnabled = false,
 			.bone = bone,
 			.smoothType = smoothType,
 			.aimkey = aimkey,
@@ -151,6 +157,8 @@ void UI::UpdateWeaponSettings()
 			.rcsAmountX = rcsAmountX,
 			.rcsAmountY = rcsAmountY,
 	                .minDamagevalue = 10.0f,
+			.reactionLow = 1.0f,
+			.reactionHigh = 25.0f,
 	                .hitchance = hitchance,
 
 	};
@@ -350,6 +358,9 @@ void Legitbot::RenderTab()
 				ImGui::PopItemWidth();
 				if (ImGui::Button(XORSTR("RCS Settings"), ImVec2(-1, 0)))
 					ImGui::OpenPopup(XORSTR("optionRCSAmount"));
+                                if (ImGui::Button(XORSTR("Reaction Time"), ImVec2(-1, 0)))
+                                        ImGui::OpenPopup(XORSTR("optionReactionTime"));
+
 				ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiSetCond_Always);
 				if (ImGui::BeginPopup(XORSTR("optionRCSAmount")))
 				{
@@ -364,6 +375,20 @@ void Legitbot::RenderTab()
 
 					ImGui::EndPopup();
 				}
+                                if (ImGui::BeginPopup(XORSTR("optionReactionTime")))
+                                {
+                                        ImGui::PushItemWidth(-1);
+                                        if (ImGui::Checkbox(XORSTR("Random Reaction time"), &reactionEnabled))
+                                                UI::UpdateWeaponSettings();
+                                        if (ImGui::SliderFloat(XORSTR("##REACTIONL"), &reactionLow, 0, 200, XORSTR("Min: %0.1f")))
+                                                UI::UpdateWeaponSettings();
+                                        if (ImGui::SliderFloat(XORSTR("##REACTIONH"), &reactionHigh, 0, 200, XORSTR("Max: %0.1f")))
+                                                UI::UpdateWeaponSettings();
+                                        ImGui::PopItemWidth();
+
+                                        ImGui::EndPopup();
+                                }
+
 			}
 			ImGui::Columns(1);
 			ImGui::Spacing();

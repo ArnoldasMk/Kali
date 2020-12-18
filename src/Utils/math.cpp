@@ -122,6 +122,11 @@ void Math::NormalizeYaw( float& yaw ) {
 		yaw += 360.0f;
 }
 
+float Math::Clamp(float f, float min, float max)
+{
+	return (f <= min) ? min : (f >= max) ? max : f;
+}
+
 void Math::ClampAngles(QAngle& angle)
 {
 	if (angle.y > 180.0f)

@@ -303,6 +303,11 @@ static void DrawWeapon(const ModelRenderInfo_t& pInfo)
 	if (!Settings::ESP::Chams::Weapon::enabled)
 		return;
 
+    	//turn weapon chams off while scoped so you can actually see with COD guns while scoped -Crazily.
+    	C_BasePlayer *localPlayer = (C_BasePlayer *) entityList->GetClientEntity(engine->GetLocalPlayer());
+    	if (localPlayer->IsScoped())
+		return;
+
 	std::string modelName = modelInfo->GetModelName(pInfo.pModel);
 	IMaterial* mat = nullptr;
 
@@ -510,6 +515,7 @@ void Chams::DrawModelExecute(void* thisptr, void* context, void *state, const Mo
 	{
 	        materialChamsPearl = Util::CreateMaterial2(XORSTR("VertexLitGeneric"), XORSTR("models/inventory_items/dogtags/dogtags_outline"), false, true, true, true, 1.f);
                 materialChamsGlow = Util::CreateMaterial3(XORSTR("VertexLitGeneric"), XORSTR("csgo/materials/glowOverlay.vmt"), false, true, true, true, 1.f, colro);
+                //materialChamsGlow = Util::CreateMaterial3(XORSTR("VertexLitGeneric"), XORSTR("dev/zone_warning"), false, true, true, true, 1.f, colro, false);
                 materialChamsPulse = Util::CreateMaterial4(XORSTR("VertexLitGeneric"), XORSTR("models/inventory_items/dogtags/dogtags_outline"), false, true, true, true, 1.f, colro);
 
 		materialChamsFlat = Util::CreateMaterial(XORSTR("UnlitGeneric"), XORSTR("VGUI/white_additive"), false, true, true, true, true);

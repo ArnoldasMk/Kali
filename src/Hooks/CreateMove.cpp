@@ -32,6 +32,8 @@
 #include "../Hacks/quickswitch.h"
 #include "../Hacks/fakewalk.h"
 #include "../Hacks/memeangle.h"
+#include "../Hacks/global.h"
+
 bool CreateMove::sendPacket = true;
 QAngle CreateMove::lastTickViewAngles = QAngle(0);
 
@@ -53,6 +55,7 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
 		/* run code that affects movement before prediction */
 		BHop::CreateMove(cmd);
                 AutoStrafe::CreateMove(cmd);
+                global::CreateMove(cmd);
                 SilentWalk::CreateMove(cmd);
 		NoDuckCooldown::CreateMove(cmd);
 		ShowRanks::CreateMove(cmd);

@@ -416,6 +416,14 @@ public:
 		return *(int*)((uintptr_t)this + offsets.DT_CSPlayer.m_bHasHelmet);
 	}
 
+	Vector GetMaxs() {
+                return *(int*)((uintptr_t)this + offsets.DT_CSPlayer.m_vecMaxs);
+	}
+
+        Vector GetMins() {
+                return *(int*)((uintptr_t)this + offsets.DT_CSPlayer.m_vecMins);
+        }
+
 	bool IsFlashed() // Pasted from CSGOSimple.
 	{ // GetFlashBangTime() - globalVars->curtime > 2.0f
 		return *(float*)((uintptr_t)this->GetFlashMaxAlpha() - 0x8) > 200.0;

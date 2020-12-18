@@ -108,6 +108,8 @@ void Offsets::GetNetVarOffsets()
 	offsets.DT_CSPlayer.m_flFlashMaxAlpha = NetVarManager::GetOffset(tables, XORSTR("DT_CSPlayer"), XORSTR("m_flFlashMaxAlpha"));
 	offsets.DT_CSPlayer.m_flLowerBodyYawTarget = NetVarManager::GetOffset(tables, XORSTR("DT_CSPlayer"), XORSTR("m_flLowerBodyYawTarget"));
 	offsets.DT_CSPlayer.m_nSurvivalTeam = NetVarManager::GetOffset(tables, XORSTR("DT_CSPlayer"), XORSTR("m_nSurvivalTeam"));
+        offsets.DT_CSPlayer.m_vecMaxs = NetVarManager::GetOffset(tables, XORSTR("DT_CSPlayerResource"), XORSTR("m_vecMaxs"));
+        offsets.DT_CSPlayer.m_vecMins = NetVarManager::GetOffset(tables, XORSTR("DT_CSPlayerResource"), XORSTR("m_vecMins"));
 
 	offsets.DT_BaseAttributableItem.m_iItemDefinitionIndex = NetVarManager::GetOffset(tables, XORSTR("DT_BaseAttributableItem"), XORSTR("m_iItemDefinitionIndex"));
 	offsets.DT_BaseAttributableItem.m_iItemIDHigh = NetVarManager::GetOffset(tables, XORSTR("DT_BaseAttributableItem"), XORSTR("m_iItemIDHigh"));
