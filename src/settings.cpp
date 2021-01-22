@@ -776,7 +776,9 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("FakeLag")][XORSTR("enabled")] = Settings::FakeLag::enabled;
     settings[XORSTR("FakeLag")][XORSTR("value")] = Settings::FakeLag::value;
     settings[XORSTR("FakeLag")][XORSTR("adaptive")] = Settings::FakeLag::adaptive;
-    settings[XORSTR("FakeLag")][XORSTR("randomLag")] = Settings::AntiAim::randomLag::enabled;
+    settings[XORSTR("FakeLag")][XORSTR("microphone")] = Settings::FakeLag::microphone;
+    settings[XORSTR("FakeLag")][XORSTR("microphoneKey")] = Settings::FakeLag::microphoneKey;
+
 
     settings[XORSTR("SlowWalk")][XORSTR("enabled")] = Settings::AntiAim::SlowWalk::enabled;
     settings[XORSTR("SlowWalk")][XORSTR("key")] = Settings::AntiAim::SlowWalk::key;
@@ -1587,7 +1589,8 @@ GetVal(settings[XORSTR("Airstuck")][XORSTR("enabled")], &Settings::Airstuck::ena
     GetVal(settings[XORSTR("FakeLag")][XORSTR("enabled")], &Settings::FakeLag::enabled);
     GetVal(settings[XORSTR("FakeLag")][XORSTR("value")], &Settings::FakeLag::value);
     GetVal(settings[XORSTR("FakeLag")][XORSTR("adaptive")], &Settings::FakeLag::adaptive);
-    GetVal(settings[XORSTR("FakeLag")][XORSTR("randomLag")], &Settings::AntiAim::randomLag::enabled);
+    GetVal(settings[XORSTR("FakeLag")][XORSTR("microphone")], &Settings::FakeLag::microphone);
+    GetButtonCode(settings[XORSTR("FakeLag")][XORSTR("microphoneKey")], &Settings::FakeLag::microphoneKey);
 
     GetVal(settings[XORSTR("SlowWalk")][XORSTR("enabled")], &Settings::AntiAim::SlowWalk::enabled);
     GetButtonCode(settings[XORSTR("SlowWalk")][XORSTR("key")], &Settings::AntiAim::SlowWalk::key);
