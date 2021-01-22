@@ -2,7 +2,7 @@
  this fork will probably contain a lot of pasted, shitty code.
 ===================
 <p align="center">
-<img src="./Pictures/eyehook.png">
+<img src="./Pictures/eyehook.jpg">
 </p>
 ===================
 # EyeHook
@@ -43,11 +43,11 @@ sudo dnf install cmake gcc-c++ gdb git libstdc++-static mesa-libGL-devel SDL2-de
 #### Download EyeHook:
 
 ```bash
-git clone --recursive https://github.com/itsme2417/MissedIT
+git clone --recursive https://github.com/itsme2417/EyeHook
 ```
 
 ```bash
-cd MissedIT
+cd EyeHook
 ```
 
 ===================
@@ -171,4 +171,3 @@ Special thanks to [@aixxe](http://www.github.com/aixxe/) ([aixxe.net](http://www
 
 This project was also originally based upon Atex's [Linux Basehook](http://unknowncheats.me/forum/counterstrike-global-offensive/181878-linux-basehook.html).
 
-[telans](https://github.com/telans) for the AUR package
