@@ -313,8 +313,15 @@ void HvH::RenderTab()
             ImGui::SameLine();
             ImGui::SliderInt(XORSTR("##FAKELAGAMOUNT"), &Settings::FakeLag::value, 0, 15, XORSTR("Amount: %0.f"));
 			ImGui::Checkbox(XORSTR("Adaptive Fake Lag"), &Settings::FakeLag::adaptive);
+		  if(Settings::FakeLag::enabled == true)
+	    {
+		ImGui::Checkbox(XORSTR("Fake Lag Mic Fix"), &Settings::FakeLag::microphone);
+		ImGui::Text(XORSTR("MicKey"));
+		ImGui::SameLine();
+		UI::KeyBindButton(&Settings::FakeLag::microphoneKey);
+	    }
 //ImGui::Checkbox(XORSTR("Random Fake Lag"), &Settings::AntiAim::randomLag::enabled);
-           UI::KeyBindButton(&Settings::FakeLag::ckey);
+        //   UI::KeyBindButton(&Settings::FakeLag::ckey);
 
                         ImGui::Checkbox(XORSTR("Slow Walk"), &Settings::AntiAim::SlowWalk::enabled);
 if (Settings::AntiAim::SlowWalk::enabled){

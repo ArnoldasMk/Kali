@@ -111,7 +111,7 @@ void RagebotTab::RenderTab()
 
 	
 	const char *DamagePredictionType[] = {"Safety","Damage",};
-	const char *EnemySelectionType[] = {"Best Damage(Lagacy Old Method)", "Closest To Crosshair( Faster But In alfa)"};
+	const char *EnemySelectionType[] = {"Best Damage(Legacy Old Method)", "Closest To Crosshair( Faster But In alfa)"};
         const char *impactType[] = {"itsme","Pritam",};
 
 
@@ -133,7 +133,7 @@ void RagebotTab::RenderTab()
 		for (auto it : ItemDefinitionIndexMap)
 		{
 			bool isDefault = (int) it.first < 0;
-			if (!isDefault && !Util::Contains(Util::ToLower(std::string(filterWeapons)), Util::ToLower(Util::Items::GetItemDisplayName(it.first).c_str())))
+			if (!isDefault && !Util::Contains(Util::ToLower(std::string(filterWeapons)), Util::ToLower(Util::Items::GetItemDisplayName(it.first))))
 				continue;
 
 			if (Util::Items::IsKnife(it.first) || Util::Items::IsGlove(it.first) || Util::Items::IsUtility(it.first))
@@ -146,7 +146,7 @@ void RagebotTab::RenderTab()
 			bool isChanged = Settings::Ragebot::weapons.find(it.first) != Settings::Ragebot::weapons.end();
 			if (!isDefault && isChanged)
 				changeIndicator = '*';
-			formattedName = changeIndicator + (isDefault ? Util::Items::GetItemDisplayName(it.first).c_str() : Util::Items::GetItemDisplayName(it.first));
+			formattedName = changeIndicator + (isDefault ? Util::Items::GetItemDisplayName(it.first) : Util::Items::GetItemDisplayName(it.first));
 			if (ImGui::Selectable(formattedName.c_str(), item_selected))
 			{
 				currentWeapon = it.first;
