@@ -2,7 +2,7 @@
  this fork will probably contain a lot of pasted, shitty code.
 ===================
 <p align="center">
-<img src="./Pictures/missedit.png">
+<img src="./Pictures/eyehook.png">
 </p>
 ===================
 # EyeHook
