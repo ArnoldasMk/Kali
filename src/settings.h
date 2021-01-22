@@ -1828,6 +1828,7 @@ inline ButtonCode_t key;
 		inline bool adaptive = false;
                 inline ButtonCode_t ckey;
 		inline bool microphone = false;
+		inline ButtonCode_t microphoneKey = KEY_K;
 	}
 
 	namespace AutoAccept
