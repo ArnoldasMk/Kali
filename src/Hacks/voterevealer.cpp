@@ -3,10 +3,7 @@
 #include "../Utils/xorstring.h"
 #include "../Utils/entity.h"
 #include "../settings.h"
-#include "../fonts.h"
 #include "../interfaces.h"
-#include "../Utils/draw.h"
-#include "../Hooks/hooks.h"
 
 void VoteRevealer::FireGameEvent(IGameEvent *event){
 
