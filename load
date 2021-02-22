@@ -36,7 +36,7 @@ filename=$(cat build_id)
 
 # Credit: Aixxe @ aixxe.net
 if grep -q "$filename" /proc/"$csgo_pid"/maps; then
-    echo_orange "Try to Inject with sudo (sudo ./load) "
+    echo_orange "If its not already Injected, try to Inject with sudo (sudo ./load) "
     exit
 fi
 echo "Injecting Build ID: $filename"

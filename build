@@ -53,4 +53,20 @@ patchelf --set-soname "$BUILD_ID" "$BUILD_ID" || echo_orange "Warning: your patc
 
 chmod 400 build_id # Make the build_id read-only for safety.
 
-echo "Build Completed."
+## Copy fonts to usr/share/fonts/TTF and (CSGODIR)/csgo/panorama/fonts/ for the weapon icon esp to work
+# Check if usr/share/fonts/TTF folder exists, if not then create it.
+echo 
+if [ ! -d /usr/share/fonts/TTF ]; then
+  sudo mkdir -p /usr/share/fonts/TTF; echo Creating Folder...
+else echo Folder exists.
+fi
+
+# Move fonts to usr/share/fonts/TTF
+if sudo cp fonts/astriumwep.ttf /usr/share/fonts/TTF; then
+    printf 'Success.\n'
+else
+    printf 'Copying failed. You will need to move font file to /usr/share/fonts/TTF by yourself.\n'
+fi
+
+echo "You need to copy font file from /linux.cc/fonts folder to your (CSGODIR)/csgo/panorama/fonts/ for the weapon icon esp to work." 
+echo "Build Completed." 
