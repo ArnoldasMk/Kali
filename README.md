@@ -85,6 +85,10 @@ Special thanks to the Original AimTux project: [https://github.com/AimTuxOfficia
 
 Special thanks to the Fuzion For Panaroma Update And For Good Quality Codes: [https://github.com/LWSS/Fuzion](https://github.com/LWSS/Fuzion).
 
+Special thanks to the MissedIT project [https://github.com/HackerPolice/MissedIT](https://github.com/HackerPolice/MissedIT)
+
+Special thanks to the EyeHook project [https://github.com/itsme2417/EyeHook] (https://github.com/itsme2417/EyeHook)
+
 Special thanks to Unknowncheats For Various Things :)
 
 Special thanks to the Nimbus project For The UI: [https://github.com/NimbusProjects/Nimbus](https://github.com/NimbusProjects/Nimbus)
