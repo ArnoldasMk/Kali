@@ -18,7 +18,7 @@ sudo rm -rf /tmp/dumps # Remove if it exists
 sudo mkdir --mode=000 /tmp/dumps # Make it as root with no permissions
 
 if [ ! -f build_id ]; then
-    echo "Build ID not found. Please rebuild using the './build' script."
+    echo "Build ID not found. Please build using the './build' script."
     exit
 fi
 

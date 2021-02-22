@@ -19,7 +19,7 @@ if [ -z "$csgo_pid" ]; then
 fi
 
 if [ ! -d ".git" ]; then
-    echo "We have detected that you have downloaded Fuzion-master.zip from GitHub.com. This is the WRONG way to download! Please download Fuzion by cloning the Git repository: 'git clone --recursive https://github.com/LWSS/Fuzion.git'"
+    echo "We have detected that you have downloaded linux.cc-master.zip from GitHub.com. This is the WRONG way to download! Please download linux.cc by cloning the Git repository: 'git clone --recursive https://github.com/ArnoldasMk/linux.cc.git'"
 fi
 
 # pBypass for crash dumps being sent
@@ -28,7 +28,7 @@ sudo rm -rf /tmp/dumps # Remove if it exists
 sudo mkdir --mode=000 /tmp/dumps # Make it as root with no permissions
 
 if [ ! -f build_id ]; then
-    echo "Build ID not found. Please rebuild using the './build' script."
+    echo "Build ID not found. Please build using the './build' script."
     exit
 fi
 
@@ -36,7 +36,7 @@ filename=$(cat build_id)
 
 # Credit: Aixxe @ aixxe.net
 if grep -q "$filename" /proc/"$csgo_pid"/maps; then
-    echo_orange "Fuzion is already injected, aborting..."
+    echo_orange "Try to Inject with sudo (sudo ./load) "
     exit
 fi
 echo "Injecting Build ID: $filename"
