@@ -64,23 +64,12 @@ Now, you can inject the hack with the `load` script
 
 You might be prompted to enter in your password, this is because the injection script requires root access.
 
-The text printed out during injection is not important. 
-
-If the injection was successful you will see a message at the bottom saying `Successfully injected!`, however, if the message says `Injection failed`, then you've most likely done something wrong.
-
-Now, go back into CS:GO, if you are in the main menu of the game you should see a banner in the top left like so:
-
-![this](Pictures/mainmenu-ss.png)
-
 *Note:* if you are getting crashes ( that are unrelated to game updates ) Try disabling shader precaching in your Steam Client -> Steam -> Settings -> Shader Pre-Caching. 
 You will need to install this font https://mega.nz/file/omZBlaBQ#AOF2CpAuWTg2Z45zMjmD6da8_hsxZMdh8IwOEZDQ0Ns to both /usr/share/fonts/TTF and (CSGODIR)/csgo/panorama/fonts/ for the weapon icon esp to work
 
 ## Using the hack
 
-Now that eyehook has been injected into the game, press <kbd>Insert</kbd> on your keyboard to open the hack menu (<kbd>ALT</kbd>+<kbd>I</kbd> if you are using a laptop).
-
-If you want to change skins, create and load configs or open the player list, you can find those buttons at the top of the screen.
-
+Now that linux.cc has been injected into the game, press <kbd>Insert</kbd> on your keyboard to open the hack menu (<kbd>ALT</kbd>+<kbd>I</kbd> if you are using a laptop).
 
 ## Unloading the hack
 
