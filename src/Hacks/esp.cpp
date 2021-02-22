@@ -500,7 +500,7 @@ std::string bombStr = std::to_string(woop );
                 Draw::AddLine(1653 + 6 + 73 + 22 , 1 + 5, 1653 + 254 , 1 + 5, Settings::ESP::Watermark::color.Color());
                 int fps = static_cast< int >( 1.f / globalVars->frametime );
                 std::string fps_string = std::to_string(fps);
-//std::string name = "eyehook | " + fps_string + " fps | 39ms";
+//std::string name = "linux.cc | " + fps_string + " fps | 39ms";
 std::string name = "eye     | " + fps_string + " fps | " + bombStr + "FL";
 
 Draw::AddText(1653 + 10 + 73 + 22, 10.8, name.c_str(), ImColor( 255, 255, 255, 255 ) );

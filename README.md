@@ -78,23 +78,7 @@ If you wish to unload the hack from the game, you can do so by entering the comm
 ./uload
 ```
 
-## Configs
 
-Configs are stored in a hidden directory in your home folder. Specifically 
-```
-~/.config/MissedIT/
-```
-
-Each `config.json` is stored in a seperately named folder (The name you see in-game, in the config window). 
-
-To add a config, create a folder inside of the `~/.config/MissedIT/` folder with a name of your choice, and paste the `config.json` inside of that folder.
-
-To see hidden folders inside your home folder, press <kbd>CTRL</kbd>+<kbd>H</kbd> when using a file manager.
-
-On your command line, you can also add the -a flag on `ls` e.g.
-```bash
-ls -la ~/
-```
 ## Credits
 
 Special thanks to the Original AimTux project: [https://github.com/AimTuxOfficial/AimTux](https://github.com/AimTuxOfficial/AimTux).
