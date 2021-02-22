@@ -1,23 +1,8 @@
-===================
-<p align="center">
-<img src="./Pictures/eyehook.jpg">
-</p>
-===================
-# EyeHook
-
-Want to chat or play with other MissedIT / eyehook users? Join us on Discord :- <a href = https://discord.gg/PDtg8hd><b>Hacker.Police Discord</b></a>
-
-
-## What is EyeHook?
-
-A fully featured internal hack for *CounterStrike : Global Offensive* which is a fork of <a href = https://github.com/HackerPolice/MissedIT><b>MissedIT</b></a>
-.
-
 ## Compiling
 
 **Note:** _Do NOT download or compile as the root user._
 
-#### Download the dependencies required to build EyeHook:
+#### Download the dependencies required to build linux.cc:
 
 If you are having problems compiling make sure you've got the latest version of `g++`.
 
@@ -38,14 +23,14 @@ sudo dnf install cmake gcc-c++ gdb git libstdc++-static mesa-libGL-devel SDL2-de
 
 ===================
 
-#### Download EyeHook:
+#### Download linux.cc:
 
 ```bash
-git clone --recursive https://github.com/itsme2417/EyeHook
+git clone --recursive https://github.com/ArnoldasMk/linux.cc
 ```
 
 ```bash
-cd EyeHook
+cd linux.cc
 ```
 
 ===================
@@ -67,9 +52,9 @@ You can later update with
 
 First of all, make sure CS:GO is open, and you are not in any official valve server. However, it is not recommended to inject while CS:GO is loading into a map. 
 
-Navigate to the directory where MissedIT was built if you have not ready.
+Navigate to the directory where linux.cc was built if you have not ready.
 ```bash
-cd MissedIT
+cd linux.cc
 ```
 
 Now, you can inject the hack with the `load` script
@@ -121,40 +106,6 @@ On your command line, you can also add the -a flag on `ls` e.g.
 ```bash
 ls -la ~/
 ```
-
-
-## Grenade Configs
-
-```
-~/.config/MissedIT/
-```
-
-Each `config.json` is stored in the folder named after them map name.
-
-To add a config, copy the folder containing it to `~/.config/MissedIT/`
-
-
-## Screenshots
-
-![Visuals](Pictures/visuals.png)
-![LegitBot](Pictures/legitbot.png)
-![RageBot](Pictures/ragebot.png)
-![AntiAim](Pictures/antiaim.png)
-![esp](Pictures/visualstab.png)
-![skinchanger](Pictures/skinchanger.png)
-![Misc](Pictures/misc.png)
-
-## Media
-https://imgur.com/a/JxWryuy made by Dehumanization » Mass Genocide#3668
-
-https://imgur.com/a/q4KV8PE made by Dehumanization » Mass Genocide#3668
-
-https://www.youtube.com/watch?v=UXm4ISktAmQ made by Dehumanization » Mass Genocide#3668
-
-https://cdn.discordapp.com/attachments/774860310703243274/774860348393390123/untitled.mp4 made by Dehumanization » Mass Genocide#3668
-
-https://www.youtube.com/watch?v=_HiIKhbuhog made by Aαɾσɳ#1883
-
 ## Credits
 
 Special thanks to the Original AimTux project: [https://github.com/AimTuxOfficial/AimTux](https://github.com/AimTuxOfficial/AimTux).
