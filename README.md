@@ -65,7 +65,6 @@ Now, you can inject the hack with the `load` script
 You might be prompted to enter in your password, this is because the injection script requires root access.
 
 *Note:* if you are getting crashes ( that are unrelated to game updates ) Try disabling shader precaching in your Steam Client -> Steam -> Settings -> Shader Pre-Caching. 
-You will need to install this font https://mega.nz/file/omZBlaBQ#AOF2CpAuWTg2Z45zMjmD6da8_hsxZMdh8IwOEZDQ0Ns to both /usr/share/fonts/TTF and (CSGODIR)/csgo/panorama/fonts/ for the weapon icon esp to work
 
 ## Using the hack
 
@@ -76,6 +75,11 @@ Now that linux.cc has been injected into the game, press <kbd>Insert</kbd> on yo
 If you wish to unload the hack from the game, you can do so by entering the command:
 ```bash
 ./uload
+```
+## My glove skin doens't load
+So apparently this bug is present with the AMDGPU and Radeon drivers. Henrym11106 discovered that that setting "mesa_no_error" (disable error checking) in adriconf/driconf, .drirc file or by adding `mesa_no_error=true %command%` to CSGO's launch options allows fancy gloves to render correctly. Saddly it doesn't crash only on mesa 20.1.4, for me it crashes on Mesa 20.3.2 and Mesa 20.2.
+```bash
+mesa_no_error=true %command%
 ```
 
 
