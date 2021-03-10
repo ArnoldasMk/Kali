@@ -501,7 +501,7 @@ std::string bombStr = std::to_string(woop );
                 int fps = static_cast< int >( 1.f / globalVars->frametime );
                 std::string fps_string = std::to_string(fps);
 //std::string name = "linux.cc | " + fps_string + " fps | 39ms";
-std::string name = "eye     | " + fps_string + " fps | " + bombStr + "FL";
+std::string name = "linux.cc" + fps_string + " fps | " + bombStr + "FL";
 
 Draw::AddText(1653 + 10 + 73 + 22, 10.8, name.c_str(), ImColor( 255, 255, 255, 255 ) );
 Draw::AddText(1653 + 8 + 73 + 21 + 22, 10.8, "hook", ImColor( 255, 166, 14, 255 ) );
