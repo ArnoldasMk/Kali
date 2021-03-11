@@ -26,6 +26,7 @@
 #include <climits>
 #include <deque>
 #include <mutex>
+#include <ctime>
 #define TICK_INTERVAL			(globalVars->interval_per_tick)
 #define TIME_TO_TICKS( dt )		( (int)( 0.5f + (float)(dt) / TICK_INTERVAL ) )
 #define TICKS_TO_TIME( t )              ( TICK_INTERVAL *( t ) )
@@ -492,19 +493,18 @@ static void DrawWatermark(C_BasePlayer* player){
 int lag = TIME_TO_TICKS(player->GetSimulationTime() - player->GetOldSimulationTime());
                 int woop = lag;
 std::string bombStr = std::to_string(woop );
-
-                Draw::AddRectFilled(1653 + 73 + 22, 2, 1653 + 260 , 30, ImColor(40, 40, 40, 225));
-                Draw::AddRectFilled(1653 + 5 + 73 + 22, 1 + 5, 1653 + 255 , 30 - 5, ImColor(10, 10, 10, 225));
-                Draw::AddRect(1653 - 1 + 73 + 22, 1, 1653 + 261 , 31, ImColor(200, 200, 200, 50));
-                Draw::AddRect(1652 + 5 + 73 + 22, 1 + 5, 1653 + 256  , 31 - 5, ImColor(200, 200, 200, 50));
-                Draw::AddLine(1653 + 6 + 73 + 22 , 1 + 5, 1653 + 254 , 1 + 5, Settings::ESP::Watermark::color.Color());
+                
+				Draw::AddRectFilled(1696 + 72 + 22, 2, 1696 + 224 , 30, ImColor(168, 7, 11, 255)); // OUTSIDE
+                Draw::AddRectFilled(1696 + 5 + 72 + 22, 1 + 5, 1696 + 219 , 30 - 5, ImColor(55, 1, 0, 255)); // INSIDE
+                Draw::AddRect(1696 - 1 + 72 + 22, 1, 1696 + 224 , 31, ImColor(0, 0, 0, 255)); // OUTSIDE
+                Draw::AddRect(1695 + 5 + 72 + 22, 1 + 5, 1696 + 219  , 31 - 5, ImColor(0, 0, 0, 225)); // INSIDE
                 int fps = static_cast< int >( 1.f / globalVars->frametime );
                 std::string fps_string = std::to_string(fps);
 //std::string name = "linux.cc | " + fps_string + " fps | 39ms";
-std::string name = "linux.cc" + fps_string + " fps | " + bombStr + "FL";
+std::string debugOverlay = std::to_string(fps);
+std::string name = "linux.cc | " + fps_string + " fps | " + bombStr + "FL";
+Draw::AddText(1696 + 10 + 72 + 22, 10.8, name.c_str(), ImColor( 255, 255, 255, 255 ) );
 
-Draw::AddText(1653 + 10 + 73 + 22, 10.8, name.c_str(), ImColor( 255, 255, 255, 255 ) );
-Draw::AddText(1653 + 8 + 73 + 21 + 22, 10.8, "hook", ImColor( 255, 166, 14, 255 ) );
 }
 static void drawfire(C_BaseEntity* entity){
         int x, y, w, h;
