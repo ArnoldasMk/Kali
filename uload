@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Credit: Aixxe @ aixxe.net
 
 csgo_pid=$(pidof csgo_linux64)
