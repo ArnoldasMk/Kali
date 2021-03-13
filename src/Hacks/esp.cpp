@@ -494,8 +494,8 @@ int lag = TIME_TO_TICKS(player->GetSimulationTime() - player->GetOldSimulationTi
                 int woop = lag;
 std::string bombStr = std::to_string(woop );
                 
-				Draw::AddRectFilled(1696 + 72 + 22, 2, 1696 + 224 , 30, ImColor(168, 7, 11, 255)); // OUTSIDE !
-                Draw::AddRectFilled(1696 + 5 + 72 + 22, 1 + 5, 1696 + 219 , 30 - 5, ImColor(55, 1, 0, 255)); // INSIDE
+				Draw::AddRectFilled(1696 + 72 + 22, 2, 1696 + 224 , 30, Settings::UI::mainColor.Color()); // OUTSIDE !
+                Draw::AddRectFilled(1696 + 5 + 72 + 22, 1 + 5, 1696 + 219 , 30 - 5, Settings::UI::bodyColor.Color()); // INSIDE
                 Draw::AddRect(1696 - 1 + 72 + 22, 1, 1696 + 224 , 31, ImColor(0, 0, 0, 255)); // OUTSIDE
                 Draw::AddRect(1695 + 5 + 72 + 22, 1 + 5, 1696 + 219  , 31 - 5, ImColor(0, 0, 0, 225)); // INSIDE
                 int fps = static_cast< int >( 1.f / globalVars->frametime );
@@ -503,7 +503,7 @@ std::string bombStr = std::to_string(woop );
 //std::string name = "linux.cc | " + fps_string + " fps | 39ms";
 std::string debugOverlay = std::to_string(fps);
 std::string name = "linux.cc | " + fps_string + " fps | " + bombStr + "FL";
-Draw::AddText(1696 + 10 + 72 + 22, 10.8, name.c_str(), ImColor( 255, 255, 255, 255 ) );
+Draw::AddText(1696 + 10 + 72 + 22, 10.8, name.c_str(), Settings::UI::fontColor.Color()); // TRUE
 
 }
 static void drawfire(C_BaseEntity* entity){
