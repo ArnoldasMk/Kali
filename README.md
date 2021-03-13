@@ -76,6 +76,23 @@ If you wish to unload the hack from the game, you can do so by entering the comm
 ```bash
 ./uload
 ```
+## Configs
+
+Configs are stored in a hidden directory in your home folder. Specifically 
+```
+~/.config/MissedIT/
+```
+
+Each `config.json` is stored in a seperately named folder (The name you see in-game, in the config window). 
+
+To add a config, create a folder inside of the `~/.config/MissedIT/` folder with a name of your choice, and paste the `config.json` inside of that folder.
+
+To see hidden folders inside your home folder, press <kbd>CTRL</kbd>+<kbd>H</kbd> when using a file manager.
+
+On your command line, you can also add the -a flag on `ls` e.g.
+```bash
+ls -la ~/
+```
 ## My glove skin doens't load
 So apparently this bug is present with the AMDGPU and Radeon drivers. Henrym11106 discovered that that setting "mesa_no_error" (disable error checking) in adriconf/driconf, .drirc file or by adding `mesa_no_error=true %command%` to CSGO's launch options allows fancy gloves to render correctly. Saddly it doesn't crash only on mesa 20.1.4, for me it crashes on Mesa 20.3.2 and Mesa 20.2.
 ```bash
