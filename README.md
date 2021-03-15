@@ -1,3 +1,4 @@
+## The previous name was linux.cc, because I didn’t know how to name it. From now the name is Kali
 ## Compiling
 
 **Note:** _Do NOT download or compile as the root user._
