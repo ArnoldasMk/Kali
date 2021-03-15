@@ -502,7 +502,7 @@ std::string bombStr = std::to_string(woop );
                 std::string fps_string = std::to_string(fps);
 //std::string name = "Kali | " + fps_string + " fps | 39ms";
 std::string debugOverlay = std::to_string(fps);
-std::string name = "Kali | " + fps_string + " fps | " + bombStr + "FL";
+std::string name = "Kali.cc | " + fps_string + " fps | " + bombStr + "FL";
 Draw::AddText(1696 + 10 + 72 + 22, 10.8, name.c_str(), Settings::UI::fontColor.Color()); // TRUE
 
 }
