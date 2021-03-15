@@ -1,9 +1,9 @@
-## The previous name was linux.cc, because I didn’t know how to name it. From now the name is Kali
+## The previous name was Kali, because I didn’t know how to name it. From now the name is Kali
 ## Compiling
 
 **Note:** _Do NOT download or compile as the root user._
 
-#### Download the dependencies required to build linux.cc:
+#### Download the dependencies required to build Kali:
 
 If you are having problems compiling make sure you've got the latest version of `g++`.
 
@@ -24,14 +24,14 @@ sudo dnf install cmake gcc-c++ gdb git libstdc++-static mesa-libGL-devel SDL2-de
 
 ===================
 
-#### Download linux.cc:
+#### Download Kali:
 
 ```bash
-git clone --recursive https://github.com/ArnoldasMk/linux.cc
+git clone --recursive https://github.com/ArnoldasMk/Kali
 ```
 
 ```bash
-cd linux.cc
+cd Kali
 ```
 
 ===================
@@ -53,9 +53,9 @@ You can later update with
 
 First of all, make sure CS:GO is open, and you are not in any official valve server. However, it is not recommended to inject while CS:GO is loading into a map. 
 
-Navigate to the directory where linux.cc was built if you have not ready.
+Navigate to the directory where Kali was built if you have not ready.
 ```bash
-cd linux.cc
+cd Kali
 ```
 
 Now, you can inject the hack with the `load` script
@@ -69,7 +69,7 @@ You might be prompted to enter in your password, this is because the injection s
 
 ## Using the hack
 
-Now that linux.cc has been injected into the game, press <kbd>Insert</kbd> on your keyboard to open the hack menu (<kbd>ALT</kbd>+<kbd>I</kbd> if you are using a laptop).
+Now that Kali has been injected into the game, press <kbd>Insert</kbd> on your keyboard to open the hack menu (<kbd>ALT</kbd>+<kbd>I</kbd> if you are using a laptop).
 
 ## Unloading the hack
 

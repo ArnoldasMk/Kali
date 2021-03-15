@@ -486,7 +486,7 @@ void Ragebot::CheckHit(C_BaseCombatWeapon *activeWeapon){
     if (tr.m_pEntityHit == lockedEnemy.player || spred > 0.003300){
         Resolver::players[Ragebot::lockedEnemy.player->GetIndex()].MissedCount++;
 
-    cvar->ConsoleDPrintf("[eyehook] Missed shot due to bad resolve [RESOLVER: ");
+    cvar->ConsoleDPrintf("[Kali] Missed shot due to bad resolve [RESOLVER: ");
     switch (Settings::Resolver::resolverType)
         {
         case resolverType::Experimental:
@@ -512,7 +512,7 @@ cvar->ConsoleDPrintf("]\n");
 }
 
         else{
-cvar->ConsoleDPrintf("[eyehook] Missed shot due to spread\n");
+cvar->ConsoleDPrintf("[Kali] Missed shot due to spread\n");
 
         }
 }
@@ -761,7 +761,7 @@ void Ragebot::CreateMove(CUserCmd* cmd)
     if ((tr.m_pEntityHit == lockedEnemy.player || spred < 0.003300) && (Settings::Resolver::resolveAll /*&&Resolver::players[lockedEnemy.player->GetIndex()].flags != Resolver::rflag::NONE*/)){ //We arent gonna miss due to spread while standing still scoped in and crouched ;-;
 
                         Resolver::players[Resolver::TargetID].MissedCount++;
-                                         cvar->ConsoleDPrintf("[eyehook] Missed shot due to bad resolve [RESOLVER: ");
+                                         cvar->ConsoleDPrintf("[Kali] Missed shot due to bad resolve [RESOLVER: ");
     	Ragebot::misstring = "Missed shot due to bad resolve [RESOLVER: "; //Shit way of doing this but im lazy.
    	switch (Settings::Resolver::resolverType)
         {
@@ -796,7 +796,7 @@ void Ragebot::CreateMove(CUserCmd* cmd)
 cvar->ConsoleDPrintf("]\n");
 }
 else{
-cvar->ConsoleDPrintf("[eyehook] Missed shot due to spread / ragebot\n");
+cvar->ConsoleDPrintf("[Kali] Missed shot due to spread / ragebot\n");
         Ragebot::misstring += "Missed shot due to spread / ragebot";
 
 }     

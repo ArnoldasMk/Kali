@@ -19,7 +19,7 @@ if [ -z "$csgo_pid" ]; then
 fi
 
 if [ ! -d ".git" ]; then
-    echo "We have detected that you have downloaded linux.cc-master.zip from GitHub.com. This is the WRONG way to download! Please download linux.cc by cloning the Git repository: 'git clone --recursive https://github.com/ArnoldasMk/linux.cc.git'"
+    echo "We have detected that you have downloaded Kali-master.zip from GitHub.com. This is the WRONG way to download! Please download Kali by cloning the Git repository: 'git clone --recursive https://github.com/ArnoldasMk/Kali.git'"
 fi
 
 # pBypass for crash dumps being sent

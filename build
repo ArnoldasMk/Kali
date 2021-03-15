@@ -68,5 +68,5 @@ else
     printf 'Copying failed. You will need to move font file to /usr/share/fonts/TTF by yourself.\n'
 fi
 
-echo "You need to copy font file from /linux.cc/fonts folder to your (CSGODIR)/csgo/panorama/fonts/ for the weapon icon esp to work." 
+echo "You need to copy font file from /Kali/fonts folder to your (CSGODIR)/csgo/panorama/fonts/ for the weapon icon esp to work." 
 echo "Build Completed." 
