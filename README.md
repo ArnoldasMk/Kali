@@ -1,4 +1,6 @@
-## The previous name was linux.cc, because I didn’t know how to name it. From now the name is Kali
+## What is Kali?
+Kali is an Open Source Linux Cheat For Counter Strike : Global Offensive. 
+"Master" branch is EyeHook fork and "rework" branch is MissedIT fork. I am currently working on rework branch. These instructions are for Master branch.
 ## Compiling
 
 **Note:** _Do NOT download or compile as the root user._
