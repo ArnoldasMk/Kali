@@ -1,6 +1,6 @@
 ## What is Kali?
 Kali is an Open Source Linux Cheat For Counter Strike : Global Offensive. 
-"Master" branch is EyeHook fork. I am currently working on my rework branch. These instructions are for Master branch.
+"Main" branch is EyeHook fork. I am currently working on my rework branch. These instructions are for Mainr branch.
 ## Compiling
 
 **Note:** _Do NOT download or compile as the root user._
