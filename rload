@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+sudo bash -c \
+"./uload
+./load" # The game crashes sometimes when reloading too quick :^(
