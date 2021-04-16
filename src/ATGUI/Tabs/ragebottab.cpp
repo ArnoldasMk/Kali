@@ -121,7 +121,7 @@ void RagebotTab::RenderTab()
 		ImGui::SetColumnOffset(1, 200);
 		ImGui::PushItemWidth(-10);
 		{
-			if (ImGui::Checkbox(XORSTR("Enabled"), &Settings::Ragebot::enabled))
+			if (ImGui::Checkbox(XORSTR("Enabled"), &Settings::Ragebot::enabled)) // Credit to tutoraddicts
 			{	
 				Settings::Legitbot::enabled = false;
 				UI::UpdateRageWeaponSettings();
