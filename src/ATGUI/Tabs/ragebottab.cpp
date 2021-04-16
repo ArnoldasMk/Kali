@@ -120,14 +120,15 @@ void RagebotTab::RenderTab()
 	{
 		ImGui::SetColumnOffset(1, 200);
 		ImGui::PushItemWidth(-10);
+		{
+			if (ImGui::Checkbox(XORSTR("Enabled"), &Settings::Ragebot::enabled))
+			{	
+				Settings::Legitbot::enabled = false;
+				UI::UpdateRageWeaponSettings();
+			}
 
-		if (ImGui::Checkbox(XORSTR("Enabled"), &Settings::Ragebot::enabled))
-		{	
-			Settings::Legitbot::enabled = false;
-			UI::UpdateRageWeaponSettings();
+			ImGui::InputText(XORSTR("##FILTERWEAPONS"), filterWeapons, IM_ARRAYSIZE(filterWeapons));
 		}
-
-		ImGui::InputText(XORSTR("##FILTERWEAPONS"), filterWeapons, IM_ARRAYSIZE(filterWeapons));
 		ImGui::PopItemWidth();
 		ImGui::ListBoxHeader(XORSTR("##GUNS"), ImVec2(-1, -1));
 		for (auto it : ItemDefinitionIndexMap)
@@ -179,7 +180,7 @@ void RagebotTab::RenderTab()
 				ImGui::PushItemWidth(-1);
 				if( ImGui::SliderFloat(XORSTR("##HITCHANCE"), &HitChange, 1, 100, XORSTR("Percent %0.0f")) )
 					UI::UpdateRageWeaponSettings();
-				ImGui::PopItemWidth();
+				ImGui::PopItemWidth();	
 
 			}
 			// END Auto Shoot Features
@@ -416,4 +417,5 @@ ImGui::Combo(XORSTR("##ImpactDetection"), (int*)&Settings::Ragebot::impacttype, 
 			ImGui::EndChild();
 		}
 	}
+	ImGui::EndColumns();
 }
