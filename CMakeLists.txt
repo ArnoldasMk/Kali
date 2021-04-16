@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(MissedIT)
+project(Kali)
 set(CMAKE_CXX_STANDARD 17)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -9,7 +9,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     message(WARNING "You use Clang, but recommended compiler is G++")
 else()
-    message(FATAL_ERROR "You must have GCC >= 9.0 installed in order to compile MissedIT. Go to https://github.com/AimTuxOfficial/AimTux/wiki/Updating-your-compiler for further instructions.")
+    message(FATAL_ERROR "You must have GCC >= 9.0 installed in order to compile Kali. Go to https://github.com/AimTuxOfficial/AimTux/wiki/Updating-your-compiler for further instructions.")
 endif()
 
 FUNCTION (EXCLUDE_FILES_FROM_DIR_IN_LIST _InFileList _excludeDirName _verbose)
@@ -54,5 +54,5 @@ include_directories("${CMAKE_SOURCE_DIR}/src/ImGUI/examples/")
 include_directories("${CMAKE_SOURCE_DIR}/src/ImGUI/examples/libs/")
 include_directories("${CMAKE_SOURCE_DIR}/src/ImGUI/examples/libs/gl3w/")
 
-add_library(MissedIT SHARED ${SOURCE_FILES})
-target_link_libraries(MissedIT dl SDL2 GL)
+add_library(Kali SHARED ${SOURCE_FILES})
+target_link_libraries(Kali dl SDL2 GL)

@@ -2,4 +2,4 @@
 
 cmake -DCMAKE_BUILD_TYPE="DEBUG"
 make -j"$(grep -c "^processor" /proc/cpuinfo)"
-mv libMissedIT.so "$(cat build_id)"
+mv libKali.so "$(cat build_id)"
