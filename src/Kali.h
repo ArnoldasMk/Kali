@@ -4,7 +4,7 @@
 #include "interfaces.h"
 #include "Utils/util.h"
 
-namespace MissedIT
+namespace Kali
 {
 	void SelfShutdown();
 }

@@ -70,7 +70,7 @@ std::string GetConfigDirectory()
     if (!DoesDirectoryExist(directory.str().c_str()))
 	mkdir(directory.str().c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-    directory << XORSTR("/MissedIT/");
+    directory << XORSTR("/Kali/");
 
     if (!DoesDirectoryExist(directory.str().c_str()))
 	mkdir(directory.str().c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
@@ -100,7 +100,7 @@ std::string GetGhConfigDirectory()
     if (!DoesDirectoryExist(directory.str().c_str()))
 	mkdir(directory.str().c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-    directory << XORSTR("/MissedITGH/");
+    directory << XORSTR("/KaliGH/");
 
     if (!DoesDirectoryExist(directory.str().c_str()))
 	mkdir(directory.str().c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);

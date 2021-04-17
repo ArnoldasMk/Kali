@@ -5,7 +5,7 @@
 
 #include "../../config.h"
 #include "../../interfaces.h"
-#include "../../MissedIT.h"
+#include "../../Kali.h"
 #include "../../settings.h"
 #include "../../Utils/xorstring.h"
 #include "../imgui.h"
@@ -513,7 +513,7 @@ NameChanger::changeName(false, res.c_str(), 5.0f);
 			ImGui::Columns(1);
 			ImGui::Separator();
                                 if (ImGui::Button(XORSTR("Unload"))){
-					MissedIT::SelfShutdown();
+					Kali::SelfShutdown();
 				}
                                 if (ImGui::Button(XORSTR("Reset resolver misses"))){
 	        C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());

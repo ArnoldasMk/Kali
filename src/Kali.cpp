@@ -9,7 +9,7 @@
 #include "fonts.h"
 #include "Hooks/hooks.h"
 #include "sdlhook.h"
-#include "MissedIT.h"
+#include "Kali.h"
 #include "EventListener.h"
 #include "Utils/xorstring.h"
 #include "Utils/bonemaps.h"
@@ -23,7 +23,7 @@
 
 static EventListener* eventListener = nullptr;
 
-const char *Util::logFileName = "/tmp/MissedIT.log";
+const char *Util::logFileName = "/tmp/Kali.log";
 std::vector<VMT*> createdVMTs;
 
 void MainThread()
@@ -138,7 +138,7 @@ void MainThread()
         BoneMaps::BuildAllBonemaps();
     }
 
-    cvar->ConsoleColorPrintf(ColorRGBA(0, 225, 0), XORSTR("\nMissedIT Successfully loaded.\n"));
+    cvar->ConsoleColorPrintf(ColorRGBA(0, 225, 0), XORSTR("\nKali Successfully loaded.\n"));
 }
 /* Entrypoint to the Library. Called when loading */
 int __attribute__((constructor)) Startup()
@@ -177,9 +177,9 @@ void __attribute__((destructor)) Shutdown()
 
 	*s_bOverridePostProcessingDisable = false;
 
-	cvar->ConsoleColorPrintf(ColorRGBA(255, 0, 0), XORSTR("MissedIT Unloaded successfully.\n"));
+	cvar->ConsoleColorPrintf(ColorRGBA(255, 0, 0), XORSTR("Kali Unloaded successfully.\n"));
 }
-void MissedIT::SelfShutdown()
+void Kali::SelfShutdown()
 {
 	Shutdown(); //meme
 }
