@@ -1529,8 +1529,8 @@ ImFont* ImFontAtlas::AddFontDefault(const ImFontConfig* font_cfg_template)
 {
     ImFontConfig font_cfg = font_cfg_template ? *font_cfg_template : ImFontConfig();
     ImGuiIO& io = ImGui::GetIO();
-  //  ImFont* font2 = io.Fonts->AddFontFromFileTTF("/usr/share/fonts/TTF/Rudac-Bold.ttf", 14.0f);
-//    return font2;
+    ImFont* font2 = io.Fonts->AddFontFromFileTTF("/usr/share/fonts/TTF/arial.ttf", 14.0f);
+    return font2;
 
 return ImGui::GetIO().Fonts->AddFontFromMemoryCompressedTTF(smallestpixel7_compressed_data, smallestpixel7_compressed_size, 14.0f); 
   if (!font_cfg_template)
