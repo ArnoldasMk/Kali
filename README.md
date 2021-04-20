@@ -97,11 +97,19 @@ On your command line, you can also add the -a flag on `ls` e.g.
 ls -la ~/
 ```
 ## My glove skin doens't load
-So apparently this bug is present with the AMDGPU and Radeon drivers. Henrym11106 discovered that that setting "mesa_no_error" (disable error checking) in adriconf/driconf, .drirc file or by adding `mesa_no_error=true %command%` to CSGO's launch options allows fancy gloves to render correctly. Saddly it doesn't crash only on mesa 20.1.4, for me it crashes on Mesa 20.3.2 and Mesa 20.2.
+So apparently this bug is present with the AMDGPU and Radeon drivers. Henrym11106 discovered that that setting "mesa_no_error" (disable error checking) in adriconf/driconf, .drirc file or by adding `mesa_no_error=true %command%` to CSGO's launch options allows fancy gloves to render correctly. I made a list of versions down below.
 ```bash
 mesa_no_error=true %command%
 ```
-
+if multiple %command% options are used, separate with spaces eg: 
+```bash
+gamemoderun mesa_no_error=true %command%
+```
+| Works, but..                          | Crashes (and when)                                             |
+| --------------------------------------| ---------------------------------------------------------------|
+| Mesa 20.1.4, but overlay doesn't work | Mesa 20.3.2 (crashes on startup)                               |
+| Mesa 21.0.0, but overlay doesn't work | Mesa 20.2.0 (crashes when choosing a team after a map loads.)  |
+|                                       | Mesa 20.2.6 (crashes when choosing a team after a map loads.)  |  
 
 ## Credits
 
