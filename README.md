@@ -97,7 +97,7 @@ On your command line, you can also add the -a flag on `ls` e.g.
 ls -la ~/
 ```
 ## My glove skin doens't load
-So apparently this bug is present with the AMDGPU and Radeon drivers. Henrym11106 discovered that that setting "mesa_no_error" (disable error checking) in adriconf/driconf, .drirc file or by adding `mesa_no_error=true %command%` to CSGO's launch options allows fancy gloves to render correctly. I made a list of versions down below.
+SSo apparently this bug presents the AMDGPU and Radeon drivers. Henrym11106 discovered that setting "mesa_no_error" disables error checking. By adding mesa_no_error=true %command% in adriconf/driconf, .drirc file to CSGO's launch options, it allows fancy gloves to render correctly. I made a list of versions down below.
 ```bash
 mesa_no_error=true %command%
 ```
