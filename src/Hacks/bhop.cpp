@@ -7,6 +7,7 @@ void BHop::CreateMove(CUserCmd* cmd)
 {
 	if (!Settings::BHop::enabled)
 		return;
+
 	static bool bLastJumped = false;
 	static bool bShouldFake = false;
 	static int bActualHop = 0;
@@ -18,8 +19,6 @@ void BHop::CreateMove(CUserCmd* cmd)
 
 	if (localplayer->GetMoveType() == MOVETYPE_LADDER || localplayer->GetMoveType() == MOVETYPE_NOCLIP)
 		return;
-       static auto last_jumped = false;
-        static auto should_jump = false;
 
 
 	if (!bLastJumped && bShouldFake)
@@ -67,5 +66,4 @@ void BHop::CreateMove(CUserCmd* cmd)
 		bLastJumped = false;
 		bShouldFake = false;
 	}
-
 }
