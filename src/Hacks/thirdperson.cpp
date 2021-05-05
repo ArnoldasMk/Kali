@@ -11,18 +11,15 @@ void ThirdPerson::OverrideView(CViewSetup *pSetup)
 	{
 		C_BasePlayer *localplayer = (C_BasePlayer *) entityList->GetClientEntity(engine->GetLocalPlayer());
 
-		if (!localplayer) {
-			return;
-		}
+		if(!localplayer)
+		return;
 
-		C_BaseCombatWeapon *activeWeapon = (C_BaseCombatWeapon *) entityList->GetClientEntityFromHandle(
-				localplayer->GetActiveWeapon());
+	C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
 
-		if (activeWeapon && activeWeapon->GetCSWpnData() &&
-			activeWeapon->GetCSWpnData()->GetWeaponType() == CSWeaponType::WEAPONTYPE_GRENADE) {
-			input->m_fCameraInThirdPerson = false;
-			Settings::ThirdPerson::toggled = false;
-			return;
+		if (activeWeapon && activeWeapon->GetCSWpnData() && activeWeapon->GetCSWpnData()->GetWeaponType() == CSWeaponType::WEAPONTYPE_GRENADE)
+		{
+		input->m_fCameraInThirdPerson = false;
+		return;
 		}
 
 		// if ( !localplayer->GetAlive() ){
@@ -92,20 +89,23 @@ void ThirdPerson::OverrideView(CViewSetup *pSetup)
 			}
 
 		}
+		else if(input->m_fCameraInThirdPerson)
+		{
+		input->m_fCameraInThirdPerson = false;
+		input->m_vecCameraOffset = Vector(0.f, 0.f, 0.f);
 
-	}
 
+		}
+}
 void ThirdPerson::FrameStageNotify(ClientFrameStage_t stage)
 {
-// static CUtlVector<AnimationLayer>* realoverlay;
+	static CUtlVector<AnimationLayer>* realoverlay;
 	if (stage == ClientFrameStage_t::FRAME_RENDER_START && engine->IsInGame())
 	{
 		C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 
 		if (localplayer && localplayer->GetAlive() && Settings::ThirdPerson::enabled && input->m_fCameraInThirdPerson)
 		{
-		//	if (!CreateMove::sendPacket)
-				//realoverlay = localplayer->GetAnimOverlay();
 			if (Settings::AntiAim::RageAntiAim::enable || Settings::AntiAim::LegitAntiAim::enable)
 				*localplayer->GetVAngles() = AntiAim::realAngle;
 		}
