@@ -55,14 +55,14 @@ void ShowSpectators::RenderWindow()
 		return;
 	if( Settings::UI::Windows::Spectators::reload )
 	{
-		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Spectators::posX, Settings::UI::Windows::Spectators::posY), ImGuiSetCond_Always);
-		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Spectators::sizeX, Settings::UI::Windows::Spectators::sizeY), ImGuiSetCond_Always);
+		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Spectators::posX, Settings::UI::Windows::Spectators::posY), ImGuiCond_Always );
+		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Spectators::sizeX, Settings::UI::Windows::Spectators::sizeY), ImGuiCond_Always );
 		Settings::UI::Windows::Spectators::reload = false;
 	}
 	else
 	{
-		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Spectators::posX, Settings::UI::Windows::Spectators::posY), ImGuiSetCond_FirstUseEver);
-		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Spectators::sizeX, Settings::UI::Windows::Spectators::sizeY), ImGuiSetCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Spectators::posX, Settings::UI::Windows::Spectators::posY), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Spectators::sizeX, Settings::UI::Windows::Spectators::sizeY), ImGuiCond_FirstUseEver);
 	}
 	if (ImGui::Begin(XORSTR("Spectators"), &Settings::ShowSpectators::enabled, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar ))
 	{

@@ -1,4 +1,4 @@
-#include "visualstab.h"
+	#include "visualstab.h"
 #include "../SDK/CPlayerResource.h"
 
 #pragma GCC diagnostic ignored "-Wformat-security"
@@ -228,20 +228,20 @@ void Visuals::RenderTab()
 	{
 		ImGui::SetColumnOffset(1, itemWidth / 3);
 		ImGui::BeginChild(XORSTR("##FilterEnemyTitle"), ImVec2(0,22),true);
-			ImGui::Text(XORSTR("Enemy"));
+		ImGui::Text(XORSTR("Enemy"));
 		ImGui::EndChild();
 	}
 	ImGui::NextColumn();
 	{
 		ImGui::BeginChild(XORSTR("##FilterLocalPlayerTitle"), ImVec2(0,22),true);
-			ImGui::Text(XORSTR("Local Player"));
+		ImGui::Text(XORSTR("Local Player"));
 		ImGui::EndChild();
 	}
 	ImGui::NextColumn();
 	{
 		// ImGui::SetColumnOffset(3, (itemWidth/3)*2 - itemWidth);
 		ImGui::BeginChild(XORSTR("##FilterAliseTitle"), ImVec2(0,22),true);
-			ImGui::Text(XORSTR("Alise"));
+		ImGui::Text(XORSTR("Alise"));
 		ImGui::EndChild();
 	}
 	ImGui::EndColumns();
@@ -249,20 +249,20 @@ void Visuals::RenderTab()
 	{
 		ImGui::SetColumnOffset(1, itemWidth / 3);
 		ImGui::BeginChild(XORSTR("##FilterEnemy"), ImVec2(0,150),false);
-			FilterEnemies();
+		FilterEnemies();
 		ImGui::EndChild();
 	}
 	ImGui::NextColumn();
 	{
 		ImGui::BeginChild(XORSTR("##FilterLocalPlayer"), ImVec2(0,150),false);
-			FilterLocalPlayer();
+		FilterLocalPlayer();
 		ImGui::EndChild();
 	}
 	ImGui::NextColumn();
 	{
 		// ImGui::SetColumnOffset(3, (itemWidth/3)*2 - itemWidth);
 		ImGui::BeginChild(XORSTR("##FilterAlise"), ImVec2(0,150),false);
-			FilterAlise();
+		FilterAlise();
 		ImGui::EndChild();
 	}
 	ImGui::EndColumns();
@@ -422,9 +422,9 @@ void Visuals::RenderTab()
 		ImGui::BeginChild(XORSTR("Chams"), ImVec2(0, 0), false);
 		{
 			ImGui::Columns(1);
+			ImGui::SameLine();
 			ImGui::Text(XORSTR("Skybox Changer"));
 			ImGui::Checkbox(XORSTR("Skybox Changer"), &Settings::SkyBox::enabled);
-			ImGui::SameLine();
 			ImGui::Combo(XORSTR("##SKYBOX"), &Settings::SkyBox::skyBoxNumber, SkyBoxes, IM_ARRAYSIZE(SkyBoxes));
 			
 			// ImGui::Text(XORSTR("Other Visual Settings"));
@@ -458,7 +458,7 @@ void Visuals::RenderTab()
 				if ( ImGui::Button( XORSTR( "Material Config" ), ImVec2( -1, 0 ) ) )
 					ImGui::OpenPopup( XORSTR( "##MaterialConfigWindow" ) );
 				SetTooltip( XORSTR( "Advanced CSGO Gfx Settings\nExperimental" ) );
-				ImGui::SetNextWindowSize( ImVec2( 320, 640 ), ImGuiSetCond_Always );
+				ImGui::SetNextWindowSize( ImVec2( 320, 640 ), ImGuiCond_Always  );
 				if ( ImGui::BeginPopup( XORSTR( "##MaterialConfigWindow" ) ) ) {
 					ImGui::PushItemWidth( -1 );
 					if ( ImGui::Button( XORSTR( "Reset Changes" ) ) ) {
@@ -497,7 +497,7 @@ void Visuals::RenderTab()
 					SetTooltip( XORSTR( "Makes the game flatter.") );
 					if ( ImGui::Button( XORSTR( "Flags" ), ImVec2( -1, 0 ) ) )
 						ImGui::OpenPopup( XORSTR( "##MaterialConfigFlags" ) );
-					ImGui::SetNextWindowSize( ImVec2( 320, 240 ), ImGuiSetCond_Always );
+					ImGui::SetNextWindowSize( ImVec2( 320, 240 ), ImGuiCond_Always  );
 					if ( ImGui::BeginPopup( XORSTR( "##MaterialConfigFlags" ) ) ) {
 						ImGui::PushItemWidth( -1 );
 
@@ -596,7 +596,7 @@ void Visuals::RenderTab()
 				}
 				if(ImGui::Button(XORSTR("Tracer Effect"), ImVec2(-1, 0)))
 					ImGui::OpenPopup(XORSTR("##TracerEffectWindow"));
-				ImGui::SetNextWindowSize(ImVec2(320,120), ImGuiSetCond_Always);
+				ImGui::SetNextWindowSize(ImVec2(320,120), ImGuiCond_Always );
 				if( ImGui::BeginPopup(XORSTR("##TracerEffectWindow")) )
 				{
 					ImGui::PushItemWidth(-1);

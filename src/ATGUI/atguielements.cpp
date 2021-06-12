@@ -263,7 +263,7 @@ void UI::SetupColors()
 	style.Colors[ImGuiCol_Text] = Settings::UI::fontColor.Color();
 	style.Colors[ImGuiCol_TextDisabled] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
 	style.Colors[ImGuiCol_WindowBg] = Settings::UI::bodyColor.Color();
-	style.Colors[ImGuiCol_ChildWindowBg] = ImVec4(.0f, .0f, .0f, .0f);
+	style.Colors[ImGuiCol_ChildBg] = ImVec4(.0f, .0f, .0f, .0f);
 	style.Colors[ImGuiCol_PopupBg] = tooltipBgColor;
 	style.Colors[ImGuiCol_Border] = Settings::UI::mainColor.Color();
 	style.Colors[ImGuiCol_BorderShadow] = ImVec4(0.92f, 0.91f, 0.88f, 0.00f);
@@ -287,9 +287,9 @@ void UI::SetupColors()
 	style.Colors[ImGuiCol_Header] = Settings::UI::accentColor.Color();
 	style.Colors[ImGuiCol_HeaderHovered] = accentColorHovered;
 	style.Colors[ImGuiCol_HeaderActive] = accentColorActive;
-	style.Colors[ImGuiCol_Column] =  Settings::UI::mainColor.Color();
-	style.Colors[ImGuiCol_ColumnHovered] = mainColorHovered;
-	style.Colors[ImGuiCol_ColumnActive] = mainColorActive;
+	style.Colors[ImGuiCol_Separator] =  Settings::UI::mainColor.Color();
+	style.Colors[ImGuiCol_SeparatorHovered] = mainColorHovered;
+	style.Colors[ImGuiCol_SeparatorActive] = mainColorActive;
 	style.Colors[ImGuiCol_ResizeGrip] = Settings::UI::accentColor.Color();
 	style.Colors[ImGuiCol_ResizeGripHovered] = accentColorHovered;
 	style.Colors[ImGuiCol_ResizeGripActive] = accentColorActive;
@@ -301,5 +301,5 @@ void UI::SetupColors()
 	style.Colors[ImGuiCol_PlotHistogram] = Settings::UI::mainColor.Color();
 	style.Colors[ImGuiCol_PlotHistogramHovered] =  mainColorHovered;
 	style.Colors[ImGuiCol_TextSelectedBg] = mainColorHovered;
-	style.Colors[ImGuiCol_ModalWindowDarkening] = ImVec4(0.0f, 0.0f, 0.0f, 0.75f);
+	style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.75f);
 }

@@ -44,15 +44,15 @@ void SkinModelChanger::RenderWindow()
 {
 	if( Settings::UI::Windows::Skinmodel::reload )
 	{
-		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Skinmodel::posX, Settings::UI::Windows::Skinmodel::posY), ImGuiSetCond_Always);
-		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Skinmodel::sizeX, Settings::UI::Windows::Skinmodel::sizeY), ImGuiSetCond_Always);
+		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Skinmodel::posX, Settings::UI::Windows::Skinmodel::posY), ImGuiCond_Always );
+		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Skinmodel::sizeX, Settings::UI::Windows::Skinmodel::sizeY), ImGuiCond_Always );
 		Settings::UI::Windows::Skinmodel::reload = false;
 		SkinModelChanger::showWindow = Settings::UI::Windows::Skinmodel::open;
 	}
 	else
 	{
-		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Skinmodel::posX, Settings::UI::Windows::Skinmodel::posY), ImGuiSetCond_FirstUseEver);
-		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Skinmodel::sizeX, Settings::UI::Windows::Skinmodel::sizeY), ImGuiSetCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Skinmodel::posX, Settings::UI::Windows::Skinmodel::posY), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Skinmodel::sizeX, Settings::UI::Windows::Skinmodel::sizeY), ImGuiCond_FirstUseEver);
 	}
 	if (!SkinModelChanger::showWindow)
 	{

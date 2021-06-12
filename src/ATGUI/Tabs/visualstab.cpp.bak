@@ -313,7 +313,7 @@ void Visuals::RenderTab()
 				if ( ImGui::Button( XORSTR( "Material Config" ), ImVec2( -1, 0 ) ) )
 					ImGui::OpenPopup( XORSTR( "##MaterialConfigWindow" ) );
 				SetTooltip( XORSTR( "Advanced CSGO Gfx Settings\nExperimental" ) );
-				ImGui::SetNextWindowSize( ImVec2( 320, 640 ), ImGuiSetCond_Always );
+				ImGui::SetNextWindowSize( ImVec2( 320, 640 ), ImGuiCond_Always  );
 				if ( ImGui::BeginPopup( XORSTR( "##MaterialConfigWindow" ) ) ) {
 					ImGui::PushItemWidth( -1 );
 					if ( ImGui::Button( XORSTR( "Reset Changes" ) ) ) {
@@ -352,7 +352,7 @@ void Visuals::RenderTab()
 					SetTooltip( XORSTR( "Makes the game flatter.") );
 					if ( ImGui::Button( XORSTR( "Flags" ), ImVec2( -1, 0 ) ) )
 						ImGui::OpenPopup( XORSTR( "##MaterialConfigFlags" ) );
-					ImGui::SetNextWindowSize( ImVec2( 320, 240 ), ImGuiSetCond_Always );
+					ImGui::SetNextWindowSize( ImVec2( 320, 240 ), ImGuiCond_Always  );
 					if ( ImGui::BeginPopup( XORSTR( "##MaterialConfigFlags" ) ) ) {
 						ImGui::PushItemWidth( -1 );
 
@@ -451,7 +451,7 @@ void Visuals::RenderTab()
 				}
 				if(ImGui::Button(XORSTR("Tracer Effect"), ImVec2(-1, 0)))
 					ImGui::OpenPopup(XORSTR("##TracerEffectWindow"));
-				ImGui::SetNextWindowSize(ImVec2(320,120), ImGuiSetCond_Always);
+				ImGui::SetNextWindowSize(ImVec2(320,120), ImGuiCond_Always );
 				if( ImGui::BeginPopup(XORSTR("##TracerEffectWindow")) )
 				{
 					ImGui::PushItemWidth(-1);

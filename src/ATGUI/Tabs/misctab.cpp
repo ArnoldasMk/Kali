@@ -111,7 +111,7 @@ void Misc::RenderTab()
 				if (ImGui::Button(XORSTR("Options###KILL")))
 					ImGui::OpenPopup(XORSTR("options_kill"));
 
-				ImGui::SetNextWindowSize(ImVec2(565, 268), ImGuiSetCond_Always);
+				ImGui::SetNextWindowSize(ImVec2(565, 268), ImGuiCond_Always );
 				if (ImGui::BeginPopup(XORSTR("options_kill")))
 				{
 					static int killSpammerMessageCurrent = -1;
@@ -160,9 +160,9 @@ void Misc::RenderTab()
 					ImGui::OpenPopup(XORSTR("options_spammer"));
 
 				if (Settings::Spammer::type == SpammerType::SPAMMER_NORMAL)
-					ImGui::SetNextWindowSize(ImVec2(565, 268), ImGuiSetCond_Always);
+					ImGui::SetNextWindowSize(ImVec2(565, 268), ImGuiCond_Always );
 				else if (Settings::Spammer::type == SpammerType::SPAMMER_POSITIONS)
-					ImGui::SetNextWindowSize(ImVec2(200, 240), ImGuiSetCond_Always);
+					ImGui::SetNextWindowSize(ImVec2(200, 240), ImGuiCond_Always );
 
 				if (Settings::Spammer::type != SpammerType::SPAMMER_NONE && ImGui::BeginPopup(XORSTR("options_spammer")))
 				{
@@ -260,7 +260,7 @@ void Misc::RenderTab()
 			{
 				if (ImGui::Button(XORSTR("Aimassist"), ImVec2(-1, 0)))
 					ImGui::OpenPopup(XORSTR("optionAimAssist"));
-				ImGui::SetNextWindowSize(ImVec2(200, 120), ImGuiSetCond_Always);
+				ImGui::SetNextWindowSize(ImVec2(200, 120), ImGuiCond_Always );
 				if (ImGui::BeginPopup(XORSTR("optionAimAssist")))
 				{
 					ImGui::PushItemWidth(-1);
@@ -277,7 +277,7 @@ void Misc::RenderTab()
 				if (ImGui::Button(XORSTR("Add Info"), ImVec2(-1, 0)))
 					ImGui::OpenPopup(XORSTR("addinfo_throw"));
 
-				ImGui::SetNextWindowSize(ImVec2(565, 268), ImGuiSetCond_Always);
+				ImGui::SetNextWindowSize(ImVec2(565, 268), ImGuiCond_Always );
 				if (ImGui::BeginPopup(XORSTR("addinfo_throw")))
 				{
 					static int throwMessageCurrent = -1;
@@ -441,7 +441,7 @@ void Misc::RenderTab()
 			ImGui::SameLine();
 			if (ImGui::Button(XORSTR("Colorize Name"), ImVec2(-1, 0)))
 				ImGui::OpenPopup(XORSTR("optionColorizeName"));
-			ImGui::SetNextWindowSize(ImVec2(150, 300), ImGuiSetCond_Always);
+			ImGui::SetNextWindowSize(ImVec2(150, 300), ImGuiCond_Always );
 			if (ImGui::BeginPopup(XORSTR("optionColorizeName")))
 			{
 				ImGui::PushItemWidth(-1);

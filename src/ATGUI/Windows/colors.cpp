@@ -13,15 +13,15 @@ void Colors::RenderWindow()
 {
 	if( Settings::UI::Windows::Colors::reload )
 	{
-		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Colors::posX, Settings::UI::Windows::Colors::posY), ImGuiSetCond_Always);
-		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Colors::sizeX, Settings::UI::Windows::Colors::sizeY), ImGuiSetCond_Always);
+		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Colors::posX, Settings::UI::Windows::Colors::posY), ImGuiCond_Always );
+		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Colors::sizeX, Settings::UI::Windows::Colors::sizeY), ImGuiCond_Always );
 		Settings::UI::Windows::Colors::reload = false;
 		Colors::showWindow = Settings::UI::Windows::Colors::open;
 	}
 	else
 	{
-		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Colors::posX, Settings::UI::Windows::Colors::posY), ImGuiSetCond_FirstUseEver);
-		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Colors::sizeX, Settings::UI::Windows::Colors::sizeY), ImGuiSetCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Colors::posX, Settings::UI::Windows::Colors::posY), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Colors::sizeX, Settings::UI::Windows::Colors::sizeY), ImGuiCond_FirstUseEver);
 	}
 	if (!Colors::showWindow)
 	{

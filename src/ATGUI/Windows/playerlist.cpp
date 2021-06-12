@@ -23,16 +23,16 @@ void PlayerList::RenderWindow()
 	
 	if( Settings::UI::Windows::Playerlist::reload )
 	{
-		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Playerlist::posX, Settings::UI::Windows::Playerlist::posY), ImGuiSetCond_Always);
-		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Playerlist::sizeX, Settings::UI::Windows::Playerlist::sizeY), ImGuiSetCond_Always);
+		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Playerlist::posX, Settings::UI::Windows::Playerlist::posY), ImGuiCond_Always );
+		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Playerlist::sizeX, Settings::UI::Windows::Playerlist::sizeY), ImGuiCond_Always );
 		Settings::UI::Windows::Playerlist::reload = false;
 		PlayerList::showWindow = Settings::UI::Windows::Playerlist::open;
 		currentPlayer = -1;
 	}
 	else
 	{
-		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Playerlist::posX, Settings::UI::Windows::Playerlist::posY), ImGuiSetCond_FirstUseEver);
-		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Playerlist::sizeX, Settings::UI::Windows::Playerlist::sizeY), ImGuiSetCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Playerlist::posX, Settings::UI::Windows::Playerlist::posY), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Playerlist::sizeX, Settings::UI::Windows::Playerlist::sizeY), ImGuiCond_FirstUseEver);
 	}
 	if (!PlayerList::showWindow)
 	{

@@ -241,7 +241,7 @@ void Legitbot::RenderTab()
 				{
 					if(ImGui::Button(XORSTR("Bones"), ImVec2(-1, 0)))
 						ImGui::OpenPopup(XORSTR("optionBones"));
-					ImGui::SetNextWindowSize(ImVec2((ImGui::GetWindowWidth()/1.25f),ImGui::GetWindowHeight()), ImGuiSetCond_Always);
+					ImGui::SetNextWindowSize(ImVec2((ImGui::GetWindowWidth()/1.25f),ImGui::GetWindowHeight()), ImGuiCond_Always );
 					if( ImGui::BeginPopup(XORSTR("optionBones")) )
 					{
 						ImGui::PushItemWidth(-1);
@@ -361,7 +361,7 @@ void Legitbot::RenderTab()
                                 if (ImGui::Button(XORSTR("Reaction Time"), ImVec2(-1, 0)))
                                         ImGui::OpenPopup(XORSTR("optionReactionTime"));
 
-				ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiSetCond_Always);
+				ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiCond_Always );
 				if (ImGui::BeginPopup(XORSTR("optionRCSAmount")))
 				{
 					ImGui::PushItemWidth(-1);
@@ -544,7 +544,7 @@ void Legitbot::RenderTab()
 					UI::UpdateWeaponSettings();
 				if(ImGui::Button(XORSTR("Autowall Bones"), ImVec2(-1, 0)))
 					ImGui::OpenPopup(XORSTR("optionBones"));
-				ImGui::SetNextWindowSize(ImVec2((ImGui::GetWindowWidth()/1.25f),ImGui::GetWindowHeight()), ImGuiSetCond_Always);
+				ImGui::SetNextWindowSize(ImVec2((ImGui::GetWindowWidth()/1.25f),ImGui::GetWindowHeight()), ImGuiCond_Always );
 				if( ImGui::BeginPopup(XORSTR("optionBones")) )
 				{
 					ImGui::PushItemWidth(-1);

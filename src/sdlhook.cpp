@@ -166,8 +166,8 @@ static void SwapWindow(SDL_Window* window)
         
 	    ImGui::EndFrame();
     // }
-	ImGui::GetCurrentContext()->Font->DisplayOffset = ImVec2(0.f, 0.f);
-	ImGui::GetCurrentContext()->Font->DisplayOffset = ImVec2(0.0f, 0.0f);
+	//ImGui::GetCurrentContext()->Font->DisplayOffset = ImVec2(0.f, 0.f);
+	//ImGui::GetCurrentContext()->Font->DisplayOffset = ImVec2(0.0f, 0.0f);
 
 	ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

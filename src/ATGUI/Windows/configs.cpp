@@ -16,15 +16,15 @@ void Configs::RenderWindow()
 {
 	if( Settings::UI::Windows::Config::reload )
 	{
-		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Config::posX, Settings::UI::Windows::Config::posY), ImGuiSetCond_Always);
-		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Config::sizeX, Settings::UI::Windows::Config::sizeY), ImGuiSetCond_Always);
+		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Config::posX, Settings::UI::Windows::Config::posY), ImGuiCond_Always );
+		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Config::sizeX, Settings::UI::Windows::Config::sizeY), ImGuiCond_Always );
 		Settings::UI::Windows::Config::reload = false;
 		Configs::showWindow = Settings::UI::Windows::Config::open;
 	}
 	else
 	{
-		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Config::posX, Settings::UI::Windows::Config::posY), ImGuiSetCond_FirstUseEver);
-		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Config::sizeX, Settings::UI::Windows::Config::sizeY), ImGuiSetCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Config::posX, Settings::UI::Windows::Config::posY), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Config::sizeX, Settings::UI::Windows::Config::sizeY), ImGuiCond_FirstUseEver);
 	}
 	if (!Configs::showWindow)
 	{

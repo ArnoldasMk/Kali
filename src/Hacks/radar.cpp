@@ -119,9 +119,9 @@ void Radar::RenderWindow()
 	if (!UI::isVisible && !engine->IsInGame())
 		return;
 
-	ImGui::SetNextWindowSize(ImVec2(256, 256), ImGuiSetCond_FirstUseEver);
+	ImGui::SetNextWindowSize(ImVec2(256, 256), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSizeConstraints(ImVec2(0, 0), ImVec2(FLT_MAX, FLT_MAX), SquareConstraint);
-	ImGui::SetNextWindowPos(Settings::Radar::pos, ImGuiSetCond_FirstUseEver);
+	ImGui::SetNextWindowPos(Settings::Radar::pos, ImGuiCond_FirstUseEver);
 
 	if (ImGui::Begin("Radar", &Settings::Radar::enabled, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar))
 	{
