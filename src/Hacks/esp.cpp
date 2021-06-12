@@ -513,15 +513,15 @@ static void drawfire(C_BaseEntity* entity){
      Vector screen_origin;
 	int factor = 3;
  	debugOverlay->ScreenPosition(entity->GetVecOrigin(), screen_origin);
-     Draw::FilledCircle3D( entity->GetVecOrigin(), 32, 160, Color::FromImColor(ImColor(49, 97, 0, 255)) );
+     //Draw::FilledCircle3D( entity->GetVecOrigin(), 32, 160, Color::FromImColor(ImColor(49, 97, 0, 255)) );	
      auto string = "Molotov";
      Vector2D nameSize = Draw::GetTextSize( string, esp_font );
-     Draw::AddText(( int ) ( x + ( w / 2 ) - ( nameSize.x / 2 ) ), y + h + 2 + nameSize.y, string, ImColor(255, 255, 255, 255) );
+     Draw::AddText(( int ) ( x + ( w / 2 ) - ( nameSize.x / 2 ) ), y + h + 2 + nameSize.y, string, ImColor(0, 0, 0, 255) );
      if (spawntime == 0){
      spawntime = globalVars->curtime;
      }else {
 	int time = TIME_TO_TICKS(globalVars->curtime - spawntime);
-     Draw::AddText(( int ) ( x + ( w / 2 ) - ( nameSize.x / 2 ) ), y + h + 2, std::to_string(489 - (TIME_TO_TICKS(globalVars->curtime - spawntime))).c_str(), ImColor(255, 255, 255, 255) );
+     Draw::AddText(( int ) ( x + ( w / 2 ) - ( nameSize.x / 2 ) ), y + h + 2, std::to_string(489 - (TIME_TO_TICKS(globalVars->curtime - spawntime))).c_str(), ImColor(0, 0, 0, 255) );
 	if (time > 489)
 	spawntime = 0;
 }
