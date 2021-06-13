@@ -344,6 +344,8 @@ struct LegitWeapon_t
 		 autoShoot,
 		 aimkeyOnly,
 		 smoothEnabled,
+		 courseRandomizationEnabled,
+		 doAimAfterXShotsEnabled,
 		 smoothSaltEnabled,
 		 errorMarginEnabled,
 		 autoAimEnabled,
@@ -364,7 +366,9 @@ struct LegitWeapon_t
 	Bone bone = BONE_HEAD;
 	SmoothType smoothType = SmoothType::SLOW_END;
 	ButtonCode_t aimkey = ButtonCode_t ::MOUSE_MIDDLE;
-	float smoothAmount = 1.0f,
+	float smoothAmount = 1.0f;
+	float courseRandomizationAmount = 2.0f,
+    	doAimAfterXShotsAmount = 0.0f,
 		  smoothSaltMultiplier = 0.0f,
 		  errorMarginValue = 0.0f,
 		  LegitautoAimFov = 15.0f,
@@ -393,6 +397,11 @@ struct LegitWeapon_t
 			this->aimkeyOnly == another.aimkeyOnly &&
 			this->smoothEnabled == another.smoothEnabled &&
 			this->smoothAmount == another.smoothAmount &&
+			this->courseRandomizationEnabled == another.courseRandomizationEnabled &&
+            	this->courseRandomizationAmount == another.courseRandomizationAmount &&
+          	this->doAimAfterXShotsEnabled == another.doAimAfterXShotsEnabled &&
+        	     this->doAimAfterXShotsAmount == another.doAimAfterXShotsAmount &&
+        	     this->smoothType == another.smoothType &&
 			this->smoothType == another.smoothType &&
 			this->smoothSaltEnabled == another.smoothSaltEnabled &&
 			this->smoothSaltMultiplier == another.smoothSaltMultiplier &&
@@ -636,6 +645,16 @@ namespace Settings
                 inline float multiplier = 0.0f;
 			}
 		}
+		namespace CourseRandomization
+		{
+		    inline bool enabled = false;
+		    inline float value = 2.0f;
+		}
+      	namespace DoAimAfterXShots
+          {
+              inline bool enabled = false;
+              inline float value = 0.0f;
+          }
 
 		namespace ErrorMargin
 		{

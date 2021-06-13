@@ -7,6 +7,7 @@
 #include "../Utils/bonemaps.h"
 #include "../settings.h"
 #include "../interfaces.h"
+#include "../Utils/PerlinNoise.h"
 
 bool Legitbot::aimStepInProgress = false;
 std::vector<int64_t> Legitbot::friends = { };
@@ -15,6 +16,8 @@ std::vector<long> killTimes = { 0 }; // the Epoch time from when we kill someone
 bool shouldAim;
 QAngle AimStepLastAngle;
 QAngle LegitRCSLPUNCH;
+
+siv::PerlinNoise perlin(1337);
 
 int Legitbot::targetAimbot = -1;
 const int headVectors = 11;
@@ -743,9 +746,30 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 			if (inputSystem->IsButtonDown(Settings::Legitbot::aimkey))
 				shouldAim = true;
 
-			Settings::Debug::AutoAim::target = bestSpot; // For Debug showing aimspot.
+			if(!Settings::Legitbot::CourseRandomization::enabled){
+
+			    Settings::Debug::AutoAim::target = bestSpot; // For Debug showing aimspot.
+			}
+
+			//Only start aimbotting after we reach X shot number in the spray. - Crazily
+			if (Settings::Legitbot::DoAimAfterXShots::enabled)
+			{
+			    int shotsFired = localplayer->GetShotsFired();
+			    //I think c++ always rounds down but only way to do it with IMGUI Slider anyway.
+			    if(shotsFired <= (int) Settings::Legitbot::DoAimAfterXShots::value)
+			    {
+
+			        shouldAim = false;
+			    } else if (shotsFired >= Settings::Legitbot::DoAimAfterXShots::value)
+			        {
+			            shouldAim = true;
+			        }
+
+			}
+
 			if (shouldAim)
 			{
+
 				if (Settings::Legitbot::Prediction::enabled)
 				{
 					localEye = VelocityExtrapolate(localplayer, localEye); // get eye pos next tick
@@ -762,6 +786,31 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 					angle += lastRandom;
 					lastShotFired = localplayer->GetShotsFired();
 				}
+				//This is kindof dirty but provides the desired effect.
+				// Maybe someone better at c++ than I am can edit it later - Crazily & Conarium Software
+
+			    	if (Settings::Legitbot::CourseRandomization::enabled)
+				{
+				    Vector bestSpotOld = bestSpot;
+
+				    const double wavelength = 3;
+				    const double amplitude = Settings::Legitbot::CourseRandomization::value;
+
+				    //GetSimulationTime was used because we just needed a rapidly changing number.
+				    double xVar = localplayer->GetSimulationTime();
+				    double yVar = localplayer->GetSimulationTime() - 5;
+				    double zVar = localplayer->GetSimulationTime() + 5;
+
+				    double xError = perlin.normalizedOctaveNoise2D(xVar/wavelength,yVar/wavelength, 2) * amplitude;
+				    double yError = perlin.normalizedOctaveNoise2D(yVar/wavelength,zVar/wavelength, 2) * amplitude;
+
+				    bestSpot.x += xError;
+				    bestSpot.z += yError;
+
+				    Settings::Debug::AutoAim::target = bestSpot; // For Debug showing aimspot.
+
+				}
+			    	angle = Math::CalcAngle(localEye, bestSpot);
 				newTarget = false;
 			}
 		}
@@ -839,7 +888,11 @@ void Legitbot::UpdateValues()
 	Settings::Legitbot::aimkey = currentWeaponSetting.aimkey;
 	Settings::Legitbot::aimkeyOnly = currentWeaponSetting.aimkeyOnly;
 	Settings::Legitbot::Smooth::enabled = currentWeaponSetting.smoothEnabled;
+	Settings::Legitbot::CourseRandomization::enabled = currentWeaponSetting.courseRandomizationEnabled;
+     Settings::Legitbot::DoAimAfterXShots::enabled = currentWeaponSetting.doAimAfterXShotsEnabled;
 	Settings::Legitbot::Smooth::value = currentWeaponSetting.smoothAmount;
+	Settings::Legitbot::CourseRandomization::value = currentWeaponSetting.courseRandomizationAmount;
+     Settings::Legitbot::DoAimAfterXShots::value = currentWeaponSetting.doAimAfterXShotsAmount;
 	Settings::Legitbot::Smooth::type = currentWeaponSetting.smoothType;
 	Settings::Legitbot::ErrorMargin::enabled = currentWeaponSetting.errorMarginEnabled;
 	Settings::Legitbot::ErrorMargin::value = currentWeaponSetting.errorMarginValue;

@@ -27,6 +27,10 @@ static ButtonCode_t aimkey = ButtonCode_t::MOUSE_MIDDLE;
 static bool aimkeyOnly = false;
 static bool smoothEnabled = false;
 static float smoothValue = 0.5f;
+static bool courseRandomizationEnabled = false;
+static bool doAimAfterXShotsEnabled = false;
+static float courseRandomizationValue = 2.0f;
+static float doAimAfterXShotsValue = 0.0f;
 static SmoothType smoothType = SmoothType::SLOW_END;
 static bool smoothSaltEnabled = false;
 static float smoothSaltMultiplier = 0.0f;
@@ -74,7 +78,11 @@ void UI::ReloadWeaponSettings()
 	aimkey = Settings::Legitbot::weapons.at(index).aimkey;
 	aimkeyOnly = Settings::Legitbot::weapons.at(index).aimkeyOnly;
 	smoothEnabled = Settings::Legitbot::weapons.at(index).smoothEnabled;
+	courseRandomizationEnabled = Settings::Legitbot::weapons.at(index).courseRandomizationEnabled;
+     doAimAfterXShotsEnabled = Settings::Legitbot::weapons.at(index).doAimAfterXShotsEnabled;
 	smoothValue = Settings::Legitbot::weapons.at(index).smoothAmount;
+	courseRandomizationValue = Settings::Legitbot::weapons.at(index).courseRandomizationAmount;
+     doAimAfterXShotsValue = Settings::Legitbot::weapons.at(index).doAimAfterXShotsAmount;
 	smoothType = Settings::Legitbot::weapons.at(index).smoothType;
 	smoothSaltEnabled = Settings::Legitbot::weapons.at(index).smoothSaltEnabled;
 	smoothSaltMultiplier = Settings::Legitbot::weapons.at(index).smoothSaltMultiplier;
@@ -119,29 +127,31 @@ void UI::UpdateWeaponSettings()
 
 	LegitWeapon_t settings = {
 			.silent = silent,
-                        .autoWallEnabled = autoWallEnabled,
-                        .autoWallValue = autoWallValue,
-                        .scopeControlEnabled = scopeControlEnabled,
-                        .autoAimRealDistance = autoAimRealDistance,
-                        .smokeCheck = smokeCheck,
-                        .flashCheck = flashCheck,
-                        .autoShoot = autoShootEnabled,
+               .autoWallEnabled = autoWallEnabled,
+               .autoWallValue = autoWallValue,
+               .scopeControlEnabled = scopeControlEnabled,
+               .autoAimRealDistance = autoAimRealDistance,
+               .smokeCheck = smokeCheck,
+               .flashCheck = flashCheck,
+               .autoShoot = autoShootEnabled,
 			.aimkeyOnly = aimkeyOnly,
 			.smoothEnabled = smoothEnabled,
+			.courseRandomizationEnabled = courseRandomizationEnabled,
+               .doAimAfterXShotsEnabled = doAimAfterXShotsEnabled,
 			.smoothSaltEnabled = smoothSaltEnabled,
 			.errorMarginEnabled = errorMarginEnabled,
 			.autoAimEnabled = autoAimEnabled,
 			.aimStepEnabled = aimStepEnabled,
 			.rcsEnabled = rcsEnabled,
 			.rcsAlwaysOn = rcsAlwaysOn,
-                        .hitchanceEnaled = false,
+               .hitchanceEnaled = false,
 			.autoPistolEnabled = autoPistolEnabled,
 			.autoScopeEnabled = autoScopeEnabled,
 			.ignoreJumpEnabled = ignoreJumpEnabled,
 			.ignoreEnemyJumpEnabled = ignoreEnemyJumpEnabled,
 			.autoSlow = autoSlow,
 			.predEnabled = predEnabled,
-                        .TriggerBot = TriggerBot,
+               .TriggerBot = TriggerBot,
 			.mindamage = 0,
 			.autoWall = false,
 			.reactionEnabled = false,
@@ -149,6 +159,8 @@ void UI::UpdateWeaponSettings()
 			.smoothType = smoothType,
 			.aimkey = aimkey,
 			.smoothAmount = smoothValue,
+			.courseRandomizationAmount = courseRandomizationValue,
+			.doAimAfterXShotsAmount = doAimAfterXShotsValue,
 			.smoothSaltMultiplier = smoothSaltMultiplier,
 			.errorMarginValue = errorMarginValue,
 			.LegitautoAimFov = autoAimValue,
@@ -156,10 +168,10 @@ void UI::UpdateWeaponSettings()
 			.aimStepMax = aimStepMax,
 			.rcsAmountX = rcsAmountX,
 			.rcsAmountY = rcsAmountY,
-	                .minDamagevalue = 10.0f,
+	          .minDamagevalue = 10.0f,
 			.reactionLow = 1.0f,
 			.reactionHigh = 25.0f,
-	                .hitchance = hitchance,
+	          .hitchance = hitchance,
 
 	};
 
@@ -401,6 +413,10 @@ void Legitbot::RenderTab()
 					UI::UpdateWeaponSettings();
 				Settings::Legitbot::Smooth::enabled = smoothEnabled;
 				}
+				if (ImGui::Checkbox(XORSTR("Advanced Error"), &courseRandomizationEnabled))
+                    	UI::UpdateWeaponSettings();
+           	     if (ImGui::Checkbox(XORSTR("Aim After Shot #"), &doAimAfterXShotsEnabled))
+                  		UI::UpdateWeaponSettings();
 				if (ImGui::Checkbox(XORSTR("Smooth Salting"), &smoothSaltEnabled))
 					UI::UpdateWeaponSettings();
 				if (ImGui::Checkbox(XORSTR("Error Margin"), &errorMarginEnabled))
@@ -415,6 +431,10 @@ void Legitbot::RenderTab()
 				ImGui::PushItemWidth(-1);
 				if (ImGui::SliderFloat(XORSTR("##SMOOTH"), &smoothValue, 0, 1))
 					UI::UpdateWeaponSettings();
+				if (ImGui::SliderFloat(XORSTR("##COURSERANDOMIZATION"), &courseRandomizationValue, 1, 6))
+					UI::UpdateWeaponSettings();
+				if (ImGui::SliderFloat(XORSTR("##DOAIMAFTERXSHOTS"), &doAimAfterXShotsValue, 0, 30))
+                   		UI::UpdateWeaponSettings();
 				if (ImGui::SliderFloat(XORSTR("##SALT"), &smoothSaltMultiplier, 0, smoothValue))
 					UI::UpdateWeaponSettings();
 				if (ImGui::SliderFloat(XORSTR("##ERROR"), &errorMarginValue, 0, 2))

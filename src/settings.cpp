@@ -173,7 +173,11 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	    LegitweaponSetting[XORSTR("AimKey")] = Util::GetButtonName(i.second.aimkey);
 	    LegitweaponSetting[XORSTR("AimKeyOnly")] = i.second.aimkeyOnly;
 	    LegitweaponSetting[XORSTR("Smooth")][XORSTR("Enabled")] = i.second.smoothEnabled;
+        LegitweaponSetting[XORSTR("CourseRandomization")][XORSTR("Enabled")] = i.second.courseRandomizationEnabled;
+        LegitweaponSetting[XORSTR("DoAimAfterXShots")][XORSTR("Enabled")] = i.second.doAimAfterXShotsEnabled;
 	    LegitweaponSetting[XORSTR("Smooth")][XORSTR("Amount")] = i.second.smoothAmount;
+        LegitweaponSetting[XORSTR("CourseRandomization")][XORSTR("Amount")] = i.second.courseRandomizationAmount;
+        LegitweaponSetting[XORSTR("DoAimAfterXShots")][XORSTR("Amount")] = i.second.doAimAfterXShotsAmount;
 	    LegitweaponSetting[XORSTR("Smooth")][XORSTR("Type")] = (int)i.second.smoothType;
 	    LegitweaponSetting[XORSTR("Smooth")][XORSTR("Salting")][XORSTR("Enabled")] = i.second.smoothSaltEnabled;
 	    LegitweaponSetting[XORSTR("Smooth")][XORSTR("Salting")][XORSTR("Multiplier")] = i.second.smoothSaltMultiplier;
@@ -912,6 +916,8 @@ void Settings::LoadConfig(std::string path)
 	        .autoShoot = LegitweaponSetting[XORSTR("AutoShoot")].asBool(),
 	        .aimkeyOnly = LegitweaponSetting[XORSTR("AimKeyOnly")].asBool(),
 	        .smoothEnabled = LegitweaponSetting[XORSTR("Smooth")][XORSTR("Enabled")].asBool(),
+            .courseRandomizationEnabled = LegitweaponSetting[XORSTR( "CourseRandomization" )][XORSTR( "Enabled" )].asBool(),
+            .doAimAfterXShotsEnabled = LegitweaponSetting[XORSTR( "DoAimAfterXShots" )][XORSTR( "Enabled" )].asBool(),
 	        .smoothSaltEnabled = LegitweaponSetting[XORSTR("Smooth")][XORSTR("Salting")][XORSTR("Enabled")].asBool(),
 	        .errorMarginEnabled = LegitweaponSetting[XORSTR("ErrorMargin")][XORSTR("Enabled")].asBool(),
 	        .autoAimEnabled = LegitweaponSetting[XORSTR("AutoAim")][XORSTR("Enabled")].asBool(),
@@ -932,6 +938,8 @@ void Settings::LoadConfig(std::string path)
 	        .smoothType = (SmoothType)LegitweaponSetting[XORSTR("Smooth")][XORSTR("Type")].asInt(),
 	        .aimkey = Util::GetButtonCode(LegitweaponSetting[XORSTR("AimKey")].asCString()),
 	        .smoothAmount = LegitweaponSetting[XORSTR("Smooth")][XORSTR("Amount")].asFloat(),
+            .courseRandomizationAmount =  LegitweaponSetting[XORSTR( "CourseRandomization" )][XORSTR( "Amount" )].asFloat(),
+            .doAimAfterXShotsAmount =  LegitweaponSetting[XORSTR( "DoAimAfterXShots" )][XORSTR( "Amount" )].asFloat(),
 	        .smoothSaltMultiplier = LegitweaponSetting[XORSTR("Smooth")][XORSTR("Salting")][XORSTR("Multiplier")].asFloat(),
 	        .errorMarginValue = LegitweaponSetting[XORSTR("ErrorMargin")][XORSTR("Value")].asFloat(),
 	        .LegitautoAimFov = LegitweaponSetting[XORSTR("AutoAim")][XORSTR("LegitFOV")].asFloat(),
