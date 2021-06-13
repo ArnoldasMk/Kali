@@ -40,14 +40,22 @@ cd Kali
 
 #### Compile with build script
 
-You can build easily with the included build script.
+You can build easily with the included Kali script.
 ```bash
-./build
+./Kali -b
+```
+or 
+```bash
+./Kali --build
 ```
 
 You can later update with 
 ```bash
-./update
+./Kali -u
+```
+or
+```bash
+./Kali --update
 ```
 
 
@@ -60,9 +68,13 @@ Navigate to the directory where Kali was built if you have not ready.
 cd Kali
 ```
 
-Now, you can inject the hack with the `load` script
+Now, you can inject the hack with the Kali script
 ```bash
-./load
+./Kali -l
+```
+or 
+```bash
+./Kali --load
 ```
 
 You might be prompted to enter in your password, this is because the injection script requires root access.
@@ -77,7 +89,11 @@ Now that Kali has been injected into the game, press <kbd>Insert</kbd> on your k
 
 If you wish to unload the hack from the game, you can do so by entering the command:
 ```bash
-./uload
+./Kali -ul
+```
+or
+```bash
+./Kali --unload
 ```
 ## Configs
 
