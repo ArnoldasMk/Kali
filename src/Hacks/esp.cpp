@@ -1493,28 +1493,15 @@ static void DrawPlayerText( C_BasePlayer* player, C_BasePlayer* localplayer, int
 	}
 
 	// weapon
-	C_BaseCombatWeapon* activeWeapon = ( C_BaseCombatWeapon* ) entityList->GetClientEntityFromHandle( player->GetActiveWeapon() );
-	if ( Settings::ESP::Info::weapon || Settings::ESP::Info::tweapon) {
-	// if (!localplayer->GetAlive())
-//return;
-		auto activeeWeapon =  *activeWeapon->GetItemDefinitionIndex();
-		std::string modelName;
-		int offset = ( int ) ( boxSpacing);
-Vector2D weaponTextSizeF;
-if (Settings::ESP::Info::weapon){
-if ( ESP::Weaponsi.find(activeeWeapon) != ESP::Weaponsi.end()){
-modelName = ESP::Weaponsi.find(activeeWeapon)->second;
-}
-                                 weaponTextSizeF = Draw::GetTextSize(modelName.c_str() , astrium );
-
-}else{
-                                weaponTextSizeF = Draw::GetTextSize(modelName.c_str() , esp_font );
-		std::string modelName = Util::Items::GetItemDisplayName( *activeWeapon->GetItemDefinitionIndex() );
-}
-		if (localplayer->GetAlive())
-		Draw::Text( ( x + ( w / 2 ) - ( weaponTextSizeF.x / 2 ) ), y + h + offset, modelName.c_str(), astrium,Color::FromImColor( Entity::IsTeamMate(player, localplayer) ? Settings::ESP::allyInfoColor.Color() : Settings::ESP::enemyInfoColor.Color()) );
-
-
+	C_BaseCombatWeapon *activeWeapon = (C_BaseCombatWeapon *) entityList->GetClientEntityFromHandle(
+			player->GetActiveWeapon());
+	if (Settings::ESP::Info::weapon && activeWeapon) {
+		std::string modelName = Util::Items::GetItemDisplayName(*activeWeapon->GetItemDefinitionIndex());
+		int offset = (int) (Settings::ESP::Bars::type == BarType::HORIZONTAL);
+		Vector2D weaponTextSize = Draw::GetTextSize(modelName.c_str(), esp_font);
+		Draw::AddText((x + (w / 2) - (weaponTextSize.x / 2)), y + h + offset, modelName.c_str(),
+		              Entity::IsTeamMate(player, localplayer) ? Settings::ESP::allyInfoColor.Color()
+		                                                      : Settings::ESP::enemyInfoColor.Color());
 	}
 	// draw info
 	std::vector<std::string> stringsToShow;
@@ -1536,7 +1523,7 @@ if (wap > 2)
 		stringsToShow.push_back("Cheating?, CP:" + std::to_string(wap) );
 	}
 	if ( Settings::ESP::Info::scoped && player->IsScoped() )
-		stringsToShow.push_back( XORSTR( "B" ) );
+		stringsToShow.push_back( XORSTR( "Scoped" ) ); //WHY B WHAT THE FUCK
 	if (Settings::ESP::Info::reloading)
 	{
 		CUtlVector<AnimationLayer> *layers = player->GetAnimOverlay();
