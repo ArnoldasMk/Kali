@@ -157,7 +157,8 @@ chmod 400 build_id # Make the build_id read-only for safety.
 echo_green "Build Completed." 
 }
 function load(){
-  # Check_For_logDirectory
+export PATH="./GDB:$PATH" # loading old gdb to fix crash
+  # Check_For_logDirectory  
  csgo_pid=$(pidof csgo_linux64)
 if [ -z "$csgo_pid" ]; then
     echo_red "CS:GO needs to be open before you can inject, exiting..."

@@ -343,6 +343,7 @@ struct LegitWeapon_t
 		 flashCheck,
 		 autoShoot,
 		 aimkeyOnly,
+		 reactionTime,
 		 smoothEnabled,
 		 courseRandomizationEnabled,
 		 doAimAfterXShotsEnabled,
@@ -361,8 +362,7 @@ struct LegitWeapon_t
 		 predEnabled,
 		 TriggerBot,
 		 mindamage,
-		 autoWall,
-		 reactionEnabled;
+		 autoWall;
 	Bone bone = BONE_HEAD;
 	SmoothType smoothType = SmoothType::SLOW_END;
 	ButtonCode_t aimkey = ButtonCode_t ::MOUSE_MIDDLE;
@@ -377,8 +377,8 @@ struct LegitWeapon_t
 		  rcsAmountX = 2.0f,
 		  rcsAmountY = 2.0f,
 		  minDamagevalue = 10.0f,
-		  reactionLow = 1.0f,
 		  reactionHigh = 25.0f,
+		  reactionLow = 1.0f,
 		  hitchance = 20;
 	bool desiredBones[31];
 
@@ -390,11 +390,12 @@ struct LegitWeapon_t
 				return false;
 		}
 
-		return this->silent == another.silent &&
+			return this->silent == another.silent &&
 			this->autoShoot == another.autoShoot &&
 			this->bone == another.bone &&
 			this->aimkey == another.aimkey &&
 			this->aimkeyOnly == another.aimkeyOnly &&
+			this->reactionTime == another.reactionTime &&
 			this->smoothEnabled == another.smoothEnabled &&
 			this->smoothAmount == another.smoothAmount &&
 			this->courseRandomizationEnabled == another.courseRandomizationEnabled &&
@@ -418,14 +419,20 @@ struct LegitWeapon_t
 			this->rcsAmountY == another.rcsAmountY &&
 			this->autoPistolEnabled == another.autoPistolEnabled &&
 			this->autoScopeEnabled == another.autoScopeEnabled &&
+			this->ignoreJumpEnabled == another.ignoreJumpEnabled &&
 			this->ignoreEnemyJumpEnabled == another.ignoreEnemyJumpEnabled &&
+			this->smokeCheck == another.smokeCheck &&
+			this->flashCheck == another.flashCheck &&
 			this->hitchanceEnaled == another.hitchanceEnaled &&
 			this->hitchance == another.hitchance &&
 			this->autoSlow == another.autoSlow &&
 			this->predEnabled == another.predEnabled &&
 			this->TriggerBot == another.TriggerBot &&
 			this->mindamage == another.mindamage &&
-			this->autoWall == another.autoWall;
+			this->autoWall == another.autoWall &&
+			this->reactionHigh == another.reactionHigh &&
+			this->reactionLow == another.reactionLow &&
+			this->scopeControlEnabled == another.scopeControlEnabled;
 	}
 } const defaultSettings{};
 
@@ -630,9 +637,8 @@ namespace Settings
         inline Bone bone = BONE_HEAD;
         inline ButtonCode_t aimkey = ButtonCode_t::MOUSE_MIDDLE;
         inline bool aimkeyOnly = false;
-	inline bool reactionTime = false;
-	inline float reactionLow;
 	inline float reactionHigh;
+	inline float reactionLow;
 		namespace Smooth
 		{
 			inline bool enabled = false;
@@ -700,7 +706,10 @@ namespace Settings
 				inline float value = 20;
 			}
 		}
-
+		namespace reactionTime
+		{
+			inline bool enabled = false;
+		}
 		namespace AutoWall
 		{
 			inline bool enabled = false;

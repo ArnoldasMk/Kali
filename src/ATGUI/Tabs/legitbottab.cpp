@@ -63,7 +63,7 @@ static bool scopeControlEnabled = false;
 static bool TriggerBot = false;
 static bool hitchanceEnaled = false;
 static float hitchance = 100.f;
-static bool reactionEnabled = false;
+static bool reactionTime = false;
 static float reactionHigh = 1.0f;
 static float reactionLow = 25.0f;
 void UI::ReloadWeaponSettings()
@@ -77,6 +77,7 @@ void UI::ReloadWeaponSettings()
 	bone = Settings::Legitbot::weapons.at(index).bone;
 	aimkey = Settings::Legitbot::weapons.at(index).aimkey;
 	aimkeyOnly = Settings::Legitbot::weapons.at(index).aimkeyOnly;
+	reactionTime = Settings::Legitbot::weapons.at(index).reactionTime;
 	smoothEnabled = Settings::Legitbot::weapons.at(index).smoothEnabled;
 	courseRandomizationEnabled = Settings::Legitbot::weapons.at(index).courseRandomizationEnabled;
      doAimAfterXShotsEnabled = Settings::Legitbot::weapons.at(index).doAimAfterXShotsEnabled;
@@ -112,9 +113,8 @@ void UI::ReloadWeaponSettings()
 	autoSlow = Settings::Legitbot::weapons.at(index).autoSlow;
 	predEnabled = Settings::Legitbot::weapons.at(index).predEnabled;
 	scopeControlEnabled = Settings::Legitbot::weapons.at(index).scopeControlEnabled;
-	reactionEnabled = Settings::Legitbot::reactionTime;
-	reactionLow = Settings::Legitbot::reactionLow;
-        reactionHigh = Settings::Legitbot::reactionHigh;
+     reactionHigh = Settings::Legitbot::weapons.at(index).reactionHigh;
+	reactionLow = Settings::Legitbot::weapons.at(index).reactionLow;
 
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 		desiredBones[bone] = Settings::Legitbot::weapons.at(index).desiredBones[bone];
@@ -135,6 +135,7 @@ void UI::UpdateWeaponSettings()
                .flashCheck = flashCheck,
                .autoShoot = autoShootEnabled,
 			.aimkeyOnly = aimkeyOnly,
+			.reactionTime = reactionTime,
 			.smoothEnabled = smoothEnabled,
 			.courseRandomizationEnabled = courseRandomizationEnabled,
                .doAimAfterXShotsEnabled = doAimAfterXShotsEnabled,
@@ -154,7 +155,6 @@ void UI::UpdateWeaponSettings()
                .TriggerBot = TriggerBot,
 			.mindamage = 0,
 			.autoWall = false,
-			.reactionEnabled = false,
 			.bone = bone,
 			.smoothType = smoothType,
 			.aimkey = aimkey,
@@ -169,8 +169,8 @@ void UI::UpdateWeaponSettings()
 			.rcsAmountX = rcsAmountX,
 			.rcsAmountY = rcsAmountY,
 	          .minDamagevalue = 10.0f,
-			.reactionLow = 1.0f,
-			.reactionHigh = 25.0f,
+			.reactionHigh = reactionHigh,
+			.reactionLow = reactionLow,
 	          .hitchance = hitchance,
 
 	};
@@ -390,7 +390,7 @@ void Legitbot::RenderTab()
                                 if (ImGui::BeginPopup(XORSTR("optionReactionTime")))
                                 {
                                         ImGui::PushItemWidth(-1);
-                                        if (ImGui::Checkbox(XORSTR("Random Reaction time"), &reactionEnabled))
+                                        if (ImGui::Checkbox(XORSTR("Random Reaction time"), &Settings::Legitbot::reactionTime::enabled))
                                                 UI::UpdateWeaponSettings();
                                         if (ImGui::SliderFloat(XORSTR("##REACTIONL"), &reactionLow, 0, 200, XORSTR("Min: %0.1f")))
                                                 UI::UpdateWeaponSettings();

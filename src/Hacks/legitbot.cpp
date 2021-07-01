@@ -31,7 +31,7 @@ static QAngle ApplyErrorToAngle(QAngle* angles, float margin)
 	return error;
 }
 
-bool ReactionTime(){
+bool reactionTime(){
         long currentTime_ms = Util::GetEpochTime();
         static long timeStamp = currentTime_ms;
         long oldTimeStamp;
@@ -831,18 +831,16 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 	RCS(angle, player, cmd);
 	Smooth(player, angle);
 	NoShoot(activeWeapon, player, cmd);
-        if (!Settings::Legitbot::reactionTime || ReactionTime()){
-    Math::NormalizeAngles(angle);
-    Math::ClampAngles(angle);
-
-	FixMouseDeltas(cmd, angle, oldAngle);
-	cmd->viewangles = angle;
-
-    Math::CorrectMovement(oldAngle, cmd, oldForward, oldSideMove);
-
-	if( !Settings::Legitbot::silent ){
-    	engine->SetViewAngles(cmd->viewangles);
-	}
+     
+	if (!Settings::Legitbot::reactionTime::enabled || reactionTime()){
+   		Math::NormalizeAngles(angle);
+    		Math::ClampAngles(angle);
+		FixMouseDeltas(cmd, angle, oldAngle);
+		cmd->viewangles = angle;
+    		Math::CorrectMovement(oldAngle, cmd, oldForward, oldSideMove);
+		if( !Settings::Legitbot::silent ){
+    			engine->SetViewAngles(cmd->viewangles);
+		}
 	}
 }
 void Legitbot::FireGameEvent(IGameEvent* event)
@@ -887,6 +885,7 @@ void Legitbot::UpdateValues()
 	Settings::Legitbot::bone = currentWeaponSetting.bone;
 	Settings::Legitbot::aimkey = currentWeaponSetting.aimkey;
 	Settings::Legitbot::aimkeyOnly = currentWeaponSetting.aimkeyOnly;
+	Settings::Legitbot::reactionTime::enabled = currentWeaponSetting.reactionTime;
 	Settings::Legitbot::Smooth::enabled = currentWeaponSetting.smoothEnabled;
 	Settings::Legitbot::CourseRandomization::enabled = currentWeaponSetting.courseRandomizationEnabled;
      Settings::Legitbot::DoAimAfterXShots::enabled = currentWeaponSetting.doAimAfterXShotsEnabled;
@@ -919,8 +918,7 @@ void Legitbot::UpdateValues()
 	Settings::Legitbot::AutoSlow::enabled = currentWeaponSetting.autoSlow;
 	Settings::Legitbot::ScopeControl::enabled = currentWeaponSetting.scopeControlEnabled;
 	Settings::Legitbot::ShootAssist::Hitchance::enabled = currentWeaponSetting.hitchanceEnaled;
-        Settings::Legitbot::ShootAssist::Hitchance::value = currentWeaponSetting.hitchance;
-	Settings::Legitbot::reactionTime = currentWeaponSetting.reactionEnabled;
+     Settings::Legitbot::ShootAssist::Hitchance::value = currentWeaponSetting.hitchance;
 	Settings::Legitbot::reactionLow = currentWeaponSetting.reactionLow;
 	Settings::Legitbot::reactionHigh = currentWeaponSetting.reactionHigh;
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)

@@ -172,6 +172,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	    LegitweaponSetting[XORSTR("TargetBone")] = (int)i.second.bone;
 	    LegitweaponSetting[XORSTR("AimKey")] = Util::GetButtonName(i.second.aimkey);
 	    LegitweaponSetting[XORSTR("AimKeyOnly")] = i.second.aimkeyOnly;
+        LegitweaponSetting[XORSTR("ReactionTimeEnabled")][XORSTR("Enabled")] = i.second.reactionTime;
 	    LegitweaponSetting[XORSTR("Smooth")][XORSTR("Enabled")] = i.second.smoothEnabled;
         LegitweaponSetting[XORSTR("CourseRandomization")][XORSTR("Enabled")] = i.second.courseRandomizationEnabled;
         LegitweaponSetting[XORSTR("DoAimAfterXShots")][XORSTR("Enabled")] = i.second.doAimAfterXShotsEnabled;
@@ -195,7 +196,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
     	LegitweaponSetting[XORSTR("AutoPistol")][XORSTR("Enabled")] = i.second.autoPistolEnabled;
     	LegitweaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")] = i.second.autoScopeEnabled;
     	LegitweaponSetting[XORSTR("IgnoreJump")][XORSTR("Enabled")] = i.second.ignoreJumpEnabled;
-	    LegitweaponSetting[XORSTR("IgnoreEnemyJump")][XORSTR("Enabled")] = i.second.ignoreEnemyJumpEnabled;
+		LegitweaponSetting[XORSTR("IgnoreEnemyJump")][XORSTR("Enabled")] = i.second.ignoreEnemyJumpEnabled;
     	LegitweaponSetting[XORSTR("HitChance")][XORSTR("Enabled")] = i.second.hitchanceEnaled;
 	    LegitweaponSetting[XORSTR("HitChance")][XORSTR("Value")] = i.second.hitchance;
     	LegitweaponSetting[XORSTR("AutoSlow")][XORSTR("enabled")] = i.second.autoSlow;
@@ -204,6 +205,9 @@ void Settings::LoadDefaultsOrSave(std::string path)
         LegitweaponSetting[XORSTR("MinDamage")][XORSTR("enabled")] = i.second.mindamage;
         LegitweaponSetting[XORSTR("MinDamage")][XORSTR("Value")] = i.second.minDamagevalue;
         LegitweaponSetting[XORSTR("Autowall")][XORSTR("enabled")] = i.second.autoWall;
+        LegitweaponSetting[XORSTR("ReactionTimeHigh")][XORSTR("Value")] = i.second.reactionHigh;
+        LegitweaponSetting[XORSTR("ReactionTimeLow")][XORSTR("Value")] = i.second.reactionLow;
+        
 	
 	    for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 	        LegitweaponSetting[XORSTR("DesiredBones")][XORSTR("Bones")][bone] = i.second.desiredBones[bone];
@@ -915,6 +919,7 @@ void Settings::LoadConfig(std::string path)
 	        .silent = LegitweaponSetting[XORSTR("Silent")].asBool(),
 	        .autoShoot = LegitweaponSetting[XORSTR("AutoShoot")].asBool(),
 	        .aimkeyOnly = LegitweaponSetting[XORSTR("AimKeyOnly")].asBool(),
+            .reactionTime = LegitweaponSetting[XORSTR("reactionTime")][XORSTR("Enabled")].asBool(),
 	        .smoothEnabled = LegitweaponSetting[XORSTR("Smooth")][XORSTR("Enabled")].asBool(),
             .courseRandomizationEnabled = LegitweaponSetting[XORSTR( "CourseRandomization" )][XORSTR( "Enabled" )].asBool(),
             .doAimAfterXShotsEnabled = LegitweaponSetting[XORSTR( "DoAimAfterXShots" )][XORSTR( "Enabled" )].asBool(),
@@ -927,8 +932,8 @@ void Settings::LoadConfig(std::string path)
 	        .hitchanceEnaled = LegitweaponSetting[XORSTR("HitChance")][XORSTR("Enabled")].asBool(),
 	        .autoPistolEnabled = LegitweaponSetting[XORSTR("AutoPistol")][XORSTR("Enabled")].asBool(),
 	        .autoScopeEnabled = LegitweaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")].asBool(),
-	        .ignoreJumpEnabled = LegitweaponSetting[XORSTR("IgnoreJump")][XORSTR("Enabled")].asBool(),
-	        .ignoreEnemyJumpEnabled = LegitweaponSetting[XORSTR("IgnoreEnemyJump")][XORSTR("Enabled")].asBool(),
+	        .ignoreJumpEnabled = LegitweaponSetting[XORSTR( "IgnoreJump" )][XORSTR( "Enabled" )].asBool(),
+			.ignoreEnemyJumpEnabled = LegitweaponSetting[XORSTR( "IgnoreEnemyJump" )][XORSTR( "Enabled" )].asBool(),
 	        .autoSlow = LegitweaponSetting[XORSTR("AutoSlow")][XORSTR("enabled")].asBool(),
 	        .predEnabled = LegitweaponSetting[XORSTR("Prediction")][XORSTR("enabled")].asBool(),
             .TriggerBot = LegitweaponSetting[XORSTR("TriggerBot")][XORSTR("enabled")].asBool(),
@@ -948,7 +953,8 @@ void Settings::LoadConfig(std::string path)
 	        .rcsAmountX = LegitweaponSetting[XORSTR("RCS")][XORSTR("AmountX")].asFloat(),
 	        .rcsAmountY = LegitweaponSetting[XORSTR("RCS")][XORSTR("AmountY")].asFloat(),
 	        .minDamagevalue = LegitweaponSetting[XORSTR("MinDamage")][XORSTR("Value")].asFloat(),
-	        .hitchance = LegitweaponSetting[XORSTR("HitChance")][XORSTR("Value")].asFloat(),
+            .reactionHigh = LegitweaponSetting[XORSTR("ReactionTimeHigh")][XORSTR("Value")].asFloat(),
+            .reactionLow = LegitweaponSetting[XORSTR("ReactionTimeLow")][XORSTR("Value")].asFloat(),
 	    };
 
 	    for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
