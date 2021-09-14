@@ -798,7 +798,7 @@ void Legitbot::CreateMove(CUserCmd* cmd)
         lastRandom = {0,0,0};
     }
 
-    AimStep(player, angle, cmd);
+    	AimStep(player, angle, cmd);
 	AutoCrouch(player, cmd);
 	AutoSlow(player, oldForward, oldSideMove, bestDamage, activeWeapon, cmd);
 	AutoPistol(activeWeapon, cmd);
@@ -807,7 +807,6 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 	RCS(angle, player, cmd);
 	Smooth(player, angle);
 	NoShoot(activeWeapon, player, cmd);
-	}
 }
 void Legitbot::FireGameEvent(IGameEvent* event)
 {
