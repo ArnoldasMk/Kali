@@ -63,7 +63,6 @@ static bool scopeControlEnabled = false;
 static bool TriggerBot = false;
 static bool hitchanceEnaled = false;
 static float hitchance = 100.f;
-static bool reactionTime = false;
 static float reactionHigh = 1.0f;
 static float reactionLow = 25.0f;
 void UI::ReloadWeaponSettings()
@@ -77,7 +76,6 @@ void UI::ReloadWeaponSettings()
 	bone = Settings::Legitbot::weapons.at(index).bone;
 	aimkey = Settings::Legitbot::weapons.at(index).aimkey;
 	aimkeyOnly = Settings::Legitbot::weapons.at(index).aimkeyOnly;
-	reactionTime = Settings::Legitbot::weapons.at(index).reactionTime;
 	smoothEnabled = Settings::Legitbot::weapons.at(index).smoothEnabled;
 	courseRandomizationEnabled = Settings::Legitbot::weapons.at(index).courseRandomizationEnabled;
      doAimAfterXShotsEnabled = Settings::Legitbot::weapons.at(index).doAimAfterXShotsEnabled;
@@ -135,7 +133,6 @@ void UI::UpdateWeaponSettings()
                .flashCheck = flashCheck,
                .autoShoot = autoShootEnabled,
 			.aimkeyOnly = aimkeyOnly,
-			.reactionTime = reactionTime,
 			.smoothEnabled = smoothEnabled,
 			.courseRandomizationEnabled = courseRandomizationEnabled,
                .doAimAfterXShotsEnabled = doAimAfterXShotsEnabled,
@@ -370,8 +367,6 @@ void Legitbot::RenderTab()
 				ImGui::PopItemWidth();
 				if (ImGui::Button(XORSTR("RCS Settings"), ImVec2(-1, 0)))
 					ImGui::OpenPopup(XORSTR("optionRCSAmount"));
-                                if (ImGui::Button(XORSTR("Reaction Time"), ImVec2(-1, 0)))
-                                        ImGui::OpenPopup(XORSTR("optionReactionTime"));
 
 				ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiCond_Always );
 				if (ImGui::BeginPopup(XORSTR("optionRCSAmount")))
@@ -387,20 +382,6 @@ void Legitbot::RenderTab()
 
 					ImGui::EndPopup();
 				}
-                                if (ImGui::BeginPopup(XORSTR("optionReactionTime")))
-                                {
-                                        ImGui::PushItemWidth(-1);
-                                        if (ImGui::Checkbox(XORSTR("Random Reaction time"), &Settings::Legitbot::reactionTime::enabled))
-                                                UI::UpdateWeaponSettings();
-                                        if (ImGui::SliderFloat(XORSTR("##REACTIONL"), &reactionLow, 0, 200, XORSTR("Min: %0.1f")))
-                                                UI::UpdateWeaponSettings();
-                                        if (ImGui::SliderFloat(XORSTR("##REACTIONH"), &reactionHigh, 0, 200, XORSTR("Max: %0.1f")))
-                                                UI::UpdateWeaponSettings();
-                                        ImGui::PopItemWidth();
-
-                                        ImGui::EndPopup();
-                                }
-
 			}
 			ImGui::Columns(1);
 			ImGui::Spacing();

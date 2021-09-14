@@ -30,30 +30,6 @@ static QAngle ApplyErrorToAngle(QAngle* angles, float margin)
 	angles->operator+=(error);
 	return error;
 }
-
-bool reactionTime(){
-        long currentTime_ms = Util::GetEpochTime();
-        static long timeStamp = currentTime_ms;
-        long oldTimeStamp;
-        static int localMin = Settings::Legitbot::reactionLow;
-        static int localMax = Settings::Legitbot::reactionHigh;
-        static int randomDelay = localMin + rand() % (localMax - localMin);
-
-        if( localMin != Settings::Legitbot::reactionLow || localMax != Settings::Legitbot::reactionHigh )
-        {
-                localMin = Settings::Legitbot::reactionLow;
-                localMax = Settings::Legitbot::reactionHigh;
-                randomDelay = localMin + rand() % (localMax - localMin);
-        }
-                if (currentTime_ms - oldTimeStamp < randomDelay)
-                {
-                        timeStamp = oldTimeStamp;
-                        return false;
-                }
-                randomDelay = localMin + rand() % (localMax - localMin);
-		return true;
-}
-
 /* Fills points Vector. True if successful. False if not.  Credits for Original method - ReactiioN */
 static bool HeadMultiPoint(C_BasePlayer *player, Vector points[])
 {
@@ -831,16 +807,6 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 	RCS(angle, player, cmd);
 	Smooth(player, angle);
 	NoShoot(activeWeapon, player, cmd);
-     
-	if (!Settings::Legitbot::reactionTime::enabled || reactionTime()){
-   		Math::NormalizeAngles(angle);
-    		Math::ClampAngles(angle);
-		FixMouseDeltas(cmd, angle, oldAngle);
-		cmd->viewangles = angle;
-    		Math::CorrectMovement(oldAngle, cmd, oldForward, oldSideMove);
-		if( !Settings::Legitbot::silent ){
-    			engine->SetViewAngles(cmd->viewangles);
-		}
 	}
 }
 void Legitbot::FireGameEvent(IGameEvent* event)
@@ -885,7 +851,6 @@ void Legitbot::UpdateValues()
 	Settings::Legitbot::bone = currentWeaponSetting.bone;
 	Settings::Legitbot::aimkey = currentWeaponSetting.aimkey;
 	Settings::Legitbot::aimkeyOnly = currentWeaponSetting.aimkeyOnly;
-	Settings::Legitbot::reactionTime::enabled = currentWeaponSetting.reactionTime;
 	Settings::Legitbot::Smooth::enabled = currentWeaponSetting.smoothEnabled;
 	Settings::Legitbot::CourseRandomization::enabled = currentWeaponSetting.courseRandomizationEnabled;
      Settings::Legitbot::DoAimAfterXShots::enabled = currentWeaponSetting.doAimAfterXShotsEnabled;
