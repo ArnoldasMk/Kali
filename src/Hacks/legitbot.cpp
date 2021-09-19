@@ -1,13 +1,14 @@
+ 
 #include "legitbot.h"
 #include "autowall.h"
 
 #include "../Utils/xorstring.h"
 #include "../Utils/math.h"
 #include "../Utils/entity.h"
-#include "../Utils/bonemaps.h"
 #include "../settings.h"
 #include "../interfaces.h"
 #include "../Utils/PerlinNoise.h"
+
 
 bool Legitbot::aimStepInProgress = false;
 std::vector<int64_t> Legitbot::friends = { };
@@ -29,6 +30,12 @@ static QAngle ApplyErrorToAngle(QAngle* angles, float margin)
 	error *= margin;
 	angles->operator+=(error);
 	return error;
+}
+
+bool reactionTime(){
+        long currentTime_ms = Util::GetEpochTime();
+        static long timeStamp = currentTime_ms;
+        long oldTimeStamp;
 }
 /* Fills points Vector. True if successful. False if not.  Credits for Original method - ReactiioN */
 static bool HeadMultiPoint(C_BasePlayer *player, Vector points[])
@@ -74,18 +81,75 @@ static bool HeadMultiPoint(C_BasePlayer *player, Vector points[])
 
 	return true;
 }
+
+static bool IsFlagSetForHitbox(int flags, int hitbox)
+{
+    switch(hitbox)
+    {
+        case Hitbox::HITBOX_HEAD:
+            return flags & HitboxFlags::HEAD;
+        case Hitbox::HITBOX_NECK:
+            return flags & HitboxFlags::NECK;
+        case Hitbox::HITBOX_PELVIS:
+            return flags & HitboxFlags::PELVIS;
+        case Hitbox::HITBOX_STOMACH:
+            return flags & HitboxFlags::STOMACH;
+        case Hitbox::HITBOX_CHEST:
+        case Hitbox::HITBOX_LOWER_CHEST:
+        case Hitbox::HITBOX_UPPER_CHEST:
+            return flags & HitboxFlags::CHEST;
+        case Hitbox::HITBOX_LEFT_THIGH:
+        case Hitbox::HITBOX_RIGHT_THIGH:
+		case Hitbox::HITBOX_LEFT_CALF:
+        case Hitbox::HITBOX_RIGHT_CALF:
+            return flags & HitboxFlags::LEGS;
+        case Hitbox::HITBOX_LEFT_FOOT:
+        case Hitbox::HITBOX_RIGHT_FOOT:
+            return flags & HitboxFlags::FEET;
+        case Hitbox::HITBOX_LEFT_HAND:
+        case Hitbox::HITBOX_RIGHT_HAND:
+            return flags & HitboxFlags::HANDS;
+        case Hitbox::HITBOX_LEFT_UPPER_ARM:
+        case Hitbox::HITBOX_RIGHT_UPPER_ARM:
+        case Hitbox::HITBOX_LEFT_FOREARM:
+        case Hitbox::HITBOX_RIGHT_FOREARM:
+            return flags & HitboxFlags::ARMS;
+        default: // invalid hitbox?
+		{
+			cvar->ConsoleDPrintf(XORSTR("Warning: Wrong hitbox (%d) fed into IsFlagSetForHitbox\n"), hitbox);
+            return false;
+		}
+	}
+}
 static float AutoWallBestSpot(C_BasePlayer *player, Vector &bestSpot)
 {
+	model_t *model = player->GetModel();
+	if (!model)
+		return 0.f;
+	
+	studiohdr_t *hdr = modelInfo->GetStudioModel(model);
+	if (!hdr)
+		return 0.f;
+
+	mstudiohitboxset_t *hitboxSet = hdr->pHitboxSet(player->GetHitboxSetCount());
+	if (!hitboxSet)
+		return 0.f;
+
 	float bestDamage = Settings::Legitbot::AutoWall::value;
-	const std::unordered_map<int, int> *modelType = BoneMaps::GetModelTypeBoneMap(player);
+	const int hitboxFlags = Settings::Legitbot::AutoAim::desiredHitboxes;
 
-	static int len = sizeof(Settings::Legitbot::AutoAim::desiredBones) / sizeof(Settings::Legitbot::AutoAim::desiredBones[0]);
 
-	for( int i = 0; i < len; i++ )
+	for ( int i = 0; i < hitboxSet->numhitboxes; i++ )	
 	{
-		if( !Settings::Legitbot::AutoAim::desiredBones[i] )
+		if( !IsFlagSetForHitbox(hitboxFlags, i) )
+		continue;
+	
+		mstudiobbox_t* hitbox = hitboxSet->pHitbox(i);
+
+		if ( !hitbox )
 			continue;
-		if( i == CONST_BONE_HEAD ) // head multipoint
+
+		if( i == Hitbox::HITBOX_HEAD ) // head multipoint
 		{
 			Vector headPoints[headVectors];
 			if( !HeadMultiPoint(player, headPoints) )
@@ -103,12 +167,10 @@ static float AutoWallBestSpot(C_BasePlayer *player, Vector &bestSpot)
 				}
 			}
 		}
-		int boneID = (*modelType).at(i);
-		if( boneID == BONE_INVALID ) // bone not available on this modeltype.
-			continue;
+		int boneID = hitbox->bone;
 
 		Vector bone3D = player->GetBonePosition(boneID);
-
+	
 		AutoWall::FireBulletData data;
 		float boneDamage = AutoWall::GetDamage(bone3D, !Settings::Legitbot::friendly, data);
 		if( boneDamage > bestDamage )
@@ -122,7 +184,6 @@ static float AutoWallBestSpot(C_BasePlayer *player, Vector &bestSpot)
 	}
 	return bestDamage;
 }
-
 static float GetRealDistanceFOV(float distance, QAngle angle, CUserCmd* cmd)
 {
 	/*    n
@@ -161,6 +222,18 @@ static Vector VelocityExtrapolate(C_BasePlayer* player, Vector aimPos)
 /* Original Credits to: https://github.com/goldenguy00 ( study! study! study! :^) ) */
 static Vector GetClosestSpot( CUserCmd* cmd, C_BasePlayer* localPlayer, C_BasePlayer* enemy, AimTargetType aimTargetType = AimTargetType::FOV)
 {
+	model_t *model = enemy->GetModel();
+	if ( !model )
+		return Vector(0.f, 0.f, 0.f);
+
+	studiohdr_t *hdr = modelInfo->GetStudioModel( model );
+	if ( !hdr )
+		return Vector(0.f, 0.f, 0.f);
+
+	mstudiohitboxset_t *hitboxSet = hdr->pHitboxSet( enemy->GetHitboxSetCount() );
+	if ( !hitboxSet )
+		return Vector(0.f, 0.f, 0.f);
+	
 	QAngle viewAngles;
 	engine->GetViewAngles(viewAngles);
 
@@ -171,18 +244,18 @@ static Vector GetClosestSpot( CUserCmd* cmd, C_BasePlayer* localPlayer, C_BasePl
 
 	Vector tempSpot = {0,0,0};
 
-	const std::unordered_map<int, int> *modelType = BoneMaps::GetModelTypeBoneMap(enemy);
-
-	static int len = sizeof(Settings::Legitbot::AutoAim::desiredBones) / sizeof(Settings::Legitbot::AutoAim::desiredBones[0]);
-	for( int i = 0; i < len; i++ )
+	const int hitboxFlags = Settings::Legitbot::AutoAim::desiredHitboxes;
+	for ( int i = 0; i < hitboxSet->numhitboxes; i++ )
 	{
-		if( !Settings::Legitbot::AutoAim::desiredBones[i] )
+		if(!IsFlagSetForHitbox(hitboxFlags, i))			
 			continue;
 
-		int boneID = (*modelType).at(i);
-		if( boneID == BONE_INVALID )
-			continue;
+		mstudiobbox_t* hitbox = hitboxSet->pHitbox(i);
 
+		if (!hitbox)
+			continue;
+			
+		int boneID = hitbox->bone;		
 		Vector cbVecTarget = enemy->GetBonePosition(boneID);
 
 		if( aimTargetType == AimTargetType::FOV )
@@ -230,7 +303,7 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, bool visibleCheck, V
 
 	if( lockedOn )
 	{
-		if( lockedOn->GetAlive() && !Settings::Legitbot::AutoAim::closestBone && !Entity::IsSpotVisibleThroughEnemies(lockedOn, lockedOn->GetBonePosition((int)Settings::Legitbot::bone)) )
+		if( lockedOn->GetAlive() && !Settings::Legitbot::AutoAim::closestHitbox && !Entity::IsSpotVisibleThroughEnemies(lockedOn, lockedOn->GetBonePosition((int)Settings::Legitbot::bone)) )
 		{
 			lockedOn = nullptr;
 			return nullptr;
@@ -253,7 +326,7 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, bool visibleCheck, V
 				return nullptr;
 			}
 
-			if( Settings::Legitbot::AutoAim::closestBone )
+			if( Settings::Legitbot::AutoAim::closestHitbox )
 			{
 				Vector tempSpot = GetClosestSpot(cmd, localplayer, lockedOn, aimTargetType);
 				if( tempSpot.IsZero() )
@@ -296,7 +369,7 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, bool visibleCheck, V
 
 		Legitbot::targetAimbot = i;
 		Vector eVecTarget = player->GetBonePosition((int) Settings::Legitbot::bone);
-		if( Settings::Legitbot::AutoAim::closestBone )
+		if( Settings::Legitbot::AutoAim::closestHitbox )		
 		{
 			Vector tempSpot = GetClosestSpot(cmd, localplayer, player, aimTargetType);
 			if( tempSpot.IsZero() || !Entity::IsSpotVisibleThroughEnemies(player, tempSpot) )
@@ -798,7 +871,7 @@ void Legitbot::CreateMove(CUserCmd* cmd)
         lastRandom = {0,0,0};
     }
 
-    	AimStep(player, angle, cmd);
+     AimStep(player, angle, cmd);
 	AutoCrouch(player, cmd);
 	AutoSlow(player, oldForward, oldSideMove, bestDamage, activeWeapon, cmd);
 	AutoPistol(activeWeapon, cmd);
@@ -807,6 +880,17 @@ void Legitbot::CreateMove(CUserCmd* cmd)
 	RCS(angle, player, cmd);
 	Smooth(player, angle);
 	NoShoot(activeWeapon, player, cmd);
+
+	Math::NormalizeAngles(angle);
+    	Math::ClampAngles(angle);
+
+	FixMouseDeltas(cmd, angle, oldAngle);
+	cmd->viewangles = angle;
+
+    	Math::CorrectMovement(oldAngle, cmd, oldForward, oldSideMove);
+
+	if( !Settings::Legitbot::silent )
+    	engine->SetViewAngles(cmd->viewangles);
 }
 void Legitbot::FireGameEvent(IGameEvent* event)
 {
@@ -847,6 +931,7 @@ void Legitbot::UpdateValues()
 	const LegitWeapon_t& currentWeaponSetting = Settings::Legitbot::weapons.at(index);
 
 	Settings::Legitbot::silent = currentWeaponSetting.silent;
+	Settings::Legitbot::friendly = currentWeaponSetting.friendly;
 	Settings::Legitbot::bone = currentWeaponSetting.bone;
 	Settings::Legitbot::aimkey = currentWeaponSetting.aimkey;
 	Settings::Legitbot::aimkeyOnly = currentWeaponSetting.aimkeyOnly;
@@ -861,32 +946,37 @@ void Legitbot::UpdateValues()
 	Settings::Legitbot::ErrorMargin::value = currentWeaponSetting.errorMarginValue;
 	Settings::Legitbot::AutoAim::enabled = currentWeaponSetting.autoAimEnabled;
 	Settings::Legitbot::AutoAim::fov = currentWeaponSetting.LegitautoAimFov;
-	Settings::Legitbot::AutoAim::closestBone = true;
+	Settings::Legitbot::AutoAim::engageLock = currentWeaponSetting.engageLock;
+	Settings::Legitbot::AutoAim::engageLockTR = currentWeaponSetting.engageLockTR;
+	Settings::Legitbot::AutoAim::engageLockTTR = currentWeaponSetting.engageLockTTR;
+	Settings::Legitbot::AutoAim::closestHitbox = currentWeaponSetting.closestHitbox;		
 	Settings::Legitbot::AimStep::enabled = currentWeaponSetting.aimStepEnabled;
 	Settings::Legitbot::AimStep::min = currentWeaponSetting.aimStepMin;
 	Settings::Legitbot::AimStep::max = currentWeaponSetting.aimStepMax;
 	Settings::Legitbot::AutoPistol::enabled = currentWeaponSetting.autoPistolEnabled;
+	Settings::Legitbot::AutoShoot::enabled = currentWeaponSetting.autoShootEnabled;
 	Settings::Legitbot::AutoShoot::autoscope = currentWeaponSetting.autoScopeEnabled;
 	Settings::Legitbot::RCS::enabled = currentWeaponSetting.rcsEnabled;
 	Settings::Legitbot::RCS::always_on = currentWeaponSetting.rcsAlwaysOn;
 	Settings::Legitbot::RCS::valueX = currentWeaponSetting.rcsAmountX;
 	Settings::Legitbot::RCS::valueY = currentWeaponSetting.rcsAmountY;
+	Settings::Legitbot::NoShoot::enabled = currentWeaponSetting.noShootEnabled;
 	Settings::Legitbot::IgnoreJump::enabled = currentWeaponSetting.ignoreJumpEnabled;
 	Settings::Legitbot::IgnoreEnemyJump::enabled = currentWeaponSetting.ignoreEnemyJumpEnabled;
 	Settings::Legitbot::Smooth::Salting::enabled = currentWeaponSetting.smoothSaltEnabled;
 	Settings::Legitbot::Smooth::Salting::multiplier = currentWeaponSetting.smoothSaltMultiplier;
 	Settings::Legitbot::SmokeCheck::enabled = currentWeaponSetting.smokeCheck;
 	Settings::Legitbot::FlashCheck::enabled = currentWeaponSetting.flashCheck;
+	Settings::Legitbot::SpreadLimit::enabled = currentWeaponSetting.spreadLimitEnabled;
+	Settings::Legitbot::SpreadLimit::value = currentWeaponSetting.spreadLimit;
 	Settings::Legitbot::AutoWall::enabled = currentWeaponSetting.autoWallEnabled;
 	Settings::Legitbot::AutoWall::value = currentWeaponSetting.autoWallValue;
 	Settings::Legitbot::AutoSlow::enabled = currentWeaponSetting.autoSlow;
 	Settings::Legitbot::ScopeControl::enabled = currentWeaponSetting.scopeControlEnabled;
 	Settings::Legitbot::ShootAssist::Hitchance::enabled = currentWeaponSetting.hitchanceEnaled;
      Settings::Legitbot::ShootAssist::Hitchance::value = currentWeaponSetting.hitchance;
-	Settings::Legitbot::reactionLow = currentWeaponSetting.reactionLow;
-	Settings::Legitbot::reactionHigh = currentWeaponSetting.reactionHigh;
-	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
-		Settings::Legitbot::AutoAim::desiredBones[bone] = currentWeaponSetting.desiredBones[bone];
+
+	Settings::Legitbot::AutoAim::desiredHitboxes = currentWeaponSetting.desiredHitboxes;
 
 	Settings::Legitbot::AutoAim::realDistance = currentWeaponSetting.autoAimRealDistance;
 }

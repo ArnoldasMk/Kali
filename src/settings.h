@@ -335,15 +335,11 @@ enum class SkinAndModel : int
 struct LegitWeapon_t
 {
 	bool silent,
-	autoWallEnabled,
-	autoWallValue,
-	scopeControlEnabled,
-	autoAimRealDistance,
-	smokeCheck,
-	flashCheck,
-	autoShoot,
+	friendly,
+	closestHitbox,
+	engageLock,
+	engageLockTR,
 	aimkeyOnly,
-	reactionTime,
 	smoothEnabled,
 	courseRandomizationEnabled,
 	doAimAfterXShotsEnabled,
@@ -353,16 +349,26 @@ struct LegitWeapon_t
 	aimStepEnabled,
 	rcsEnabled,
 	rcsAlwaysOn,
+	spreadLimitEnabled,
 	hitchanceEnaled,
 	autoPistolEnabled,
+	autoShootEnabled,
 	autoScopeEnabled,
+	noShootEnabled,
 	ignoreJumpEnabled,
 	ignoreEnemyJumpEnabled,
+	smokeCheck,
+	flashCheck,
+	autoWallEnabled,
+	autoAimRealDistance,
 	autoSlow,
 	predEnabled,
+	scopeControlEnabled,
 	TriggerBot,
 	mindamage,
 	autoWall;
+
+	int engageLockTTR = 700;
 	Bone bone = BONE_HEAD;
 	SmoothType smoothType = SmoothType::SLOW_END;
 	ButtonCode_t aimkey = ButtonCode_t ::MOUSE_MIDDLE;
@@ -376,26 +382,26 @@ struct LegitWeapon_t
 	aimStepMax = 35.0f,
 	rcsAmountX = 2.0f,
 	rcsAmountY = 2.0f,
+ 	autoWallValue = 10.0f,
+	spreadLimit = 1.0f,
 	minDamagevalue = 10.0f,
-	reactionHigh = 25.0f,
-	reactionLow = 1.0f,
 	hitchance = 20;
-	bool desiredBones[31];
-
+	
+	HitboxFlags desiredHitboxes;
 	bool operator == (const LegitWeapon_t& another) const
 	{
-		for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
-		{
-			if( this->desiredBones[bone] != another.desiredBones[bone] )
+			if(this->desiredHitboxes != another.desiredHitboxes)
 				return false;
-		}
 
 			return this->silent == another.silent &&
-			this->autoShoot == another.autoShoot &&
+			this->friendly == another.friendly &&
+			this->engageLock == another.engageLock &&
+			this->engageLockTR == another.engageLockTR &&
+			this->engageLockTTR == another.engageLockTTR &&
+			this->autoShootEnabled == another.autoShootEnabled &&
 			this->bone == another.bone &&
 			this->aimkey == another.aimkey &&
 			this->aimkeyOnly == another.aimkeyOnly &&
-			this->reactionTime == another.reactionTime &&
 			this->smoothEnabled == another.smoothEnabled &&
 			this->smoothAmount == another.smoothAmount &&
 			this->courseRandomizationEnabled == another.courseRandomizationEnabled &&
@@ -419,19 +425,23 @@ struct LegitWeapon_t
 			this->rcsAmountY == another.rcsAmountY &&
 			this->autoPistolEnabled == another.autoPistolEnabled &&
 			this->autoScopeEnabled == another.autoScopeEnabled &&
+			this->noShootEnabled == another.noShootEnabled &&
 			this->ignoreJumpEnabled == another.ignoreJumpEnabled &&
 			this->ignoreEnemyJumpEnabled == another.ignoreEnemyJumpEnabled &&
 			this->smokeCheck == another.smokeCheck &&
 			this->flashCheck == another.flashCheck &&
+			this->spreadLimitEnabled == another.spreadLimitEnabled &&
+			this->spreadLimit == another.spreadLimit &&
+			this->autoWallEnabled == another.autoWallEnabled &&
+			this->autoWallValue == another.autoWallValue &&
 			this->hitchanceEnaled == another.hitchanceEnaled &&
 			this->hitchance == another.hitchance &&
 			this->autoSlow == another.autoSlow &&
 			this->predEnabled == another.predEnabled &&
+			this->autoAimRealDistance == another.autoAimRealDistance &&
 			this->TriggerBot == another.TriggerBot &&
 			this->mindamage == another.mindamage &&
 			this->autoWall == another.autoWall &&
-			this->reactionHigh == another.reactionHigh &&
-			this->reactionLow == another.reactionLow &&
 			this->scopeControlEnabled == another.scopeControlEnabled;
 	}
 } const defaultSettings{};
@@ -635,8 +645,6 @@ namespace Settings
           inline Bone bone = BONE_HEAD;
           inline ButtonCode_t aimkey = ButtonCode_t::MOUSE_MIDDLE;
           inline bool aimkeyOnly = false;
-	     inline float reactionHigh;
-	     inline float reactionLow;
 
 		namespace Smooth
 		{
@@ -673,12 +681,8 @@ namespace Settings
           	inline float fov = 15.f;
           	inline bool realDistance = false;
           	inline bool closestBone = false;
-          	inline bool desiredBones[] = {true, true, true, true, true, true, true, // center mass
-                                            false, false, false, false, false, false, false, // left arm
-                                            false, false, false, false, false, false, false, // right arm
-                                            false, false, false, false, false, // left leg
-                                            false, false, false, false, false  // right leg
-               };
+			inline bool closestHitbox = false;
+           	inline HitboxFlags desiredHitboxes = HitboxFlags::HEAD;
 			
           	inline bool engageLock = false;
           	inline bool engageLockTR = false; // Target Reacquisition ( re-target after getting a kill when spraying ).
@@ -704,10 +708,6 @@ namespace Settings
 				inline bool enabled = false;
 				inline float value = 20;
 			}
-		}
-		namespace reactionTime
-		{
-			inline bool enabled = false;
 		}
 		namespace AutoWall
 		{

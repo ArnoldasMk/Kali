@@ -168,11 +168,15 @@ void Settings::LoadDefaultsOrSave(std::string path)
     // in C++ and weird shit
     #define LegitweaponSetting settings[XORSTR("Legitbot")][XORSTR("weapons")][Util::Items::GetItemName((enum ItemDefinitionIndex)i.first)]
 	    LegitweaponSetting[XORSTR("Silent")] = i.second.silent;
-	    LegitweaponSetting[XORSTR("AutoShoot")] = i.second.autoShoot;
+		LegitweaponSetting[XORSTR("Friendly")] = i.second.friendly;
+        LegitweaponSetting[XORSTR("ClosestHitbox")] = i.second.closestHitbox;
+		LegitweaponSetting[XORSTR("engageLock")] = i.second.engageLock;
+		LegitweaponSetting[XORSTR("engageLockTR")] = i.second.engageLockTR;
+		LegitweaponSetting[XORSTR("engageLockTTR")] = i.second.engageLockTTR;
+	    LegitweaponSetting[XORSTR("AutoShoot")][XORSTR( "Enabled" )] = i.second.autoShootEnabled;
 	    LegitweaponSetting[XORSTR("TargetBone")] = (int)i.second.bone;
 	    LegitweaponSetting[XORSTR("AimKey")] = Util::GetButtonName(i.second.aimkey);
 	    LegitweaponSetting[XORSTR("AimKeyOnly")] = i.second.aimkeyOnly;
-        LegitweaponSetting[XORSTR("ReactionTimeEnabled")][XORSTR("Enabled")] = i.second.reactionTime;
 	    LegitweaponSetting[XORSTR("Smooth")][XORSTR("Enabled")] = i.second.smoothEnabled;
         LegitweaponSetting[XORSTR("CourseRandomization")][XORSTR("Enabled")] = i.second.courseRandomizationEnabled;
         LegitweaponSetting[XORSTR("DoAimAfterXShots")][XORSTR("Enabled")] = i.second.doAimAfterXShotsEnabled;
@@ -195,25 +199,33 @@ void Settings::LoadDefaultsOrSave(std::string path)
     	LegitweaponSetting[XORSTR("RCS")][XORSTR("AmountY")] = i.second.rcsAmountY;
     	LegitweaponSetting[XORSTR("AutoPistol")][XORSTR("Enabled")] = i.second.autoPistolEnabled;
     	LegitweaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")] = i.second.autoScopeEnabled;
+		LegitweaponSetting[XORSTR("NoShoot")][XORSTR("Enabled")] = i.second.noShootEnabled;
     	LegitweaponSetting[XORSTR("IgnoreJump")][XORSTR("Enabled")] = i.second.ignoreJumpEnabled;
 		LegitweaponSetting[XORSTR("IgnoreEnemyJump")][XORSTR("Enabled")] = i.second.ignoreEnemyJumpEnabled;
+        LegitweaponSetting[XORSTR("SmokeCheck")][XORSTR("Enabled")] = i.second.smokeCheck;
+		LegitweaponSetting[XORSTR("FlashCheck")][XORSTR("Enabled")] = i.second.flashCheck;
+		LegitweaponSetting[XORSTR("SpreadLimit")][XORSTR("Enabled")] = i.second.spreadLimitEnabled;
+		LegitweaponSetting[XORSTR("SpreadLimit")][XORSTR("Value")] = i.second.spreadLimit;
+		LegitweaponSetting[XORSTR("AutoWall")][XORSTR("Enabled")] = i.second.autoWallEnabled;
+		LegitweaponSetting[XORSTR("AutoWall")][XORSTR("Value")] = i.second.autoWallValue;
     	LegitweaponSetting[XORSTR("HitChance")][XORSTR("Enabled")] = i.second.hitchanceEnaled;
 	    LegitweaponSetting[XORSTR("HitChance")][XORSTR("Value")] = i.second.hitchance;
     	LegitweaponSetting[XORSTR("AutoSlow")][XORSTR("enabled")] = i.second.autoSlow;
 	    LegitweaponSetting[XORSTR("Prediction")][XORSTR("enabled")] = i.second.predEnabled;
+		LegitweaponSetting[XORSTR("ScopeControl")][XORSTR("Enabled")] = i.second.scopeControlEnabled;
+		LegitweaponSetting[XORSTR("AutoAim")][XORSTR("RealDistance")] = i.second.autoAimRealDistance;
         LegitweaponSetting[XORSTR("TriggerBot")][XORSTR("enabled")] = i.second.TriggerBot;
         LegitweaponSetting[XORSTR("MinDamage")][XORSTR("enabled")] = i.second.mindamage;
         LegitweaponSetting[XORSTR("MinDamage")][XORSTR("Value")] = i.second.minDamagevalue;
         LegitweaponSetting[XORSTR("Autowall")][XORSTR("enabled")] = i.second.autoWall;
-        LegitweaponSetting[XORSTR("ReactionTimeHigh")][XORSTR("Value")] = i.second.reactionHigh;
-        LegitweaponSetting[XORSTR("ReactionTimeLow")][XORSTR("Value")] = i.second.reactionLow;
-        
-	
-	    for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
-	        LegitweaponSetting[XORSTR("DesiredBones")][XORSTR("Bones")][bone] = i.second.desiredBones[bone];
 
+
+	    LegitweaponSetting[XORSTR("DesiredHitboxes")] = i.second.desiredHitboxes;
+    
     #undef LegitweaponSetting
     }
+    settings[XORSTR("Legit")][XORSTR("AutoShoot")][XORSTR("velocityCheck")] = Settings::Legitbot::AutoShoot::velocityCheck;
+
 
     for (auto i : Settings::Ragebot::weapons)
     {
@@ -914,12 +926,14 @@ void Settings::LoadConfig(std::string path)
 
 	    if (Settings::Legitbot::weapons.find(weaponID) == Settings::Legitbot::weapons.end())
 	        Settings::Legitbot::weapons[weaponID] = LegitWeapon_t();
-
+        // void UI::UpdateWeaponSettings()
 	    LegitWeapon_t weapon = {
 	        .silent = LegitweaponSetting[XORSTR("Silent")].asBool(),
-	        .autoShoot = LegitweaponSetting[XORSTR("AutoShoot")].asBool(),
+			.friendly = LegitweaponSetting[XORSTR("Friendly")].asBool(),
+            .closestHitbox = LegitweaponSetting[XORSTR( "ClosestHitbox" )].asBool(),
+            .engageLock = LegitweaponSetting[XORSTR("engageLock")].asBool(),
+			.engageLockTR = LegitweaponSetting[XORSTR("engageLockTR")].asBool(),
 	        .aimkeyOnly = LegitweaponSetting[XORSTR("AimKeyOnly")].asBool(),
-            .reactionTime = LegitweaponSetting[XORSTR("reactionTime")][XORSTR("Enabled")].asBool(),
 	        .smoothEnabled = LegitweaponSetting[XORSTR("Smooth")][XORSTR("Enabled")].asBool(),
             .courseRandomizationEnabled = LegitweaponSetting[XORSTR( "CourseRandomization" )][XORSTR( "Enabled" )].asBool(),
             .doAimAfterXShotsEnabled = LegitweaponSetting[XORSTR( "DoAimAfterXShots" )][XORSTR( "Enabled" )].asBool(),
@@ -929,16 +943,26 @@ void Settings::LoadConfig(std::string path)
 	        .aimStepEnabled = LegitweaponSetting[XORSTR("AimStep")][XORSTR("Enabled")].asBool(),
 	        .rcsEnabled = LegitweaponSetting[XORSTR("RCS")][XORSTR("Enabled")].asBool(),
 	        .rcsAlwaysOn = LegitweaponSetting[XORSTR("RCS")][XORSTR("AlwaysOn")].asBool(),
+			.spreadLimitEnabled = LegitweaponSetting[XORSTR( "SpreadLimit" )][XORSTR( "Enabled" )].asBool(),
 	        .hitchanceEnaled = LegitweaponSetting[XORSTR("HitChance")][XORSTR("Enabled")].asBool(),
 	        .autoPistolEnabled = LegitweaponSetting[XORSTR("AutoPistol")][XORSTR("Enabled")].asBool(),
+	        .autoShootEnabled = LegitweaponSetting[XORSTR("AutoShoot")][XORSTR( "Enabled" )].asBool(),
 	        .autoScopeEnabled = LegitweaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")].asBool(),
+			.noShootEnabled = LegitweaponSetting[XORSTR( "NoShoot" )][XORSTR( "Enabled" )].asBool(),
 	        .ignoreJumpEnabled = LegitweaponSetting[XORSTR( "IgnoreJump" )][XORSTR( "Enabled" )].asBool(),
 			.ignoreEnemyJumpEnabled = LegitweaponSetting[XORSTR( "IgnoreEnemyJump" )][XORSTR( "Enabled" )].asBool(),
+            .smokeCheck = LegitweaponSetting[XORSTR( "SmokeCheck" )][XORSTR( "Enabled" )].asBool(),
+			.flashCheck = LegitweaponSetting[XORSTR( "FlashCheck" )][XORSTR( "Enabled" )].asBool(),
+			.autoWallEnabled = LegitweaponSetting[XORSTR( "AutoWall" )][XORSTR( "Enabled" )].asBool(),
+			.autoAimRealDistance = LegitweaponSetting[XORSTR( "AutoAim" )][XORSTR( "RealDistance" )].asBool(),
 	        .autoSlow = LegitweaponSetting[XORSTR("AutoSlow")][XORSTR("enabled")].asBool(),
 	        .predEnabled = LegitweaponSetting[XORSTR("Prediction")][XORSTR("enabled")].asBool(),
+			.scopeControlEnabled = LegitweaponSetting[XORSTR( "ScopeControl" )][XORSTR( "Enabled" )].asBool(),
             .TriggerBot = LegitweaponSetting[XORSTR("TriggerBot")][XORSTR("enabled")].asBool(),
             .mindamage = LegitweaponSetting[XORSTR("MinDamage")][XORSTR("enabled")].asBool(),
             .autoWall = LegitweaponSetting[XORSTR("Autowall")][XORSTR("enabled")].asBool(),
+
+			.engageLockTTR = LegitweaponSetting[XORSTR( "engageLockTTR" )].asInt(),
 	        .bone = LegitweaponSetting[XORSTR("TargetBone")].asInt(),
 	        .smoothType = (SmoothType)LegitweaponSetting[XORSTR("Smooth")][XORSTR("Type")].asInt(),
 	        .aimkey = Util::GetButtonCode(LegitweaponSetting[XORSTR("AimKey")].asCString()),
@@ -952,15 +976,17 @@ void Settings::LoadConfig(std::string path)
 	        .aimStepMax = LegitweaponSetting[XORSTR("AimStep")][XORSTR("max")].asFloat(),
 	        .rcsAmountX = LegitweaponSetting[XORSTR("RCS")][XORSTR("AmountX")].asFloat(),
 	        .rcsAmountY = LegitweaponSetting[XORSTR("RCS")][XORSTR("AmountY")].asFloat(),
+            .autoWallValue = LegitweaponSetting[XORSTR("AutoWall")][XORSTR("Value")].asFloat(),
+			.spreadLimit = LegitweaponSetting[XORSTR( "SpreadLimit" )][XORSTR( "Value" )].asFloat(),
 	        .minDamagevalue = LegitweaponSetting[XORSTR("MinDamage")][XORSTR("Value")].asFloat(),
-            .reactionHigh = LegitweaponSetting[XORSTR("ReactionTimeHigh")][XORSTR("Value")].asFloat(),
-            .reactionLow = LegitweaponSetting[XORSTR("ReactionTimeLow")][XORSTR("Value")].asFloat(),
 	    };
 
-	    for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
-	        weapon.desiredBones[bone] = LegitweaponSetting[XORSTR("DesiredBones")][XORSTR("Bones")][bone].asBool();
+	    weapon.desiredHitboxes = (HitboxFlags) LegitweaponSetting[XORSTR("DesiredHitboxes")].asInt();
 	    Settings::Legitbot::weapons.at(weaponID) = weapon;
     }
+    GetVal(settings[XORSTR("Legitbot")][XORSTR("AutoCrouch")][XORSTR("enabled")], &Settings::Legitbot::AutoCrouch::enabled);
+    GetVal(settings[XORSTR("Legitbot")][XORSTR("AutoShoot")][XORSTR("velocityCheck")], &Settings::Legitbot::AutoShoot::velocityCheck);
+
 
     Settings::Ragebot::weapons = {
 	    { ItemDefinitionIndex::INVALID, ragedefault },
