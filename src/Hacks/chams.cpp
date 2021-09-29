@@ -9,6 +9,7 @@
 #include "../interfaces.h"
 #include "../Hooks/hooks.h"
 #include "lagcomp.h"
+
 IMaterial *materialChamsFlat, *materialChamsFlatIgnorez;
 IMaterial *WhiteAdditive,*WhiteAdditiveIgnoreZ;
 IMaterial *AdditiveTwo, *AdditiveTwoIgnoreZ;
@@ -16,7 +17,7 @@ IMaterial* materialChamsPearl;
 IMaterial* materialChamsGlow;
 IMaterial* materialChamsPulse;
 
-                Vector colro = Vector(0.5, 0, 1);
+Vector colro = Vector(0.5, 0, 1);
 
 typedef void (*DrawModelExecuteFn) (void*, void*, void*, const ModelRenderInfo_t&, matrix3x4_t*);
 
@@ -40,12 +41,12 @@ static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRen
 
 	if ( Entity::IsTeamMate(entity,localplayer) && Settings::ESP::FilterAlise::Chams::enabled && entity != localplayer)
 		chamsType = Settings::ESP::FilterAlise::Chams::type;
-	else if (!Entity::IsTeamMate(entity, localplayer) && FilterEnemy::Chams::enabled)
+	
+	if (!Entity::IsTeamMate(entity, localplayer) && FilterEnemy::Chams::enabled)
 		chamsType = Settings::ESP::FilterEnemy::Chams::type;
-	else if ( entity == localplayer && FilterLocalPlayer::RealChams::enabled)
+	
+	if ( entity == localplayer && FilterLocalPlayer::RealChams::enabled)
 		chamsType = FilterLocalPlayer::RealChams::type;
-	else
-		return;
 
 	IMaterial *visible_material = nullptr;
 	IMaterial *hidden_material = nullptr;
@@ -104,8 +105,8 @@ static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRen
 			return;
 	}
 
-	visible_material->AlphaModulate(1.f);
-	hidden_material->AlphaModulate(1.f);
+	visible_material->AlphaModulate(1.0f);
+	hidden_material->AlphaModulate(1.0f);
 
 	if (entity == localplayer)
 	{
@@ -131,7 +132,7 @@ static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRen
 		hidden_material->AlphaModulate(Settings::ESP::Chams::allyColor.Color(entity).Value.w);
 		//colro.x = Settings::ESP::Chams::allyColor.Color(entity).Value.x;
 		//colro.y = Settings::ESP::Chams::allyColor.Color(entity).Value.y;
-                //colro.z = Settings::ESP::Chams::allyColor.Color(entity).Value.z;
+           //colro.z = Settings::ESP::Chams::allyColor.Color(entity).Value.z;
 	}
 	else if (!Entity::IsTeamMate(entity, localplayer))
 	{
@@ -143,6 +144,10 @@ static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRen
 
 		visible_material->AlphaModulate(Settings::ESP::Chams::enemyVisibleColor.Color(entity).Value.w);
 		hidden_material->AlphaModulate(Settings::ESP::Chams::enemyColor.Color(entity).Value.w);
+	}
+	else
+	{
+		return;
 	}
 
 	if (entity->GetImmune())
@@ -385,10 +390,10 @@ static void DrawSleeves(const ModelRenderInfo_t& pInfo)
         if (!Settings::ESP::Chams::Sleeves::enabled)
                 mat = material->FindMaterial(modelName.c_str(), TEXTURE_GROUP_MODEL);
 
-    mat->ColorModulate(Settings::ESP::Chams::Sleeves::color.Color());
-    mat->AlphaModulate(Settings::ESP::Chams::Sleeves::color.Color().Value.w);
-       mat->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, true);
-        mat->SetMaterialVarFlag(MATERIAL_VAR_NO_DRAW, Settings::ESP::Chams::Weapon::type == ChamsType::NONE);
+     mat->ColorModulate(Settings::ESP::Chams::Sleeves::color.Color());
+     mat->AlphaModulate(Settings::ESP::Chams::Sleeves::color.Color().Value.w);
+     mat->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, true);
+     mat->SetMaterialVarFlag(MATERIAL_VAR_NO_DRAW, Settings::ESP::Chams::Weapon::type == ChamsType::NONE);
 
     modelRender->ForcedMaterialOverride(mat);
 }
@@ -483,20 +488,21 @@ static void DrawArms(void *thisptr, void *context, void *state, const ModelRende
 
 	mat->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Settings::ESP::Chams::Arms::type == ChamsType::WIREFRAME || Settings::ESP::Chams::Arms::type == ChamsType::ANIMATED);
 	mat->SetMaterialVarFlag(MATERIAL_VAR_NO_DRAW, Settings::ESP::Chams::Arms::type == ChamsType::NONE);
-if ( Settings::ESP::Chams::Arms::type == ChamsType::ANIMATED){
-base_material = materialChamsFlat;
-        base_material->ColorModulate(Settings::ESP::Chams::Base::color.Color());
-        base_material->AlphaModulate(Settings::ESP::Chams::Base::color.Color().Value.w);
+	
+	if ( Settings::ESP::Chams::Arms::type == ChamsType::ANIMATED){
+		
+		base_material = materialChamsFlat;
+        	base_material->ColorModulate(Settings::ESP::Chams::Base::color.Color());
+        	base_material->AlphaModulate(Settings::ESP::Chams::Base::color.Color().Value.w);
 
-        modelRender->ForcedMaterialOverride(base_material);
-                modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, pCustomBoneToWorld);
+        	modelRender->ForcedMaterialOverride(base_material);
+          modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, pCustomBoneToWorld);
+          modelRender->ForcedMaterialOverride(mat);
+	}
+	else {
+           modelRender->ForcedMaterialOverride(mat);
 
-                modelRender->ForcedMaterialOverride(mat);
-}
-else {
-                modelRender->ForcedMaterialOverride(mat);
-
-}
+	}
 }
 
 void Chams::DrawModelExecute(void* thisptr, void* context, void *state, const ModelRenderInfo_t &pInfo, matrix3x4_t* pCustomBoneToWorld)
@@ -513,10 +519,10 @@ void Chams::DrawModelExecute(void* thisptr, void* context, void *state, const Mo
 	static bool materialsCreated = false;
 	if (!materialsCreated)
 	{
-	        materialChamsPearl = Util::CreateMaterial2(XORSTR("VertexLitGeneric"), XORSTR("models/inventory_items/dogtags/dogtags_outline"), false, true, true, true, 1.f);
-                materialChamsGlow = Util::CreateMaterial3(XORSTR("VertexLitGeneric"), XORSTR("csgo/materials/glowOverlay.vmt"), false, true, true, true, 1.f, colro);
-                //materialChamsGlow = Util::CreateMaterial3(XORSTR("VertexLitGeneric"), XORSTR("dev/zone_warning"), false, true, true, true, 1.f, colro, false);
-                materialChamsPulse = Util::CreateMaterial4(XORSTR("VertexLitGeneric"), XORSTR("models/inventory_items/dogtags/dogtags_outline"), false, true, true, true, 1.f, colro);
+	     materialChamsPearl = Util::CreateMaterial2(XORSTR("VertexLitGeneric"), XORSTR("models/inventory_items/dogtags/dogtags_outline"), false, true, true, true, 1.f);
+     	materialChamsGlow = Util::CreateMaterial3(XORSTR("VertexLitGeneric"), XORSTR("csgo/materials/glowOverlay.vmt"), false, true, true, true, 1.f, colro);
+     	 //materialChamsGlow = Util::CreateMaterial3(XORSTR("VertexLitGeneric"), XORSTR("dev/zone_warning"), false, true, true, true, 1.f, colro, false);
+          materialChamsPulse = Util::CreateMaterial4(XORSTR("VertexLitGeneric"), XORSTR("models/inventory_items/dogtags/dogtags_outline"), false, true, true, true, 1.f, colro);
 
 		materialChamsFlat = Util::CreateMaterial(XORSTR("UnlitGeneric"), XORSTR("VGUI/white_additive"), false, true, true, true, true);
 		materialChamsFlatIgnorez = Util::CreateMaterial(XORSTR("UnlitGeneric"), XORSTR("VGUI/white_additive"), true, true, true, true, true);
@@ -534,17 +540,22 @@ void Chams::DrawModelExecute(void* thisptr, void* context, void *state, const Mo
 
 	if (modelName.find(XORSTR("models/player")) != std::string::npos)
 	{
-                 DrawRecord(thisptr, context, state, pInfo, pCustomBoneToWorld);
+          DrawRecord(thisptr, context, state, pInfo, pCustomBoneToWorld);
 		DrawFake(thisptr, context, state, pInfo, pCustomBoneToWorld);
 		DrawPlayer(thisptr, context, state, pInfo, pCustomBoneToWorld);
 
 	}
 
-        else if (modelName.find(XORSTR("v_sleeves")) != std::string::npos)
-                DrawSleeves(pInfo);
+     else if (modelName.find(XORSTR("v_sleeves")) != std::string::npos)
+	{
+          DrawSleeves(pInfo);
+	}
 	else if (modelName.find(XORSTR("arms")) != std::string::npos)
+	{
 		DrawArms( thisptr,  context,  state, pInfo, pCustomBoneToWorld);
-        else if (modelName.find(XORSTR("weapon")) != std::string::npos)
-                DrawWeapon(pInfo);
-
+	}
+     else if (modelName.find(XORSTR("weapon")) != std::string::npos)
+     {
+          DrawWeapon(pInfo);
+	}
 }

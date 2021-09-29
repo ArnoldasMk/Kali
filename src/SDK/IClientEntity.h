@@ -712,15 +712,15 @@ public:
 	}
 
 	float GetRange() {
-		return *( float* ) ( ( uintptr_t )this + 0x184);
-	}
-
-	float GetRangeModifier() {
 		return *( float* ) ( ( uintptr_t )this + 0x188);
 	}
 
+	float GetRangeModifier() {
+		return *( float* ) ( ( uintptr_t )this + 0x18C);
+	}
+
 	float GetMaxPlayerSpeed() {
-		return *( float* ) ( ( uintptr_t )this + 0x1B0);
+		return *( float* ) ( ( uintptr_t )this + 0x1B8);
 	}
 
 	int GetZoomLevels() { // Doesn't work correctly on some weapons.
@@ -728,11 +728,11 @@ public:
 	}
 
 	char* GetTracerEffect() {
-		return *( char** ) ( ( uintptr_t )this + 0x280);
+		return *( char** ) ( ( uintptr_t )this + 0x290);
 	}
 
 	int* GetTracerFrequency() {
-		return ( int* ) ( ( uintptr_t )this + 0x288);
+		return ( int* ) ( ( uintptr_t )this + 0x298);
 	}
 };
 

@@ -298,8 +298,8 @@ void Hooker::FindGetLocalClient()
 void Hooker::FindLineGoesThroughSmoke()
 {
 	uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
-																(unsigned char*) XORSTR("\xE8\x00\x00\x00\x00\x0F\xB6\x95\x00\x00\x00\x00\x31\xF6"),
-																XORSTR("x????xxx????xx"));
+																(unsigned char*) XORSTR("\x55\x48\x89\xe5\x41\x56\x41\x55\x41\x54\x53\x48\x83\xec\x30\x66\x0f\xd6\x45\xd0\x8b\x0d"),
+																XORSTR("xxxxxxxxxxxxxxxxxxx?xx"));
 	LineGoesThroughSmoke = reinterpret_cast<LineGoesThroughSmokeFn>(func_address);
 }
 
