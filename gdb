@@ -5,7 +5,6 @@
 function echo_red {
 	echo -e "\e[31m$*\e[0m"
 }
-export PATH="./GDB:$PATH" # loading old gdb to fix crash
 csgo_pid=$(pidof csgo_linux64)
 if [ -z "$csgo_pid" ]; then
     echo_red "CS:GO needs to be open..."

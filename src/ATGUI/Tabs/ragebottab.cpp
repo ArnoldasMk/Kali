@@ -48,7 +48,7 @@ void UI::ReloadRageWeaponSettings()
 	HitChange = Settings::Ragebot::weapons.at(index).HitChance;
 	MinDamage = Settings::Ragebot::weapons.at(index).MinDamage;
 	autoSlow = Settings::Ragebot::weapons.at(index).autoSlow;
-	doubleFire = Settings::Ragebot::weapons.at(index).DoubleFire;
+	//doubleFire = Settings::Ragebot::weapons.at(index).DoubleFire;
 	scopeControlEnabled = Settings::Ragebot::weapons.at(index).scopeControlEnabled;
 	damagePrediction = Settings::Ragebot::weapons.at(index).DmagePredictionType;
 	enemySelectionType = Settings::Ragebot::weapons.at(index).enemySelectionType;
@@ -60,7 +60,6 @@ void UI::ReloadRageWeaponSettings()
 	}
 		
 
-	// Ragebot::UpdateValues();
 }
 
 void UI::UpdateRageWeaponSettings()
@@ -78,7 +77,7 @@ void UI::UpdateRageWeaponSettings()
 			.autoScopeEnabled = autoScopeEnabled,
 			.autoSlow = autoSlow,
 			.scopeControlEnabled = scopeControlEnabled,
-			.DoubleFire = doubleFire,
+			//.DoubleFire = doubleFire,
 			.MinDamage = MinDamage,
 			.HitChance = HitChange,
 			.DmagePredictionType = damagePrediction,
@@ -102,7 +101,6 @@ void UI::UpdateRageWeaponSettings()
 		return;
 	}
 
-	// Ragebot::UpdateValues();
 }
 
 void RagebotTab::RenderTab()

@@ -378,8 +378,8 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, bool visibleCheck, V
 		}
 
 		Vector pVecTarget = localplayer->GetEyePosition();
-        lastRayStart = pVecTarget;
-        lastRayEnd = eVecTarget;
+          lastRayStart = pVecTarget;
+          lastRayEnd = eVecTarget;
 
 		QAngle viewAngles;
 		engine->GetViewAngles(viewAngles);

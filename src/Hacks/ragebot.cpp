@@ -554,6 +554,7 @@ void RagebotAutoR8(C_BasePlayer* player, C_BasePlayer* localplayer, C_BaseCombat
 	}
 }
 
+
 void RagebotAutoShoot(C_BasePlayer* player, C_BasePlayer* localplayer, C_BaseCombatWeapon* activeWeapon, CUserCmd* cmd, Vector& bestspot, QAngle& angle, float& forrwordMove, float& sideMove, const RageWeapon_t& currentSettings)
 {
     if (!currentSettings.autoShootEnabled)
@@ -724,125 +725,132 @@ static Vector VelocityExtrapolate(C_BasePlayer* player, Vector aimPos)
 
 void Ragebot::CreateMove(CUserCmd* cmd)
 {
+	C_BasePlayer* localplayer = (C_BasePlayer*)entityList->GetClientEntity(engine->GetLocalPlayer());
+     if (!localplayer || !localplayer->GetAlive())
+		return;
+
 	if (!Settings::Ragebot::enabled)
 		return;
-	C_BasePlayer* localplayer = (C_BasePlayer*)entityList->GetClientEntity(engine->GetLocalPlayer());
-    if (!localplayer || !localplayer->GetAlive())
+
+     C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*)entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
+     if (!activeWeapon || activeWeapon->GetInReload())
 		return;
-    C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*)entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
-    if (!activeWeapon || activeWeapon->GetInReload())
+
+     CSWeaponType weaponType = activeWeapon->GetCSWpnData()->GetWeaponType();
+     if (weaponType == CSWeaponType::WEAPONTYPE_C4 || weaponType == CSWeaponType::WEAPONTYPE_GRENADE || weaponType == CSWeaponType::WEAPONTYPE_KNIFE)
 		return;
-    CSWeaponType weaponType = activeWeapon->GetCSWpnData()->GetWeaponType();
-    if (weaponType == CSWeaponType::WEAPONTYPE_C4 || weaponType == CSWeaponType::WEAPONTYPE_GRENADE || weaponType == CSWeaponType::WEAPONTYPE_KNIFE)
-		return;
-//Heres my ghetto attempt at this.
-	if (Settings::Ragebot::impacttype == impactType::ITSME){
-        if (Ragebot::lockedEnemy.shooted && lockedEnemy.player && activeWeapon->GetNextPrimaryAttack() <= static_cast<float>(localplayer->GetTickBase()) * TICK_INTERVAL && localplayer->GetAlive() && !(activeWeapon->GetInReload()))
-        {
-      Vector traceStart, traceEnd;
 
-        traceStart = Ragebot::localEye;
-        traceEnd.x = Ragebot::lockedEnemy.lockedSpot.x;
-        traceEnd.y = Ragebot::lockedEnemy.lockedSpot.y;
-        traceEnd.z = Ragebot::lockedEnemy.lockedSpot.z;
-    Ray_t ray;
-    trace_t tr;
+	//Heres my ghetto attempt at this.
+	if (Settings::Ragebot::impacttype == impactType::ITSME)
+	{
+	    	if (Ragebot::lockedEnemy.shooted && lockedEnemy.player && activeWeapon->GetNextPrimaryAttack() <= static_cast<float>(localplayer->GetTickBase()) * TICK_INTERVAL && localplayer->GetAlive() && !(activeWeapon->GetInReload()))
+	     {
+			Vector traceStart, traceEnd;
+    	   		traceStart = Ragebot::localEye;
+    		  	traceEnd.x = Ragebot::lockedEnemy.lockedSpot.x;
+    	 	  	traceEnd.y = Ragebot::lockedEnemy.lockedSpot.y;
+     		traceEnd.z = Ragebot::lockedEnemy.lockedSpot.z;
+  			Ray_t ray;
+  			trace_t tr;		
 
-    ray.Init(traceStart, traceEnd);
- CTraceFilter traceFilter;
-                traceFilter.pSkip = localplayer;
+   			ray.Init(traceStart, traceEnd);
+ 			CTraceFilter traceFilter;
+          	traceFilter.pSkip = localplayer;
+   			trace->TraceRay(ray, MASK_SHOT, &traceFilter, &tr);
 
-    trace->TraceRay(ray, MASK_SHOT, &traceFilter, &tr);
+        		if (Ragebot::lockedEnemy.playerhelth == lockedEnemy.player->GetHealth() && lockedEnemy.player->GetAlive())
+			{
+       			float spred = activeWeapon->GetSpread() + activeWeapon->GetInaccuracy();
+				Ragebot::miss = true;
+  				if ((tr.m_pEntityHit == lockedEnemy.player || spred < 0.003300) && (Settings::Resolver::resolveAll /*&&Resolver::players[lockedEnemy.player->GetIndex()].flags != Resolver::rflag::NONE*/)) //We arent gonna miss due to spread while standing still scoped in and crouched ;-;
+				{ 
+          			Resolver::players[Resolver::TargetID].MissedCount++;
+          		     cvar->ConsoleDPrintf("[Kali] Missed shot due to bad resolve [RESOLVER: ");
+    					Ragebot::misstring = "Missed shot due to bad resolve [RESOLVER: "; //Shit way of doing this but im lazy.
+   				     switch (Settings::Resolver::resolverType)
+        				{
+	   			 	    case resolverType::Experimental:
+						if (!Settings::Resolver::manual){
+						cvar->ConsoleDPrintf("EXP, STEP "); 
+						Ragebot::misstring += "EXP]";
+						Ragebot::misstring += std::to_string(Resolver::players[Resolver::TargetID].MissedCount);
+						cvar->ConsoleDPrintf(std::to_string(Resolver::players[Resolver::TargetID].MissedCount).c_str()); 
+	     	   			cvar->ConsoleDPrintf(" , FLAGS: ");
+						if (Resolver::players[lockedEnemy.player->GetIndex()].flags == Resolver::rflag::LAA)
+	     	   			cvar->ConsoleDPrintf("LegitAA");
 
+						else if (Resolver::players[lockedEnemy.player->GetIndex()].flags == Resolver::rflag::LOW)
+    			 			cvar->ConsoleDPrintf("Low");
 
-                if (Ragebot::lockedEnemy.playerhelth == lockedEnemy.player->GetHealth() && lockedEnemy.player->GetAlive()){
-        float spred = activeWeapon->GetSpread() + activeWeapon->GetInaccuracy();
-	Ragebot::miss = true;
-    if ((tr.m_pEntityHit == lockedEnemy.player || spred < 0.003300) && (Settings::Resolver::resolveAll /*&&Resolver::players[lockedEnemy.player->GetIndex()].flags != Resolver::rflag::NONE*/)){ //We arent gonna miss due to spread while standing still scoped in and crouched ;-;
+	    		 			else if (Resolver::players[lockedEnemy.player->GetIndex()].flags == Resolver::rflag::LBY)
+		      			cvar->ConsoleDPrintf("LBY");
+						}
 
-                        Resolver::players[Resolver::TargetID].MissedCount++;
-                                         cvar->ConsoleDPrintf("[Kali] Missed shot due to bad resolve [RESOLVER: ");
-    	Ragebot::misstring = "Missed shot due to bad resolve [RESOLVER: "; //Shit way of doing this but im lazy.
-   	switch (Settings::Resolver::resolverType)
-        {
-        case resolverType::Experimental:
-	if (!Settings::Resolver::manual){
-	cvar->ConsoleDPrintf("EXP, STEP "); 
-	Ragebot::misstring += "EXP]";
-	Ragebot::misstring += std::to_string(Resolver::players[Resolver::TargetID].MissedCount);
-	cvar->ConsoleDPrintf(std::to_string(Resolver::players[Resolver::TargetID].MissedCount).c_str()); 
-        cvar->ConsoleDPrintf(" , FLAGS: ");
-	if (Resolver::players[lockedEnemy.player->GetIndex()].flags == Resolver::rflag::LAA)
-        cvar->ConsoleDPrintf("LegitAA");
-	else if (Resolver::players[lockedEnemy.player->GetIndex()].flags == Resolver::rflag::LOW)
-        cvar->ConsoleDPrintf("Low");
-        else if (Resolver::players[lockedEnemy.player->GetIndex()].flags == Resolver::rflag::LBY)
-        cvar->ConsoleDPrintf("LBY");
+						else if (!Settings::Resolver::forcebrute) 
+						{
+			     	  	  	cvar->ConsoleDPrintf("MANUAL, Y: ");
+							cvar->ConsoleDPrintf(std::to_string(Settings::Resolver::EyeAngles).c_str());
+		               		cvar->ConsoleDPrintf(" , X: ");
+		           		     cvar	->ConsoleDPrintf(std::to_string(Settings::Resolver::Pitch).c_str());
+						}
+						else if (Settings::Resolver::forcebrute && Settings::Resolver::manual){
+		     			cvar->ConsoleDPrintf("BRUTEFORCE");
+						}
+						break;
+
+						case resolverType::ApuWare:
+		        			cvar->ConsoleDPrintf("ApuWare");
+						break;
+					}	
+					cvar->ConsoleDPrintf("]\n");
+    	    		     }
+    	           	else{
+
+    	         	  		cvar->ConsoleDPrintf("[Kali] Missed shot due to spread / ragebot\n");
+	  	 		     Ragebot::misstring += "Missed shot due to spread / ragebot";
+				}         
+			}
+			if (Resolver::players[Resolver::TargetID].MissedCount > 4)
+          	Resolver::players[Resolver::TargetID].MissedCount = 0;
+  	     	Ragebot::lockedEnemy.shooted = false;
+  	     	Ragebot::lockedEnemy.playerhelth = 0;
+  	  	}
 	}
-	else if (!Settings::Resolver::forcebrute) {
-	        cvar->ConsoleDPrintf("MANUAL, Y: ");
-		cvar->ConsoleDPrintf(std::to_string(Settings::Resolver::EyeAngles).c_str());
-                cvar->ConsoleDPrintf(" , X: ");
-                cvar->ConsoleDPrintf(std::to_string(Settings::Resolver::Pitch).c_str());
-	}else if (Settings::Resolver::forcebrute && Settings::Resolver::manual){
-     cvar->ConsoleDPrintf("BRUTEFORCE");}
-	break;
-	case resolverType::ApuWare:
-	                cvar->ConsoleDPrintf("ApuWare");
-
-	break;
-
+	else 
+	{
+		Ragebot::CheckHit(activeWeapon);
 	}
-cvar->ConsoleDPrintf("]\n");
-}
-else{
-cvar->ConsoleDPrintf("[Kali] Missed shot due to spread / ragebot\n");
-        Ragebot::misstring += "Missed shot due to spread / ragebot";
-
-}     
-                   }
-
-                if (Resolver::players[Resolver::TargetID].MissedCount > 4)
-                        Resolver::players[Resolver::TargetID].MissedCount = 0;
-
-                Ragebot::lockedEnemy.shooted = false;
-                Ragebot::lockedEnemy.playerhelth = 0;
-        }
-}
-else {
- Ragebot::CheckHit(activeWeapon);
-}
 	QAngle oldAngle;
-    engine->GetViewAngles(oldAngle);
+     engine->GetViewAngles(oldAngle);
     
 	float oldForward = cmd->forwardmove;
-    float oldSideMove = cmd->sidemove;
+     float oldSideMove = cmd->sidemove;
 	QAngle angle = cmd->viewangles;
 
 	ItemDefinitionIndex index = ItemDefinitionIndex::INVALID;
-    if (Settings::Ragebot::weapons.find(*activeWeapon->GetItemDefinitionIndex()) != Settings::Ragebot::weapons.end())
-		  index = *activeWeapon->GetItemDefinitionIndex();
-    const RageWeapon_t &currentWeaponSetting = Settings::Ragebot::weapons.at(index);
+     if (Settings::Ragebot::weapons.find(*activeWeapon->GetItemDefinitionIndex()) != Settings::Ragebot::weapons.end())
+		index = *activeWeapon->GetItemDefinitionIndex();
+     const RageWeapon_t &currentRageWeaponSetting = Settings::Ragebot::weapons.at(index);
 
 	Ragebot::localEye = localplayer->GetEyePosition();
-    Ragebot::BestSpot = Vector(0);
+     Ragebot::BestSpot = Vector(0);
 	Ragebot::BestDamage = 0;
 
 	C_BasePlayer* player = nullptr;
-	player = GetBestEnemyAndSpot(localplayer, currentWeaponSetting);
-        RagebotAutoR8(player, localplayer, activeWeapon, cmd, Ragebot::BestSpot, angle, oldForward, oldSideMove, currentWeaponSetting);
+	player = GetBestEnemyAndSpot(localplayer, currentRageWeaponSetting);
+        RagebotAutoR8(player, localplayer, activeWeapon, cmd, Ragebot::BestSpot, angle, oldForward, oldSideMove, currentRageWeaponSetting);
 	if (player)
         cmd->tick_count = TIME_TO_TICKS(player->GetSimulationTime() + get_interpolation());
 	bool FD = (Settings::AntiAim::FakeDuck::enabled && inputSystem->IsButtonDown(Settings::AntiAim::FakeDuck::fakeDuckKey) && cmd->buttons & IN_DUCK);
-   if (player && Ragebot::BestDamage > 0 && !FD)
-    {
+     if (player && Ragebot::BestDamage > 0 && !FD)
+     {
 		Resolver::TargetID = player->GetIndex();
 		Ragebot::lockedEnemy.player = player;
 		Ragebot::lockedEnemy.lockedSpot = Ragebot::BestSpot;
 		Ragebot::lockedEnemy.bestDamage = Ragebot::BestDamage;
 		Settings::Debug::AutoAim::target = Ragebot::BestSpot;
-		RagebotAutoShoot(player, localplayer, activeWeapon, cmd, Ragebot::BestSpot, angle, oldForward, oldSideMove, currentWeaponSetting);
-		RagebotAutoCrouch(player, cmd, activeWeapon, currentWeaponSetting);
+		RagebotAutoShoot(player, localplayer, activeWeapon, cmd, Ragebot::BestSpot, angle, oldForward, oldSideMove, currentRageWeaponSetting);
+		RagebotAutoCrouch(player, cmd, activeWeapon, currentRageWeaponSetting);
 
 		// bf_write* buf;
 		// CUserCmd* from = cmd;
@@ -865,27 +873,28 @@ else {
 			CreateMove::sendPacket = true;
 		}
 
-    }
+    	}
 	else{
 		Ragebot::lockedEnemy.player = nullptr;
 		Ragebot::lockedEnemy.lockedSpot = Vector(0);
 		Ragebot::lockedEnemy.bestDamage = 0;
 	}
 	
-	RagebotNoRecoil(angle, cmd, localplayer, activeWeapon, currentWeaponSetting);
+	RagebotNoRecoil(angle, cmd, localplayer, activeWeapon, currentRageWeaponSetting);
 	
-    Math::NormalizeAngles(angle);
+     Math::NormalizeAngles(angle);
 	Math::ClampAngles(angle);
 
-    FixMouseDeltas(cmd, player, angle, oldAngle);
-    cmd->viewangles = angle;
+     FixMouseDeltas(cmd, player, angle, oldAngle);
+     cmd->viewangles = angle;
 
-	if (!currentWeaponSetting.silent)
+	if (!currentRageWeaponSetting.silent)
 		engine->SetViewAngles(cmd->viewangles);
 
 	Math::CorrectMovement(oldAngle, cmd, oldForward, oldSideMove);
-Ragebot::quickpeek(cmd);
-Ragebot::drawStartPos();
+	Ragebot::quickpeek(cmd);
+	Ragebot::drawStartPos();
+
 }
 
 void Ragebot::FireGameEvent(IGameEvent* event)
@@ -893,14 +902,14 @@ void Ragebot::FireGameEvent(IGameEvent* event)
 	if(!event)	
 		return;
 
-    if (strcmp(event->GetName(), XORSTR("player_connect_full")) == 0 || strcmp(event->GetName(), XORSTR("cs_game_disconnected")) == 0)
-    {
+     if (strcmp(event->GetName(), XORSTR("player_connect_full")) == 0 || strcmp(event->GetName(), XORSTR("cs_game_disconnected")) == 0)
+     {
 		if (event->GetInt(XORSTR("userid")) && engine->GetPlayerForUserID(event->GetInt(XORSTR("userid"))) != engine->GetLocalPlayer())
 	    	return;
 		Ragebot::friends.clear();
-    }
-    if (strcmp(event->GetName(), XORSTR("player_death")) == 0)
-    {
+     }
+     if (strcmp(event->GetName(), XORSTR("player_death")) == 0)
+     {
 		int attacker_id = engine->GetPlayerForUserID(event->GetInt(XORSTR("attacker")));
 		int deadPlayer_id = engine->GetPlayerForUserID(event->GetInt(XORSTR("userid")));
 
@@ -911,12 +920,11 @@ void Ragebot::FireGameEvent(IGameEvent* event)
 	    	return;
 
 		RagebotkillTimes.push_back(Util::GetEpochTime());
-    }
-if ( strcmp(event->GetName(), XORSTR("bullet_impact")) == 0 && engine->GetPlayerForUserID(event->GetInt(XORSTR("userid"))) == engine->GetLocalPlayer()){
+     }
+	if ( strcmp(event->GetName(), XORSTR("bullet_impact")) == 0 && engine->GetPlayerForUserID(event->GetInt(XORSTR("userid"))) == engine->GetLocalPlayer()){
                 float x = event->GetFloat(XORSTR("x")), y = event->GetFloat(XORSTR("y")), z = event->GetFloat(XORSTR("z"));
                 bulletPosition->x = x; bulletPosition->y = y; bulletPosition->z = z; 
 		shatted = true;
-}
+	}
 
 }
-

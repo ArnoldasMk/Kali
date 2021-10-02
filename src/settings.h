@@ -386,8 +386,8 @@ struct LegitWeapon_t
 	spreadLimit = 1.0f,
 	minDamagevalue = 10.0f,
 	hitchance = 20;
-	
 	HitboxFlags desiredHitboxes;
+
 	bool operator == (const LegitWeapon_t& another) const
 	{
 			if(this->desiredHitboxes != another.desiredHitboxes)
@@ -395,6 +395,7 @@ struct LegitWeapon_t
 
 			return this->silent == another.silent &&
 			this->friendly == another.friendly &&
+			this->closestHitbox == another.closestHitbox &&
 			this->engageLock == another.engageLock &&
 			this->engageLockTR == another.engageLockTR &&
 			this->engageLockTTR == another.engageLockTTR &&
