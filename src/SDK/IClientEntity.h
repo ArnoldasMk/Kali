@@ -704,11 +704,11 @@ public:
 	}
 
 	float GetWeaponArmorRatio() {
-		return *( float* ) ( ( uintptr_t )this + 0x170);
+		return *( float* ) ( ( uintptr_t )this + 0x174);
 	}
 
 	float GetPenetration() {
-		return *( float* ) ( ( uintptr_t )this + 0x178);
+		return *( float* ) ( ( uintptr_t )this + 0x17C);
 	}
 
 	float GetRange() {
