@@ -27,10 +27,16 @@ static bool autoScopeEnabled = false;
 static bool HitChanceEnabled = false;
 static float HitChange = 20.f;
 static float MinDamage = 50.f;
+static float BodyScale = 0.1f;
+static float HeadScale = 0.1f;
 static bool autoSlow = false;
 static bool doubleFire = false;
 static bool scopeControlEnabled = false;
-
+static bool BacktrackEnabled = false;
+static bool OnshotEnabled = false;
+static float BacktrackValue = 0.2f;
+static ButtonCode_t onshotkey  = ButtonCode_t::KEY_3;
+static ButtonCode_t mindmgoveridekey = ButtonCode_t::KEY_5;
 
 void UI::ReloadRageWeaponSettings()
 {
@@ -48,10 +54,18 @@ void UI::ReloadRageWeaponSettings()
 	HitChange = Settings::Ragebot::weapons.at(index).HitChance;
 	MinDamage = Settings::Ragebot::weapons.at(index).MinDamage;
 	autoSlow = Settings::Ragebot::weapons.at(index).autoSlow;
-	//doubleFire = Settings::Ragebot::weapons.at(index).DoubleFire;
+	doubleFire = Settings::Ragebot::weapons.at(index).DoubleFire;
 	scopeControlEnabled = Settings::Ragebot::weapons.at(index).scopeControlEnabled;
 	damagePrediction = Settings::Ragebot::weapons.at(index).DmagePredictionType;
 	enemySelectionType = Settings::Ragebot::weapons.at(index).enemySelectionType;
+	BacktrackEnabled = Settings::Ragebot::weapons.at(index).BacktrackEnabled;
+	OnshotEnabled = Settings::Ragebot::weapons.at(index).OnshotEnabled;
+	MinDamage = Settings::Ragebot::weapons.at(index).MinDamage;
+	BodyScale = Settings::Ragebot::weapons.at(index).BodyScale;
+	HeadScale = Settings::Ragebot::weapons.at(index).HeadScale;
+	BacktrackValue = Settings::Ragebot::weapons.at(index).BacktrackValue;
+	onshotkey = Settings::Ragebot::weapons.at(index).onshotkey;
+	mindmgoveridekey = Settings::Ragebot::weapons.at(index).mindmgoveridekey;
 
 	for (int BONE = 0; BONE < 6; BONE++)
 	{
@@ -64,22 +78,33 @@ void UI::ReloadRageWeaponSettings()
 
 void UI::UpdateRageWeaponSettings()
 {
-	if (Settings::Ragebot::weapons.find(currentWeapon) == Settings::Ragebot::weapons.end() && Settings::Ragebot::enabled)
+	
+	if (Settings::Ragebot::weapons.find(currentWeapon) == Settings::Ragebot::weapons.end())
 		Settings::Ragebot::weapons[currentWeapon] = RageWeapon_t();
 
 	RageWeapon_t settings = {
+
 			.silent = silent,
 			.friendly = friendly,
 			.closestBone = closestBone,
-			.HitChanceEnabled = HitChanceEnabled,	
+			.HitChanceEnabled = HitChanceEnabled,
 			.autoPistolEnabled = autoPistolEnabled,
 			.autoShootEnabled = autoShootEnabled,
 			.autoScopeEnabled = autoScopeEnabled,
 			.autoSlow = autoSlow,
 			.scopeControlEnabled = scopeControlEnabled,
-			//.DoubleFire = doubleFire,
+			.DoubleFire = doubleFire,
+			.BacktrackEnabled = BacktrackEnabled,
+			.OnshotEnabled = OnshotEnabled,
+
 			.MinDamage = MinDamage,
 			.HitChance = HitChange,
+			.BodyScale = BodyScale,
+			.HeadScale = HeadScale,
+			.BacktrackValue = BacktrackValue,
+
+			.onshotkey = onshotkey,
+			.mindmgoveridekey = mindmgoveridekey,
 			.DmagePredictionType = damagePrediction,
 			.enemySelectionType = enemySelectionType,	
 	};
@@ -106,20 +131,16 @@ void UI::UpdateRageWeaponSettings()
 void RagebotTab::RenderTab()
 {
 	static char filterWeapons[32];
-
-	
 	const char *DamagePredictionType[] = {"Safety","Damage",};
 	const char *EnemySelectionType[] = {"Best Damage(Legacy Old Method)", "Closest To Crosshair( Faster But In alfa)"};
-        const char *impactType[] = {"itsme","Pritam",};
+     const char *impactType[] = {"itsme","Pritam",};
 
-
-	
 	ImGui::Columns(3, nullptr, false);
 	{
 		ImGui::SetColumnOffset(1, 200);
 		ImGui::PushItemWidth(-10);
 		{
-			if (ImGui::Checkbox(XORSTR("Enabled"), &Settings::Ragebot::enabled)) // Credit to tutoraddicts
+			if (ImGui::Checkbox(XORSTR("Enabled"), &Settings::Ragebot::enabled))
 			{	
 				Settings::Legitbot::enabled = false;
 				UI::UpdateRageWeaponSettings();
@@ -205,7 +226,7 @@ void RagebotTab::RenderTab()
 			}
 			if ( ImGui::BeginCombo(XORSTR("##MultiBONESELECTION"), XORSTR("SELECT Multi Points")) )
 			{
-				if ( ImGui::Selectable(XORSTR("HEAD"), &desiredMultiBones[(int)DesireBones::BONE_HEAD], ImGuiSelectableFlags_DontClosePopups) )
+				if (ImGui::Selectable(XORSTR("HEAD"), &desiredMultiBones[(int)DesireBones::BONE_HEAD], ImGuiSelectableFlags_DontClosePopups))
 					UI::UpdateRageWeaponSettings();
 				if (ImGui::Selectable(XORSTR("UPPER CHEST"), &desiredMultiBones[(int)DesireBones::UPPER_CHEST], ImGuiSelectableFlags_DontClosePopups))
 					UI::UpdateRageWeaponSettings();
@@ -317,9 +338,9 @@ ImGui::Combo(XORSTR("##ImpactDetection"), (int*)&Settings::Ragebot::impacttype, 
                                 ImGui::Checkbox(XORSTR("Wait for onshot"), &Settings::Ragebot::onshot::enabled);
                                 UI::KeyBindButton(&Settings::Ragebot::onshot::button);
                                         ImGui::TextWrapped(XORSTR("Head multipoint scale"));
-                                ImGui::SliderFloat(XORSTR("##HEADSCALE"), &Settings::Ragebot::HeadScale, 0.0f, 1.0f);
+                                ImGui::SliderFloat(XORSTR("##HEADSCALE"), &HeadScale, 0.0f, 1.0f);
                                         ImGui::TextWrapped(XORSTR("Body multipoint scale"));
-                                ImGui::SliderFloat(XORSTR("##BODYSCALE"), &Settings::Ragebot::BodyScale, 0.0f, 1.0f);
+                                ImGui::SliderFloat(XORSTR("##BODYSCALE"), &BodyScale, 0.0f, 1.0f);
 
 			//	ImGui::Checkbox(XORSTR("Resolver"), &Settings::Resolver::resolveAll);
 
@@ -409,7 +430,7 @@ ImGui::Combo(XORSTR("##ImpactDetection"), (int*)&Settings::Ragebot::impacttype, 
 				if (ImGui::Button(XORSTR("Clear Weapon Settings"), ImVec2(-1, 0)))
 				{
 					Settings::Ragebot::weapons.erase(currentWeapon);
-					UI::ReloadRageWeaponSettings();
+					UI::ReloadRageWeaponSettings();	
 				}
 			}
 			ImGui::EndChild();

@@ -169,7 +169,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
     #define LegitweaponSetting settings[XORSTR("Legitbot")][XORSTR("weapons")][Util::Items::GetItemName((enum ItemDefinitionIndex)i.first)]
 	    LegitweaponSetting[XORSTR("Silent")] = i.second.silent;
 		LegitweaponSetting[XORSTR("Friendly")] = i.second.friendly;
-        LegitweaponSetting[XORSTR("ClosestHitbox")] = i.second.closestHitbox;
 		LegitweaponSetting[XORSTR("engageLock")] = i.second.engageLock;
 		LegitweaponSetting[XORSTR("engageLockTR")] = i.second.engageLockTR;
 		LegitweaponSetting[XORSTR("engageLockTTR")] = i.second.engageLockTTR;
@@ -220,7 +219,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
         LegitweaponSetting[XORSTR("Autowall")][XORSTR("enabled")] = i.second.autoWall;
 
 
-	    LegitweaponSetting[XORSTR("DesiredHitboxes")] = i.second.desiredHitboxes;
     
     #undef LegitweaponSetting
     }
@@ -245,8 +243,11 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	    RageweaponSetting[XORSTR("AutoSlow")][XORSTR("Enabled")] = i.second.autoSlow;
 	    RageweaponSetting[XORSTR("DoubleFire")][XORSTR("Enabled")] = i.second.DoubleFire;
 	    RageweaponSetting[XORSTR("ScopeControl")][XORSTR("Enabled")] = i.second.scopeControlEnabled;
+	    RageweaponSetting[XORSTR("Head")][XORSTR("Value")] = i.second.HeadScale;
+	    RageweaponSetting[XORSTR("Body")][XORSTR("Value")] = i.second.BodyScale;
         RageweaponSetting[XORSTR("DamagePrediction")][XORSTR("Type")] = (int)i.second.DmagePredictionType;
         RageweaponSetting[XORSTR("EnemySelectionType")][XORSTR("Type")] = (int)i.second.enemySelectionType;
+        
 
         for (int bone = 0; bone < 6; bone++)
         {
@@ -930,7 +931,6 @@ void Settings::LoadConfig(std::string path)
 	    LegitWeapon_t weapon = {
 	        .silent = LegitweaponSetting[XORSTR("Silent")].asBool(),
 			.friendly = LegitweaponSetting[XORSTR("Friendly")].asBool(),
-            .closestHitbox = LegitweaponSetting[XORSTR( "ClosestHitbox" )].asBool(),
             .engageLock = LegitweaponSetting[XORSTR("engageLock")].asBool(),
 			.engageLockTR = LegitweaponSetting[XORSTR("engageLockTR")].asBool(),
 	        .aimkeyOnly = LegitweaponSetting[XORSTR("AimKeyOnly")].asBool(),
@@ -981,7 +981,6 @@ void Settings::LoadConfig(std::string path)
 	        .minDamagevalue = LegitweaponSetting[XORSTR("MinDamage")][XORSTR("Value")].asFloat(),
 	    };
 
-	    weapon.desiredHitboxes = (HitboxFlags) LegitweaponSetting[XORSTR("DesiredHitboxes")].asInt();
 	    Settings::Legitbot::weapons.at(weaponID) = weapon;
     }
     GetVal(settings[XORSTR("Legitbot")][XORSTR("AutoCrouch")][XORSTR("enabled")], &Settings::Legitbot::AutoCrouch::enabled);
@@ -1024,8 +1023,10 @@ void Settings::LoadConfig(std::string path)
 	        .autoSlow = RageweaponSetting[XORSTR("AutoSlow")][XORSTR("Enabled")].asBool(),
 	        .scopeControlEnabled = RageweaponSetting[XORSTR("ScopeControl")][XORSTR("Enabled")].asBool(),
 		    .DoubleFire = RageweaponSetting[XORSTR("Prediction")][XORSTR("Enabled")].asBool(),
+
             .MinDamage = RageweaponSetting[XORSTR("MinDamage")].asFloat(),
-	        .HitChance = RageweaponSetting[XORSTR("HitChance")][XORSTR("Value")].asFloat(),
+        	.BodyScale = RageweaponSetting[XORSTR("Body")][XORSTR("Value")].asFloat(),
+            .HeadScale = RageweaponSetting[XORSTR("Head")][XORSTR("Value")].asFloat(),
         };
         // Getting value like this because can't find anyother way convert value from json to enum
         GetVal(RageweaponSetting[XORSTR("DamagePrediction")][XORSTR("Type")], (int*)&weapon.DmagePredictionType);

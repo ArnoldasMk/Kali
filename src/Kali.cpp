@@ -12,7 +12,7 @@
 #include "Kali.h"
 #include "EventListener.h"
 #include "Utils/xorstring.h"
-
+#include "Utils/bonemaps.h"
 #include "Hacks/nosmoke.h"
 #include "Hacks/tracereffect.h"
 #include "Hacks/skinchanger.h"
@@ -132,6 +132,10 @@ void MainThread()
 
 	srand(time(nullptr)); // Seed random # Generator so we can call rand() later
 
+    // Build bonemaps here if we are already in-game
+    if( engine->IsInGame() ){
+        BoneMaps::BuildAllBonemaps();
+    }
     cvar->ConsoleColorPrintf(ColorRGBA(0, 225, 0), XORSTR("\nKali Successfully loaded.\n"));
 }
 /* Entrypoint to the Library. Called when loading */
@@ -175,5 +179,5 @@ void __attribute__((destructor)) Shutdown()
 }
 void Kali::SelfShutdown()
 {
-	Shutdown(); //meme
+	Shutdown(); 
 }

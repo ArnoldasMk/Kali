@@ -267,6 +267,7 @@ void CheckHit(C_BaseCombatWeapon*);
     void gotoStart(CUserCmd*);
     void CreateMove(CUserCmd*);
     void FireGameEvent(IGameEvent* event);
+    void UpdateValues();
     inline RagebotPredictionSystem* ragebotPredictionSystem = new RagebotPredictionSystem();
 }
 

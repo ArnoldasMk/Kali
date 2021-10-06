@@ -906,29 +906,14 @@ static void DrawAimbotSpot( ) {
 static void DrawBoneMap( C_BasePlayer* player ) {
 	static Vector bone2D;
 	static Vector bone3D;
-	model_t *model = player->GetModel();
-	if ( !model )
+	studiohdr_t* pStudioModel = modelInfo->GetStudioModel( player->GetModel() );
+
+	if( !pStudioModel )
 		return;
 
-	studiohdr_t *hdr = modelInfo->GetStudioModel(model);
-	if ( !hdr )
-		return;
-
-	mstudiohitboxset_t *hitboxSet = hdr->pHitboxSet(player->GetHitboxSetCount());
-	if ( !hitboxSet )
-		return;
-
-	for ( int i = 0; i < hitboxSet->numhitboxes; i++ )
-	{		
-		mstudiobbox_t* hitbox = hitboxSet->pHitbox(i);
-
-		if ( !hitbox )
-			continue;
-
-		int boneID = hitbox->bone;
-
-		bone3D = player->GetBonePosition(boneID);
-		mstudiobone_t* pBone = hdr->pBone( boneID );
+	for( int i = 1; i < pStudioModel->numbones; i++ ){
+		bone3D = player->GetBonePosition( i );
+        mstudiobone_t* pBone = pStudioModel->pBone( i );
 		if( !pBone )
 			continue;
 
@@ -944,13 +929,13 @@ static void DrawBoneMap( C_BasePlayer* player ) {
 	}
 	IEngineClient::player_info_t entityInformation;
 	engine->GetPlayerInfo( player->GetIndex(), &entityInformation );
-	cvar->ConsoleDPrintf( XORSTR( "(%s)-ModelName: %s, numBones: %d\n" ), entityInformation.name, hdr->name, hdr->numbones );
+	cvar->ConsoleDPrintf( XORSTR( "(%s)-ModelName: %s, numBones: %d\n" ), entityInformation.name, pStudioModel->name, pStudioModel->numbones );
 }
 static void DrawAATrace( QAngle fake, QAngle actual ) {
         C_BasePlayer* localPlayer = ( C_BasePlayer* ) entityList->GetClientEntity( engine->GetLocalPlayer() );
          if(!localPlayer->GetAlive())
             return;
-	Vector src3D, dst3D, forward;
+	   Vector src3D, dst3D, forward;
         Vector src, dst;
         trace_t tr;
         Ray_t ray;
@@ -1039,28 +1024,14 @@ static void DrawAATrace( QAngle fake, QAngle actual ) {
 }
 
 static void DrawAutoWall(C_BasePlayer *player) {
-	model_t *model = player->GetModel();
-	if ( !model )
-		return;
-
-	studiohdr_t *hdr = modelInfo->GetStudioModel(model);
-	if ( !hdr )
-		return;
-
-	mstudiohitboxset_t *hitboxSet = hdr->pHitboxSet(player->GetHitboxSetCount());
-	if ( !hitboxSet )
-		return;
-
-	for ( int i = 0; i < hitboxSet->numhitboxes; i++ )
-	{		
-		mstudiobbox_t* hitbox = hitboxSet->pHitbox(i);
-
-		if ( !hitbox )
+	const std::unordered_map<int, int> *modelType = BoneMaps::GetModelTypeBoneMap(player);
+	for( int i = 0; i < 31; i++ )
+	{
+		auto bone = modelType->find(i);
+		if( bone == modelType->end() || bone->second <= BONE_INVALID )
 			continue;
-
-		int boneID = hitbox->bone;
 		Vector bone2D;
-		Vector bone3D = player->GetBonePosition(boneID);
+		Vector bone3D = player->GetBonePosition(bone->second);
 		if ( debugOverlay->ScreenPosition( bone3D, bone2D ) )
 			continue;
 
@@ -1075,11 +1046,18 @@ static void DrawAutoWall(C_BasePlayer *player) {
 
 	if( !player->SetupBones(matrix, 128, 0x100, 0.f) )
 		return;
+	model_t *pModel = player->GetModel();
+	if( !pModel )
+		return;
+
+	studiohdr_t *hdr = modelInfo->GetStudioModel(pModel);
+	if( !hdr )
+		return;
 
 	mstudiobbox_t *bbox = hdr->pHitbox((int)Hitbox::HITBOX_HEAD, 0); // bounding box
 	if( !bbox )
 		return;
-
+	
 	Vector mins, maxs;
 	Math::VectorTransform(bbox->bbmin, matrix[bbox->bone], mins);
 	Math::VectorTransform(bbox->bbmax, matrix[bbox->bone], maxs);

@@ -12,11 +12,17 @@ static ItemDefinitionIndex currentWeapon = ItemDefinitionIndex::INVALID;
 static bool enabled = false;
 static bool silent = false;
 static bool friendly = false;
-static bool closestHitbox = true;
-static HitboxFlags desiredHitboxes = HitboxFlags::HEAD;
+static bool closestBone = true;
+inline bool desiredBones[] = {
+    true, true, true, true, true, true, true,	   // center mass
+    false, false, false, false, false, false, false, // left arm
+    false, false, false, false, false, false, false, // right arm
+    false, false, false, false, false,			   // left leg
+    false, false, false, false, false			   // right leg
+};
 static bool engageLock = false;
 static bool engageLockTR = false; // Target Reacquisition
-static int engageLockTTR = 700; // Time to Target Reacquisition ( in ms )
+static int engageLockTTR = 700;   // Time to Target Reacquisition ( in ms )
 static Bone bone = CONST_BONE_HEAD;
 static ButtonCode_t aimkey = ButtonCode_t::MOUSE_MIDDLE;
 static bool aimkeyOnly = false;
@@ -68,7 +74,6 @@ void UI::ReloadWeaponSettings()
 
 	silent = Settings::Legitbot::weapons.at(index).silent;
 	friendly = Settings::Legitbot::weapons.at(index).friendly;
-	closestHitbox = Settings::Legitbot::weapons.at(index).closestHitbox;
 	engageLock = Settings::Legitbot::weapons.at(index).engageLock;
 	engageLockTR = Settings::Legitbot::weapons.at(index).engageLockTR;
 	engageLockTTR = Settings::Legitbot::weapons.at(index).engageLockTTR;
@@ -77,10 +82,10 @@ void UI::ReloadWeaponSettings()
 	aimkeyOnly = Settings::Legitbot::weapons.at(index).aimkeyOnly;
 	smoothEnabled = Settings::Legitbot::weapons.at(index).smoothEnabled;
 	courseRandomizationEnabled = Settings::Legitbot::weapons.at(index).courseRandomizationEnabled;
-     doAimAfterXShotsEnabled = Settings::Legitbot::weapons.at(index).doAimAfterXShotsEnabled;
+	doAimAfterXShotsEnabled = Settings::Legitbot::weapons.at(index).doAimAfterXShotsEnabled;
 	smoothValue = Settings::Legitbot::weapons.at(index).smoothAmount;
 	courseRandomizationValue = Settings::Legitbot::weapons.at(index).courseRandomizationAmount;
-     doAimAfterXShotsValue = Settings::Legitbot::weapons.at(index).doAimAfterXShotsAmount;
+	doAimAfterXShotsValue = Settings::Legitbot::weapons.at(index).doAimAfterXShotsAmount;
 	smoothType = Settings::Legitbot::weapons.at(index).smoothType;
 	smoothSaltEnabled = Settings::Legitbot::weapons.at(index).smoothSaltEnabled;
 	smoothSaltMultiplier = Settings::Legitbot::weapons.at(index).smoothSaltMultiplier;
@@ -115,7 +120,8 @@ void UI::ReloadWeaponSettings()
 	predEnabled = Settings::Legitbot::weapons.at(index).predEnabled;
 	scopeControlEnabled = Settings::Legitbot::weapons.at(index).scopeControlEnabled;
 
-	desiredHitboxes = Settings::Legitbot::weapons.at(index).desiredHitboxes;
+	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
+		desiredBones[bone] = Settings::Legitbot::weapons.at(index).desiredBones[bone];
 }
 
 void UI::UpdateWeaponSettings()
@@ -125,66 +131,66 @@ void UI::UpdateWeaponSettings()
 
 	LegitWeapon_t settings = {
 
-			.silent = silent,
-			.friendly = friendly,
-			.closestHitbox = closestHitbox,
-			.engageLock = engageLock,
-			.engageLockTR = engageLockTR,
-			.aimkeyOnly = aimkeyOnly,
-			.smoothEnabled = smoothEnabled,
-			.courseRandomizationEnabled = courseRandomizationEnabled,
-               .doAimAfterXShotsEnabled = doAimAfterXShotsEnabled,
-			.smoothSaltEnabled = smoothSaltEnabled,
-			.errorMarginEnabled = errorMarginEnabled,
-			.autoAimEnabled = autoAimEnabled,
-			.aimStepEnabled = aimStepEnabled,
-			.rcsEnabled = rcsEnabled,
-			.rcsAlwaysOn = rcsAlwaysOn,
-			.spreadLimitEnabled = spreadLimitEnabled,
-               .hitchanceEnaled = false,
-			.autoPistolEnabled = autoPistolEnabled,
-			.autoShootEnabled = autoShootEnabled,
-			.autoScopeEnabled = autoScopeEnabled,
-			.noShootEnabled = noShootEnabled,
-			.ignoreJumpEnabled = ignoreJumpEnabled,
-			.ignoreEnemyJumpEnabled = ignoreEnemyJumpEnabled,
-			.smokeCheck = smokeCheck,
-			.flashCheck = flashCheck,
-               .autoWallEnabled = autoWallEnabled,
-               .autoAimRealDistance = autoAimRealDistance,
-			.autoSlow = autoSlow,
-			.predEnabled = predEnabled,
-               .scopeControlEnabled = scopeControlEnabled,
-               .TriggerBot = TriggerBot,
-			.mindamage = 0,
-			.autoWall = false,
+	    .silent = silent,
+	    .friendly = friendly,
+	    .engageLock = engageLock,
+	    .engageLockTR = engageLockTR,
+	    .aimkeyOnly = aimkeyOnly,
+	    .smoothEnabled = smoothEnabled,
+	    .courseRandomizationEnabled = courseRandomizationEnabled,
+	    .doAimAfterXShotsEnabled = doAimAfterXShotsEnabled,
+	    .smoothSaltEnabled = smoothSaltEnabled,
+	    .errorMarginEnabled = errorMarginEnabled,
+	    .autoAimEnabled = autoAimEnabled,
+	    .aimStepEnabled = aimStepEnabled,
+	    .rcsEnabled = rcsEnabled,
+	    .rcsAlwaysOn = rcsAlwaysOn,
+	    .spreadLimitEnabled = spreadLimitEnabled,
+	    .hitchanceEnaled = false,
+	    .autoPistolEnabled = autoPistolEnabled,
+	    .autoShootEnabled = autoShootEnabled,
+	    .autoScopeEnabled = autoScopeEnabled,
+	    .noShootEnabled = noShootEnabled,
+	    .ignoreJumpEnabled = ignoreJumpEnabled,
+	    .ignoreEnemyJumpEnabled = ignoreEnemyJumpEnabled,
+	    .smokeCheck = smokeCheck,
+	    .flashCheck = flashCheck,
+	    .autoWallEnabled = autoWallEnabled,
+	    .autoAimRealDistance = autoAimRealDistance,
+	    .autoSlow = autoSlow,
+	    .predEnabled = predEnabled,
+	    .scopeControlEnabled = scopeControlEnabled,
+	    .TriggerBot = TriggerBot,
+	    .mindamage = 0,
+	    .autoWall = false,
 
-			.engageLockTTR = engageLockTTR,
-			.bone = bone,
-			.smoothType = smoothType,
-			.aimkey = aimkey,
-			.smoothAmount = smoothValue,
-			.courseRandomizationAmount = courseRandomizationValue,
-			.doAimAfterXShotsAmount = doAimAfterXShotsValue,
-			.smoothSaltMultiplier = smoothSaltMultiplier,
-			.errorMarginValue = errorMarginValue,
-			.LegitautoAimFov = autoAimValue,
-			.aimStepMin = aimStepMin,
-			.aimStepMax = aimStepMax,
-			.rcsAmountX = rcsAmountX,
-			.rcsAmountY = rcsAmountY,
-			.autoWallValue = autoWallValue,
-			.spreadLimit = spreadLimit,
-			.minDamagevalue = 10.0f,
-	          .hitchance = hitchance,
+	    .engageLockTTR = engageLockTTR,
+	    .bone = bone,
+	    .smoothType = smoothType,
+	    .aimkey = aimkey,
+	    .smoothAmount = smoothValue,
+	    .courseRandomizationAmount = courseRandomizationValue,
+	    .doAimAfterXShotsAmount = doAimAfterXShotsValue,
+	    .smoothSaltMultiplier = smoothSaltMultiplier,
+	    .errorMarginValue = errorMarginValue,
+	    .LegitautoAimFov = autoAimValue,
+	    .aimStepMin = aimStepMin,
+	    .aimStepMax = aimStepMax,
+	    .rcsAmountX = rcsAmountX,
+	    .rcsAmountY = rcsAmountY,
+	    .autoWallValue = autoWallValue,
+	    .spreadLimit = spreadLimit,
+	    .minDamagevalue = 10.0f,
+	    .hitchance = hitchance,
 	};
 
-	settings.desiredHitboxes = desiredHitboxes;
+	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
+		settings.desiredBones[bone] = desiredBones[bone];
 
 	Settings::Legitbot::weapons.at(currentWeapon) = settings;
 
 	if (Settings::Legitbot::weapons.at(currentWeapon) == Settings::Legitbot::weapons.at(ItemDefinitionIndex::INVALID) &&
-		currentWeapon != ItemDefinitionIndex::INVALID)
+	    currentWeapon != ItemDefinitionIndex::INVALID)
 	{
 		Settings::Legitbot::weapons.erase(currentWeapon);
 		UI::ReloadWeaponSettings();
@@ -193,8 +199,8 @@ void UI::UpdateWeaponSettings()
 
 void Legitbot::RenderTab()
 {
-	const char* targets[] = { "PELVIS", "HIP", "LOWER SPINE", "MIDDLE SPINE", "UPPER SPINE", "NECK", "HEAD" };
-	const char* smoothTypes[] = { "Slow Near End", "Constant Speed", "Fast Near End" };
+	const char *targets[] = {"PELVIS", "HIP", "LOWER SPINE", "MIDDLE SPINE", "UPPER SPINE", "NECK", "HEAD"};
+	const char *smoothTypes[] = {"Slow Near End", "Constant Speed", "Fast Near End"};
 	static char filterWeapons[32];
 
 	if (ImGui::Checkbox(XORSTR("Enabled"), &Settings::Legitbot::enabled))
@@ -212,15 +218,15 @@ void Legitbot::RenderTab()
 			ImGui::ListBoxHeader(XORSTR("##GUNS"), ImVec2(-1, -1));
 			for (auto it : ItemDefinitionIndexMap)
 			{
-				bool isDefault = (int) it.first < 0;
+				bool isDefault = (int)it.first < 0;
 				if (!isDefault && !Util::Contains(Util::ToLower(std::string(filterWeapons)), Util::ToLower(Util::Items::GetItemDisplayName(it.first).c_str())))
 					continue;
 
 				if (Util::Items::IsKnife(it.first) || Util::Items::IsGlove(it.first) || Util::Items::IsUtility(it.first))
-				continue;	
+					continue;
 
-				const bool item_selected = ((int) it.first == (int) currentWeapon);
-				ImGui::PushID((int) it.first);
+				const bool item_selected = ((int)it.first == (int)currentWeapon);
+				ImGui::PushID((int)it.first);
 				std::string formattedName;
 				char changeIndicator = ' ';
 				bool isChanged = Settings::Legitbot::weapons.find(it.first) != Settings::Legitbot::weapons.end();
@@ -234,7 +240,7 @@ void Legitbot::RenderTab()
 				}
 				ImGui::PopID();
 			}
-			ImGui::ListBoxFooter();		
+			ImGui::ListBoxFooter();
 		}
 		ImGui::NextColumn();
 		{
@@ -270,9 +276,9 @@ void Legitbot::RenderTab()
 				ImGui::NextColumn();
 				ImGui::PushItemWidth(-1);
 				if (ImGui::SliderFloat(XORSTR("##RCSX"), &rcsAmountX, 0, 2, XORSTR("Pitch: %0.3f")))
-						UI::UpdateWeaponSettings();
+					UI::UpdateWeaponSettings();
 				if (ImGui::SliderFloat(XORSTR("##RCSY"), &rcsAmountY, 0, 2, XORSTR("Yaw: %0.3f")))
-						UI::UpdateWeaponSettings();
+					UI::UpdateWeaponSettings();
 				ImGui::PopItemWidth();
 				ImGui::Columns(1);
 				ImGui::Separator();
@@ -306,12 +312,12 @@ void Legitbot::RenderTab()
 						UI::UpdateWeaponSettings();
 					if (ImGui::Checkbox(XORSTR("Error Margin"), &errorMarginEnabled))
 						UI::UpdateWeaponSettings();
-          	     			if (ImGui::Checkbox(XORSTR("Advanced Error"), &courseRandomizationEnabled))
-          	          			UI::UpdateWeaponSettings();
-          	      		if (ImGui::Checkbox(XORSTR("Aim After Shot #"), &doAimAfterXShotsEnabled))
-              	      			UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Advanced Error"), &courseRandomizationEnabled))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Aim After Shot #"), &doAimAfterXShotsEnabled))
+						UI::UpdateWeaponSettings();
 					ImGui::PushItemWidth(-1);
-					if (ImGui::Combo(XORSTR("##SMOOTHTYPE"), (int*)& smoothType, smoothTypes, IM_ARRAYSIZE(smoothTypes)))
+					if (ImGui::Combo(XORSTR("##SMOOTHTYPE"), (int *)&smoothType, smoothTypes, IM_ARRAYSIZE(smoothTypes)))
 						UI::UpdateWeaponSettings();
 					ImGui::PopItemWidth();
 				}
@@ -324,66 +330,103 @@ void Legitbot::RenderTab()
 						UI::UpdateWeaponSettings();
 					if (ImGui::SliderFloat(XORSTR("##ERROR"), &errorMarginValue, 0, 2))
 						UI::UpdateWeaponSettings();
-                         if (ImGui::SliderFloat(XORSTR("##COURSERANDOMIZATION"), &courseRandomizationValue, 1, 6))
-                             UI::UpdateWeaponSettings();
-                         if (ImGui::SliderFloat(XORSTR("##DOAIMAFTERXSHOTS"), &doAimAfterXShotsValue, 0, 30))
-                             UI::UpdateWeaponSettings();	
+					if (ImGui::SliderFloat(XORSTR("##COURSERANDOMIZATION"), &courseRandomizationValue, 1, 6))
+						UI::UpdateWeaponSettings();
+					if (ImGui::SliderFloat(XORSTR("##DOAIMAFTERXSHOTS"), &doAimAfterXShotsValue, 0, 30))
+						UI::UpdateWeaponSettings();
 					ImGui::PopItemWidth();
 				}
 				ImGui::EndColumns();
-
-
 				ImGui::Separator();
 				ImGui::Columns(1);
 				ImGui::Text(XORSTR("Target Hitboxes"));
 				ImGui::Separator();
-				ImGui::Columns(2, nullptr, true);
+				ImGui::Columns(3, nullptr, false);
 				{
 					ImGui::PushItemWidth(-1);
-					if(ImGui::CheckboxFlags(XORSTR("Head"), (unsigned int *)&desiredHitboxes, HitboxFlags::HEAD))
+					ImGui::Text(XORSTR("Player's Right Arm"));
+					if (ImGui::Checkbox(XORSTR("Collarbone"), &desiredBones[BONE_RIGHT_COLLARBONE]))
 						UI::UpdateWeaponSettings();
-					if(ImGui::CheckboxFlags(XORSTR("Neck"), (unsigned int *)&desiredHitboxes, HitboxFlags::NECK))
+					if (ImGui::Checkbox(XORSTR("Shoulder"), &desiredBones[BONE_RIGHT_SHOULDER]))
 						UI::UpdateWeaponSettings();
-					if(ImGui::CheckboxFlags(XORSTR("Chest"), (unsigned int *)&desiredHitboxes, HitboxFlags::CHEST))
+					if (ImGui::Checkbox(XORSTR("Armpit"), &desiredBones[BONE_RIGHT_ARMPIT]))
 						UI::UpdateWeaponSettings();
-					if(ImGui::CheckboxFlags(XORSTR("Stomach"), (unsigned int *)&desiredHitboxes, HitboxFlags::STOMACH))
+					if (ImGui::Checkbox(XORSTR("Bicep"), &desiredBones[BONE_RIGHT_BICEP]))
 						UI::UpdateWeaponSettings();
-					if(ImGui::CheckboxFlags(XORSTR("Pelvis"), (unsigned int *)&desiredHitboxes, HitboxFlags::PELVIS))
+					if (ImGui::Checkbox(XORSTR("Elbow"), &desiredBones[BONE_RIGHT_ELBOW]))
 						UI::UpdateWeaponSettings();
-					if(ImGui::CheckboxFlags(XORSTR("Arms"), (unsigned int *)&desiredHitboxes, HitboxFlags::ARMS))
+					if (ImGui::Checkbox(XORSTR("Forearm"), &desiredBones[BONE_RIGHT_FOREARM]))
 						UI::UpdateWeaponSettings();
-					if(ImGui::CheckboxFlags(XORSTR("Hands"), (unsigned int *)&desiredHitboxes, HitboxFlags::HANDS))
+					if (ImGui::Checkbox(XORSTR("Wrist"), &desiredBones[BONE_RIGHT_WRIST]))
 						UI::UpdateWeaponSettings();
-					if(ImGui::CheckboxFlags(XORSTR("Legs"), (unsigned int *)&desiredHitboxes, HitboxFlags::LEGS))
+					ImGui::Text(XORSTR("Player's Right Leg"));
+					if (ImGui::Checkbox(XORSTR("Buttcheek"), &desiredBones[BONE_RIGHT_BUTTCHEEK]))
 						UI::UpdateWeaponSettings();
-					if(ImGui::CheckboxFlags(XORSTR("Feet"), (unsigned int *)&desiredHitboxes, HitboxFlags::FEET))
+					if (ImGui::Checkbox(XORSTR("Thigh"), &desiredBones[BONE_RIGHT_THIGH]))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Knee"), &desiredBones[BONE_RIGHT_KNEE]))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Ankle"), &desiredBones[BONE_RIGHT_ANKLE]))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Sole"), &desiredBones[BONE_RIGHT_SOLE]))
 						UI::UpdateWeaponSettings();
 				}
 				ImGui::NextColumn();
-				{			
-					if(ImGui::Checkbox(XORSTR("EngageLock"), &engageLock))
+				{
+					ImGui::Text(XORSTR("Center Mass"));
+					if (ImGui::Checkbox(XORSTR("Head"), &desiredBones[BONE_HEAD]))
 						UI::UpdateWeaponSettings();
-					if(engageLock)
-					{
-						if(ImGui::Checkbox(XORSTR("Target Reacquisition"), &engageLockTR))
-							UI::UpdateWeaponSettings();
-						if( engageLockTR )
-						{
-							if(ImGui::SliderInt(XORSTR("##TTR"), &engageLockTTR, 0, 1000))
-								UI::UpdateWeaponSettings();
-						}
-					}
-					if (ImGui::Checkbox(XORSTR("FriendlyFire"), &friendly))
+					if (ImGui::Checkbox(XORSTR("Neck"), &desiredBones[BONE_NECK]))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Upper Spine"), &desiredBones[BONE_UPPER_SPINAL_COLUMN]))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Middle Spine"), &desiredBones[BONE_MIDDLE_SPINAL_COLUMN]))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Lower Spine"), &desiredBones[BONE_LOWER_SPINAL_COLUMN]))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Pelvis"), &desiredBones[BONE_PELVIS]))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Hip"), &desiredBones[BONE_HIP]))
+						UI::UpdateWeaponSettings();
+				}
+				ImGui::NextColumn();
+				{ // these spaces are here in the strings because checkboxes can't have duplicate titles.
+					ImGui::Text(XORSTR("Player's Left Arm"));
+					if (ImGui::Checkbox(XORSTR("Collarbone "), &desiredBones[BONE_LEFT_COLLARBONE]))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Shoulder "), &desiredBones[BONE_LEFT_SHOULDER]))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Armpit "), &desiredBones[BONE_LEFT_ARMPIT]))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Bicep "), &desiredBones[BONE_LEFT_BICEP]))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Elbow "), &desiredBones[BONE_LEFT_ELBOW]))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Forearm "), &desiredBones[BONE_LEFT_FOREARM]))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Wrist "), &desiredBones[BONE_LEFT_WRIST]))
+						UI::UpdateWeaponSettings();
+
+					ImGui::Text(XORSTR("Player's Left Leg"));
+					if (ImGui::Checkbox(XORSTR("Buttcheek "), &desiredBones[BONE_LEFT_BUTTCHEEK]))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Thigh "), &desiredBones[BONE_LEFT_THIGH]))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Knee "), &desiredBones[BONE_LEFT_KNEE]))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Ankle "), &desiredBones[BONE_LEFT_ANKLE]))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Sole "), &desiredBones[BONE_LEFT_SOLE]))
 						UI::UpdateWeaponSettings();
 				}
 				ImGui::EndColumns();
 				ImGui::Separator();
 				ImGui::PopItemWidth();
+			}
+			ImGui::EndChild();
 		}
-		ImGui::EndChild();
-	}
-	ImGui::NextColumn();
-	{
+		ImGui::NextColumn();
+		{
 			ImGui::BeginChild(XORSTR("COL2"), ImVec2(0, 0), true);
 			{
 				ImGui::Text(XORSTR("Aimkey Only"));
@@ -406,23 +449,23 @@ void Legitbot::RenderTab()
 
 					switch (currentWeapon)
 					{
-						case ItemDefinitionIndex::INVALID:
-						case ItemDefinitionIndex::WEAPON_DEAGLE:
-						case ItemDefinitionIndex::WEAPON_ELITE:
-						case ItemDefinitionIndex::WEAPON_FIVESEVEN:
-						case ItemDefinitionIndex::WEAPON_GLOCK:
-						case ItemDefinitionIndex::WEAPON_TEC9:
-						case ItemDefinitionIndex::WEAPON_HKP2000:
-						case ItemDefinitionIndex::WEAPON_USP_SILENCER:
-						case ItemDefinitionIndex::WEAPON_P250:
-						case ItemDefinitionIndex::WEAPON_CZ75A:
-						case ItemDefinitionIndex::WEAPON_REVOLVER:
+					case ItemDefinitionIndex::INVALID:
+					case ItemDefinitionIndex::WEAPON_DEAGLE:
+					case ItemDefinitionIndex::WEAPON_ELITE:
+					case ItemDefinitionIndex::WEAPON_FIVESEVEN:
+					case ItemDefinitionIndex::WEAPON_GLOCK:
+					case ItemDefinitionIndex::WEAPON_TEC9:
+					case ItemDefinitionIndex::WEAPON_HKP2000:
+					case ItemDefinitionIndex::WEAPON_USP_SILENCER:
+					case ItemDefinitionIndex::WEAPON_P250:
+					case ItemDefinitionIndex::WEAPON_CZ75A:
+					case ItemDefinitionIndex::WEAPON_REVOLVER:
 						if (ImGui::Checkbox(XORSTR("Auto Pistol"), &autoPistolEnabled))
 							UI::UpdateWeaponSettings();
 						break;
 					default:
-							break;
-					}	
+						break;
+					}
 
 					if (ImGui::Checkbox(XORSTR("Silent Aim"), &silent))
 						UI::UpdateWeaponSettings();
@@ -435,23 +478,23 @@ void Legitbot::RenderTab()
 
 					switch (currentWeapon)
 					{
-						case ItemDefinitionIndex::WEAPON_DEAGLE:
-						case ItemDefinitionIndex::WEAPON_ELITE:
-						case ItemDefinitionIndex::WEAPON_FIVESEVEN:
-						case ItemDefinitionIndex::WEAPON_GLOCK:
-						case ItemDefinitionIndex::WEAPON_TEC9:
-						case ItemDefinitionIndex::WEAPON_HKP2000:
-						case ItemDefinitionIndex::WEAPON_USP_SILENCER:
-						case ItemDefinitionIndex::WEAPON_P250:
-						case ItemDefinitionIndex::WEAPON_CZ75A:
-						case ItemDefinitionIndex::WEAPON_REVOLVER:
-							break;
-						default:
-							if (ImGui::Checkbox(XORSTR("Auto Scope"), &autoScopeEnabled))
-								UI::UpdateWeaponSettings();
-							if (ImGui::Checkbox(XORSTR("Scope Control"), &scopeControlEnabled))
-								UI::UpdateWeaponSettings();
-					}	
+					case ItemDefinitionIndex::WEAPON_DEAGLE:
+					case ItemDefinitionIndex::WEAPON_ELITE:
+					case ItemDefinitionIndex::WEAPON_FIVESEVEN:
+					case ItemDefinitionIndex::WEAPON_GLOCK:
+					case ItemDefinitionIndex::WEAPON_TEC9:
+					case ItemDefinitionIndex::WEAPON_HKP2000:
+					case ItemDefinitionIndex::WEAPON_USP_SILENCER:
+					case ItemDefinitionIndex::WEAPON_P250:
+					case ItemDefinitionIndex::WEAPON_CZ75A:
+					case ItemDefinitionIndex::WEAPON_REVOLVER:
+						break;
+					default:
+						if (ImGui::Checkbox(XORSTR("Auto Scope"), &autoScopeEnabled))
+							UI::UpdateWeaponSettings();
+						if (ImGui::Checkbox(XORSTR("Scope Control"), &scopeControlEnabled))
+							UI::UpdateWeaponSettings();
+					}
 
 					if (ImGui::Checkbox(XORSTR("Flash Check"), &flashCheck))
 						UI::UpdateWeaponSettings();
@@ -462,22 +505,43 @@ void Legitbot::RenderTab()
 				}
 				ImGui::Columns(1);
 				ImGui::Separator();
+				ImGui::Text(XORSTR("Misc"));
+				ImGui::Separator();
+				ImGui::Columns(1);
+				{
+					if (ImGui::Checkbox(XORSTR("EngageLock"), &engageLock))
+						UI::UpdateWeaponSettings();
+					if (engageLock)
+					{
+						if (ImGui::Checkbox(XORSTR("Target Reacquisition"), &engageLockTR))
+							UI::UpdateWeaponSettings();
+						if (engageLockTR)
+						{
+							if (ImGui::SliderInt(XORSTR("##TTR"), &engageLockTTR, 0, 1000))
+								UI::UpdateWeaponSettings();
+						}
+					}
+					if (ImGui::Checkbox(XORSTR("FriendlyFire"), &friendly))
+						UI::UpdateWeaponSettings();
+				}
+				ImGui::Columns(1);
+				ImGui::Separator();
 				ImGui::Text(XORSTR("Semirage Options"));
 				ImGui::Separator();
 				if (ImGui::Checkbox(XORSTR("Auto Shoot"), &autoShootEnabled))
 					UI::UpdateWeaponSettings();
 				ImGui::Checkbox(XORSTR("Velocity Check"), &Settings::Legitbot::AutoShoot::velocityCheck);
-				if( ImGui::Checkbox(XORSTR("Spread Limit"), &spreadLimitEnabled) )
+				if (ImGui::Checkbox(XORSTR("Spread Limit"), &spreadLimitEnabled))
 					UI::UpdateWeaponSettings();
-				if( ImGui::SliderFloat(XORSTR("##SPREADLIMIT"), &spreadLimit, 0, 0.1) )
-					UI::UpdateWeaponSettings();			
+				if (ImGui::SliderFloat(XORSTR("##SPREADLIMIT"), &spreadLimit, 0, 0.1))
+					UI::UpdateWeaponSettings();
 				ImGui::Columns(1);
 				ImGui::Separator();
 				ImGui::Text(XORSTR("Autowall"));
-				ImGui::Separator(); 
+				ImGui::Separator();
 				ImGui::Columns(1);
 				{
-						
+
 					if (ImGui::Checkbox(XORSTR("Autowall"), &autoWallEnabled))
 						UI::UpdateWeaponSettings();
 				}
@@ -492,7 +556,7 @@ void Legitbot::RenderTab()
 				ImGui::Separator();
 				ImGui::Text(XORSTR("AutoSlow"));
 				ImGui::Separator();
-				if (ImGui::Checkbox(XORSTR("Enabled##AUTOSLOW"), &autoSlow))	
+				if (ImGui::Checkbox(XORSTR("Enabled##AUTOSLOW"), &autoSlow))
 					UI::UpdateWeaponSettings();
 				ImGui::Columns(1);
 				ImGui::Separator();
@@ -506,8 +570,6 @@ void Legitbot::RenderTab()
 				}
 			}
 			ImGui::EndChild();
-		
-
 		}
 		ImGui::EndColumns();
 	}

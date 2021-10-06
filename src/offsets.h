@@ -11,7 +11,7 @@ struct COffsets
 		std::ptrdiff_t m_viewPunchAngle;
 		std::ptrdiff_t m_vecViewOffset;
 		std::ptrdiff_t m_nTickBase;
-                std::ptrdiff_t m_nTickBaseShift;
+		std::ptrdiff_t m_nTickBaseShift;
 		std::ptrdiff_t m_vecVelocity;
 		std::ptrdiff_t m_iHealth;
 		std::ptrdiff_t m_lifeState;
@@ -34,7 +34,7 @@ struct COffsets
 		std::ptrdiff_t m_MoveType;
 		std::ptrdiff_t m_Collision;
 		std::ptrdiff_t m_bSpotted;
-	 	std::ptrdiff_t m_bSpottedByMask;
+		std::ptrdiff_t m_bSpottedByMask;
 	} DT_BaseEntity;
 
 	struct
@@ -114,8 +114,8 @@ struct COffsets
 		std::ptrdiff_t m_bHasDefuser;
 		std::ptrdiff_t m_bIsDefusing;
 		std::ptrdiff_t m_bIsGrabbingHostage;
-                std::ptrdiff_t m_vecMaxs;
-                std::ptrdiff_t m_vecMins;
+		std::ptrdiff_t m_vecMaxs;
+		std::ptrdiff_t m_vecMins;
 		std::ptrdiff_t m_bIsScoped;
 		std::ptrdiff_t m_bGunGameImmunity;
 		std::ptrdiff_t m_bIsRescuing;
@@ -151,7 +151,7 @@ struct COffsets
 	{
 		std::ptrdiff_t m_bReloadVisuallyComplete;
 		std::ptrdiff_t m_fAccuracyPenalty;
-        std::ptrdiff_t m_flPostponeFireReadyTime;
+		std::ptrdiff_t m_flPostponeFireReadyTime;
 	} DT_WeaponCSBase;
 
 	struct
@@ -285,20 +285,6 @@ struct COffsets
 		std::ptrdiff_t m_iHealth;
 		std::ptrdiff_t m_iMaxHealth;
 	} DT_PhysPropLootCrate;
-
-	struct
-	{
-		std::ptrdiff_t m_nSequence;
-		std::ptrdiff_t m_bClientSideAnimation;
-		std::ptrdiff_t m_nSkin;
-		std::ptrdiff_t m_nBody;
-		std::ptrdiff_t m_flPoseParameter;
-		std::ptrdiff_t m_nForceBone;
-		std::ptrdiff_t m_nHitboxSet;
-		std::ptrdiff_t m_nMuzzleFlashParity;
-		std::ptrdiff_t m_hLightingOrigin;
-		std::ptrdiff_t m_bClientSideFrameReset;
-	} DT_BaseAnimating;
 };
 
 namespace Offsets
@@ -306,7 +292,7 @@ namespace Offsets
 	void GetNetVarOffsets();
 
 	extern unsigned int playerAnimStateOffset;
-    extern unsigned int playerAnimOverlayOffset;
+	extern unsigned int playerAnimOverlayOffset;
 }
 
 extern COffsets offsets;

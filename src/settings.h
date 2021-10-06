@@ -13,17 +13,20 @@
 #include "SDK/definitions.h"
 #include "SDK/Materialsystem_config.h"
 
-enum class DamagePrediction : int {
+enum class DamagePrediction : int
+{
 	justDamage = 0,
 	damage,
 };
 
-enum class EnemySelectionType : int {
+enum class EnemySelectionType : int
+{
 	BestDamage = 0,
 	CLosestToCrosshair,
 };
 
-enum class DesireBones : int {
+enum class DesireBones : int
+{
 	BONE_HEAD = 0,
 	UPPER_CHEST,
 	MIDDLE_CHEST,
@@ -32,10 +35,11 @@ enum class DesireBones : int {
 	LOWER_BODY,
 };
 
-enum class DrawingBackend : int {
-    SURFACE = 0,
-    IMGUI,
-    NUMBER_OF_TYPES,
+enum class DrawingBackend : int
+{
+	SURFACE = 0,
+	IMGUI,
+	NUMBER_OF_TYPES,
 };
 
 enum class SmoothType : int
@@ -47,8 +51,8 @@ enum class SmoothType : int
 
 enum class SlowMode : int
 {
-     SAFETY,
-     ACCURATE,
+	SAFETY,
+	ACCURATE,
 };
 
 enum class TracerType : int
@@ -68,8 +72,8 @@ enum class ClanTagType : int
 
 enum class AAState : int
 {
-     STAND,
-     AIR,
+	STAND,
+	AIR,
 	MOVE,
 	SLOLWWALK,
 	FAKEDUCK,
@@ -78,16 +82,16 @@ enum class AAState : int
 
 enum class impactType : int
 {
-     ITSME,
-     PRITAM,
+	ITSME,
+	PRITAM,
 };
 
 enum class MusicType : int
 {
-     CSGO,
-     CSGO2,
-     CRIMSON_ASSAULT,
-     SHARPENED,
+	CSGO,
+	CSGO2,
+	CRIMSON_ASSAULT,
+	SHARPENED,
 	INSURGENCY,
 	ADB,
 	HIGH_MOON,
@@ -145,7 +149,7 @@ enum class ChamsType : int
 	GLOW,
 	GLOWF,
 	PULSE,
-     ANIMATED,
+	ANIMATED,
 	NONE,
 };
 
@@ -172,16 +176,17 @@ enum class SpriteType : int
 };
 enum class AntiAimType_X : int
 {
-    STATIC_UP,
-    STATIC_DOWN,
-    FRONT,
-    EMOTION,
-    FRONT_FAKE,
-    DOWN_FAKE,
-    UP_FAKE,
-    FAKE_JITTER,
+	STATIC_UP,
+	STATIC_DOWN,
+	FRONT,
+	EMOTION,
+	FRONT_FAKE,
+	DOWN_FAKE,
+	UP_FAKE,
+	FAKE_JITTER,
 };
-enum class Sound : int {
+enum class Sound : int
+{
 
 	NONE,
 	SPONGEBOB,
@@ -236,9 +241,9 @@ enum class AimTargetType : int
 
 enum class DtSpeed : int
 {
-     INSTANT,
-     FAST,
-     ACCURATE,
+	INSTANT,
+	FAST,
+	ACCURATE,
 };
 
 enum class SpammerType : int
@@ -250,9 +255,9 @@ enum class SpammerType : int
 
 enum class resolverType : int
 {
-     NONE,
-     Experimental,
-     ApuWare,
+	NONE,
+	Experimental,
+	ApuWare,
 	Legit,
 	Rage,
 };
@@ -270,24 +275,24 @@ enum class AntiAimRealType_Y : int
 
 enum class MainWep : int
 {
-     NONE,
-     AUTO,
-     AWP,
-     SCOUT,
+	NONE,
+	AUTO,
+	AWP,
+	SCOUT,
 };
 
 enum class SecWep : int
 {
-        NONE,
-        DUAL,
-        DEAGLE,
+	NONE,
+	DUAL,
+	DEAGLE,
 };
 
 enum class AltWep : int
 {
-        GRENADES,
-        ARMOR,
-        TASER,
+	GRENADES,
+	ARMOR,
+	TASER,
 	DEFUSER,
 };
 
@@ -321,7 +326,7 @@ enum class RageAntiAimType : int
 
 enum class LegitAAType : int
 {
-    OverWatchProof,
+	OverWatchProof,
 	FakeLegitAA,
 	Experimental,
 };
@@ -335,38 +340,37 @@ enum class SkinAndModel : int
 struct LegitWeapon_t
 {
 	bool silent,
-	friendly,
-	closestHitbox,
-	engageLock,
-	engageLockTR,
-	aimkeyOnly,
-	smoothEnabled,
-	courseRandomizationEnabled,
-	doAimAfterXShotsEnabled,
-	smoothSaltEnabled,
-	errorMarginEnabled,
-	autoAimEnabled,
-	aimStepEnabled,
-	rcsEnabled,
-	rcsAlwaysOn,
-	spreadLimitEnabled,
-	hitchanceEnaled,
-	autoPistolEnabled,
-	autoShootEnabled,
-	autoScopeEnabled,
-	noShootEnabled,
-	ignoreJumpEnabled,
-	ignoreEnemyJumpEnabled,
-	smokeCheck,
-	flashCheck,
-	autoWallEnabled,
-	autoAimRealDistance,
-	autoSlow,
-	predEnabled,
-	scopeControlEnabled,
-	TriggerBot,
-	mindamage,
-	autoWall;
+	    friendly,
+	    engageLock,
+	    engageLockTR,
+	    aimkeyOnly,
+	    smoothEnabled,
+	    courseRandomizationEnabled,
+	    doAimAfterXShotsEnabled,
+	    smoothSaltEnabled,
+	    errorMarginEnabled,
+	    autoAimEnabled,
+	    aimStepEnabled,
+	    rcsEnabled,
+	    rcsAlwaysOn,
+	    spreadLimitEnabled,
+	    hitchanceEnaled,
+	    autoPistolEnabled,
+	    autoShootEnabled,
+	    autoScopeEnabled,
+	    noShootEnabled,
+	    ignoreJumpEnabled,
+	    ignoreEnemyJumpEnabled,
+	    smokeCheck,
+	    flashCheck,
+	    autoWallEnabled,
+	    autoAimRealDistance,
+	    autoSlow,
+	    predEnabled,
+	    scopeControlEnabled,
+	    TriggerBot,
+	    mindamage,
+	    autoWall;
 
 	int engageLockTTR = 700;
 	Bone bone = BONE_HEAD;
@@ -374,127 +378,140 @@ struct LegitWeapon_t
 	ButtonCode_t aimkey = ButtonCode_t ::MOUSE_MIDDLE;
 	float smoothAmount = 1.0f;
 	float courseRandomizationAmount = 2.0f,
-    	doAimAfterXShotsAmount = 0.0f,
-	smoothSaltMultiplier = 0.0f,
-	errorMarginValue = 0.0f,
-	LegitautoAimFov = 15.0f,
-	aimStepMin = 25.0f,
-	aimStepMax = 35.0f,
-	rcsAmountX = 2.0f,
-	rcsAmountY = 2.0f,
- 	autoWallValue = 10.0f,
-	spreadLimit = 1.0f,
-	minDamagevalue = 10.0f,
-	hitchance = 20;
-	HitboxFlags desiredHitboxes;
-
-	bool operator == (const LegitWeapon_t& another) const
+		 doAimAfterXShotsAmount = 0.0f,
+		 smoothSaltMultiplier = 0.0f,
+		 errorMarginValue = 0.0f,
+		 LegitautoAimFov = 15.0f,
+		 aimStepMin = 25.0f,
+		 aimStepMax = 35.0f,
+		 rcsAmountX = 2.0f,
+		 rcsAmountY = 2.0f,
+		 autoWallValue = 10.0f,
+		 spreadLimit = 1.0f,
+		 minDamagevalue = 10.0f,
+		 hitchance = 20;
+	bool desiredBones[31];
+	bool operator==(const LegitWeapon_t &another) const
 	{
-			if(this->desiredHitboxes != another.desiredHitboxes)
+		for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
+		{
+			if (this->desiredBones[bone] != another.desiredBones[bone])
 				return false;
-
-			return this->silent == another.silent &&
-			this->friendly == another.friendly &&
-			this->closestHitbox == another.closestHitbox &&
-			this->engageLock == another.engageLock &&
-			this->engageLockTR == another.engageLockTR &&
-			this->engageLockTTR == another.engageLockTTR &&
-			this->autoShootEnabled == another.autoShootEnabled &&
-			this->bone == another.bone &&
-			this->aimkey == another.aimkey &&
-			this->aimkeyOnly == another.aimkeyOnly &&
-			this->smoothEnabled == another.smoothEnabled &&
-			this->smoothAmount == another.smoothAmount &&
-			this->courseRandomizationEnabled == another.courseRandomizationEnabled &&
-            	this->courseRandomizationAmount == another.courseRandomizationAmount &&
-          	this->doAimAfterXShotsEnabled == another.doAimAfterXShotsEnabled &&
-        	     this->doAimAfterXShotsAmount == another.doAimAfterXShotsAmount &&
-        	     this->smoothType == another.smoothType &&
-			this->smoothType == another.smoothType &&
-			this->smoothSaltEnabled == another.smoothSaltEnabled &&
-			this->smoothSaltMultiplier == another.smoothSaltMultiplier &&
-			this->errorMarginEnabled == another.errorMarginEnabled &&
-			this->errorMarginValue == another.errorMarginValue &&
-			this->autoAimEnabled == another.autoAimEnabled &&
-			this->LegitautoAimFov == another.LegitautoAimFov &&
-			this->aimStepEnabled == another.aimStepEnabled &&
-			this->aimStepMin == another.aimStepMin &&
-			this->aimStepMax == another.aimStepMax &&
-			this->rcsEnabled == another.rcsEnabled &&
-			this->rcsAlwaysOn == another.rcsAlwaysOn &&
-			this->rcsAmountX == another.rcsAmountX &&
-			this->rcsAmountY == another.rcsAmountY &&
-			this->autoPistolEnabled == another.autoPistolEnabled &&
-			this->autoScopeEnabled == another.autoScopeEnabled &&
-			this->noShootEnabled == another.noShootEnabled &&
-			this->ignoreJumpEnabled == another.ignoreJumpEnabled &&
-			this->ignoreEnemyJumpEnabled == another.ignoreEnemyJumpEnabled &&
-			this->smokeCheck == another.smokeCheck &&
-			this->flashCheck == another.flashCheck &&
-			this->spreadLimitEnabled == another.spreadLimitEnabled &&
-			this->spreadLimit == another.spreadLimit &&
-			this->autoWallEnabled == another.autoWallEnabled &&
-			this->autoWallValue == another.autoWallValue &&
-			this->hitchanceEnaled == another.hitchanceEnaled &&
-			this->hitchance == another.hitchance &&
-			this->autoSlow == another.autoSlow &&
-			this->predEnabled == another.predEnabled &&
-			this->autoAimRealDistance == another.autoAimRealDistance &&
-			this->TriggerBot == another.TriggerBot &&
-			this->mindamage == another.mindamage &&
-			this->autoWall == another.autoWall &&
-			this->scopeControlEnabled == another.scopeControlEnabled;
+		}
+		return this->silent == another.silent &&
+			  this->friendly == another.friendly &&
+			  this->engageLock == another.engageLock &&
+			  this->engageLockTR == another.engageLockTR &&
+			  this->engageLockTTR == another.engageLockTTR &&
+			  this->autoShootEnabled == another.autoShootEnabled &&
+			  this->bone == another.bone &&
+			  this->aimkey == another.aimkey &&
+			  this->aimkeyOnly == another.aimkeyOnly &&
+			  this->smoothEnabled == another.smoothEnabled &&
+			  this->smoothAmount == another.smoothAmount &&
+			  this->courseRandomizationEnabled == another.courseRandomizationEnabled &&
+			  this->courseRandomizationAmount == another.courseRandomizationAmount &&
+			  this->doAimAfterXShotsEnabled == another.doAimAfterXShotsEnabled &&
+			  this->doAimAfterXShotsAmount == another.doAimAfterXShotsAmount &&
+			  this->smoothType == another.smoothType &&
+			  this->smoothType == another.smoothType &&
+			  this->smoothSaltEnabled == another.smoothSaltEnabled &&
+			  this->smoothSaltMultiplier == another.smoothSaltMultiplier &&
+			  this->errorMarginEnabled == another.errorMarginEnabled &&
+			  this->errorMarginValue == another.errorMarginValue &&
+			  this->autoAimEnabled == another.autoAimEnabled &&
+			  this->LegitautoAimFov == another.LegitautoAimFov &&
+			  this->aimStepEnabled == another.aimStepEnabled &&
+			  this->aimStepMin == another.aimStepMin &&
+			  this->aimStepMax == another.aimStepMax &&
+			  this->rcsEnabled == another.rcsEnabled &&
+			  this->rcsAlwaysOn == another.rcsAlwaysOn &&
+			  this->rcsAmountX == another.rcsAmountX &&
+			  this->rcsAmountY == another.rcsAmountY &&
+			  this->autoPistolEnabled == another.autoPistolEnabled &&
+			  this->autoScopeEnabled == another.autoScopeEnabled &&
+			  this->noShootEnabled == another.noShootEnabled &&
+			  this->ignoreJumpEnabled == another.ignoreJumpEnabled &&
+			  this->ignoreEnemyJumpEnabled == another.ignoreEnemyJumpEnabled &&
+			  this->smokeCheck == another.smokeCheck &&
+			  this->flashCheck == another.flashCheck &&
+			  this->spreadLimitEnabled == another.spreadLimitEnabled &&
+			  this->spreadLimit == another.spreadLimit &&
+			  this->autoWallEnabled == another.autoWallEnabled &&
+			  this->autoWallValue == another.autoWallValue &&
+			  this->hitchanceEnaled == another.hitchanceEnaled &&
+			  this->hitchance == another.hitchance &&
+			  this->autoSlow == another.autoSlow &&
+			  this->predEnabled == another.predEnabled &&
+			  this->autoAimRealDistance == another.autoAimRealDistance &&
+			  this->TriggerBot == another.TriggerBot &&
+			  this->mindamage == another.mindamage &&
+			  this->autoWall == another.autoWall &&
+			  this->scopeControlEnabled == another.scopeControlEnabled;
 	}
 } const defaultSettings{};
 
 struct RageWeapon_t
 {
 	bool silent,
-		friendly,
-		closestBone,
-		HitChanceEnabled,
-		autoPistolEnabled,
-		autoShootEnabled,
-		autoScopeEnabled,
-		autoSlow,
-		scopeControlEnabled,
-		DoubleFire;
+	    friendly,
+	    closestBone,
+	    HitChanceEnabled,
+	    autoPistolEnabled,
+	    autoShootEnabled,
+	    autoScopeEnabled,
+	    autoSlow,
+	    scopeControlEnabled,
+	    DoubleFire,
+	    BacktrackEnabled,
+	    OnshotEnabled;
+
 	float MinDamage = 50.f,
-		 HitChance = 20.f;
+		 HitChance = 20.f,
+		 BodyScale = 0.1f,
+		 HeadScale = 0.1f,
+		 BacktrackValue = 0.2f;
+
+	ButtonCode_t onshotkey = ButtonCode_t ::KEY_3;
+	ButtonCode_t mindmgoveridekey = ButtonCode_t ::KEY_5;
+
 	DamagePrediction DmagePredictionType = DamagePrediction::damage;
 	EnemySelectionType enemySelectionType = EnemySelectionType::CLosestToCrosshair;
 	bool desireBones[6];
 	bool desiredMultiBones[6];
-	
 
-	bool operator == (const RageWeapon_t& Ragebotanother) const
+	bool operator==(const RageWeapon_t &Ragebotanother) const
 	{
 		for (int bone = 0; bone < 6; bone++) // static bones
 		{
-			if( this->desireBones[bone] != Ragebotanother.desireBones[bone] )
+			if (this->desireBones[bone] != Ragebotanother.desireBones[bone])
 				return false;
-			if( this->desiredMultiBones[bone] != Ragebotanother.desiredMultiBones[bone] )
+			if (this->desiredMultiBones[bone] != Ragebotanother.desiredMultiBones[bone])
 				return false;
 		}
-	return this->silent == Ragebotanother.silent &&
-		  this->friendly == Ragebotanother.friendly &&
-		  this->closestBone == Ragebotanother.closestBone &&
-		  this->autoPistolEnabled == Ragebotanother.autoPistolEnabled &&
-		  this->autoShootEnabled == Ragebotanother.autoShootEnabled &&
-		  this->autoScopeEnabled == Ragebotanother.autoScopeEnabled &&
-		  this->HitChanceEnabled == Ragebotanother.HitChanceEnabled &&
-		  this->MinDamage == Ragebotanother.MinDamage &&
-		  this->autoSlow == Ragebotanother.autoSlow &&
-		  this->scopeControlEnabled == Ragebotanother.scopeControlEnabled && 
-		  this->HitChance == Ragebotanother.HitChance && 
-		  this->DmagePredictionType == Ragebotanother.DmagePredictionType && 
-	       this->enemySelectionType == Ragebotanother.enemySelectionType && 
-		  this->DoubleFire == Ragebotanother.DoubleFire;
+		return this->silent == Ragebotanother.silent &&
+			  this->friendly == Ragebotanother.friendly &&
+			  this->closestBone == Ragebotanother.closestBone &&
+			  this->autoPistolEnabled == Ragebotanother.autoPistolEnabled &&
+			  this->autoShootEnabled == Ragebotanother.autoShootEnabled &&
+			  this->autoScopeEnabled == Ragebotanother.autoScopeEnabled &&
+			  this->HitChanceEnabled == Ragebotanother.HitChanceEnabled &&
+			  this->MinDamage == Ragebotanother.MinDamage &&
+			  this->autoSlow == Ragebotanother.autoSlow &&
+			  this->scopeControlEnabled == Ragebotanother.scopeControlEnabled &&
+			  this->HitChance == Ragebotanother.HitChance &&
+			  this->DmagePredictionType == Ragebotanother.DmagePredictionType &&
+			  this->enemySelectionType == Ragebotanother.enemySelectionType &&
+			  this->BodyScale == Ragebotanother.BodyScale &&
+			  this->HeadScale == Ragebotanother.HeadScale &&
+			  this->BacktrackEnabled == Ragebotanother.BacktrackEnabled &&
+			  this->BacktrackValue == Ragebotanother.BacktrackValue &&
+			  this->mindmgoveridekey == Ragebotanother.mindmgoveridekey &&
+			  this->onshotkey == Ragebotanother.onshotkey &&
+			  this->DoubleFire == Ragebotanother.DoubleFire;
 	}
 
 } const ragedefault{};
-
-
 
 class ColorVar
 {
@@ -540,7 +557,7 @@ public:
 		this->hp = false;
 	}
 
-	ImColor Color(C_BasePlayer* player)
+	ImColor Color(C_BasePlayer *player)
 	{
 		ImColor result = this->rainbow ? Util::GetRainbowColor(this->rainbowSpeed) : (this->hp ? Color::ToImColor(Util::GetHealthColor(player)) : this->color);
 		result.Value.w = this->color.Value.w;
@@ -553,15 +570,15 @@ namespace Settings
 	namespace UI
 	{
 		inline bool particles;
-		inline ColorVar mainColor = ImColor(42, 45, 42, 255 );
-		inline ColorVar bodyColor = ImColor( 0, 0, 0, 245 );
-		inline ColorVar fontColor = ImColor( 238, 224, 224, 154 );
-		inline ColorVar accentColor = ImColor( 0, 171, 178, 255 );
+		inline ColorVar mainColor = ImColor(42, 45, 42, 255);
+		inline ColorVar bodyColor = ImColor(0, 0, 0, 245);
+		inline ColorVar fontColor = ImColor(238, 224, 224, 154);
+		inline ColorVar accentColor = ImColor(0, 171, 178, 255);
 		inline bool imGuiAliasedLines = false;
 		inline bool imGuiAliasedFill = true;
 		inline int playertype;
-        /* Window Position/Size Defaults */
-        namespace Windows
+		/* Window Position/Size Defaults */
+		namespace Windows
 		{
 			namespace Colors
 			{
@@ -570,7 +587,7 @@ namespace Settings
 				inline int sizeX = 540;
 				inline int sizeY = 360;
 				inline bool open = false;
-				inline bool reload = false ; // True on config load, used to change Window Properties.
+				inline bool reload = false; // True on config load, used to change Window Properties.
 			}
 			namespace Config
 			{
@@ -609,13 +626,13 @@ namespace Settings
 				inline bool reload = false; // True on config load, used to change Window Position.
 			}
 			namespace Kills
-               {
-                    inline int posX = 50;
-                    inline int posY = 100;
-                    inline int sizeX = 50;
-                    inline int sizeY = 100;
-                    inline bool reload = false; // True on config load, used to change Window Position.
-               }
+			{
+				inline int posX = 50;
+				inline int posY = 100;
+				inline int sizeX = 50;
+				inline int sizeY = 100;
+				inline bool reload = false; // True on config load, used to change Window Position.
+			}
 
 			namespace Spectators
 			{
@@ -630,45 +647,45 @@ namespace Settings
 		{
 			namespace ESP
 			{
-				inline char* family = (char*)"Verdana";
+				inline char *family = (char *)"Verdana";
 				inline int size = 12;
 				inline int flags = (int)FontFlags::FONTFLAG_OUTLINE;
 			}
 		}
 	}
-    /* Default LegitBot Settings */
+	/* Default LegitBot Settings */
 	namespace Legitbot
 	{
 		inline bool enabled = false;
-          inline bool silent = false;
-          inline bool friendly = false;
+		inline bool silent = false;
+		inline bool friendly = false;
 		inline float minDamage = 10.f;
-          inline Bone bone = BONE_HEAD;
-          inline ButtonCode_t aimkey = ButtonCode_t::MOUSE_MIDDLE;
-          inline bool aimkeyOnly = false;
+		inline Bone bone = BONE_HEAD;
+		inline ButtonCode_t aimkey = ButtonCode_t::MOUSE_MIDDLE;
+		inline bool aimkeyOnly = false;
 
 		namespace Smooth
 		{
 			inline bool enabled = false;
-          	inline float value = 0.5f;
-          	inline SmoothType type = SmoothType::SLOW_END;
+			inline float value = 0.5f;
+			inline SmoothType type = SmoothType::SLOW_END;
 
-		namespace Salting
-		{
-			inline bool enabled = false;
-               inline float multiplier = 0.0f;
-		}
+			namespace Salting
+			{
+				inline bool enabled = false;
+				inline float multiplier = 0.0f;
+			}
 		}
 		namespace CourseRandomization
 		{
-		    inline bool enabled = false;
-		    inline float value = 2.0f;
+			inline bool enabled = false;
+			inline float value = 2.0f;
 		}
-      	namespace DoAimAfterXShots
-          {
-              inline bool enabled = false;
-              inline float value = 0.0f;
-          }
+		namespace DoAimAfterXShots
+		{
+			inline bool enabled = false;
+			inline float value = 0.0f;
+		}
 
 		namespace ErrorMargin
 		{
@@ -679,15 +696,20 @@ namespace Settings
 		namespace AutoAim
 		{
 			inline bool enabled = false;
-          	inline float fov = 15.f;
-          	inline bool realDistance = false;
-          	inline bool closestBone = false;
-			inline bool closestHitbox = false;
-           	inline HitboxFlags desiredHitboxes = HitboxFlags::HEAD;
-			
-          	inline bool engageLock = false;
-          	inline bool engageLockTR = false; // Target Reacquisition ( re-target after getting a kill when spraying ).
-          	inline int engageLockTTR = 700; // Time to Target Reacquisition in ms
+			inline float fov = 15.f;
+			inline bool realDistance = false;
+			inline bool closestBone = false;
+			inline bool desiredBones[] = {
+			    true, true, true, true, true, true, true,	   // center mass
+			    false, false, false, false, false, false, false, // left arm
+			    false, false, false, false, false, false, false, // right arm
+			    false, false, false, false, false,			   // left leg
+			    false, false, false, false, false			   // right leg
+			};
+
+			inline bool engageLock = false;
+			inline bool engageLockTR = false; // Target Reacquisition ( re-target after getting a kill when spraying ).
+			inline int engageLockTTR = 700;   // Time to Target Reacquisition in ms
 		}
 
 		namespace ShootAssist
@@ -697,9 +719,9 @@ namespace Settings
 			namespace ShotDelay
 			{
 				inline float Value = 100.f;
-			}	
+			}
 			namespace MinShotFire
-			
+
 			{
 				inline int value = 6;
 			} // namespace MinShotFire
@@ -793,28 +815,28 @@ namespace Settings
 		}
 
 		inline std::unordered_map<ItemDefinitionIndex, LegitWeapon_t, Util::IntHash<ItemDefinitionIndex>> weapons = {
-                { ItemDefinitionIndex::INVALID, defaultSettings },
-          };
+		    {ItemDefinitionIndex::INVALID, defaultSettings},
+		};
 	}
-		
+
 	namespace ProfileChanger
-     {
-          extern int coinID;
-          extern int musicID;
-          extern int compRank;
-          extern int weaponStatus;
-          extern int weaponRarity;
+	{
+		extern int coinID;
+		extern int musicID;
+		extern int compRank;
+		extern int weaponStatus;
+		extern int weaponRarity;
 		extern int music;
 		extern int rank;
 		extern int coin;
-          extern bool enabled;
+		extern bool enabled;
 		inline MusicType type = MusicType::CSGO;
-     	}
+	}
 
 	namespace Ragebot
 	{
 		inline float HeadScale;
-          inline float BodyScale;
+		inline float BodyScale;
 
 		namespace onshot
 		{
@@ -827,26 +849,26 @@ namespace Settings
 
 		namespace exploits
 		{
-               inline ButtonCode_t doubletapKey;
-               inline bool doubletapToggle;
-               inline bool enabled;
-		     inline bool doubletap;
- 	     	inline DtSpeed doubletapSpeed = DtSpeed::INSTANT;
+			inline ButtonCode_t doubletapKey;
+			inline bool doubletapToggle;
+			inline bool enabled;
+			inline bool doubletap;
+			inline DtSpeed doubletapSpeed = DtSpeed::INSTANT;
 		}
 
 		inline float test;
 
 		namespace quickpeek
 		{
-         		inline ButtonCode_t key;
+			inline ButtonCode_t key;
 			inline bool enabled;
-		     inline ColorVar color = ImColor(255, 255, 255, 190 );
+			inline ColorVar color = ImColor(255, 255, 255, 190);
 		}
 		inline bool DoubleTap;
 		inline float MinDamage = 50.f;
 		inline bool enabled = false;
-        	inline bool silent = false;
-        	inline bool friendly = false;
+		inline bool silent = false;
+		inline bool friendly = false;
 		inline bool DoubleFire = false;
 
 		inline DamagePrediction damagePrediction = DamagePrediction::damage;
@@ -881,7 +903,7 @@ namespace Settings
 			inline float value = 20.f;
 		}
 
-		namespace HitChanceOverwrride 
+		namespace HitChanceOverwrride
 		{
 			inline bool enable = false;
 			inline float value = 1.0f;
@@ -905,11 +927,9 @@ namespace Settings
 		}
 
 		inline std::unordered_map<ItemDefinitionIndex, RageWeapon_t, Util::IntHash<ItemDefinitionIndex>> weapons = {
-                { ItemDefinitionIndex::INVALID, ragedefault },
-        };
+		    {ItemDefinitionIndex::INVALID, ragedefault},
+		};
 	}
-
-
 
 	namespace Triggerbot
 	{
@@ -938,39 +958,39 @@ namespace Settings
 		namespace RandomDelay
 		{
 			inline bool enabled = false;
-			inline int lowBound = 20; // in ms
-			inline int highBound = 35;// in ms
+			inline int lowBound = 20;  // in ms
+			inline int highBound = 35; // in ms
 			inline int lastRoll = 0;
 		}
 	}
-    namespace SilentWalk
-    {
+	namespace SilentWalk
+	{
 
 		inline bool enabled;
 		inline ButtonCode_t key = ButtonCode_t::KEY_Z;
-    }
+	}
 
-    namespace AnimMemes
-    {
+	namespace AnimMemes
+	{
 		inline bool enabled;
-    }
+	}
 
-    namespace AntiAim
-    {
+	namespace AntiAim
+	{
 		inline bool arms;
 		inline bool aaoff;
 		inline float offsat;
 		inline bool AutoInvert;
 		inline bool ChokeOnShot;
 		inline float realoffset;
-     	inline AntiAimType_X pitchtype = AntiAimType_X::STATIC_DOWN;
+		inline AntiAimType_X pitchtype = AntiAimType_X::STATIC_DOWN;
 		inline bool lbyjitter;
 
 		namespace airspin
 		{
 			inline bool enabled;
 		}
-		namespace SlowWalk 
+		namespace SlowWalk
 		{
 			inline SlowMode mode = SlowMode::ACCURATE;
 			inline float Speed;
@@ -981,26 +1001,26 @@ namespace Settings
 		{
 			inline AntiAimType antiaimType = AntiAimType::LegitAntiAim;
 		}
- 	     namespace AutoDisable
-          {
-          	inline bool noEnemy = false;
-          	inline bool knifeHeld = false;
-          }
-          namespace RageAntiAim
-          {
-	          inline bool head;
-               inline ButtonCode_t fakeheadkey;
-	          inline bool fakepeek;
+		namespace AutoDisable
+		{
+			inline bool noEnemy = false;
+			inline bool knifeHeld = false;
+		}
+		namespace RageAntiAim
+		{
+			inline bool head;
+			inline ButtonCode_t fakeheadkey;
+			inline bool fakepeek;
 
 			namespace customaa
 			{
-	     		inline AAState aastate = AAState::STAND;
-	 		     inline bool enabled;
-	  		     inline bool randang;
-	     		inline bool sidemove;
-	   		     inline int baseAngle;
-	     		inline int standang;
-	     		inline int airang;
+				inline AAState aastate = AAState::STAND;
+				inline bool enabled;
+				inline bool randang;
+				inline bool sidemove;
+				inline int baseAngle;
+				inline int standang;
+				inline int airang;
 				inline int moveang;
 				inline int slowang;
 				inline int duckang;
@@ -1009,15 +1029,15 @@ namespace Settings
 
 			namespace legitkey
 			{
-	    			inline bool enabled;
-            		inline ButtonCode_t key;
+				inline bool enabled;
+				inline ButtonCode_t key;
 			}
 
-            	inline float bodylean;
-	    		inline bool pitchJitter;
-	    		inline float offset = 180;
-	   		inline bool invertOnHurt = false;
-            	inline bool enable = false;
+			inline float bodylean;
+			inline bool pitchJitter;
+			inline float offset = 180;
+			inline bool invertOnHurt = false;
+			inline bool enable = false;
 			inline ButtonCode_t InvertKey;
 			inline bool inverted = false;
 			inline float AntiAImPercent = 100.f;
@@ -1025,15 +1045,15 @@ namespace Settings
 			inline bool atTheTarget = false;
 			inline bool SendReal = false;
 			inline RageAntiAimType Type = RageAntiAimType::DefaultRage;
-        		inline LbyMode lbym = LbyMode::Normal;
+			inline LbyMode lbym = LbyMode::Normal;
 
 			namespace lby
 			{
-                    inline LbyMode type = LbyMode::Normal;
+				inline LbyMode type = LbyMode::Normal;
 				inline bool enabled;
 			}
 		}
-		namespace LegitAntiAim 
+		namespace LegitAntiAim
 		{
 			inline bool enable = false;
 			inline bool OverWatchProof = true;
@@ -1050,30 +1070,30 @@ namespace Settings
 			inline ButtonCode_t RightButton = ButtonCode_t::KEY_C;
 			inline ButtonCode_t LeftButton = ButtonCode_t::KEY_Z;
 		}
-        	namespace Yaw
-        	{
-          	inline AntiAimRealType_Y typeReal = AntiAimRealType_Y::Static;
-          	inline AntiAimFakeType_y typeFake = AntiAimFakeType_y::Static;
-          }
-        	namespace HeadEdge
-        	{
-          	inline bool enabled = false;
-          	inline float distance = 25.0f;
-          }
-        	namespace LBYBreaker
-        	{
-          	inline bool enabled = false;
-          	inline float offset = 180.0f;
-          }
+		namespace Yaw
+		{
+			inline AntiAimRealType_Y typeReal = AntiAimRealType_Y::Static;
+			inline AntiAimFakeType_y typeFake = AntiAimFakeType_y::Static;
+		}
+		namespace HeadEdge
+		{
+			inline bool enabled = false;
+			inline float distance = 25.0f;
+		}
+		namespace LBYBreaker
+		{
+			inline bool enabled = false;
+			inline float offset = 180.0f;
+		}
 		namespace FakeDuck
 		{
 			inline bool enabled = false;
 			inline ButtonCode_t fakeDuckKey;
 		}
-  		namespace randomLag
-          {
-               inline bool enabled = false;
-          }
+		namespace randomLag
+		{
+			inline bool enabled = false;
+		}
 
 	}
 
@@ -1089,13 +1109,13 @@ namespace Settings
 		inline bool manual = false;
 		inline bool forcebrute = false;
 		inline bool resolveAllAP;
-          inline resolverType resolverType = resolverType::NONE;
+		inline resolverType resolverType = resolverType::NONE;
 
 	}
-     namespace bullettracers
-     {
-          inline bool enabled = false;
-     }
+	namespace bullettracers
+	{
+		inline bool enabled = false;
+	}
 
 	namespace ESP
 	{
@@ -1112,7 +1132,7 @@ namespace Settings
 		{
 			inline int distance;
 			inline int size;
-               inline ColorVar color;
+			inline ColorVar color;
 		}
 		namespace taserrange
 		{
@@ -1122,16 +1142,16 @@ namespace Settings
 		namespace customfog
 		{
 			inline bool enabled;
-     	     inline ColorVar color;
+			inline ColorVar color;
 			inline int distance;
 			inline float density;
 		}
 		namespace indicators
 		{
 			inline bool enabled;
-     	     inline bool lby;
-      	     inline bool aa;
-      	     inline bool vel;
+			inline bool lby;
+			inline bool aa;
+			inline bool vel;
 		}
 
 		inline bool drawback;
@@ -1150,41 +1170,41 @@ namespace Settings
 		inline bool showDormant = true;
 		inline ColorVar dormantColor = ImColor(255, 255, 255, 255);
 		inline bool enabled = false;
-    		inline DrawingBackend backend = DrawingBackend::IMGUI;
+		inline DrawingBackend backend = DrawingBackend::IMGUI;
 		inline Filter filter = Filter::Enemies;
 		inline ButtonCode_t key = ButtonCode_t::KEY_Z;
 		inline TeamColorType teamColorType = TeamColorType::RELATIVE;
-     	inline HealthColorVar enemyColor = ImColor(255, 0, 0, 255);
-     	inline HealthColorVar enemyVisibleColor = ImColor(255, 255, 0, 255);
-     	inline HealthColorVar allyColor = ImColor(0, 0, 255, 255);
-     	inline HealthColorVar allyVisibleColor = ImColor(0, 255, 0, 255);
-     	inline HealthColorVar tColor = ImColor(255, 0, 0, 255);
-     	inline HealthColorVar tVisibleColor = ImColor(255, 255, 0, 255);
-     	inline HealthColorVar ctColor = ImColor(0, 0, 255, 255);
-     	inline HealthColorVar ctVisibleColor = ImColor(0, 255, 0, 255);
-     	inline HealthColorVar localplayerColor = ImColor(0, 255, 255, 255);
-     	inline ColorVar bombColor = ImColor(156, 39, 176, 255);
-     	inline ColorVar bombDefusingColor = ImColor(213, 0, 249, 255);
-     	inline ColorVar hostageColor = ImColor(121, 85, 72, 255);
-     	inline ColorVar defuserColor = ImColor(49, 27, 146, 255);
-     	inline ColorVar weaponColor = ImColor(158, 158, 158, 255);
-     	inline ColorVar chickenColor = ImColor(255, 193, 7, 255);
-     	inline ColorVar fishColor = ImColor(255, 255, 255, 255);
-     	inline ColorVar smokeColor = ImColor(97, 97, 97, 255);
-     	inline ColorVar decoyColor = ImColor(2255, 152, 0, 255);
-     	inline ColorVar flashbangColor = ImColor(255, 235, 59, 255);
-     	inline ColorVar grenadeColor = ImColor(244, 67, 54, 255);
-     	inline ColorVar molotovColor = ImColor(205, 32, 31, 255);
-     	inline ColorVar mineColor = ImColor(205, 32, 31, 255);
-     	inline ColorVar chargeColor = ImColor(205, 32, 31, 255);
-     	inline ColorVar allyInfoColor = ImColor(255, 255, 255, 255);
-     	inline ColorVar enemyInfoColor = ImColor(255, 255, 255, 255);
-     
+		inline HealthColorVar enemyColor = ImColor(255, 0, 0, 255);
+		inline HealthColorVar enemyVisibleColor = ImColor(255, 255, 0, 255);
+		inline HealthColorVar allyColor = ImColor(0, 0, 255, 255);
+		inline HealthColorVar allyVisibleColor = ImColor(0, 255, 0, 255);
+		inline HealthColorVar tColor = ImColor(255, 0, 0, 255);
+		inline HealthColorVar tVisibleColor = ImColor(255, 255, 0, 255);
+		inline HealthColorVar ctColor = ImColor(0, 0, 255, 255);
+		inline HealthColorVar ctVisibleColor = ImColor(0, 255, 0, 255);
+		inline HealthColorVar localplayerColor = ImColor(0, 255, 255, 255);
+		inline ColorVar bombColor = ImColor(156, 39, 176, 255);
+		inline ColorVar bombDefusingColor = ImColor(213, 0, 249, 255);
+		inline ColorVar hostageColor = ImColor(121, 85, 72, 255);
+		inline ColorVar defuserColor = ImColor(49, 27, 146, 255);
+		inline ColorVar weaponColor = ImColor(158, 158, 158, 255);
+		inline ColorVar chickenColor = ImColor(255, 193, 7, 255);
+		inline ColorVar fishColor = ImColor(255, 255, 255, 255);
+		inline ColorVar smokeColor = ImColor(97, 97, 97, 255);
+		inline ColorVar decoyColor = ImColor(2255, 152, 0, 255);
+		inline ColorVar flashbangColor = ImColor(255, 235, 59, 255);
+		inline ColorVar grenadeColor = ImColor(244, 67, 54, 255);
+		inline ColorVar molotovColor = ImColor(205, 32, 31, 255);
+		inline ColorVar mineColor = ImColor(205, 32, 31, 255);
+		inline ColorVar chargeColor = ImColor(205, 32, 31, 255);
+		inline ColorVar allyInfoColor = ImColor(255, 255, 255, 255);
+		inline ColorVar enemyInfoColor = ImColor(255, 255, 255, 255);
+
 		namespace Watermark
-     	{
-     	     inline bool enabled = true;
-         		inline ColorVar color = ImColor(215, 5, 252, 255);
-     	}
+		{
+			inline bool enabled = true;
+			inline ColorVar color = ImColor(215, 5, 252, 255);
+		}
 
 		namespace FilterEnemy
 		{
@@ -1197,20 +1217,20 @@ namespace Settings
 			{
 
 				inline bool enabled = false;
-            		inline HealthColorVar allyColor = ImColor(0, 0, 255, 255);
-            		inline HealthColorVar enemyColor = ImColor(255, 0, 0, 255);
-            		inline HealthColorVar enemyVisibleColor = ImColor(255, 255, 0, 255);
-            		inline HealthColorVar localplayerColor = ImColor(0, 255, 255, 255);
-            		inline ColorVar weaponColor = ImColor(158, 158, 158, 255);
-            		inline ColorVar grenadeColor = ImColor(96, 125, 139, 255);
-           		inline ColorVar defuserColor = ImColor(49, 27, 146, 255);
-            		inline ColorVar chickenColor = ImColor(255, 193, 7, 255);
+				inline HealthColorVar allyColor = ImColor(0, 0, 255, 255);
+				inline HealthColorVar enemyColor = ImColor(255, 0, 0, 255);
+				inline HealthColorVar enemyVisibleColor = ImColor(255, 255, 0, 255);
+				inline HealthColorVar localplayerColor = ImColor(0, 255, 255, 255);
+				inline ColorVar weaponColor = ImColor(158, 158, 158, 255);
+				inline ColorVar grenadeColor = ImColor(96, 125, 139, 255);
+				inline ColorVar defuserColor = ImColor(49, 27, 146, 255);
+				inline ColorVar chickenColor = ImColor(255, 193, 7, 255);
 			}
 			namespace Skeleton
 			{
 				inline bool enabled = false;
-            		inline ColorVar allyColor = ImColor(255, 255, 255, 255);
-            		inline ColorVar enemyColor = ImColor(255, 255, 255, 255);
+				inline ColorVar allyColor = ImColor(255, 255, 255, 255);
+				inline ColorVar enemyColor = ImColor(255, 255, 255, 255);
 			}
 			namespace HeadDot
 			{
@@ -1222,10 +1242,10 @@ namespace Settings
 				inline bool enabled = false;
 				inline BoxType type = BoxType::FRAME_2D;
 			}
-	  		namespace BulletTracers 
-	     	{
-          	     inline bool enabled = false;
-          	}
+			namespace BulletTracers
+			{
+				inline bool enabled = false;
+			}
 			namespace Chams
 			{
 				inline bool enabled = false;
@@ -1254,20 +1274,20 @@ namespace Settings
 			namespace Glow
 			{
 				inline bool enabled = false;
- 	    		  	inline HealthColorVar allyColor = ImColor(0, 0, 255, 255);
-         	   		inline HealthColorVar enemyColor = ImColor(255, 0, 0, 255);
-            		inline HealthColorVar enemyVisibleColor = ImColor(255, 255, 0, 255);
-            		inline HealthColorVar localplayerColor = ImColor(0, 255, 255, 255);
-            		inline ColorVar weaponColor = ImColor(158, 158, 158, 255);
-            		inline ColorVar grenadeColor = ImColor(96, 125, 139, 255);
-      	 		inline ColorVar defuserColor = ImColor(49, 27, 146, 255);
-           	 	inline ColorVar chickenColor = ImColor(255, 193, 7, 255);
+				inline HealthColorVar allyColor = ImColor(0, 0, 255, 255);
+				inline HealthColorVar enemyColor = ImColor(255, 0, 0, 255);
+				inline HealthColorVar enemyVisibleColor = ImColor(255, 255, 0, 255);
+				inline HealthColorVar localplayerColor = ImColor(0, 255, 255, 255);
+				inline ColorVar weaponColor = ImColor(158, 158, 158, 255);
+				inline ColorVar grenadeColor = ImColor(96, 125, 139, 255);
+				inline ColorVar defuserColor = ImColor(49, 27, 146, 255);
+				inline ColorVar chickenColor = ImColor(255, 193, 7, 255);
 			}
 			namespace Skeleton
 			{
 				inline bool enabled = false;
-          		inline ColorVar allyColor = ImColor(255, 255, 255, 255);
-            		inline ColorVar enemyColor = ImColor(255, 255, 255, 255);
+				inline ColorVar allyColor = ImColor(255, 255, 255, 255);
+				inline ColorVar enemyColor = ImColor(255, 255, 255, 255);
 			}
 			namespace HeadDot
 			{
@@ -1300,7 +1320,7 @@ namespace Settings
 				inline bool enabled = false;
 				inline TracerType type = TracerType::BOTTOM;
 			}
-		}	
+		}
 
 		namespace FilterLocalPlayer
 		{
@@ -1312,14 +1332,14 @@ namespace Settings
 			namespace Glow
 			{
 				inline bool enabled = false;
-     		  	inline HealthColorVar allyColor = ImColor(0, 0, 255, 255);
-         		   	inline HealthColorVar enemyColor = ImColor(255, 0, 0, 255);
-         	   		inline HealthColorVar enemyVisibleColor = ImColor(255, 255, 0, 255);
-         	   		inline HealthColorVar localplayerColor = ImColor(0, 255, 255, 255);
-            		inline ColorVar weaponColor = ImColor(158, 158, 158, 255);
-            		inline ColorVar grenadeColor = ImColor(96, 125, 139, 255);
-          	 	inline ColorVar defuserColor = ImColor(49, 27, 146, 255);
-            		inline ColorVar chickenColor = ImColor(255, 193, 7, 255);
+				inline HealthColorVar allyColor = ImColor(0, 0, 255, 255);
+				inline HealthColorVar enemyColor = ImColor(255, 0, 0, 255);
+				inline HealthColorVar enemyVisibleColor = ImColor(255, 255, 0, 255);
+				inline HealthColorVar localplayerColor = ImColor(0, 255, 255, 255);
+				inline ColorVar weaponColor = ImColor(158, 158, 158, 255);
+				inline ColorVar grenadeColor = ImColor(96, 125, 139, 255);
+				inline ColorVar defuserColor = ImColor(49, 27, 146, 255);
+				inline ColorVar chickenColor = ImColor(255, 193, 7, 255);
 			}
 			namespace RealChams
 			{
@@ -1334,8 +1354,8 @@ namespace Settings
 			namespace Skeleton
 			{
 				inline bool enabled = false;
-       			inline ColorVar allyColor = ImColor(255, 255, 255, 255);           	
-		     	inline ColorVar enemyColor = ImColor(255, 255, 255, 255);
+				inline ColorVar allyColor = ImColor(255, 255, 255, 255);
+				inline ColorVar enemyColor = ImColor(255, 255, 255, 255);
 			}
 			namespace HeadDot
 			{
@@ -1367,14 +1387,14 @@ namespace Settings
 		namespace Glow
 		{
 			inline bool enabled = false;
-     	     inline HealthColorVar allyColor = ImColor(0, 0, 255, 255);
-     	     inline HealthColorVar enemyColor = ImColor(255, 0, 0, 255);
-     	    	inline HealthColorVar enemyVisibleColor = ImColor(255, 255, 0, 255);
-     	     inline HealthColorVar localplayerColor = ImColor(0, 255, 255, 255);
-     	     inline ColorVar weaponColor = ImColor(158, 158, 158, 255);
-     	     inline ColorVar grenadeColor = ImColor(96, 125, 139, 255);
-     	     inline ColorVar defuserColor = ImColor(49, 27, 146, 255);
-     	     inline ColorVar chickenColor = ImColor(255, 193, 7, 255);
+			inline HealthColorVar allyColor = ImColor(0, 0, 255, 255);
+			inline HealthColorVar enemyColor = ImColor(255, 0, 0, 255);
+			inline HealthColorVar enemyVisibleColor = ImColor(255, 255, 0, 255);
+			inline HealthColorVar localplayerColor = ImColor(0, 255, 255, 255);
+			inline ColorVar weaponColor = ImColor(158, 158, 158, 255);
+			inline ColorVar grenadeColor = ImColor(96, 125, 139, 255);
+			inline ColorVar defuserColor = ImColor(49, 27, 146, 255);
+			inline ColorVar chickenColor = ImColor(255, 193, 7, 255);
 		}
 
 		namespace Filters
@@ -1405,7 +1425,7 @@ namespace Settings
 			inline bool health = false;
 			inline bool armor = false;
 			inline bool weapon = false;
-          	inline bool tweapon = false;
+			inline bool tweapon = false;
 			inline bool scoped = false;
 			inline bool reloading = false;
 			inline bool flashed = false;
@@ -1421,8 +1441,8 @@ namespace Settings
 		namespace Skeleton
 		{
 			inline bool enabled = false;
-	          inline ColorVar allyColor = ImColor(255, 255, 255, 255);
-    	      inline ColorVar enemyColor = ImColor(255, 255, 255, 255);
+			inline ColorVar allyColor = ImColor(255, 255, 255, 255);
+			inline ColorVar enemyColor = ImColor(255, 255, 255, 255);
 		}
 
 		namespace Boxes
@@ -1442,7 +1462,7 @@ namespace Settings
 			inline bool enabled = false;
 			inline BarType type = BarType::HORIZONTAL;
 			inline BarColorType colorType = BarColorType::HEALTH_BASED;
-		}	
+		}
 
 		namespace Tracers
 		{
@@ -1453,7 +1473,7 @@ namespace Settings
 		namespace BulletTracers
 		{
 			inline bool enabled = false;
-		}	
+		}
 
 		namespace Bomb
 		{
@@ -1467,19 +1487,19 @@ namespace Settings
 		}
 		namespace Chams
 		{
-			
+
 			inline bool enabled = false;
-          	inline HealthColorVar allyColor = ImColor(0, 0, 255, 255);
-          	inline HealthColorVar allyVisibleColor = ImColor(0, 255, 0, 255);
-          	inline HealthColorVar enemyColor = ImColor(255, 0, 0, 255);
-          	inline HealthColorVar enemyVisibleColor = ImColor(255, 255, 0, 255);
-          	inline HealthColorVar localplayerColor = ImColor(0, 255, 255, 255);
-			inline HealthColorVar FakeColor = ImColor(124,145,25,225);
+			inline HealthColorVar allyColor = ImColor(0, 0, 255, 255);
+			inline HealthColorVar allyVisibleColor = ImColor(0, 255, 0, 255);
+			inline HealthColorVar enemyColor = ImColor(255, 0, 0, 255);
+			inline HealthColorVar enemyVisibleColor = ImColor(255, 255, 0, 255);
+			inline HealthColorVar localplayerColor = ImColor(0, 255, 255, 255);
+			inline HealthColorVar FakeColor = ImColor(124, 145, 25, 225);
 
 			inline ChamsType type = ChamsType::WHITEADDTIVE;
 			namespace Base
-	          {
-    	          inline ColorVar color = ImColor(255, 255, 255, 255);
+			{
+				inline ColorVar color = ImColor(255, 255, 255, 255);
 			}
 			namespace Arms
 			{
@@ -1490,26 +1510,26 @@ namespace Settings
 			namespace Weapon
 			{
 				inline bool enabled = false;
-				inline ColorVar color = ImColor( 255, 255, 255, 255 );
+				inline ColorVar color = ImColor(255, 255, 255, 255);
 				inline ChamsType type = ChamsType::WHITEADDTIVE;
 			}
-     	     namespace Sleeves
-     	     {
-         	     	inline bool enabled = false;
-         	      	inline ColorVar color = ImColor( 255, 255, 255, 255 );
-         	      	inline ChamsType type = ChamsType::WHITEADDTIVE;
-         	 	}
+			namespace Sleeves
+			{
+				inline bool enabled = false;
+				inline ColorVar color = ImColor(255, 255, 255, 255);
+				inline ChamsType type = ChamsType::WHITEADDTIVE;
+			}
 
 		}
 
-			// sound esp
+		// sound esp
 		namespace Sounds
 		{
 			inline bool enabled = false;
 			inline int time = 1000;
 		}
 		namespace Hitmarker
-		{	
+		{
 			inline bool enabled = false;
 			inline bool enemies = false;
 			inline bool allies = false;
@@ -1522,25 +1542,26 @@ namespace Settings
 			{
 				inline bool enabled = false;
 			}
-			namespace Sounds {
+			namespace Sounds
+			{
 				inline bool enabled = false;
 				inline Sound sound = Sound::NONE;
 			}
-		}	
+		}
 
 		namespace HeadDot
 		{
 			inline bool enabled = false;
 			inline float size = 2.0f;
-		}	
+		}
 
 		namespace Spread
 		{
-			inline bool enabled = false; // show current spread
+			inline bool enabled = false;	   // show current spread
 			inline bool spreadLimit = false; // show spreadLimit value
 			inline ColorVar color = ImColor(15, 200, 45, 255);
 			inline ColorVar spreadLimitColor = ImColor(20, 5, 150, 255);
-		}						
+		}
 
 		namespace DangerZone
 		{
@@ -1558,22 +1579,23 @@ namespace Settings
 			inline bool tablet = false;
 			inline bool healthshot = false;
 			inline bool melee = false;
-      		inline ColorVar upgradeColor = ImColor(255, 0, 0, 255);
-         		inline ColorVar lootcrateColor = ImColor(255, 0, 0, 255);
-         		inline ColorVar radarjammerColor = ImColor(255, 0, 0, 255);
-          	inline ColorVar barrelColor = ImColor(255, 0, 0, 255);
-     		inline ColorVar ammoboxColor = ImColor(255, 0, 0, 255);
-         		inline ColorVar safeColor = ImColor(255, 0, 0, 255);
-         		inline ColorVar dronegunColor = ImColor(255, 0, 0, 255);
-         		inline ColorVar droneColor = ImColor(255, 0, 0, 255);
-         		inline ColorVar cashColor = ImColor(255, 0, 0, 255);
-         		inline ColorVar tabletColor = ImColor(255, 0, 0, 255);
-         		inline ColorVar healthshotColor = ImColor(255, 0, 0, 255);
-          	inline ColorVar meleeColor = ImColor(255, 0, 0, 255);
+			inline ColorVar upgradeColor = ImColor(255, 0, 0, 255);
+			inline ColorVar lootcrateColor = ImColor(255, 0, 0, 255);
+			inline ColorVar radarjammerColor = ImColor(255, 0, 0, 255);
+			inline ColorVar barrelColor = ImColor(255, 0, 0, 255);
+			inline ColorVar ammoboxColor = ImColor(255, 0, 0, 255);
+			inline ColorVar safeColor = ImColor(255, 0, 0, 255);
+			inline ColorVar dronegunColor = ImColor(255, 0, 0, 255);
+			inline ColorVar droneColor = ImColor(255, 0, 0, 255);
+			inline ColorVar cashColor = ImColor(255, 0, 0, 255);
+			inline ColorVar tabletColor = ImColor(255, 0, 0, 255);
+			inline ColorVar healthshotColor = ImColor(255, 0, 0, 255);
+			inline ColorVar meleeColor = ImColor(255, 0, 0, 255);
 		}
 	}
 
-	namespace MaterialConfig {
+	namespace MaterialConfig
+	{
 		inline bool enabled = false;
 		inline MaterialSystem_Config_t config = {};
 	}
@@ -1583,7 +1605,7 @@ namespace Settings
 		inline bool enabled = false;
 		inline float radius = 500.0f;
 	}
-	
+
 	namespace Eventlog
 	{
 		inline bool showEnemies = false;
@@ -1591,8 +1613,8 @@ namespace Settings
 		inline bool showLocalplayer = false;
 		inline float duration = 5000;
 		inline float lines = 10;
-		inline ColorVar color = ImColor( 255, 79, 56, 255 );
-	}	
+		inline ColorVar color = ImColor(255, 79, 56, 255);
+	}
 
 	namespace Spammer
 	{
@@ -1649,7 +1671,7 @@ namespace Settings
 	}
 	namespace FakeWalk
 	{
-		inline bool enabled;	
+		inline bool enabled;
 		inline int speed;
 		inline ButtonCode_t key;
 	}
@@ -1689,23 +1711,23 @@ namespace Settings
 		inline bool allies = false;
 		inline bool bomb = false;
 		inline bool defuser = false;
-		inline bool legit = false ;
+		inline bool legit = false;
 		inline bool visibilityCheck = false;
 		inline bool smokeCheck = false;
 		inline TeamColorType teamColorType = TeamColorType::RELATIVE;
-     	inline HealthColorVar enemyColor = ImColor(255, 0, 0, 255);
-     	inline HealthColorVar enemyVisibleColor = ImColor(255, 255, 0, 255);
-     	inline HealthColorVar allyColor = ImColor(0, 0, 255, 255);
-     	inline HealthColorVar allyVisibleColor = ImColor(0, 255, 0, 255);
-     	inline HealthColorVar tColor = ImColor(255, 0, 0, 255);
-     	inline HealthColorVar tVisibleColor = ImColor(255, 255, 0, 255);
-     	inline HealthColorVar ctColor = ImColor(0, 0, 255, 255);
-     	inline HealthColorVar ctVisibleColor = ImColor(0, 255, 0, 255);
-     	inline ColorVar bombColor = ImColor(156, 39, 176, 255);
-     	inline ColorVar bombDefusingColor = ImColor(213, 0, 249, 255);
-     	inline ColorVar defuserColor = ImColor(49, 27, 146, 255);
+		inline HealthColorVar enemyColor = ImColor(255, 0, 0, 255);
+		inline HealthColorVar enemyVisibleColor = ImColor(255, 255, 0, 255);
+		inline HealthColorVar allyColor = ImColor(0, 0, 255, 255);
+		inline HealthColorVar allyVisibleColor = ImColor(0, 255, 0, 255);
+		inline HealthColorVar tColor = ImColor(255, 0, 0, 255);
+		inline HealthColorVar tVisibleColor = ImColor(255, 255, 0, 255);
+		inline HealthColorVar ctColor = ImColor(0, 0, 255, 255);
+		inline HealthColorVar ctVisibleColor = ImColor(0, 255, 0, 255);
+		inline ColorVar bombColor = ImColor(156, 39, 176, 255);
+		inline ColorVar bombDefusingColor = ImColor(213, 0, 249, 255);
+		inline ColorVar defuserColor = ImColor(49, 27, 146, 255);
 		inline float iconsScale = 4.5f;
-		inline ImVec2 pos = ImVec2(0,0);
+		inline ImVec2 pos = ImVec2(0, 0);
 
 		namespace InGame
 		{
@@ -1742,7 +1764,7 @@ namespace Settings
 	}
 	namespace Skinchanger
 	{
-	inline std::string PlayerModel = "models/player/custom_player/legacy/ctm_st6_varianti.mdl";
+		inline std::string PlayerModel = "models/player/custom_player/legacy/ctm_st6_varianti.mdl";
 
 		namespace Skins
 		{
@@ -1758,72 +1780,71 @@ namespace Settings
 		}
 
 		inline std::unordered_map<ItemDefinitionIndex, AttribItem_t, Util::IntHash<ItemDefinitionIndex>> skinsCT = {
-                { ItemDefinitionIndex::WEAPON_AK47 /*WeaponID*/, { ItemDefinitionIndex::INVALID /*itemDefinitionIndex*/, 524 /*fallbackPaintKit*/, 0.0005f /*fallbackWear*/, -1 /*fallbackSeed*/, 1337/*fallbackStatTrak*/, -1/*fallbackEntityQuality*/, "TestTux"/*customName*/ } },
-                { ItemDefinitionIndex::WEAPON_KNIFE, { ItemDefinitionIndex::WEAPON_KNIFE_M9_BAYONET, -1, -1, -1, -1, -1, "" } },
-                { ItemDefinitionIndex::GLOVE_CT_SIDE, { ItemDefinitionIndex::GLOVE_SPECIALIST, 10006, 0.0005f, -1, -1, -1, "" } },
-                { ItemDefinitionIndex::GLOVE_T_SIDE, { ItemDefinitionIndex::GLOVE_STUDDED_BLOODHOUND, 10006, 0.0005f, -1, -1, -1, "" } },
-                { ItemDefinitionIndex::GLOVE_STUDDED_BLOODHOUND, { ItemDefinitionIndex::INVALID, 10006, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::GLOVE_SPORTY, { ItemDefinitionIndex::INVALID, 10018, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::GLOVE_SLICK, { ItemDefinitionIndex::INVALID, 10013, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::GLOVE_MOTORCYCLE, { ItemDefinitionIndex::INVALID, 10024, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::GLOVE_LEATHER_WRAP, { ItemDefinitionIndex::INVALID, 10009, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::GLOVE_SPECIALIST, { ItemDefinitionIndex::INVALID, 10033, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_M9_BAYONET, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, 1337, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_KARAMBIT, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_BAYONET, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_FLIP, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_GUT, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_BUTTERFLY, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_TACTICAL, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_PUSH, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_SURVIVAL_BOWIE, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_URSUS, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_GYPSY_JACKKNIFE, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_STILETTO, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_WIDOWMAKER, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_CSS, { ItemDefinitionIndex::INVALID, -1, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_GHOST, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                //{ ItemDefinitionIndex::WEAPON_KNIFEGG, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_USP_SILENCER, { ItemDefinitionIndex::INVALID, 2, 0.0005f, -1, -1, -1, ""} },
-        };
+		    {ItemDefinitionIndex::WEAPON_AK47 /*WeaponID*/, {ItemDefinitionIndex::INVALID /*itemDefinitionIndex*/, 524 /*fallbackPaintKit*/, 0.0005f /*fallbackWear*/, -1 /*fallbackSeed*/, 1337 /*fallbackStatTrak*/, -1 /*fallbackEntityQuality*/, "TestTux" /*customName*/}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE, {ItemDefinitionIndex::WEAPON_KNIFE_M9_BAYONET, -1, -1, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::GLOVE_CT_SIDE, {ItemDefinitionIndex::GLOVE_SPECIALIST, 10006, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::GLOVE_T_SIDE, {ItemDefinitionIndex::GLOVE_STUDDED_BLOODHOUND, 10006, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::GLOVE_STUDDED_BLOODHOUND, {ItemDefinitionIndex::INVALID, 10006, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::GLOVE_SPORTY, {ItemDefinitionIndex::INVALID, 10018, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::GLOVE_SLICK, {ItemDefinitionIndex::INVALID, 10013, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::GLOVE_MOTORCYCLE, {ItemDefinitionIndex::INVALID, 10024, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::GLOVE_LEATHER_WRAP, {ItemDefinitionIndex::INVALID, 10009, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::GLOVE_SPECIALIST, {ItemDefinitionIndex::INVALID, 10033, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_M9_BAYONET, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, 1337, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_KARAMBIT, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_BAYONET, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_FLIP, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_GUT, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_BUTTERFLY, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_TACTICAL, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_PUSH, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_SURVIVAL_BOWIE, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_URSUS, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_GYPSY_JACKKNIFE, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_STILETTO, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_WIDOWMAKER, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_CSS, {ItemDefinitionIndex::INVALID, -1, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_GHOST, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    //{ ItemDefinitionIndex::WEAPON_KNIFEGG, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
+		    {ItemDefinitionIndex::WEAPON_USP_SILENCER, {ItemDefinitionIndex::INVALID, 2, 0.0005f, -1, -1, -1, ""}},
+		};
 		inline std::unordered_map<ItemDefinitionIndex, AttribItem_t, Util::IntHash<ItemDefinitionIndex>> skinsT = {
-                { ItemDefinitionIndex::WEAPON_AK47 /*WeaponID*/, { ItemDefinitionIndex::INVALID /*itemDefinitionIndex*/, 524 /*fallbackPaintKit*/, 0.0005f /*fallbackWear*/, -1 /*fallbackSeed*/, 1337/*fallbackStatTrak*/, -1/*fallbackEntityQuality*/, "TestTux"/*customName*/ } },
-                { ItemDefinitionIndex::WEAPON_KNIFE_T, { ItemDefinitionIndex::WEAPON_KNIFE_KARAMBIT, -1, -1, -1, -1, -1, "" } },
-                { ItemDefinitionIndex::GLOVE_T_SIDE, { ItemDefinitionIndex::GLOVE_STUDDED_BLOODHOUND, 10006, 0.0005f, -1, -1, -1, "" } },
-                { ItemDefinitionIndex::GLOVE_STUDDED_BLOODHOUND, { ItemDefinitionIndex::INVALID, 10006, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::GLOVE_SPORTY, { ItemDefinitionIndex::INVALID, 10018, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::GLOVE_SLICK, { ItemDefinitionIndex::INVALID, 10013, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::GLOVE_MOTORCYCLE, { ItemDefinitionIndex::INVALID, 10024, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::GLOVE_LEATHER_WRAP, { ItemDefinitionIndex::INVALID, 10009, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::GLOVE_SPECIALIST, { ItemDefinitionIndex::INVALID, 10033, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_M9_BAYONET, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_KARAMBIT, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, 1337, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_BAYONET, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_FLIP, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_GUT, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_BUTTERFLY, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_TACTICAL, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_PUSH, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_SURVIVAL_BOWIE, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_URSUS, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_GYPSY_JACKKNIFE, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_STILETTO, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_WIDOWMAKER, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_CSS, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                { ItemDefinitionIndex::WEAPON_KNIFE_GHOST, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-                //{ ItemDefinitionIndex::WEAPON_KNIFEGG, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
-        };
+		    {ItemDefinitionIndex::WEAPON_AK47 /*WeaponID*/, {ItemDefinitionIndex::INVALID /*itemDefinitionIndex*/, 524 /*fallbackPaintKit*/, 0.0005f /*fallbackWear*/, -1 /*fallbackSeed*/, 1337 /*fallbackStatTrak*/, -1 /*fallbackEntityQuality*/, "TestTux" /*customName*/}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_T, {ItemDefinitionIndex::WEAPON_KNIFE_KARAMBIT, -1, -1, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::GLOVE_T_SIDE, {ItemDefinitionIndex::GLOVE_STUDDED_BLOODHOUND, 10006, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::GLOVE_STUDDED_BLOODHOUND, {ItemDefinitionIndex::INVALID, 10006, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::GLOVE_SPORTY, {ItemDefinitionIndex::INVALID, 10018, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::GLOVE_SLICK, {ItemDefinitionIndex::INVALID, 10013, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::GLOVE_MOTORCYCLE, {ItemDefinitionIndex::INVALID, 10024, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::GLOVE_LEATHER_WRAP, {ItemDefinitionIndex::INVALID, 10009, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::GLOVE_SPECIALIST, {ItemDefinitionIndex::INVALID, 10033, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_M9_BAYONET, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_KARAMBIT, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, 1337, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_BAYONET, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_FLIP, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_GUT, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_BUTTERFLY, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_TACTICAL, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_PUSH, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_SURVIVAL_BOWIE, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_URSUS, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_GYPSY_JACKKNIFE, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_STILETTO, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_WIDOWMAKER, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_CSS, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    {ItemDefinitionIndex::WEAPON_KNIFE_GHOST, {ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""}},
+		    //{ ItemDefinitionIndex::WEAPON_KNIFEGG, { ItemDefinitionIndex::INVALID, 417, 0.0005f, -1, -1, -1, ""} },
+		};
 	}
 
 	namespace ShowRanks
 	{
 		inline bool enabled = false;
 	}
-       namespace ShowKills
-        {
-                inline bool enabled = false;
-        }
-
+	namespace ShowKills
+	{
+		inline bool enabled = false;
+	}
 
 	namespace ShowSpectators
 	{
@@ -1858,7 +1879,7 @@ namespace Settings
 		inline bool enabled = false;
 		inline int value = 9;
 		inline bool adaptive = false;
-          inline ButtonCode_t ckey;
+		inline ButtonCode_t ckey;
 		inline bool microphone = false;
 		inline ButtonCode_t microphoneKey = KEY_K;
 	}
@@ -1949,59 +1970,59 @@ namespace Settings
 		inline bool enabled;
 		inline bool fakelat;
 
-		namespace bloom {
+		namespace bloom
+		{
 			inline bool enabled;
 			inline float scale;
 			inline float factor;
-		}	
-		namespace gravity {
-		inline bool enabled;
-		inline int amount;
+		}
+		namespace gravity
+		{
+			inline bool enabled;
+			inline int amount;
 		}
 
 		namespace aspect
 		{
 			inline bool enabled;
-		inline float var;
+			inline float var;
 		}
 
 		namespace svcheats
 		{
-		inline bool enabled;
+			inline bool enabled;
 		}
 
 		namespace bright
 		{
-		inline bool enabled;
+			inline bool enabled;
 		}
 
 		namespace fog
 		{
-		inline bool enabled;
+			inline bool enabled;
 		}
 
 		namespace impacts
 		{
-		inline bool enabled;
+			inline bool enabled;
 		}
-
 
 		namespace viewmodel
 		{
-		inline bool enabled;
-		inline float fov;
-		inline float x;
-		inline float y;
-		inline float z;
+			inline bool enabled;
+			inline float fov;
+			inline float x;
+			inline float y;
+			inline float z;
 		}
 
 		namespace grenadetraj
 		{
-		inline bool enabled;
+			inline bool enabled;
 		}
 
 	}
-
 
 	namespace DisablePostProcessing
 	{
@@ -2017,19 +2038,19 @@ namespace Settings
 		inline float aimStep = 5;
 		inline float aimDistance = 75;
 		inline float aimFov = 45;
-     	inline ColorVar aimDot = ImColor(10, 10, 200, 255);
-     	inline ColorVar aimLine = ImColor(200, 200, 200, 255);
-     	inline ColorVar infoHE = ImColor(7, 183, 7, 255);
-     	inline ColorVar infoMolotov = ImColor(236, 0, 0, 255);
-     	inline ColorVar infoSmoke = ImColor(172, 172, 172, 255);
-     	inline ColorVar infoFlash = ImColor(255, 255, 0, 255);
+		inline ColorVar aimDot = ImColor(10, 10, 200, 255);
+		inline ColorVar aimLine = ImColor(200, 200, 200, 255);
+		inline ColorVar infoHE = ImColor(7, 183, 7, 255);
+		inline ColorVar infoMolotov = ImColor(236, 0, 0, 255);
+		inline ColorVar infoSmoke = ImColor(172, 172, 172, 255);
+		inline ColorVar infoFlash = ImColor(255, 255, 0, 255);
 		inline std::string actMapName = {};
 	}
 
 	namespace GrenadePrediction
 	{
 		inline bool enabled = false;
-		inline ColorVar color = ImColor( 255, 79, 56, 255 );
+		inline ColorVar color = ImColor(255, 79, 56, 255);
 
 	}
 
@@ -2042,16 +2063,16 @@ namespace Settings
 
 	}
 	namespace AutoKnife
- 	{
- 		inline bool enabled = false;
- 		inline bool onKey = true;
+	{
+		inline bool enabled = false;
+		inline bool onKey = true;
 
- 		namespace Filters
- 		{
- 			inline bool enemies = true;
- 			inline bool allies = false;
- 		}
- 	}
+		namespace Filters
+		{
+			inline bool enemies = true;
+			inline bool allies = false;
+		}
+	}
 
 	namespace QuickSwitch
 	{
@@ -2068,20 +2089,20 @@ namespace Settings
 	}
 	namespace buybot
 	{
-	inline MainWep wep;
-	inline SecWep sec;
-	inline AltWep alt;
-	inline bool enabled = false;
-	inline bool scout = false;
-	inline bool autosniper = false;
-     inline bool awp = false;
+		inline MainWep wep;
+		inline SecWep sec;
+		inline AltWep alt;
+		inline bool enabled = false;
+		inline bool scout = false;
+		inline bool autosniper = false;
+		inline bool awp = false;
 	}
-    	namespace Debug
-    	{
-     	namespace AutoWall
-        	{
-        	    inline bool debugView = false;
-        	}
+	namespace Debug
+	{
+		namespace AutoWall
+		{
+			inline bool debugView = false;
+		}
 		namespace AutoAim
 		{
 			inline bool drawTarget = false;
@@ -2097,7 +2118,7 @@ namespace Settings
 		{
 			inline bool draw = false;
 		}
-    }
+	}
 
 	void LoadDefaultsOrSave(std::string path);
 	void LoadConfig(std::string path);

@@ -12,14 +12,13 @@ function echo_green() {
 }
 
 function launch_csgo() {
-  
+
   local csgo_pid=$(pidof csgo_linux64)
   echo_orange "Launching CSGO"
   steam steam://rungameid/730 >/dev/null 2>&1 &
   disown
   echo -ne "Launching..."
-  while [ -z "$csgo_pid" ]; 
-  do
+  while [ -z "$csgo_pid" ]; do
     csgo_pid=$(pidof csgo_linux64)
     echo -ne "."
   done
@@ -29,289 +28,254 @@ function launch_csgo() {
   sleep 25 # wait for 25 secs
 }
 
-function build(){
+function build() {
   cmake . || exit 1
 
-if ! hash patchelf 2>/dev/null; then
+  if ! hash patchelf 2>/dev/null; then
     echo_red -e "You need to install the \"patchelf\" command!\nUse your package manager to install it, or get source here:\nhttps://github.com/NixOS/patchelf"
     exit 1
-fi
+  fi
 
-rm build_id_hex
-# Get a Random name from the build_names file.
-BUILD_ID=$(shuf -n 1 build_names)
+  rm build_id_hex
+  # Get a Random name from the build_names file.
+  BUILD_ID=$(shuf -n 1 build_names)
 
-# In case this file exists, get another one. ( checked it works )
-while [ -f "/usr/lib/${BUILD_ID}" ] || grep -q ${BUILD_ID} /proc/$(pidof csgo_linux64)/maps; do
-	BUILD_ID=$(shuf -n 1 build_names)
-done
+  # In case this file exists, get another one. ( checked it works )
+  while [ -f "/usr/lib/${BUILD_ID}" ] || grep -q ${BUILD_ID} /proc/$(pidof csgo_linux64)/maps; do
+    BUILD_ID=$(shuf -n 1 build_names)
+  done
 
-# Hexify it and put it into build_id_hex
-for (( i=0; i<${#BUILD_ID}; i++ )); do
-  printf '0x%x,\n' "'${BUILD_ID:$i:1}" >> build_id_hex
-done
-printf '0x0' >> build_id_hex
+  # Hexify it and put it into build_id_hex
+  for ((i = 0; i < ${#BUILD_ID}; i++)); do
+    printf '0x%x,\n' "'${BUILD_ID:$i:1}" >>build_id_hex
+  done
+  printf '0x0' >>build_id_hex
 
-make -j"$(grep -c "^processor" /proc/cpuinfo)" "$@" || exit 1
+  make -j"$(grep -c "^processor" /proc/cpuinfo)" "$@" || exit 1
 
-if [ -f build_id ]; then
+  if [ -f build_id ]; then
     filename=$(cat build_id)
     rm "$filename"
     if [ -f "/usr/lib/${filename}" ]; then
-    	echo -e "Note: Old file found at /usr/lib/${filename}\n"
-        #sudo rm "/usr/lib/${filename}"
+      echo -e "Note: Old file found at /usr/lib/${filename}\n"
+      #sudo rm "/usr/lib/${filename}"
 
     fi
     chmod 660 build_id
     mv build_id build_id_old
-fi
+  fi
 
-echo $BUILD_ID > build_id
-mv libKali.so "$BUILD_ID"
+  echo $BUILD_ID >build_id
+  mv libKali.so "$BUILD_ID"
 
-strip -s -v "$BUILD_ID"
-patchelf --set-soname "$BUILD_ID" "$BUILD_ID" || echo_orange "Warning: your patchelf version does not support \"--set-soname\"\nConsider building from source: https://github.com/NixOS/patchelf"
+  strip -s -v "$BUILD_ID"
+  patchelf --set-soname "$BUILD_ID" "$BUILD_ID" || echo_orange "Warning: your patchelf version does not support \"--set-soname\"\nConsider building from source: https://github.com/NixOS/patchelf"
 
-chmod 400 build_id # Make the build_id read-only for safety.
-
-## Copy fonts to usr/share/fonts/TTF and (CSGODIR)/csgo/panorama/fonts/ for the weapon icon esp to work
-echo 'moving astriumwep.ttf to usr/share/fonts/TTF'
-echo_orange 'Check if usr/share/fonts/TTF folder exists, if not then create it.\n'
-if [ ! -d /usr/share/fonts/TTF ]; then
-  sudo mkdir -p /usr/share/fonts/TTF; echo Creating Folder...
-else echo_green Folder exists.
-fi
-
-# Move fonts to usr/share/fonts/TTF
-if sudo cp fonts/astriumwep.ttf /usr/share/fonts/TTF; then
-    echo_green 'Success.\n'
-else
-    echo_red 'Copying failed. You will need to move font file to /usr/share/fonts/TTF by yourself.\n'
-fi
-
-## Copy fonts file to usr/share/fonts/TTF
-
-//echo_orange Check if usr/share/fonts/TTF folder exists, if not then create it.
-if [ ! -d /usr/share/fonts/TTF ]; then
-  sudo mkdir -p /usr/share/fonts/TTF; echo Creating Folder...
-else echo_green Folder exists.
-fi
-
-# Move fonts to usr/share/fonts/TTFec
-echo 'moving arial.ttf to usr/share/fonts/TTF'
-if sudo cp fonts/arial.ttf /usr/share/fonts/TTF; then
-    echo_green 'Success.\n'
-else
-    echo_red 'Copying failed. You will need to move font file to /usr/share/fonts/TTF by yourself.\n'
-fi
-
-
-echo_orange "You need to copy font file from /Kali/fonts folder to your (CSGODIR)/csgo/panorama/fonts/ for the weapon icon esp to work." 
-echo_green "Build Completed." 
+  chmod 400 build_id # Make the build_id read-only for safety.
+  echo_green "Build Completed."
 }
 function build_debug() {
 
   cmake -D CMAKE_BUILD_TYPE=Debug . || exit 1
 
-if ! hash patchelf 2>/dev/null; then
+  if ! hash patchelf 2>/dev/null; then
     echo_red -e "You need to install the \"patchelf\" command!\nUse your package manager to install it, or get source here:\nhttps://github.com/NixOS/patchelf"
     exit 1
-fi
+  fi
 
-rm build_id_hex
-# Get a Random name from the build_names file.
-BUILD_ID=$(shuf -n 1 build_names)
+  rm build_id_hex
+  # Get a Random name from the build_names file.
+  BUILD_ID=$(shuf -n 1 build_names)
 
-# In case this file exists, get another one. ( checked it works )
-while [ -f "/usr/lib/${BUILD_ID}" ] || grep -q ${BUILD_ID} /proc/$(pidof csgo_linux64)/maps; do
-	BUILD_ID=$(shuf -n 1 build_names)
-done
+  # In case this file exists, get another one. ( checked it works )
+  while [ -f "/usr/lib/${BUILD_ID}" ] || grep -q ${BUILD_ID} /proc/$(pidof csgo_linux64)/maps; do
+    BUILD_ID=$(shuf -n 1 build_names)
+  done
 
-# Hexify it and put it into build_id_hex
-for (( i=0; i<${#BUILD_ID}; i++ )); do
-  printf '0x%x,\n' "'${BUILD_ID:$i:1}" >> build_id_hex
-done
-printf '0x0' >> build_id_hex
+  # Hexify it and put it into build_id_hex
+  for ((i = 0; i < ${#BUILD_ID}; i++)); do
+    printf '0x%x,\n' "'${BUILD_ID:$i:1}" >>build_id_hex
+  done
+  printf '0x0' >>build_id_hex
 
-make -j"$(grep -c "^processor" /proc/cpuinfo)" "$@" || exit 1
+  make -j"$(grep -c "^processor" /proc/cpuinfo)" "$@" || exit 1
 
-if [ -f build_id ]; then
+  if [ -f build_id ]; then
     filename=$(cat build_id)
     rm "$filename"
     if [ -f "/usr/lib/${filename}" ]; then
-    	echo -e "Note: Old file found at /usr/lib/${filename}\n"
-        #sudo rm "/usr/lib/${filename}"
+      echo -e "Note: Old file found at /usr/lib/${filename}\n"
+      #sudo rm "/usr/lib/${filename}"
 
     fi
     chmod 660 build_id
     mv build_id build_id_old
-fi
+  fi
 
-echo $BUILD_ID > build_id
-mv libKali.so "$BUILD_ID"
+  echo $BUILD_ID >build_id
+  mv libKali.so "$BUILD_ID"
 
-strip -s -v "$BUILD_ID"
-patchelf --set-soname "$BUILD_ID" "$BUILD_ID" || echo_orange "Warning: your patchelf version does not support \"--set-soname\"\nConsider building from source: https://github.com/NixOS/patchelf"
+  strip -s -v "$BUILD_ID"
+  patchelf --set-soname "$BUILD_ID" "$BUILD_ID" || echo_orange "Warning: your patchelf version does not support \"--set-soname\"\nConsider building from source: https://github.com/NixOS/patchelf"
 
-chmod 400 build_id # Make the build_id read-only for safety.
-echo_green "Build Completed." 
+  chmod 400 build_id # Make the build_id read-only for safety.
+  echo_green "Build Completed."
 }
-function load(){
-export PATH="./GDB:$PATH" # loading old gdb to fix crash
-  # Check_For_logDirectory  
- csgo_pid=$(pidof csgo_linux64)
-if [ -z "$csgo_pid" ]; then
-    echo_red "CS:GO needs to be open before you can inject, exiting..."
-    exit 1
-fi
-
-if [ ! -d ".git" ]; then
-    echo "We have detected that you have downloaded Kali-master.zip from GitHub.com. This is the WRONG way to download! Please download Kali by cloning the Git repository: 'git clone --recursive https://github.com/ArnoldasMk/Kali.git'"
-fi
-
-# pBypass for crash dumps being sent
-# You may also want to consider using -nobreakpad in your launch options.
-sudo rm -rf /tmp/dumps # Remove if it exists
-sudo mkdir --mode=000 /tmp/dumps # Make it as root with no permissions
-
-if [ ! -f build_id ]; then
-    echo "Build ID not found. Please build using the './Kali -b' script."
-    exit
-fi
-
-filename=$(cat build_id)
-
-# Credit: Aixxe @ aixxe.net
-if grep -q "$filename" /proc/"$csgo_pid"/maps; then
-    echo_orange "If its not already Injected, try to Inject with sudo (sudo ./Kali -l) "
-    exit
-fi
-echo "Injecting Build ID: $filename"
-
-# https://www.kernel.org/doc/Documentation/security/Yama.txt
-echo "2" | sudo tee /proc/sys/kernel/yama/ptrace_scope # Only allows root to inject code. This is temporary until reboot.
-
-sudo cp "$filename" "/usr/lib/${filename}"
-
-sudo killall -19 steam
-sudo killall -19 steamwebhelper
-
-lib_dir_name="lib"
-if [ $(getconf LONG_BIT) = 64 ]; then
-    lib_dir_name+="64"
-fi
-
-input="$(
-sudo gdb -n -q -batch-silent \
-  -ex "set logging on" \
-  -ex "set logging file /dev/null" \
-  -ex "set logging redirect on" \
-  -ex "set auto-load safe-path /usr/share/gdb/auto-load/usr/$lib_dir_name/:/usr/$lib_dir_name/" \
-  -ex "attach $csgo_pid" \
-  -ex "set \$dlopen = (void*(*)(char*, int)) dlopen" \
-  -ex "call \$dlopen(\"/usr/lib/$filename\", 1)" \
-  -ex "detach" \
-  -ex "quit"
-)"
-
-sleep 1
-sudo killall -18 steamwebhelper
-sudo killall -18 steam
-
-sudo rm "/usr/lib/${filename}"
-
-last_line="${input##*$'\n'}"
-
-if [ "$last_line" != "\$1 = (void *) 0x0" ]; then
-    echo_green "Successfully injected!"
-else
-    echo_red "Injection failed, make sure you have compiled..."
-fi
-
-}
-
-function load_debug(){
+function load() {
   # Check_For_logDirectory
- csgo_pid=$(pidof csgo_linux64)
-if [ -z "$csgo_pid" ]; then
+  csgo_pid=$(pidof csgo_linux64)
+  if [ -z "$csgo_pid" ]; then
     echo_red "CS:GO needs to be open before you can inject, exiting..."
     exit 1
-fi
+  fi
 
-if [ ! -d ".git" ]; then
+  if [ ! -d ".git" ]; then
     echo "We have detected that you have downloaded Kali-master.zip from GitHub.com. This is the WRONG way to download! Please download Kali by cloning the Git repository: 'git clone --recursive https://github.com/ArnoldasMk/Kali.git'"
-fi
+  fi
 
-# pBypass for crash dumps being sent
-# You may also want to consider using -nobreakpad in your launch options.
-sudo rm -rf /tmp/dumps # Remove if it exists
-sudo mkdir --mode=000 /tmp/dumps # Make it as root with no permissions
+  # pBypass for crash dumps being sent
+  # You may also want to consider using -nobreakpad in your launch options.
+  sudo rm -rf /tmp/dumps           # Remove if it exists
+  sudo mkdir --mode=000 /tmp/dumps # Make it as root with no permissions
 
-if [ ! -f build_id ]; then
+  if [ ! -f build_id ]; then
     echo "Build ID not found. Please build using the './Kali -b' script."
     exit
-fi
+  fi
 
-filename=$(cat build_id)
+  filename=$(cat build_id)
 
-# Credit: Aixxe @ aixxe.net
-if grep -q "$filename" /proc/"$csgo_pid"/maps; then
+  # Credit: Aixxe @ aixxe.net
+  if grep -q "$filename" /proc/"$csgo_pid"/maps; then
     echo_orange "If its not already Injected, try to Inject with sudo (sudo ./Kali -l) "
     exit
-fi
-echo "Injecting Build ID: $filename"
+  fi
+  echo "Injecting Build ID: $filename"
 
-# https://www.kernel.org/doc/Documentation/security/Yama.txt
-echo "2" | sudo tee /proc/sys/kernel/yama/ptrace_scope # Only allows root to inject code. This is temporary until reboot.
+  # https://www.kernel.org/doc/Documentation/security/Yama.txt
+  echo "2" | sudo tee /proc/sys/kernel/yama/ptrace_scope # Only allows root to inject code. This is temporary until reboot.
 
-sudo cp "$filename" "/usr/lib/${filename}"
+  sudo cp "$filename" "/usr/lib/${filename}"
 
-sudo killall -19 steam
-sudo killall -19 steamwebhelper
+  sudo killall -19 steam
+  sudo killall -19 steamwebhelper
 
-lib_dir_name="lib"
-if [ $(getconf LONG_BIT) = 64 ]; then
+  lib_dir_name="lib"
+  if [ $(getconf LONG_BIT) = 64 ]; then
     lib_dir_name+="64"
-fi
+  fi
 
-input="$(
-sudo gdb -n -q -batch \
-  -ex "set logging on" \
-  -ex "set logging file /dev/null" \
-  -ex "set logging redirect on" \
-  -ex "set auto-load safe-path /usr/share/gdb/auto-load/usr/$lib_dir_name/:/usr/$lib_dir_name/" \
-  -ex "attach $csgo_pid" \
-  -ex "set \$dlopen = (void*(*)(char*, int)) dlopen" \
-  -ex "call \$dlopen(\"/usr/lib/$filename\", 1)" \
-  -ex "detach" \
-  -ex "quit" 
-)"
+  input="$(
+    sudo gdb -n -q -batch-silent \
+      -ex "set logging on" \
+      -ex "set logging file /dev/null" \
+      -ex "set logging redirect on" \
+      -ex "set auto-load safe-path /usr/share/gdb/auto-load/usr/$lib_dir_name/:/usr/$lib_dir_name/" \
+      -ex "attach $csgo_pid" \
+      -ex "set \$dlopen = (void*(*)(char*, int)) dlopen" \
+      -ex "call \$dlopen(\"/usr/lib/$filename\", 1)" \
+      -ex "detach" \
+      -ex "quit"
+  )"
 
-sleep 1
-sudo killall -18 steamwebhelper
-sudo killall -18 steam
+  sleep 1
+  sudo killall -18 steamwebhelper
+  sudo killall -18 steam
 
-sudo rm "/usr/lib/${filename}"
+  sudo rm "/usr/lib/${filename}"
 
-last_line="${input##*$'\n'}"
+  last_line="${input##*$'\n'}"
 
-if [ "$last_line" != "\$1 = (void *) 0x0" ]; then
+  if [ "$last_line" != "\$1 = (void *) 0x0" ]; then
     echo_green "Successfully injected!"
-else
+  else
     echo_red "Injection failed, make sure you have compiled..."
-fi
+  fi
 
 }
-function unload(){
+
+function load_debug() {
+  # Check_For_logDirectory
+  csgo_pid=$(pidof csgo_linux64)
+  if [ -z "$csgo_pid" ]; then
+    echo_red "CS:GO needs to be open before you can inject, exiting..."
+    exit 1
+  fi
+
+  if [ ! -d ".git" ]; then
+    echo "We have detected that you have downloaded Kali-master.zip from GitHub.com. This is the WRONG way to download! Please download Kali by cloning the Git repository: 'git clone --recursive https://github.com/ArnoldasMk/Kali.git'"
+  fi
+
+  # pBypass for crash dumps being sent
+  # You may also want to consider using -nobreakpad in your launch options.
+  sudo rm -rf /tmp/dumps           # Remove if it exists
+  sudo mkdir --mode=000 /tmp/dumps # Make it as root with no permissions
+
+  if [ ! -f build_id ]; then
+    echo "Build ID not found. Please build using the './Kali -b' script."
+    exit
+  fi
+
+  filename=$(cat build_id)
+
+  # Credit: Aixxe @ aixxe.net
+  if grep -q "$filename" /proc/"$csgo_pid"/maps; then
+    echo_orange "If its not already Injected, try to Inject with sudo (sudo ./Kali -l) "
+    exit
+  fi
+  echo "Injecting Build ID: $filename"
+
+  # https://www.kernel.org/doc/Documentation/security/Yama.txt
+  echo "2" | sudo tee /proc/sys/kernel/yama/ptrace_scope # Only allows root to inject code. This is temporary until reboot.
+
+  sudo cp "$filename" "/usr/lib/${filename}"
+
+  sudo killall -19 steam
+  sudo killall -19 steamwebhelper
+
+  lib_dir_name="lib"
+  if [ $(getconf LONG_BIT) = 64 ]; then
+    lib_dir_name+="64"
+  fi
+
+  input="$(
+    sudo gdb -n -q -batch \
+      -ex "set logging on" \
+      -ex "set logging file /dev/null" \
+      -ex "set logging redirect on" \
+      -ex "set auto-load safe-path /usr/share/gdb/auto-load/usr/$lib_dir_name/:/usr/$lib_dir_name/" \
+      -ex "attach $csgo_pid" \
+      -ex "set \$dlopen = (void*(*)(char*, int)) dlopen" \
+      -ex "call \$dlopen(\"/usr/lib/$filename\", 1)" \
+      -ex "detach" \
+      -ex "quit"
+  )"
+
+  sleep 1
+  sudo killall -18 steamwebhelper
+  sudo killall -18 steam
+
+  sudo rm "/usr/lib/${filename}"
+
+  last_line="${input##*$'\n'}"
+
+  if [ "$last_line" != "\$1 = (void *) 0x0" ]; then
+    echo_green "Successfully injected!"
+  else
+    echo_red "Injection failed, make sure you have compiled..."
+  fi
+
+}
+function unload() {
   # Credit: Aixxe @ aixxe.net
   csgo_pid=$(pidof csgo_linux64)
-filename=$(cat build_id)
-filename_old=$(cat build_id_old)
+  filename=$(cat build_id)
+  filename_old=$(cat build_id_old)
 
-if [ -f build_id ]; then
+  if [ -f build_id ]; then
     if grep -q "$filename" /proc/"$csgo_pid"/maps; then
-    echo "unloading $filename"
-    sudo gdb -n -q -batch-silent \
+      echo "unloading $filename"
+      sudo gdb -n -q -batch-silent \
         -ex "set logging on" \
         -ex "set logging file /dev/null" \
         -ex "set logging redirect on" \
@@ -323,15 +287,15 @@ if [ -f build_id ]; then
         -ex "call \$dlclose(\$library)" \
         -ex "detach" \
         -ex "quit"
-    sudo rm "/usr/lib/${filename}"
+      sudo rm "/usr/lib/${filename}"
     fi
-fi
+  fi
 
-# "build_id_old" is used for unloading in case you rebuild while injected.
-if [ -f build_id_old ]; then
+  # "build_id_old" is used for unloading in case you rebuild while injected.
+  if [ -f build_id_old ]; then
     if grep -q "$filename_old" /proc/"$csgo_pid"/maps; then
-    echo "unloading old file - $filename_old"
-    sudo gdb -n -q -batch-silent \
+      echo "unloading old file - $filename_old"
+      sudo gdb -n -q -batch-silent \
         -ex "set logging on" \
         -ex "set logging file /dev/null" \
         -ex "set logging redirect on" \
@@ -343,15 +307,15 @@ if [ -f build_id_old ]; then
         -ex "call \$dlclose(\$library)" \
         -ex "detach" \
         -ex "quit"
-    sudo rm "/usr/lib/${filename_old}"
+      sudo rm "/usr/lib/${filename_old}"
     fi
-fi
+  fi
 
-echo "Done. See CS:GO Console."
+  echo "Done. See CS:GO Console."
 
 }
 
-function clean(){
+function clean() {
   rm -rf ./CMakeFiles
   rm ./CMakeCache.txt
   rm ./Makefile
@@ -364,18 +328,18 @@ function clean(){
   rm ./.build_id_old
 }
 
-function reverce_update(){
+function reverce_update() {
   git reset --hard
 }
 
-function kill_process(){
+function kill_process() {
   sudo killall -9 csgo_linux64
   sudo killall -9 csgo.sh
   sudo killall -9 gdb
   # sudo killall -9 steam
 }
 
-function update(){
+function update() {
   if [ -d ".git" ]; then
     git pull
     git submodule update --init --recursive --remote
@@ -386,21 +350,21 @@ function update(){
   fi
 }
 
-function update_force(){
+function update_force() {
   if [ -d ".git" ]; then
     read -p "This will delete local code changes. Are you sure? (y/n)" -n 1 -r
     echo
-  if [[ $REPLY =~ ^[Yy]$ ]]; then
-    git reset --hard
-    update
-  fi
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      git reset --hard
+      update
+    fi
   else
     echo "Not a git repository (or any of the parent directories): .git. Do NOT download the repository as a zip file from GitHub.com! Please download Fuzion by cloning the Git repository: 'git clone --recursive https://github.com/LWSS/Fuzion.git'"
     exit
   fi
 }
 
-function help(){
+function help() {
   echo "[-b or --build] > to build the Kali"
   echo "[-bd or --build_debug] > to build and debug the Kali"
   echo "[-l or --load] > to load the Kali"
@@ -412,60 +376,58 @@ function help(){
   echo "[-k or --kill] > to kill processes related to steam and csgo"
 }
 
-function __main__(){
+function __main__() {
   local option="$1"
   sudo -v ## asking for root permission
 
-  case $option in 
-      -b|--build)
-        echo_orange "Building the project"
-        build
-      ;;
-      -bd|--build_debug)
-        echo_orange "Building and debuging the project"
-        build_debug
-      ;;
-      -l|--load)
-        echo_orange "loading..."
-        load
-      ;;
-      -ld|--load_debug)
-        echo_orange "loading..."
-        load_debug
-      ;;
-      -ul|--unload)
-        echo_orange "unloading..."
-        unload
-      ;;
-      -c|--clean)
-        echo_orange "Cleaning the mess :)"
-        clean
-      ;;
-      -u|--update)
-      update
-      ;;
-      -uf|--update-force)
-      update_force
-      ;;
-      -ru|--reverce-update)
-      reverce_update
-      ;;
-      -k|--kill)
-      kill_process
-      ;;
-      -h|--help)
-      help
-      ;;
-      *)
-        echo_red "Unknown Command $option || use -h or --help to show the list of commands"
-      ;;
+  case $option in
+  -b | --build)
+    echo_orange "Building the project"
+    build
+    ;;
+  -bd | --build_debug)
+    echo_orange "Building and debuging the project"
+    build_debug
+    ;;
+  -l | --load)
+    echo_orange "loading..."
+    load
+    ;;
+  -ld | --load_debug)
+    echo_orange "loading..."
+    load_debug
+    ;;
+  -ul | --unload)
+    echo_orange "unloading..."
+    unload
+    ;;
+  -c | --clean)
+    echo_orange "Cleaning the mess :)"
+    clean
+    ;;
+  -u | --update)
+    update
+    ;;
+  -uf | --update-force)
+    update_force
+    ;;
+  -ru | --reverce-update)
+    reverce_update
+    ;;
+  -k | --kill)
+    kill_process
+    ;;
+  -h | --help)
+    help
+    ;;
+  *)
+    echo_red "Unknown Command $option || use -h or --help to show the list of commands"
+    ;;
   esac
 }
 
 #dor loop not working
-while [[ $# -gt 0 ]]
-do
+while [[ $# -gt 0 ]]; do
   __main__ $1
   shift
 done
-
