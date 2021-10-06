@@ -32,12 +32,6 @@ static float HeadScale = 0.1f;
 static bool autoSlow = false;
 static bool doubleFire = false;
 static bool scopeControlEnabled = false;
-static bool BacktrackEnabled = false;
-static bool OnshotEnabled = false;
-static float BacktrackValue = 0.2f;
-static ButtonCode_t onshotkey  = ButtonCode_t::KEY_3;
-static ButtonCode_t mindmgoveridekey = ButtonCode_t::KEY_5;
-
 void UI::ReloadRageWeaponSettings()
 {
 	ItemDefinitionIndex index = ItemDefinitionIndex::INVALID;
@@ -58,14 +52,9 @@ void UI::ReloadRageWeaponSettings()
 	scopeControlEnabled = Settings::Ragebot::weapons.at(index).scopeControlEnabled;
 	damagePrediction = Settings::Ragebot::weapons.at(index).DmagePredictionType;
 	enemySelectionType = Settings::Ragebot::weapons.at(index).enemySelectionType;
-	BacktrackEnabled = Settings::Ragebot::weapons.at(index).BacktrackEnabled;
-	OnshotEnabled = Settings::Ragebot::weapons.at(index).OnshotEnabled;
 	MinDamage = Settings::Ragebot::weapons.at(index).MinDamage;
 	BodyScale = Settings::Ragebot::weapons.at(index).BodyScale;
 	HeadScale = Settings::Ragebot::weapons.at(index).HeadScale;
-	BacktrackValue = Settings::Ragebot::weapons.at(index).BacktrackValue;
-	onshotkey = Settings::Ragebot::weapons.at(index).onshotkey;
-	mindmgoveridekey = Settings::Ragebot::weapons.at(index).mindmgoveridekey;
 
 	for (int BONE = 0; BONE < 6; BONE++)
 	{
@@ -94,17 +83,12 @@ void UI::UpdateRageWeaponSettings()
 			.autoSlow = autoSlow,
 			.scopeControlEnabled = scopeControlEnabled,
 			.DoubleFire = doubleFire,
-			.BacktrackEnabled = BacktrackEnabled,
-			.OnshotEnabled = OnshotEnabled,
 
 			.MinDamage = MinDamage,
 			.HitChance = HitChange,
 			.BodyScale = BodyScale,
 			.HeadScale = HeadScale,
-			.BacktrackValue = BacktrackValue,
 
-			.onshotkey = onshotkey,
-			.mindmgoveridekey = mindmgoveridekey,
 			.DmagePredictionType = damagePrediction,
 			.enemySelectionType = enemySelectionType,	
 	};
