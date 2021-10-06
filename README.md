@@ -3,9 +3,6 @@ Kali is an Open Source Linux Cheat For Counter Strike : Global Offensive.
 This cheat is a fork of fork of fork of fork: 
 
 Linux Basehook -> Aimtux -> Fuzion -> MissedIT -> EyeHook -> Kali.
-
-It has some problems with Ragebot functions, it crashes when you toggle them on specific weapon. I'm mainly fixing everything I can, instead of going to add more features to the cheat, I prefer stability > performance. I am also loosing motivation to work on this cheat, because of how much this cheat is a mess. 
-
 ## Compiling
 
 **Note:** _Do NOT download or compile as the root user._
