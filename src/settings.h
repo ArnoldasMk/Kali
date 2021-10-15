@@ -1205,7 +1205,14 @@ namespace Settings
 			inline bool enabled = true;
 			inline ColorVar color = ImColor(215, 5, 252, 255);
 		}
-
+		namespace Drawfire
+		{
+			inline bool enabled = false;
+		}
+		namespace DrawAATrace
+		{
+			inline bool enabled = false;
+		}
 		namespace FilterEnemy
 		{
 

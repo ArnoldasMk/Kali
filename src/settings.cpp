@@ -409,6 +409,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("ESP")][XORSTR("KeybindsY")] = Settings::ESP::keybi::y;
     settings[XORSTR("ESP")][XORSTR("KeybindsX")] = Settings::ESP::keybi::x;
     settings[XORSTR("ESP")][XORSTR("showKeybinds")] = Settings::ESP::KeyBinds;
+    settings[XORSTR("ESP")][XORSTR("DrawAATrace")][XORSTR("enabled")] = Settings::ESP::DrawAATrace::enabled;
+    settings[XORSTR("ESP")][XORSTR("Draw Molotov")][XORSTR("enabled")] = Settings::ESP::Drawfire::enabled;
     settings[XORSTR("ESP")][XORSTR("showDormant")] = Settings::ESP::showDormant;
     settings[XORSTR("ESP")][XORSTR("showimpacts")] = Settings::ESP::showimpacts;
     settings[XORSTR("ESP")][XORSTR("enabled")] = Settings::ESP::enabled;
@@ -1198,6 +1200,8 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("ESP")][XORSTR("KeybindsY")], &Settings::ESP::keybi::y);
     GetVal(settings[XORSTR("ESP")][XORSTR("KeybindsX")], &Settings::ESP::keybi::x);
     GetVal(settings[XORSTR("ESP")][XORSTR("showKeybinds")], &Settings::ESP::KeyBinds);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Draw Molotov")][XORSTR("enabled")], &Settings::ESP::Drawfire::enabled);
+    GetVal(settings[XORSTR("ESP")][XORSTR("DrawAATrace")][XORSTR("enabled")], &Settings::ESP::DrawAATrace::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("showDormant")], &Settings::ESP::showDormant);
     GetVal(settings[XORSTR("ESP")][XORSTR("showimpacts")], &Settings::ESP::showimpacts);
     GetVal(settings[XORSTR("ESP")][XORSTR("enabled")], &Settings::ESP::enabled);
