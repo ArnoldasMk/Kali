@@ -123,16 +123,17 @@ if multiple %command% options are used, separate with spaces eg:
 ```bash
 gamemoderun mesa_no_error=true %command%
 ```
+To check mesa version:
+```bash
+glxinfo | grep "OpenGL version"
+```
 | Works, but..                          | Crashes (and when)                                             |
 | --------------------------------------| ---------------------------------------------------------------|
-| Mesa 20.1.4, but overlay doesn't work | Mesa 20.3.2 (crashes on startup)                               |
+| Mesa 20.1.4, but overlay doesn't work | Mesa 20.3.2 (crashes on startup.)                              |
 | Mesa 21.0.0, but overlay doesn't work | Mesa 20.2.0 (crashes when choosing a team after a map loads.)  |
-|                                       | Mesa 20.2.6 (crashes when choosing a team after a map loads.)  |  
-
-## New menu photos WIP !!!!
-Legitbot Tab
-![LegitBot](Pictures/newmenulegitbottab.png)
-
+|-                                      | Mesa 20.2.6 (crashes when choosing a team after a map loads.)  |  
+|-                                      | Mesa 21.1.6-1 (crashes when choosing a team after a map loads.)|  
+|-                                      | Mesa 21.2.1 (crashes on startup.)                              |
 ## Credits
 
 Special thanks to the Original AimTux project: [https://github.com/AimTuxOfficial/AimTux](https://github.com/AimTuxOfficial/AimTux).
