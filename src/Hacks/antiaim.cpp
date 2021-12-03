@@ -707,7 +707,7 @@ if (CreateMove::sendPacket){
 		if (!(should_break_lby(cmd) && lby::enabled && !Settings::AntiAim::ManualAntiAim::Enable)){
 	        should_sidemove = true;
                 if (!AntiAim::bSend)
-                angle.y += inverted ? AntiAim::GetMaxDelta(localplayer->GetAnimState()) : -AntiAim::GetMaxDelta(localplayer->GetAnimState());
+                angle.y += inverted ? (AntiAim::GetMaxDelta(localplayer->GetAnimState())+ AntiAimOffset) : -(AntiAim::GetMaxDelta(localplayer->GetAnimState()) + AntiAimOffset);
 		}
                 break;
 
