@@ -315,6 +315,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("invertonhurt")] = Settings::AntiAim::RageAntiAim::invertOnHurt;
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Fake Percent")] = Settings::AntiAim::RageAntiAim::AntiAImPercent;
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Real Jitter Percent")] = Settings::AntiAim::RageAntiAim::JitterPercent;
+    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Static Offset")] = Settings::AntiAim::RageAntiAim::AntiAimOffset;
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("togglekey")] = Util::GetButtonName(Settings::AntiAim::RageAntiAim::InvertKey);
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("inverted")] = Settings::AntiAim::RageAntiAim::inverted;
     settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Type")] = (int)Settings::AntiAim::RageAntiAim::Type;
@@ -1097,6 +1098,7 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("enabled")], &Settings::AntiAim::RageAntiAim::enable);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("invertonhurt")], &Settings::AntiAim::RageAntiAim::invertOnHurt);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Fake Percent")], &Settings::AntiAim::RageAntiAim::AntiAImPercent);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Static Offset")], &Settings::AntiAim::RageAntiAim::AntiAimOffset);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Real Jitter Percent")], &Settings::AntiAim::RageAntiAim::JitterPercent);
     GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("togglekey")], &Settings::AntiAim::RageAntiAim::InvertKey);
     GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("inverted")], &Settings::AntiAim::RageAntiAim::inverted);

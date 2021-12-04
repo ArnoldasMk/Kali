@@ -1041,6 +1041,7 @@ namespace Settings
 			inline ButtonCode_t InvertKey;
 			inline bool inverted = false;
 			inline float AntiAImPercent = 100.f;
+			inline float AntiAimOffset = 30.f;
 			inline float JitterPercent = 30.f;
 			inline bool atTheTarget = false;
 			inline bool SendReal = false;
