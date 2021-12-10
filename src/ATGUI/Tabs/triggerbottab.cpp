@@ -4,98 +4,112 @@
 #include "../../settings.h"
 #include "../../ImGUI/imgui_internal.h"
 #include "../atgui.h"
+#include "../tooltip.h"
 
 #pragma GCC diagnostic ignored "-Wformat-security"
 
-void Triggerbot::RenderTab()
+void Triggerbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 {
-	ImGui::Checkbox(XORSTR("Enabled"), &Settings::Triggerbot::enabled);
-	ImGui::Separator();
-	ImGui::Columns(2, nullptr, true);
+	draw->AddRectFilled(ImVec2(pos.x + 180, pos.y + 65), ImVec2(pos.x + 960 - 15, pos.y + 95), ImColor(0, 0, 0, 25),10);
+	ImGui::SetCursorPos(ImVec2(185, 70));
+	ImGui::BeginGroup();
 	{
-		ImGui::BeginChild(XORSTR("TRIG1"), ImVec2(0, 0), true);
+		if (ImGui::CheckboxFill(XORSTR("Enabled"), &Settings::Triggerbot::enabled)) {}
+	}
+	ImGui::EndGroup();
+	ToolTip::Show(XORSTR("Enable Trigger Bot Bot"), ImGui::IsItemHovered());
+	ImGui::SetCursorPos(ImVec2(180, 100));
+	ImGui::BeginGroup();
+	{
+		ImGui::Columns(2, nullptr, false);
 		{
-			ImGui::Text(XORSTR("Keybind"));
-			ImGui::Separator();
-			ImGui::Columns(2, nullptr, true);
+			ImGui::BeginChild(XORSTR("TRIG1"), ImVec2(0, 670), true);
 			{
-				ImGui::ItemSize(ImVec2(0.0f, 0.0f), 0.0f);
-				ImGui::Text(XORSTR("Trigger Key"));
-			}
-			ImGui::NextColumn();
-			{
+				ImGui::Text(XORSTR("Keybind"));
+				ImGui::Separator();
+				ImGui::Columns(2, nullptr, true);
+				{
+					ImGui::ItemSize(ImVec2(0.0f, 0.0f), 0.0f);
+					ImGui::Text(XORSTR("Trigger Key"));
+				}
+				ImGui::NextColumn();
+				{
 				UI::KeyBindButton(&Settings::Triggerbot::key);
-			}
-			ImGui::Columns(1);
-			ImGui::Separator();
-			ImGui::Text(XORSTR("Random Delay"));
-			ImGui::Separator();
-			ImGui::Columns(2, nullptr, true);
-			{
-				ImGui::Checkbox(XORSTR("Enabled"), &Settings::Triggerbot::RandomDelay::enabled);
-				if( Settings::Triggerbot::RandomDelay::lastRoll != 0 )
-				{
-					ImGui::Text(XORSTR("Last delay: %dms"), Settings::Triggerbot::RandomDelay::lastRoll);
 				}
-			}
-			ImGui::NextColumn();
-			{
-				ImGui::Text(XORSTR("Minimum ms"));
-				ImGui::SliderInt(XORSTR("##TRIGGERRANDOMLOW"), &Settings::Triggerbot::RandomDelay::lowBound, 5, 220);
-				if( Settings::Triggerbot::RandomDelay::lowBound >= Settings::Triggerbot::RandomDelay::highBound )
+				ImGui::Columns(1);
+				ImGui::Separator();
+				ImGui::Text(XORSTR("Random Delay"));
+				ImGui::Separator();
+				ImGui::Columns(2, nullptr, true);
 				{
-					Settings::Triggerbot::RandomDelay::highBound = Settings::Triggerbot::RandomDelay::lowBound + 1;
+					ImGui::Checkbox(XORSTR("Enabled"), &Settings::Triggerbot::RandomDelay::enabled);
+					if( Settings::Triggerbot::RandomDelay::lastRoll != 0 )
+					{
+						ImGui::Text(XORSTR("Last delay: %dms"), Settings::Triggerbot::RandomDelay::lastRoll);
+					}
 				}
-				ImGui::Text(XORSTR("Maximum ms"));
-				ImGui::SliderInt(XORSTR("##TRIGGERRANDOMHIGH"), &Settings::Triggerbot::RandomDelay::highBound, (Settings::Triggerbot::RandomDelay::lowBound+1), 225);
-			}
-			ImGui::Columns(1);
-			ImGui::Separator();
+				ImGui::NextColumn();
+				{
+					ImGui::Text(XORSTR("Minimum ms"));
+					ImGui::SliderInt(XORSTR("##TRIGGERRANDOMLOW"), &Settings::Triggerbot::RandomDelay::lowBound, 5, 220);
+					if( Settings::Triggerbot::RandomDelay::lowBound >= Settings::Triggerbot::RandomDelay::highBound )
+					{
+						Settings::Triggerbot::RandomDelay::highBound = Settings::Triggerbot::RandomDelay::lowBound + 1;
+					}
+					ImGui::Text(XORSTR("Maximum ms"));
+					ImGui::SliderInt(XORSTR("##TRIGGERRANDOMHIGH"), &Settings::Triggerbot::RandomDelay::highBound, (Settings::Triggerbot::RandomDelay::lowBound+1), 225);
+				}
+				ImGui::Columns(1);
+				ImGui::Separator();		
 
-			ImGui::Text(XORSTR("Auto Knife & Zeus"));
- 			ImGui::Separator();
- 			ImGui::Columns(2, nullptr, true);
- 			{
+				ImGui::Text(XORSTR("Auto Knife & Zeus"));
+	 			ImGui::Separator();
+ 				ImGui::Columns(2, nullptr, true);
+ 				{
  					ImGui::PushItemWidth(-1);
  					ImGui::Checkbox(XORSTR("Auto Knife"), &Settings::AutoKnife::enabled);
  					ImGui::Checkbox(XORSTR("On Key"), &Settings::AutoKnife::onKey);
 
- 			}
- 			ImGui::NextColumn();
- 			{
+	 			}
+ 				ImGui::NextColumn();
+ 				{
  					ImGui::PushItemWidth(-1);
  					ImGui::Checkbox(XORSTR("Enemies"), &Settings::AutoKnife::Filters::enemies);
  					ImGui::Checkbox(XORSTR("Allies"), &Settings::AutoKnife::Filters::allies);
- 			}
+ 				}						
 
 			ImGui::EndChild();
+			}
 		}
-	}
-	ImGui::NextColumn();
-	{
-		ImGui::BeginChild(XORSTR("TRIG2"), ImVec2(0, 0), true);
+		ImGui::NextColumn();
 		{
-			ImGui::Text(XORSTR("Filter"));
-			ImGui::Separator();
-			ImGui::Columns(2, nullptr, true);
+			ImGui::BeginChild(XORSTR("TRIG2"), ImVec2(0, 670), true);
 			{
-				ImGui::Checkbox(XORSTR("Enemies"), &Settings::Triggerbot::Filters::enemies);
-				ImGui::Checkbox(XORSTR("Walls"), &Settings::Triggerbot::Filters::walls);
-				ImGui::Checkbox(XORSTR("Head"), &Settings::Triggerbot::Filters::head);
-				ImGui::Checkbox(XORSTR("Chest"), &Settings::Triggerbot::Filters::chest);
-				ImGui::Checkbox(XORSTR("Legs"), &Settings::Triggerbot::Filters::legs);
+				ImGui::Text(XORSTR("Filter"));
+				ImGui::Separator();
+				ImGui::Columns(2, nullptr, true);
+				{
+					ImGui::Checkbox(XORSTR("Enemies"), &Settings::Triggerbot::Filters::enemies);
+					ImGui::Checkbox(XORSTR("Walls"), &Settings::Triggerbot::Filters::walls);
+					ImGui::Checkbox(XORSTR("Head"), &Settings::Triggerbot::Filters::head);
+					ImGui::Checkbox(XORSTR("Chest"), &Settings::Triggerbot::Filters::chest);
+					ImGui::Checkbox(XORSTR("Legs"), &Settings::Triggerbot::Filters::legs);
+				}
+				ImGui::NextColumn();
+				{
+					ImGui::Checkbox(XORSTR("Allies"), &Settings::Triggerbot::Filters::allies);
+					ImGui::Checkbox(XORSTR("Smoke check"), &Settings::Triggerbot::Filters::smokeCheck);
+					ImGui::Checkbox(XORSTR("Flash check"), &Settings::Triggerbot::Filters::flashCheck);
+					ImGui::Checkbox(XORSTR("Stomach"), &Settings::Triggerbot::Filters::stomach);
+					ImGui::Checkbox(XORSTR("Arms"), &Settings::Triggerbot::Filters::arms);
+				}
+				ImGui::Columns(1);
+				ImGui::Separator();
 			}
-			ImGui::NextColumn();
-			{
-				ImGui::Checkbox(XORSTR("Allies"), &Settings::Triggerbot::Filters::allies);
-				ImGui::Checkbox(XORSTR("Smoke check"), &Settings::Triggerbot::Filters::smokeCheck);
-				ImGui::Checkbox(XORSTR("Flash check"), &Settings::Triggerbot::Filters::flashCheck);
-				ImGui::Checkbox(XORSTR("Stomach"), &Settings::Triggerbot::Filters::stomach);
-				ImGui::Checkbox(XORSTR("Arms"), &Settings::Triggerbot::Filters::arms);
-			}
-			ImGui::Columns(1);
-			ImGui::Separator();
 			ImGui::EndChild();
 		}
+		ImGui::EndColumns();
+
 	}
+	ImGui::EndGroup();
 }

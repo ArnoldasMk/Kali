@@ -1,7 +1,7 @@
 #include "hooks.h"
 
 #include "../interfaces.h"
-#include "../Hacks/materialconfig.h"
+#include "../Features/materialconfig.h"
 
 typedef void ( *OverrideConfigFn)( void*, MaterialSystem_Config_t *config, bool );
 

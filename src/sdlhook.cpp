@@ -143,10 +143,13 @@ static void SwapWindow(SDL_Window* window)
         SDL_GetMouseState(&mx, &my);
 
         io.MousePos = ImVec2((float)mx, (float)my);
-    }
-    SDL_ShowCursor(io.MouseDrawCursor ? 0: 1);
 
-    UI::SetupColors();
+        SDL_ShowCursor(io.MouseDrawCursor ? 0: 1);
+    }
+    else
+    SDL_ShowCursor(1);
+
+    UI::SetupMainMenuColor();
     
     // if (!UI::isVisible)
     // {

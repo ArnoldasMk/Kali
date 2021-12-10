@@ -598,12 +598,12 @@ namespace Settings
 				inline bool open = false;
 				inline bool reload = false;
 			}
-			namespace Main
+			namespace MainMenu
 			{
 				inline int posX = 30;
 				inline int posY = 20;
-				inline int sizeX = 960;
-				inline int sizeY = 645;
+				inline int sizeX = 1128;
+				inline int sizeY = 800;
 				inline bool open = false;
 				inline bool reload = false; // True on config load, used to change Window Position.
 			}
@@ -878,6 +878,7 @@ namespace Settings
 		{
 			inline bool enabled = false;
 			inline bool desireBones[] = {true, true, true, true, true, true};
+			inline bool desiredMultiBones[] = {true, true, true, true, true, true};
 		}
 
 		namespace AutoPistol
@@ -905,7 +906,7 @@ namespace Settings
 
 		namespace HitChanceOverwrride
 		{
-			inline bool enable = false;
+			inline bool enabled = false;
 			inline float value = 1.0f;
 		}
 
@@ -916,7 +917,7 @@ namespace Settings
 
 		namespace AutoCrouch
 		{
-			inline bool enable = false;
+			inline bool enabled = false;
 		}
 
 		namespace backTrack
@@ -978,7 +979,6 @@ namespace Settings
 	namespace AntiAim
 	{
 		inline bool arms;
-		inline bool aaoff;
 		inline float offsat;
 		inline bool AutoInvert;
 		inline bool ChokeOnShot;
@@ -986,6 +986,10 @@ namespace Settings
 		inline AntiAimType_X pitchtype = AntiAimType_X::STATIC_DOWN;
 		inline bool lbyjitter;
 
+		namespace AADisabled
+		{
+			inline bool enabled = true;
+		}
 		namespace airspin
 		{
 			inline bool enabled;
@@ -1015,7 +1019,7 @@ namespace Settings
 			namespace customaa
 			{
 				inline AAState aastate = AAState::STAND;
-				inline bool enabled;
+				inline bool enabled = false;
 				inline bool randang;
 				inline bool sidemove;
 				inline int baseAngle;
@@ -1037,7 +1041,7 @@ namespace Settings
 			inline bool pitchJitter;
 			inline float offset = 180;
 			inline bool invertOnHurt = false;
-			inline bool enable = false;
+			inline bool enabled = false;
 			inline ButtonCode_t InvertKey;
 			inline bool inverted = false;
 			inline float AntiAImPercent = 100.f;
@@ -1056,7 +1060,7 @@ namespace Settings
 		}
 		namespace LegitAntiAim
 		{
-			inline bool enable = false;
+			inline bool enabled = false;
 			inline bool OverWatchProof = true;
 			inline ButtonCode_t InvertKey = ButtonCode_t::KEY_T;
 			inline bool inverted = false;
@@ -1066,7 +1070,7 @@ namespace Settings
 		}
 		namespace ManualAntiAim
 		{
-			inline bool Enable = false;
+			inline bool Enabled = false;
 			inline ButtonCode_t backButton = ButtonCode_t::KEY_X;
 			inline ButtonCode_t RightButton = ButtonCode_t::KEY_C;
 			inline ButtonCode_t LeftButton = ButtonCode_t::KEY_Z;
@@ -1410,7 +1414,7 @@ namespace Settings
 			inline bool legit = false;
 			inline bool visibilityCheck = false;
 			inline bool smokeCheck = false;
-			//inline bool flashCheck = false;
+			// inline bool flashCheck = false;
 			inline bool enemies = false;
 			inline bool allies = false;
 			inline bool bomb = false;

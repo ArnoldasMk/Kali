@@ -197,33 +197,47 @@ void UI::UpdateWeaponSettings()
 	}
 }
 
-void Legitbot::RenderTab()
+void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 {
 	const char *targets[] = {"PELVIS", "HIP", "LOWER SPINE", "MIDDLE SPINE", "UPPER SPINE", "NECK", "HEAD"};
 	const char *smoothTypes[] = {"Slow Near End", "Constant Speed", "Fast Near End"};
 	static char filterWeapons[32];
-
-	if (ImGui::Checkbox(XORSTR("Enabled"), &Settings::Legitbot::enabled))
-		UI::UpdateWeaponSettings();
-	ImGui::Separator();
-
+	draw->AddRectFilled(ImVec2(pos.x + 180, pos.y + 65), ImVec2(pos.x + 960 - 15, pos.y + 95), ImColor(0, 0, 0, 25), 10);
+	ImGui::SetCursorPos(ImVec2(185, 70));
 	ImGui::BeginGroup();
 	{
-		ImGui::Columns(3, nullptr, true);
+		if (ImGui::CheckboxFill(XORSTR("Enabled"), &Settings::Legitbot::enabled))
 		{
-			ImGui::SetColumnOffset(1, 200);
-			ImGui::PushItemWidth(-1);
+			Settings::Ragebot::enabled = false;
+			UI::UpdateWeaponSettings();
+		}
+	}
+	ImGui::EndGroup();
+	ImGui::SetCursorPos(ImVec2(180, 100));
+	ImGui::BeginGroup();
+	{
+		ImGui::Columns(3, nullptr, false);
+		{
+			ImGui::SetColumnOffset(1, 350);
+			ImGui::PushItemWidth(-10);
+
 			ImGui::InputText(XORSTR("##FILTERWEAPONS"), filterWeapons, IM_ARRAYSIZE(filterWeapons));
 			ImGui::PopItemWidth();
-			ImGui::ListBoxHeader(XORSTR("##GUNS"), ImVec2(-1, -1));
+			ImGui::ListBoxHeader(XORSTR("##GUNS"), ImVec2(-1, 706));
 			for (auto it : ItemDefinitionIndexMap)
 			{
 				bool isDefault = (int)it.first < 0;
-				if (!isDefault && !Util::Contains(Util::ToLower(std::string(filterWeapons)), Util::ToLower(Util::Items::GetItemDisplayName(it.first).c_str())))
+				if (!isDefault && !Util::Contains(Util::ToLower(std::string(filterWeapons)),
+										    Util::ToLower(Util::Items::GetItemDisplayName(it.first).c_str())))
+				{
 					continue;
+				}
 
-				if (Util::Items::IsKnife(it.first) || Util::Items::IsGlove(it.first) || Util::Items::IsUtility(it.first))
+				if (Util::Items::IsKnife(it.first) || Util::Items::IsGlove(it.first) ||
+				    Util::Items::IsUtility(it.first))
+				{
 					continue;
+				}
 
 				const bool item_selected = ((int)it.first == (int)currentWeapon);
 				ImGui::PushID((int)it.first);
@@ -231,8 +245,11 @@ void Legitbot::RenderTab()
 				char changeIndicator = ' ';
 				bool isChanged = Settings::Legitbot::weapons.find(it.first) != Settings::Legitbot::weapons.end();
 				if (!isDefault && isChanged)
+				{
 					changeIndicator = '*';
-				formattedName = changeIndicator + (isDefault ? Util::Items::GetItemDisplayName(it.first).c_str() : Util::Items::GetItemDisplayName(it.first));
+				}
+				formattedName = changeIndicator + (isDefault ? Util::Items::GetItemDisplayName(it.first).c_str()
+													: Util::Items::GetItemDisplayName(it.first));
 				if (ImGui::Selectable(formattedName.c_str(), item_selected))
 				{
 					currentWeapon = it.first;
@@ -245,7 +262,7 @@ void Legitbot::RenderTab()
 		ImGui::NextColumn();
 		{
 			ImGui::SetColumnOffset(2, ImGui::GetWindowWidth() / 2 + 226);
-			ImGui::BeginChild(XORSTR("COL1"), ImVec2(0, 0), true);
+			ImGui::BeginChild(XORSTR("COL1"), ImVec2(0, 736), true);
 			{
 				ImGui::Columns(1);
 				ImGui::Separator();
@@ -339,7 +356,7 @@ void Legitbot::RenderTab()
 				ImGui::EndColumns();
 				ImGui::Separator();
 				ImGui::Columns(1);
-				ImGui::Text(XORSTR("Target Hitboxes"));
+				ImGui::Text(XORSTR("Target Bones"));
 				ImGui::Separator();
 				ImGui::Columns(3, nullptr, false);
 				{
@@ -427,7 +444,7 @@ void Legitbot::RenderTab()
 		}
 		ImGui::NextColumn();
 		{
-			ImGui::BeginChild(XORSTR("COL2"), ImVec2(0, 0), true);
+			ImGui::BeginChild(XORSTR("COL2"), ImVec2(0, 736), true);
 			{
 				ImGui::Text(XORSTR("Aimkey Only"));
 				ImGui::Separator();
@@ -542,7 +559,7 @@ void Legitbot::RenderTab()
 				ImGui::Columns(1);
 				{
 
-					if (ImGui::Checkbox(XORSTR("Autowall"), &autoWallEnabled))
+					if (ImGui::Checkbox(XORSTR("Autowall Enabled"), &autoWallEnabled))
 						UI::UpdateWeaponSettings();
 				}
 				ImGui::Columns(1);
@@ -567,6 +584,7 @@ void Legitbot::RenderTab()
 						Settings::Legitbot::weapons.erase(currentWeapon);
 						UI::ReloadWeaponSettings();
 					}
+					ImGui::Separator();
 				}
 			}
 			ImGui::EndChild();

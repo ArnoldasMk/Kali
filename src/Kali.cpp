@@ -13,10 +13,10 @@
 #include "EventListener.h"
 #include "Utils/xorstring.h"
 #include "Utils/bonemaps.h"
-#include "Hacks/nosmoke.h"
-#include "Hacks/tracereffect.h"
-#include "Hacks/skinchanger.h"
-#include "Hacks/valvedscheck.h"
+#include "Features/nosmoke.h"
+#include "Features/tracereffect.h"
+#include "Features/skinchanger.h"
+#include "Features/valvedscheck.h"
 #include "settings.h"
 
 

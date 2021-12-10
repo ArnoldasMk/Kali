@@ -12,11 +12,10 @@
 #define MAX_WEAPON_PREFIX 16
 #define MAX_WEAPON_AMMO_NAME 32
 
-
 class model_t;
 class ClientClass;
 
-typedef int (* GetSequenceActivityFn)( void*, int ); // C_BaseAnimating::GetSequenceActivity(int sequence).
+typedef int (*GetSequenceActivityFn)(void *, int); // C_BaseAnimating::GetSequenceActivity(int sequence).
 extern GetSequenceActivityFn GetSeqActivity;
 extern uintptr_t SetAbsOriginFnAddr;
 
@@ -72,48 +71,50 @@ enum DataUpdateType_t
 class AnimationLayer
 {
 public:
-    char pad_0000[24];
-    int m_nOrder;
-    int m_nSequence; // 0x1C
-    float_t m_flPrevCycle;
-    float_t m_flWeight;
-    float_t m_flWeightDeltaRate;
-    float_t m_flPlaybackRate;
-    float_t m_flCycle;
-    void *m_pOwner; // 0x38 // player's thisptr
-    char pad_0038[8]; // 0x40
-}; //Size: 0x0048
+	char pad_0000[24];
+	int m_nOrder;
+	int m_nSequence; // 0x1C
+	float_t m_flPrevCycle;
+	float_t m_flWeight;
+	float_t m_flWeightDeltaRate;
+	float_t m_flPlaybackRate;
+	float_t m_flCycle;
+	void *m_pOwner;   // 0x38 // player's thisptr
+	char pad_0038[8]; // 0x40
+};				   //Size: 0x0048
 
 class ICollideable
 {
 public:
 	virtual void pad0();
-	virtual const Vector& OBBMins() const;
-	virtual const Vector& OBBMaxs() const;
+	virtual const Vector &OBBMins() const;
+	virtual const Vector &OBBMaxs() const;
 };
 
 class IHandleEntity
 {
 public:
-	virtual ~IHandleEntity() {};
+	virtual ~IHandleEntity(){};
 };
 
-class IClientUnknown : public IHandleEntity {};
+class IClientUnknown : public IHandleEntity
+{
+};
 
 class IClientRenderable
 {
 public:
-	virtual ~IClientRenderable() {};
+	virtual ~IClientRenderable(){};
 
-	model_t* GetModel()
+	model_t *GetModel()
 	{
-		typedef model_t* (* oGetModel)(void*);
+		typedef model_t *(*oGetModel)(void *);
 		return getvfunc<oGetModel>(this, 8)(this);
 	}
 
-	bool SetupBones(matrix3x4_t* pBoneMatrix, int nMaxBones, int nBoneMask, float flCurTime = 0)
+	bool SetupBones(matrix3x4_t *pBoneMatrix, int nMaxBones, int nBoneMask, float flCurTime = 0)
 	{
-		typedef bool (* oSetupBones)(void*, matrix3x4_t*, int, int, float);
+		typedef bool (*oSetupBones)(void *, matrix3x4_t *, int, int, float);
 		return getvfunc<oSetupBones>(this, 13)(this, pBoneMatrix, nMaxBones, nBoneMask, flCurTime);
 	}
 };
@@ -121,41 +122,41 @@ public:
 class IClientNetworkable
 {
 public:
-	virtual ~IClientNetworkable() {};
+	virtual ~IClientNetworkable(){};
 
 	void Release()
 	{
-		typedef void (* oRelease)(void*);
+		typedef void (*oRelease)(void *);
 		return getvfunc<oRelease>(this, 1)(this);
 	}
 
-	ClientClass* GetClientClass()
+	ClientClass *GetClientClass()
 	{
-		typedef ClientClass* (* oGetClientClass)(void*);
+		typedef ClientClass *(*oGetClientClass)(void *);
 		return getvfunc<oGetClientClass>(this, 2)(this);
 	}
 
 	void PreDataUpdate(DataUpdateType_t updateType)
 	{
-		typedef void (* oPreDataUpdate)(void*, DataUpdateType_t);
+		typedef void (*oPreDataUpdate)(void *, DataUpdateType_t);
 		return getvfunc<oPreDataUpdate>(this, 6)(this, updateType);
 	}
 
 	bool GetDormant()
 	{
-		typedef bool (* oGetDormant)(void*);
+		typedef bool (*oGetDormant)(void *);
 		return getvfunc<oGetDormant>(this, 9)(this);
 	}
 
 	int GetIndex()
 	{
-		typedef int (* oGetIndex)(void*);
+		typedef int (*oGetIndex)(void *);
 		return getvfunc<oGetIndex>(this, 10)(this);
 	}
 
 	void SetDestroyedOnRecreateEntities()
 	{
-		typedef void (* oSetDestroyedOnRecreateEntities)(void*);
+		typedef void (*oSetDestroyedOnRecreateEntities)(void *);
 		return getvfunc<oSetDestroyedOnRecreateEntities>(this, 13)(this);
 	}
 };
@@ -163,305 +164,306 @@ public:
 class IClientThinkable
 {
 public:
-	virtual ~IClientThinkable() {};
+	virtual ~IClientThinkable(){};
 };
 
 class IClientEntity : public IClientUnknown, public IClientRenderable, public IClientNetworkable, public IClientThinkable
 {
 public:
-	virtual ~IClientEntity() {};
+	virtual ~IClientEntity(){};
 };
 
 class C_BaseEntity : public IClientEntity
 {
 public:
-
-	IClientNetworkable* GetNetworkable()
+	IClientNetworkable *GetNetworkable()
 	{
-		return (IClientNetworkable*)((uintptr_t)this + 0x10);
+		return (IClientNetworkable *)((uintptr_t)this + 0x10);
 	}
 
-	const Vector& GetAbsOrigin( )
+	const Vector &GetAbsOrigin()
 	{
-		typedef const Vector& (* oGetAbsOrigin)(void*);
-		return getvfunc<oGetAbsOrigin>( this, 12 )( this );
+		typedef const Vector &(*oGetAbsOrigin)(void *);
+		return getvfunc<oGetAbsOrigin>(this, 12)(this);
 	}
 
-	void SetAbsOrigin( const Vector * const angles ) {
-		asm volatile ("mov %0, %%rdi;\n\t"
-				"mov %1, %%rsi;\n\t"
-				"call *%P2;"
-		:
-		:"r"(this), "r"(angles), "r"(SetAbsOriginFnAddr)
-		:"%rdi", "%rsi"
-		);
+	void SetAbsOrigin(const Vector *const angles)
+	{
+		asm volatile("mov %0, %%rdi;\n\t"
+				   "mov %1, %%rsi;\n\t"
+				   "call *%P2;"
+				   :
+				   : "r"(this), "r"(angles), "r"(SetAbsOriginFnAddr)
+				   : "%rdi", "%rsi");
 	}
 
 	void SetModelIndex(int index)
 	{
-		typedef void (* oSetModelIndex)(void*, int);
+		typedef void (*oSetModelIndex)(void *, int);
 		return getvfunc<oSetModelIndex>(this, 111)(this, index);
 	}
 
-	int* GetModelIndex()
+	int *GetModelIndex()
 	{
-		return (int*)((uintptr_t)this + offsets.DT_BaseViewModel.m_nModelIndex);
+		return (int *)((uintptr_t)this + offsets.DT_BaseViewModel.m_nModelIndex);
 	}
 
 	float GetAnimTime()
 	{
-		return *(float*)((uintptr_t)this + offsets.DT_BaseEntity.m_flAnimTime);
+		return *(float *)((uintptr_t)this + offsets.DT_BaseEntity.m_flAnimTime);
 	}
 
 	float GetSimulationTime()
 	{
-		return *(float*)((uintptr_t)this + offsets.DT_BaseEntity.m_flSimulationTime);
+		return *(float *)((uintptr_t)this + offsets.DT_BaseEntity.m_flSimulationTime);
 	}
 
 	float GetOldSimulationTime()
 	{
-                return *(float*)((uintptr_t)this + offsets.DT_BaseEntity.m_flSimulationTime + 4);
+		return *(float *)((uintptr_t)this + offsets.DT_BaseEntity.m_flSimulationTime + 4);
 	}
 
 	TeamID GetTeam()
 	{
-		return *(TeamID*)((uintptr_t)this + offsets.DT_BaseEntity.m_iTeamNum);
+		return *(TeamID *)((uintptr_t)this + offsets.DT_BaseEntity.m_iTeamNum);
 	}
 
 	int GetSurvivalTeam()
 	{
-		return *(int*)((uintptr_t)this + offsets.DT_CSPlayer.m_nSurvivalTeam);
+		return *(int *)((uintptr_t)this + offsets.DT_CSPlayer.m_nSurvivalTeam);
 	}
 
 	Vector GetVecOrigin()
 	{
-		return *(Vector*)((uintptr_t)this + offsets.DT_BaseEntity.m_vecOrigin);
+		return *(Vector *)((uintptr_t)this + offsets.DT_BaseEntity.m_vecOrigin);
 	}
 
 	MoveType_t GetMoveType()
 	{
-		return *(MoveType_t*)((uintptr_t)this + offsets.DT_BaseEntity.m_MoveType);
+		return *(MoveType_t *)((uintptr_t)this + offsets.DT_BaseEntity.m_MoveType);
 	}
 
-	ICollideable* GetCollideable()
+	ICollideable *GetCollideable()
 	{
-		return (ICollideable*)((uintptr_t)this + offsets.DT_BaseEntity.m_Collision);
+		return (ICollideable *)((uintptr_t)this + offsets.DT_BaseEntity.m_Collision);
 	}
 
-        uint32_t *GetSpottedByMask()
-        {
-                return (uint32_t *)((uintptr_t)this + offsets.DT_BaseEntity.m_bSpottedByMask);
-        }
-
-	bool* GetSpotted()
+	uint32_t *GetSpottedByMask()
 	{
-		return (bool*)((uintptr_t)this + offsets.DT_BaseEntity.m_bSpotted);
+		return (uint32_t *)((uintptr_t)this + offsets.DT_BaseEntity.m_bSpottedByMask);
+	}
+
+	bool *GetSpotted()
+	{
+		return (bool *)((uintptr_t)this + offsets.DT_BaseEntity.m_bSpotted);
 	}
 
 	void ClientAnimations(bool value) // responsible for local animation
 	{
-		*reinterpret_cast<bool*>(uintptr_t(this) + offsets.DT_BasePlayer.m_clientAnimation) = value;
+		*reinterpret_cast<bool *>(uintptr_t(this) + offsets.DT_BasePlayer.m_clientAnimation) = value;
 	}
 
-	void updateClientAnimation( )
+	void updateClientAnimation()
 	{
 		// typedef void (* oSetDestroyedOnRecreateEntities)(void*);
 		// return getvfunc<oSetDestroyedOnRecreateEntities>(this, 13)(this);
-		typedef void (*UpdateAnim)(void*);
-		return getvfunc<UpdateAnim>( this, 223 )( this );
+		typedef void (*UpdateAnim)(void *);
+		return getvfunc<UpdateAnim>(this, 223)(this);
 	}
-
 };
 
 /* generic game classes */
 class C_BasePlayer : public C_BaseEntity
 {
 public:
-    int GetSequenceActivity(int sequence)
-    {
-        if( !GetSeqActivity )
-            return -1;
-        return GetSeqActivity( this, sequence );
-    }
-    CUtlVector<AnimationLayer>* GetAnimOverlay() {
-        return reinterpret_cast<CUtlVector<AnimationLayer>*>((uintptr_t)this + Offsets::playerAnimOverlayOffset);
-    }
-
-    CCSGOAnimState* GetAnimState()
-    {
-        return *reinterpret_cast<CCSGOAnimState**>((uintptr_t)this + Offsets::playerAnimStateOffset);
-    }
-
-	QAngle* GetViewPunchAngle()
+	int GetSequenceActivity(int sequence)
 	{
-		return (QAngle*)((uintptr_t)this + offsets.DT_BasePlayer.m_viewPunchAngle);
+		if (!GetSeqActivity)
+			return -1;
+		return GetSeqActivity(this, sequence);
+	}
+	CUtlVector<AnimationLayer> *GetAnimOverlay()
+	{
+		return reinterpret_cast<CUtlVector<AnimationLayer> *>((uintptr_t)this + Offsets::playerAnimOverlayOffset);
 	}
 
-	QAngle* GetAimPunchAngle()
+	CCSGOAnimState *GetAnimState()
 	{
-		return (QAngle*)((uintptr_t)this + offsets.DT_BasePlayer.m_aimPunchAngle);
+		return *reinterpret_cast<CCSGOAnimState **>((uintptr_t)this + Offsets::playerAnimStateOffset);
+	}
+
+	QAngle *GetViewPunchAngle()
+	{
+		return (QAngle *)((uintptr_t)this + offsets.DT_BasePlayer.m_viewPunchAngle);
+	}
+
+	QAngle *GetAimPunchAngle()
+	{
+		return (QAngle *)((uintptr_t)this + offsets.DT_BasePlayer.m_aimPunchAngle);
 	}
 
 	Vector GetVecViewOffset()
 	{
-		return *(Vector*)((uintptr_t)this + offsets.DT_BasePlayer.m_vecViewOffset);
+		return *(Vector *)((uintptr_t)this + offsets.DT_BasePlayer.m_vecViewOffset);
 	}
-        unsigned int GetTickBaseShift()
-        {
-                return *(unsigned int*)((uintptr_t)this + offsets.DT_BasePlayer.m_nTickBaseShift);
-        }
+	unsigned int GetTickBaseShift()
+	{
+		return *(unsigned int *)((uintptr_t)this + offsets.DT_BasePlayer.m_nTickBaseShift);
+	}
 
 	unsigned int GetTickBase()
 	{
-		return *(unsigned int*)((uintptr_t)this + offsets.DT_BasePlayer.m_nTickBase);
+		return *(unsigned int *)((uintptr_t)this + offsets.DT_BasePlayer.m_nTickBase);
 	}
 
 	Vector GetVelocity()
 	{
-		return *(Vector*)((uintptr_t)this + offsets.DT_BasePlayer.m_vecVelocity);
+		return *(Vector *)((uintptr_t)this + offsets.DT_BasePlayer.m_vecVelocity);
 	}
 
 	int GetHealth()
 	{
-		return *(int*)((uintptr_t)this + offsets.DT_BasePlayer.m_iHealth);
+		return *(int *)((uintptr_t)this + offsets.DT_BasePlayer.m_iHealth);
 	}
 
 	unsigned char GetLifeState()
 	{
-		return *(unsigned char*)((uintptr_t)this + offsets.DT_BasePlayer.m_lifeState);
+		return *(unsigned char *)((uintptr_t)this + offsets.DT_BasePlayer.m_lifeState);
 	}
 
 	int GetFlags()
 	{
-		return *(int*)((uintptr_t)this + offsets.DT_BasePlayer.m_fFlags);
+		return *(int *)((uintptr_t)this + offsets.DT_BasePlayer.m_fFlags);
 	}
 
-	ObserverMode_t* GetObserverMode()
+	ObserverMode_t *GetObserverMode()
 	{
-		return (ObserverMode_t*)((uintptr_t)this + offsets.DT_BasePlayer.m_iObserverMode);
+		return (ObserverMode_t *)((uintptr_t)this + offsets.DT_BasePlayer.m_iObserverMode);
 	}
 
-	void* GetObserverTarget()
+	void *GetObserverTarget()
 	{
-		return (void*)((uintptr_t)this + offsets.DT_BasePlayer.m_hObserverTarget);
+		return (void *)((uintptr_t)this + offsets.DT_BasePlayer.m_hObserverTarget);
 	}
 
-	void* GetViewModel()
+	void *GetViewModel()
 	{
-		return (void*)((uintptr_t)this + offsets.DT_BasePlayer.m_hViewModel);
+		return (void *)((uintptr_t)this + offsets.DT_BasePlayer.m_hViewModel);
 	}
 
-	const char* GetLastPlaceName()
+	const char *GetLastPlaceName()
 	{
-		return (const char*)((uintptr_t)this + offsets.DT_BasePlayer.m_szLastPlaceName);
+		return (const char *)((uintptr_t)this + offsets.DT_BasePlayer.m_szLastPlaceName);
 	}
 
 	int GetShotsFired()
 	{
-		return *(int*)((uintptr_t)this + offsets.DT_CSPlayer.m_iShotsFired);
+		return *(int *)((uintptr_t)this + offsets.DT_CSPlayer.m_iShotsFired);
 	}
 
-	QAngle* GetEyeAngles()
+	QAngle *GetEyeAngles()
 	{
-		return (QAngle*)((uintptr_t)this + offsets.DT_CSPlayer.m_angEyeAngles[0]);
+		return (QAngle *)((uintptr_t)this + offsets.DT_CSPlayer.m_angEyeAngles[0]);
 	}
 
 	int GetMoney()
 	{
-		return *(int*)((uintptr_t)this + offsets.DT_CSPlayer.m_iAccount);
+		return *(int *)((uintptr_t)this + offsets.DT_CSPlayer.m_iAccount);
 	}
 
 	int GetHits()
 	{
-		return *(int*)((uintptr_t)this + offsets.DT_CSPlayer.m_totalHitsOnServer);
+		return *(int *)((uintptr_t)this + offsets.DT_CSPlayer.m_totalHitsOnServer);
 	}
 
 	int GetArmor()
 	{
-		return *(int*)((uintptr_t)this + offsets.DT_CSPlayer.m_ArmorValue);
+		return *(int *)((uintptr_t)this + offsets.DT_CSPlayer.m_ArmorValue);
 	}
 
 	int HasDefuser()
 	{
-		return *(int*)((uintptr_t)this + offsets.DT_CSPlayer.m_bHasDefuser);
+		return *(int *)((uintptr_t)this + offsets.DT_CSPlayer.m_bHasDefuser);
 	}
 
 	bool IsDefusing()
 	{
-		return *(bool*)((uintptr_t)this + offsets.DT_CSPlayer.m_bIsDefusing);
+		return *(bool *)((uintptr_t)this + offsets.DT_CSPlayer.m_bIsDefusing);
 	}
 
 	bool IsGrabbingHostage()
 	{
-		return *(bool*)((uintptr_t)this + offsets.DT_CSPlayer.m_bIsGrabbingHostage);
+		return *(bool *)((uintptr_t)this + offsets.DT_CSPlayer.m_bIsGrabbingHostage);
 	}
 
 	bool IsScoped()
 	{
-		return *(bool*)((uintptr_t)this + offsets.DT_CSPlayer.m_bIsScoped);
+		return *(bool *)((uintptr_t)this + offsets.DT_CSPlayer.m_bIsScoped);
 	}
 
 	bool GetImmune()
 	{
-		return *(bool*)((uintptr_t)this + offsets.DT_CSPlayer.m_bGunGameImmunity);
+		return *(bool *)((uintptr_t)this + offsets.DT_CSPlayer.m_bGunGameImmunity);
 	}
 
 	bool IsRescuing()
 	{
-		return *(bool*)((uintptr_t)this + offsets.DT_CSPlayer.m_bIsRescuing);
+		return *(bool *)((uintptr_t)this + offsets.DT_CSPlayer.m_bIsRescuing);
 	}
 
 	int HasHelmet()
 	{
-		return *(int*)((uintptr_t)this + offsets.DT_CSPlayer.m_bHasHelmet);
+		return *(int *)((uintptr_t)this + offsets.DT_CSPlayer.m_bHasHelmet);
 	}
 
-	Vector GetMaxs() {
-                return *(int*)((uintptr_t)this + offsets.DT_CSPlayer.m_vecMaxs);
+	Vector GetMaxs()
+	{
+		return *(int *)((uintptr_t)this + offsets.DT_CSPlayer.m_vecMaxs);
 	}
 
-        Vector GetMins() {
-                return *(int*)((uintptr_t)this + offsets.DT_CSPlayer.m_vecMins);
-        }
+	Vector GetMins()
+	{
+		return *(int *)((uintptr_t)this + offsets.DT_CSPlayer.m_vecMins);
+	}
 
 	bool IsFlashed() // Pasted from CSGOSimple.
-	{ // GetFlashBangTime() - globalVars->curtime > 2.0f
-		return *(float*)((uintptr_t)this->GetFlashMaxAlpha() - 0x8) > 200.0;
+	{			  // GetFlashBangTime() - globalVars->curtime > 2.0f
+		return *(float *)((uintptr_t)this->GetFlashMaxAlpha() - 0x8) > 200.0;
 	}
 
 	float GetFlashBangTime()
 	{
-		return *(float*)((uintptr_t)this + 0xABF4);
+		return *(float *)((uintptr_t)this + 0xABF4);
 	}
 
 	float GetFlashDuration()
 	{
-		return *(float*)((uintptr_t)this + offsets.DT_CSPlayer.m_flFlashDuration);
+		return *(float *)((uintptr_t)this + offsets.DT_CSPlayer.m_flFlashDuration);
 	}
 
-	float* GetFlashMaxAlpha()
+	float *GetFlashMaxAlpha()
 	{
-		return (float*)((uintptr_t)this + offsets.DT_CSPlayer.m_flFlashMaxAlpha);
+		return (float *)((uintptr_t)this + offsets.DT_CSPlayer.m_flFlashMaxAlpha);
 	}
 
-	float* GetLowerBodyYawTarget()
+	float *GetLowerBodyYawTarget()
 	{
-		return (float*)((uintptr_t)this + offsets.DT_CSPlayer.m_flLowerBodyYawTarget);
+		return (float *)((uintptr_t)this + offsets.DT_CSPlayer.m_flLowerBodyYawTarget);
 	}
 
-	void* GetActiveWeapon()
+	void *GetActiveWeapon()
 	{
-		return (void*)((uintptr_t)this + offsets.DT_BaseCombatCharacter.m_hActiveWeapon);
+		return (void *)((uintptr_t)this + offsets.DT_BaseCombatCharacter.m_hActiveWeapon);
 	}
 
-	int* GetWeapons()
+	int *GetWeapons()
 	{
-		return (int*)((uintptr_t)this + offsets.DT_BaseCombatCharacter.m_hMyWeapons);
+		return (int *)((uintptr_t)this + offsets.DT_BaseCombatCharacter.m_hMyWeapons);
 	}
 
-	int* GetWearables()
+	int *GetWearables()
 	{
-		return (int*)((uintptr_t)this + offsets.DT_BaseCombatCharacter.m_hMyWearables);
+		return (int *)((uintptr_t)this + offsets.DT_BaseCombatCharacter.m_hMyWearables);
 	}
 
 	bool GetAlive()
@@ -503,11 +505,10 @@ public:
 		return Vector(hitbox[0][3], hitbox[1][3], hitbox[2][3]);
 	}*/
 
-	QAngle* GetVAngles()
+	QAngle *GetVAngles()
 	{
-		return (QAngle*)((uintptr_t)this + offsets.DT_BasePlayer.deadflag + 0x4);
+		return (QAngle *)((uintptr_t)this + offsets.DT_BasePlayer.deadflag + 0x4);
 	}
-
 };
 
 class C_PlantedC4 : public C_BaseEntity
@@ -520,100 +521,99 @@ public:
 
 	float GetBombTime()
 	{
-		return *(float*)((uintptr_t)this + offsets.DT_PlantedC4.m_flC4Blow);
+		return *(float *)((uintptr_t)this + offsets.DT_PlantedC4.m_flC4Blow);
 	}
 
 	bool IsBombDefused()
 	{
-		return *(bool*)((uintptr_t)this + offsets.DT_PlantedC4.m_bBombDefused);
+		return *(bool *)((uintptr_t)this + offsets.DT_PlantedC4.m_bBombDefused);
 	}
 
 	int GetBombDefuser()
 	{
-		return *(int*)((uintptr_t)this + offsets.DT_PlantedC4.m_hBombDefuser);
+		return *(int *)((uintptr_t)this + offsets.DT_PlantedC4.m_hBombDefuser);
 	}
 	float GetBombDefuseCountDown()
 	{
-		return *(float*)((uintptr_t)this + offsets.DT_PlantedC4.m_flDefuseCountDown);
+		return *(float *)((uintptr_t)this + offsets.DT_PlantedC4.m_flDefuseCountDown);
 	}
 
 	float GetDefuseLenght()
 	{
-		return *(float*)((uintptr_t)this + offsets.DT_PlantedC4.m_flDefuseLength);
-	}	
+		return *(float *)((uintptr_t)this + offsets.DT_PlantedC4.m_flDefuseLength);
+	}
 
 	int GetBombSite()
 	{
-		return *(int*)((uintptr_t)this + offsets.DT_PlantedC4.m_nBombSite);
-	} 	
+		return *(int *)((uintptr_t)this + offsets.DT_PlantedC4.m_nBombSite);
+	}
 };
 
 class C_BaseAttributableItem : public C_BaseEntity
 {
 public:
-
-	ItemDefinitionIndex* GetItemDefinitionIndex()
+	ItemDefinitionIndex *GetItemDefinitionIndex()
 	{
-		return (ItemDefinitionIndex*)((uintptr_t)this + offsets.DT_BaseAttributableItem.m_iItemDefinitionIndex);
+		return (ItemDefinitionIndex *)((uintptr_t)this + offsets.DT_BaseAttributableItem.m_iItemDefinitionIndex);
 	}
 
-    bool* GetInitialized()
-    {
-        return (bool*)((uintptr_t)this + offsets.DT_BaseAttributableItem.m_bInitialized);
-    }
-
-	int* GetItemIDHigh()
+	bool *GetInitialized()
 	{
-		return (int*)((uintptr_t)this + offsets.DT_BaseAttributableItem.m_iItemIDHigh);
+		return (bool *)((uintptr_t)this + offsets.DT_BaseAttributableItem.m_bInitialized);
 	}
 
-	int* GetEntityQuality()
+	int *GetItemIDHigh()
 	{
-		return (int*)((uintptr_t)this + offsets.DT_BaseAttributableItem.m_iEntityQuality);
+		return (int *)((uintptr_t)this + offsets.DT_BaseAttributableItem.m_iItemIDHigh);
 	}
 
-	char* GetCustomName()
+	int *GetEntityQuality()
 	{
-		return (char*)((uintptr_t)this + offsets.DT_BaseAttributableItem.m_szCustomName);
+		return (int *)((uintptr_t)this + offsets.DT_BaseAttributableItem.m_iEntityQuality);
 	}
 
-	int* GetFallbackPaintKit()
+	char *GetCustomName()
 	{
-		return (int*)((uintptr_t)this + offsets.DT_BaseAttributableItem.m_nFallbackPaintKit);
+		return (char *)((uintptr_t)this + offsets.DT_BaseAttributableItem.m_szCustomName);
 	}
 
-	int* GetFallbackSeed()
+	int *GetFallbackPaintKit()
 	{
-		return (int*)((uintptr_t)this + offsets.DT_BaseAttributableItem.m_nFallbackSeed);
+		return (int *)((uintptr_t)this + offsets.DT_BaseAttributableItem.m_nFallbackPaintKit);
 	}
 
-	float* GetFallbackWear()
+	int *GetFallbackSeed()
 	{
-		return (float*)((uintptr_t)this + offsets.DT_BaseAttributableItem.m_flFallbackWear);
+		return (int *)((uintptr_t)this + offsets.DT_BaseAttributableItem.m_nFallbackSeed);
 	}
 
-	int* GetFallbackStatTrak()
+	float *GetFallbackWear()
 	{
-		return (int*)((uintptr_t)this + offsets.DT_BaseAttributableItem.m_nFallbackStatTrak);
+		return (float *)((uintptr_t)this + offsets.DT_BaseAttributableItem.m_flFallbackWear);
 	}
 
-	int* GetAccountID()
+	int *GetFallbackStatTrak()
 	{
-		return (int*)((uintptr_t)this + offsets.DT_BaseAttributableItem.m_iAccountID);
+		return (int *)((uintptr_t)this + offsets.DT_BaseAttributableItem.m_nFallbackStatTrak);
+	}
+
+	int *GetAccountID()
+	{
+		return (int *)((uintptr_t)this + offsets.DT_BaseAttributableItem.m_iAccountID);
 	}
 };
 
-class C_BaseViewModel: public C_BaseEntity
+class C_BaseViewModel : public C_BaseEntity
 {
 public:
 	int GetWeapon()
 	{
-		return *(int*)((uintptr_t)this + offsets.DT_BaseViewModel.m_hWeapon);
+		return *(int *)((uintptr_t)this + offsets.DT_BaseViewModel.m_hWeapon);
 	}
 
 	int GetOwner()
 	{
-		return *(int*)((uintptr_t)this + offsets.DT_BaseViewModel.m_hOwner);
+		return *(int *)((uintptr_t)this + offsets.DT_BaseViewModel.m_hOwner);
 	}
 };
 
@@ -666,133 +666,152 @@ public:
 
 	// Sprite data, read from the data file
 	int iSpriteCount;
-	CHudTexture* iconActive;
-	CHudTexture* iconInactive;
-	CHudTexture* iconAmmo;
-	CHudTexture* iconAmmo2;
-	CHudTexture* iconCrosshair;
-	CHudTexture* iconAutoaim;
-	CHudTexture* iconZoomedCrosshair;
-	CHudTexture* iconZoomedAutoaim;
-	CHudTexture* iconSmall;
+	CHudTexture *iconActive;
+	CHudTexture *iconInactive;
+	CHudTexture *iconAmmo;
+	CHudTexture *iconAmmo2;
+	CHudTexture *iconCrosshair;
+	CHudTexture *iconAutoaim;
+	CHudTexture *iconZoomedCrosshair;
+	CHudTexture *iconZoomedAutoaim;
+	CHudTexture *iconSmall;
 };
 
-class CCSWeaponInfo : public FileWeaponInfo_t {
+class CCSWeaponInfo : public FileWeaponInfo_t
+{
 public:
-	char* GetConsoleName() {
-		return *( char** ) ( ( uintptr_t )this + 0x8);
+	char *GetConsoleName()
+	{
+		return *(char **)((uintptr_t)this + 0x8);
 	}
 
-	int GetClipSize() {
-		return *( int* ) ( ( uintptr_t )this + 0x20);
+	int GetClipSize()
+	{
+		return *(int *)((uintptr_t)this + 0x20);
 	}
 
-	CSWeaponType GetWeaponType() {
-		return *( CSWeaponType* ) ( ( uintptr_t )this + 0x140);
+	CSWeaponType GetWeaponType()
+	{
+		return *(CSWeaponType *)((uintptr_t)this + 0x140);
 	}
 
-	void SetWeaponType( CSWeaponType type ) {
-		*( CSWeaponType* ) ( ( uintptr_t )this + 0x140) = type;
+	void SetWeaponType(CSWeaponType type)
+	{
+		*(CSWeaponType *)((uintptr_t)this + 0x140) = type;
 	}
 
-	int GetDamage() {
-		return *( int* ) ( ( uintptr_t )this + 0x16C);
+	int GetDamage()
+	{
+		return *(int *)((uintptr_t)this + 0x16C);
 	}
 
-	float GetWeaponArmorRatio() {
-		return *( float* ) ( ( uintptr_t )this + 0x174);
+	float GetWeaponArmorRatio()
+	{
+		return *(float *)((uintptr_t)this + 0x174);
 	}
 
-	float GetPenetration() {
-		return *( float* ) ( ( uintptr_t )this + 0x17C);
+	float GetPenetration()
+	{
+		return *(float *)((uintptr_t)this + 0x17C);
 	}
 
-	float GetRange() {
-		return *( float* ) ( ( uintptr_t )this + 0x188);
+	float GetRange()
+	{
+		return *(float *)((uintptr_t)this + 0x188);
 	}
 
-	float GetRangeModifier() {
-		return *( float* ) ( ( uintptr_t )this + 0x18C);
+	float GetRangeModifier()
+	{
+		return *(float *)((uintptr_t)this + 0x18C);
 	}
 
-	float GetMaxPlayerSpeed() {
-		return *( float* ) ( ( uintptr_t )this + 0x1B8);
+	float GetMaxPlayerSpeed()
+	{
+		return *(float *)((uintptr_t)this + 0x1B8);
 	}
 
-	int GetZoomLevels() { // Doesn't work correctly on some weapons.
-		return *( int* ) ( ( uintptr_t )this + 0x23C); // DT_WeaponCSBaseGun.m_zoomLevel ?
+	int GetZoomLevels()
+	{									  // Doesn't work correctly on some weapons.
+		return *(int *)((uintptr_t)this + 0x23C); // DT_WeaponCSBaseGun.m_zoomLevel ?
 	}
 
-	char* GetTracerEffect() {
-		return *( char** ) ( ( uintptr_t )this + 0x290);
+	char *GetTracerEffect()
+	{
+		return *(char **)((uintptr_t)this + 0x290);
 	}
 
-	int* GetTracerFrequency() {
-		return ( int* ) ( ( uintptr_t )this + 0x298);
+	int *GetTracerFrequency()
+	{
+		return (int *)((uintptr_t)this + 0x298);
 	}
 };
 
-class C_BaseCombatWeapon: public C_BaseAttributableItem
+class C_BaseCombatWeapon : public C_BaseAttributableItem
 {
 public:
 	int GetOwner()
 	{
-		return *(int*)((uintptr_t)this + offsets.DT_BaseCombatWeapon.m_hOwner);
+		return *(int *)((uintptr_t)this + offsets.DT_BaseCombatWeapon.m_hOwner);
 	}
 
 	int GetAmmo()
 	{
-		return *(int*)((uintptr_t)this + offsets.DT_BaseCombatWeapon.m_iClip1);
+		return *(int *)((uintptr_t)this + offsets.DT_BaseCombatWeapon.m_iClip1);
 	}
 
 	float GetNextPrimaryAttack()
 	{
-		return *(float*)((uintptr_t)this + offsets.DT_BaseCombatWeapon.m_flNextPrimaryAttack);
+		return *(float *)((uintptr_t)this + offsets.DT_BaseCombatWeapon.m_flNextPrimaryAttack);
 	}
 
 	bool GetInReload()
 	{
-		return *(bool*)((uintptr_t)this + offsets.DT_BaseCombatWeapon.m_bInReload);
+		return *(bool *)((uintptr_t)this + offsets.DT_BaseCombatWeapon.m_bInReload);
 	}
 
 	float GetAccuracyPenalty()
 	{
-		return *(float*)((uintptr_t)this + offsets.DT_WeaponCSBase.m_fAccuracyPenalty);
+		return *(float *)((uintptr_t)this + offsets.DT_WeaponCSBase.m_fAccuracyPenalty);
 	}
 
-    float GetPostPoneReadyTime()
-    {
-        return *(float*)((uintptr_t) this + offsets.DT_WeaponCSBase.m_flPostponeFireReadyTime);
-    }
+	float GetPostPoneReadyTime()
+	{
+		return *(float *)((uintptr_t)this + offsets.DT_WeaponCSBase.m_flPostponeFireReadyTime);
+	}
 
 	bool GetReloadVisuallyComplete()
 	{
-		return *(bool*)((uintptr_t)this + offsets.DT_WeaponCSBase.m_bReloadVisuallyComplete);
+		return *(bool *)((uintptr_t)this + offsets.DT_WeaponCSBase.m_bReloadVisuallyComplete);
 	}
 
-	void DrawCrosshair() { // returns a 1
-		typedef void (* oDrawCrosshair)( void* );
-		return getvfunc<oDrawCrosshair>( this, 472 )( this );
+	void DrawCrosshair()
+	{ // returns a 1
+		typedef void (*oDrawCrosshair)(void *);
+		return getvfunc<oDrawCrosshair>(this, 472)(this);
 	}
 
-	CCSWeaponInfo* GetCSWpnData() { // "script file not found" (client_client) Because LWSS change it yo
-		typedef CCSWeaponInfo* (* oGetCSWpnData)( void* );
-		return getvfunc<oGetCSWpnData>( this, 529 )( this );
+	CCSWeaponInfo *GetCSWpnData()
+	{ // "script file not found" (client_client) Because LWSS change it yo
+		typedef CCSWeaponInfo *(*oGetCSWpnData)(void *);
+		return getvfunc<oGetCSWpnData>(this, 529)(this);
 	}
 
-	float GetSpread() {
-		typedef float (* oGetSpread)( void* );
-		return getvfunc<oGetSpread>( this, 521 )( this );
+	float GetSpread()
+	{
+		typedef float (*oGetSpread)(void *);
+		return getvfunc<oGetSpread>(this, 521)(this);
 	}
 
-	float GetInaccuracy() {
-		typedef float (* oGetInaccuracy)( void* );
-		return getvfunc<oGetInaccuracy>( this, 551 )( this );
+	float GetInaccuracy()
+	{
+		typedef float (*oGetInaccuracy)(void *);
+		return getvfunc<oGetInaccuracy>(this, 551)(this);
 	}
 
-	void UpdateAccuracyPenalty() {
-		typedef void (* oUpdateAccuracyPenalty)( void* );
-		return getvfunc<oUpdateAccuracyPenalty>( this, 552 )( this );
+	void UpdateAccuracyPenalty()
+	{
+		typedef void (*oUpdateAccuracyPenalty)(void *);
+		return getvfunc<oUpdateAccuracyPenalty>(this, 552)(this);
 	}
 };
 
@@ -801,16 +820,16 @@ class C_WeaponC4 : C_BaseCombatWeapon
 public:
 	bool GetStartedArming()
 	{
-		return *(bool*)((uintptr_t)this + offsets.DT_WeaponC4.m_bStartedArming);
+		return *(bool *)((uintptr_t)this + offsets.DT_WeaponC4.m_bStartedArming);
 	}
 };
 
 class C_Chicken : C_BaseEntity
 {
 public:
-	bool* GetShouldGlow()
+	bool *GetShouldGlow()
 	{
-		return (bool*)((uintptr_t)this + offsets.DT_DynamicProp.m_bShouldGlow);
+		return (bool *)((uintptr_t)this + offsets.DT_DynamicProp.m_bShouldGlow);
 	}
 };
 
@@ -819,21 +838,21 @@ class C_BaseCSGrenade : C_BaseCombatWeapon
 public:
 	bool IsHeldByPlayer()
 	{
-		return *(bool*)((uintptr_t)this + offsets.DT_BaseCSGrenade.m_bIsHeldByPlayer);
+		return *(bool *)((uintptr_t)this + offsets.DT_BaseCSGrenade.m_bIsHeldByPlayer);
 	}
 
 	bool GetPinPulled()
 	{
-		return *(bool*)((uintptr_t)this + offsets.DT_BaseCSGrenade.m_bPinPulled);
+		return *(bool *)((uintptr_t)this + offsets.DT_BaseCSGrenade.m_bPinPulled);
 	}
 
 	float GetThrowTime()
 	{
-		return *(float*)((uintptr_t)this + offsets.DT_BaseCSGrenade.m_fThrowTime);
+		return *(float *)((uintptr_t)this + offsets.DT_BaseCSGrenade.m_fThrowTime);
 	}
 
 	float GetThrowStrength()
 	{
-		return *(float*)((uintptr_t)this + offsets.DT_BaseCSGrenade.m_flThrowStrength);
+		return *(float *)((uintptr_t)this + offsets.DT_BaseCSGrenade.m_flThrowStrength);
 	}
 };

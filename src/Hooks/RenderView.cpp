@@ -2,7 +2,7 @@
 
 #include "../interfaces.h"
 
-#include "../Hacks/grenadeprediction.h"
+#include "../Features/grenadeprediction.h"
 
 std::queue<RenderView::RenderRequest> RenderView::renderQueue;
 

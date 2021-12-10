@@ -2,10 +2,11 @@
 #include "main.h"
 
 #include "../../settings.h"
-
+#include "../Windows/configs.h"
 #include "../../ImGUI/imgui_internal.h"
 #include "../../Utils/xorstring.h"
 #include "../Tabs/legitbottab.h"
+#include "../Tabs/visualstab.h"
 #include "../Tabs/ragebottab.h"
 #include "../Tabs/antiaimtab.h"
 #include "../Tabs/misctab.h"
@@ -15,92 +16,219 @@
 #include "../Tabs/modelstab.h"
 #include "../Tabs/skinsandmodel.h"
 #include "../menu_font.h"
-bool Main::showWindow = true;
-//ImFont* menu_font =  ImGui::GetIO().Fonts->AddFontFromMemoryCompressedTTF(menu_font_compressed_data,menu_font_compressed_size,25);
-void Main::RenderWindow()
+#include <vector>
+bool MainMenu::showWindow = true;
+
+static int tabs = 0;
+static int subtabs = 0;
+
+enum
 {
-	if (Settings::UI::Windows::Main::reload)
-	{
-		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Main::posX, Settings::UI::Windows::Main::posY), ImGuiCond_Always );
-		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Main::sizeX, Settings::UI::Windows::Main::sizeY), ImGuiCond_Always );
-		Main::showWindow = Settings::UI::Windows::Main::open;
-		Settings::UI::Windows::Main::reload = false;
-	}
-	else
-	{
-		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Main::posX, Settings::UI::Windows::Main::posY), ImGuiCond_FirstUseEver);
-		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Main::sizeX, Settings::UI::Windows::Main::sizeY), ImGuiCond_FirstUseEver);
-	}
-	if (!Main::showWindow)
-	{
-		Settings::UI::Windows::Main::open = false;
-		return;
-	}
+	AimbotTab,
+	AntiAimTab,
+	Visuals,
+	SkinChangerTab,
+	MiscTab,
+	Config,
+	Dev,
+};
 
-	static int page = 0;
-//ImGui::PushFont(menu_font);
+enum
+{
+	LegitbotTab,
+	RageTab,
+	TriggerbotTab,
+};
 
-	if (ImGui::Begin(XORSTR("##Kali"), &Main::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar))
+const char *TabsNames[] = {"Aimbot", "Anti Aim", "Visuals", "Skin Changer", "Misc", "Config"};
+
+std::initializer_list<const char *> subtabAimbot = {"Legitbot", "Ragebot", "Triggerbot"};
+std::initializer_list<const char *> subtabAntiAim = {"Anti Aim"};
+std::initializer_list<const char *> subtabVisuals = {"Enemy", "Allies", "Local", "Materials", "Menu"};
+std::initializer_list<const char *> subtabSkinChanger = {"Skins", "Models"};
+std::initializer_list<const char *> subtabMisc = {"BunnyHop", "Customize", "Spammer", "Others", "Unload/Eject"};
+std::initializer_list<const char *> subtabConfig = {"Add", "Refresh", "Save", "Remove"};
+std::initializer_list<const char *> subtabDev = {"Options"};
+
+std::vector<std::initializer_list<const char *>> allsubtabs{
+    subtabAimbot,
+    subtabAntiAim,
+    subtabVisuals,
+    subtabSkinChanger,
+    subtabMisc,
+    subtabConfig,
+    subtabDev,
+};
+
+static ImVec2 pos;
+ImDrawList *draw;
+
+static void BgDecorations()
+{
+	ImGuiIO &io = ImGui::GetIO();
+
+	auto info = io.FontDefault;
+	pos = ImGui::GetWindowPos();
+	draw = ImGui::GetWindowDrawList();
+
+	// 645
+	// Background
+	draw->AddRectFilled(ImVec2(pos.x, pos.y), ImVec2(pos.x + 1128, pos.y + 865), ImColor(4, 3, 5), 0);	 // ImColor(8, 8, 8, 200), 0);
+																					 // Header
+	draw->AddRectFilled(ImVec2(pos.x, pos.y + 50), ImVec2(pos.x + 1128, pos.y + 52), ImColor(2, 6, 11)); // ImColor(220, 60, 40));
+	// Footer Border
+	draw->AddRectFilled(ImVec2(pos.x, pos.y), ImVec2(pos.x + 1128, pos.y + 50), ImColor(2, 6, 11), 0, 3); // ImColor(187, 37, 38), 0, 3);
+	// Footer
+	draw->AddRectFilled(ImVec2(pos.x, pos.y + 835), ImVec2(pos.x + 1128, pos.y + 865), ImColor(2, 6, 11), 0, 4 | 8); // ImColor(187, 37, 38), 0, 4 | 8);
+
+	draw->AddText(info, 13.f, ImVec2(pos.x + 12, pos.y + 845), ImColor(255, 255, 255), "Kali");
+	//draw->AddText(info, 13.f, ImVec2(pos.x + 100, pos.y + 625), ImColor(255, 255, 255), "Counter-Strike: Global Offensive");
+	//draw->AddText(info, 13.f, ImVec2(pos.x + 860, pos.y + 625), ImColor(255, 255, 255), "Kali");
+	//
+	// Side Panel Bg
+	draw->AddRectFilled(ImVec2(pos.x, pos.y + 55), ImVec2(pos.x + 160, pos.y + 835), ImColor(2, 19, 30, 150)); // mColor(0, 0, 0, 150));
+	ImGui::SetCursorPos(ImVec2(10, 10));
+	//
+	// draw->AddRectFilled(ImVec2(pos.x + 595, pos.y + 15), ImVec2(pos.x + 785, pos.y + 35), ImColor(220, 220, 220), 5);
+	// draw->AddText(info, 13.f, ImVec2(pos.x + 600, pos.y + 18), ImColor(136, 136, 134), u8"���� search features �� ���");
+	//
+}
+
+// Upper Tabs
+static void Tabs()
+{
+
+	static int tab_sizes = IM_ARRAYSIZE(TabsNames);
+	static int tab_gaps = 120;
+	static int tabY = 10;
+	static int tabX;
+	tabX = 60;
+	for (int i = 0; i < tab_sizes; i++)
 	{
-		Settings::UI::Windows::Main::open = true;
-		ImVec2 temp = ImGui::GetWindowSize();
-		Settings::UI::Windows::Main::sizeX = (int)temp.x;
-		Settings::UI::Windows::Main::sizeY = (int)temp.y;
-		temp = ImGui::GetWindowPos();
-		Settings::UI::Windows::Main::posX = (int)temp.x;
-		Settings::UI::Windows::Main::posY = (int)temp.y;
-		const char *tabs[] = {
-				"Legit Bot",
-				"Rage Bot",
-				"Anti Aim",
-				"Visuals",
-				"Skin/Model",
-				"Misc",
-		};
-		for (int i = 0; i < IM_ARRAYSIZE(tabs); i++)
+		ImGui::SetCursorPos(ImVec2(tabX, tabY));
+		if (ImGui::Tab(TabsNames[i], i == tabs))
 		{
-			int distance = i == page ? 0 : i > page ? i - page : page - i;
-
-                        ImGui::GetStyle().Colors[ImGuiCol_Button] = ImVec4(
-                                Settings::UI::mainColor.Color().Value.x - (distance * 0.035f),
-                                Settings::UI::mainColor.Color().Value.y - (distance * 0.035f),
-                                Settings::UI::mainColor.Color().Value.z - (distance * 0.035f),
-                                Settings::UI::mainColor.Color().Value.w);
-			if (ImGui::Button(tabs[i], ImVec2(ImGui::GetWindowSize().x / IM_ARRAYSIZE(tabs) - 9,50)))
-				page = i;
-
-
-
-			ImGui::GetStyle().Colors[ImGuiCol_Button] = Settings::UI::accentColor.Color();
-
-			if (i < IM_ARRAYSIZE(tabs) - 1)
-				ImGui::SameLine();
+			tabs = i;
+			subtabs = 0;
 		}
-//ImGui::PopFont();
-		ImGui::Separator();
 
-		switch (page)
+		tabX += tab_gaps;
+	}
+}
+
+// Side Tabs
+static void SubTabs()
+{
+
+	static int tab_gaps = 40;
+	static int tabY;
+	static int tabX = 0;
+	tabY = 53;
+	static int subtabs_size = allsubtabs.size();
+	for (int i = 0; i < subtabs_size; i++)
+	{
+		if (i == tabs)
 		{
-                   case 0:
-                                        Legitbot::RenderTab();
-                                        break;
-                                case 1:
-                                        RagebotTab::RenderTab();
-                                        break;
-                                case 2:
-                                        HvH::RenderTab();
-                                        break;
-                                case 3:
-                                        Visuals::RenderTab();
-                                        break;
-                                case 4:
-                                        SkinsAndModel::RenderTab();
-                                        break;
-                                case 5:
-                                        Misc::RenderTab();
-                                        break;
-
+			int j = 0;
+			for (auto _subtabname : allsubtabs[i])
+			{
+				ImGui::SetCursorPos(ImVec2(tabX, tabY));
+				if (ImGui::Sub(_subtabname, j == subtabs))
+					subtabs = j;
+				j++;
+				tabY += tab_gaps;
+			}
+			break;
 		}
+	}
+}
+
+static void aimbotTab()
+{
+	switch (subtabs)
+	{
+	case LegitbotTab:
+		Legitbot::RenderMainMenu(pos, draw, subtabs);
+		break;
+	case RageTab:
+		RagebotTab::RenderMainMenu(pos, draw, subtabs);
+		break;
+	default:
+		Triggerbot::RenderMainMenu(pos, draw, subtabs);
+		break;
+	}
+}
+
+enum
+{
+	Enemy,
+	Allies,
+	Local,
+	Materials,
+	Menu,
+};
+
+static void VisualsTab()
+{
+	switch (subtabs)
+	{
+	case Enemy:
+		VisualsEnemy::RenderMainMenu(pos, draw, subtabs);
+		break;
+	case Allies:
+		VisualsGood::RenderMainMenu(pos, draw, subtabs);
+		break;
+	case Local:
+		VisualsLocal::RenderMainMenu(pos, draw, subtabs);
+		break;
+	case Materials:
+		VisualsMaterialConfig::RenderMainMenu(pos, draw, subtabs);
+		break;
+	case Menu:
+		VisualsMenu::RenderMainMenu(pos, draw, subtabs);
+		break;
+	}
+}
+void MainMenu::Render()
+{
+	ImVec2 size = ImGui::GetWindowSize();
+	size = ImVec2((size.x - 1128) / 2, (size.y - 865) / 2);
+
+	ImGui::SetNextWindowPos(ImVec2(size.x, size.y), ImGuiCond_Once);
+	ImGui::SetNextWindowSize(ImVec2(1128, 865), ImGuiCond_Once);
+	ImGui::SetNextWindowBgAlpha(0.0f);
+	if (ImGui::Begin(XORSTR("##Menu"), &MainMenu::showWindow, ImGuiWindowFlags_NoCollapse /*| ImGuiWindowFlags_NoMove*/ | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiConfigFlags_NoMouseCursorChange))
+	{
+		BgDecorations();
+		Tabs();
+		SubTabs();
+
+		// // cvar->ConsoleDPrintf(XORSTR("Selected tab : %d\n"), tabs);
+		switch (tabs)
+		{
+		case AimbotTab:
+			aimbotTab();
+			break;
+		case AntiAimTab:
+			AntiAim::RenderMainMenu(pos, draw, subtabs);
+			break;
+		case Visuals:
+			VisualsTab();
+			break;
+		case SkinChangerTab:
+			SkinsAndModel::RenderMainMenu(pos, draw, subtabs);
+			break;
+		case MiscTab:
+			Misc::RenderMainMenu(pos, draw, subtabs);
+			break;
+		case Config:
+			//ConfigTab::RenderMainMenu(pos, draw, subtabs);
+		case Dev:
+			subtabs = 0;
+		default:
+			break;
+		}
+
 		ImGui::End();
 	}
 }

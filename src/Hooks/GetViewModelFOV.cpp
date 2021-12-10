@@ -3,7 +3,7 @@
 #include "../interfaces.h"
 #include "../settings.h"
 
-#include "../Hacks/fovchanger.h"
+#include "../Features/fovchanger.h"
 
 typedef float (*GetViewModelFOVFn) (void*);
 

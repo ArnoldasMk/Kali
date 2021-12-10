@@ -4,7 +4,7 @@
 #include "../../SDK/definitions.h"
 #include "../../settings.h"
 #include "../../ImGUI/imgui_internal.h"
-#include "../../Hacks/skinchanger.h"
+#include "../../Features/skinchanger.h"
 #include "../imgui.h"
 
 #pragma GCC diagnostic ignored "-Wformat-security"
@@ -70,7 +70,7 @@ void Models::RenderTab()
 
 	ImGui::Columns(4);
 
-	ImGui::ListBoxHeader(XORSTR("##originalModelsCT"), ImVec2(-1, 300));
+	ImGui::ListBoxHeader(XORSTR("##originalModelsCT"), ImVec2(-1, 620));
 	ImGui::Columns(2);
 	for (auto model : ItemDefinitionIndexMap)
 	{
@@ -97,7 +97,7 @@ void Models::RenderTab()
 	ImGui::ListBoxFooter();
 	ImGui::NextColumn();
 
-	ImGui::ListBoxHeader(XORSTR("##replacementModelsCT"), ImVec2(-1, 300));
+	ImGui::ListBoxHeader(XORSTR("##replacementModelsCT"), ImVec2(-1, 620));
 	ImGui::Columns(2);
 	for (auto model : ItemDefinitionIndexMap)
 	{
@@ -131,7 +131,7 @@ void Models::RenderTab()
 	ImGui::ListBoxFooter();
 	ImGui::NextColumn();
 
-	ImGui::ListBoxHeader(XORSTR("##originalModelsT"), ImVec2(-1, 300));
+	ImGui::ListBoxHeader(XORSTR("##originalModelsT"), ImVec2(-1, 620));
 	ImGui::Columns(2);
 	for (auto model : ItemDefinitionIndexMap)
 	{
@@ -158,7 +158,7 @@ void Models::RenderTab()
 	ImGui::ListBoxFooter();
 	ImGui::NextColumn();
 
-	ImGui::ListBoxHeader(XORSTR("##replacementModelsT"), ImVec2(-1, 300));
+	ImGui::ListBoxHeader(XORSTR("##replacementModelsT"), ImVec2(-1, 620));
 	ImGui::Columns(2);
 	for (auto model : ItemDefinitionIndexMap)
 	{
@@ -228,7 +228,7 @@ void Models::RenderTab()
 		SkinChanger::glovesUpdated = true;
 	}
 	ImGui::Columns(1);
-    ImGui::Checkbox(XORSTR("Force rare animations"), &Settings::Skinchanger::forcerareanim);
+     //ImGui::Checkbox(XORSTR("Force rare animations"), &Settings::Skinchanger::forcerareanim);
 
 	ImGui::Separator();
 }

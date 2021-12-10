@@ -1,7 +1,7 @@
 #include "hooks.h"
 
 #include "../interfaces.h"
-#include "../Hacks/autoaccept.h"
+#include "../Features/autoaccept.h"
 
 typedef void (*EmitSound2Fn) (void*, IRecipientFilter&, int, int, const char*, unsigned int, const char*, float, int, soundlevel_t, int, int, const Vector*, const Vector*, void*, bool, float, int, StartSoundParams_t&);
 

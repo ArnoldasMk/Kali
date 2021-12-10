@@ -9,8 +9,8 @@
 #include "interfaces.h"
 #include "offsets.h"
 #include "Utils/GlobalVars.h"
-#include "Hacks/Tickbase.h"
-#include "Hacks/fakelag.h"
+#include "Features/Tickbase.h"
+#include "Features/fakelag.h"
 //#include "SDK/CInput.h"
 int* nPredictionRandomSeed = nullptr;
 CMoveData* g_MoveData = nullptr;
@@ -576,7 +576,7 @@ uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("/client_clie
 }
 #include "Hooks/hooks.h"
 #include "interfaces.h"
-#include "Hacks/fakelag.h"
+#include "Features/fakelag.h"
 #include "Utils/xorstring.h"
 
 typedef bool (*WriteUserCmdDeltFn) (void* thisptr, int slot, bf_write *buf, int from, int to, bool isnewcommand );

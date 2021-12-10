@@ -7,9 +7,9 @@
 
 #pragma GCC diagnostic ignored "-Wformat-security"
 
-void UI::KeyBindButton(ButtonCode_t* key)
+void UI::KeyBindButton(ButtonCode_t *key)
 {
-	const char* text = inputSystem->ButtonCodeToString(*key);
+	const char *text = inputSystem->ButtonCodeToString(*key);
 
 	if (SetKeyCodeState::shouldListen && SetKeyCodeState::keyOutput == key)
 		text = XORSTR("-- press a key --");
@@ -23,7 +23,7 @@ void UI::KeyBindButton(ButtonCode_t* key)
 	}
 }
 
-bool UI::ColorPicker(float* col, bool alphabar)
+bool UI::ColorPicker(float *col, bool alphabar)
 {
 	const int EDGE_SIZE = 200; // = int(ImGui::GetWindowWidth() * 0.75f);
 	const ImVec2 SV_PICKER_SIZE = ImVec2(EDGE_SIZE, EDGE_SIZE);
@@ -34,7 +34,7 @@ bool UI::ColorPicker(float* col, bool alphabar)
 	ImColor color(col[0], col[1], col[2]);
 	bool value_changed = false;
 
-	ImDrawList* draw_list = ImGui::GetWindowDrawList();
+	ImDrawList *draw_list = ImGui::GetWindowDrawList();
 
 	ImVec2 picker_pos = ImGui::GetCursorScreenPos();
 
@@ -42,49 +42,44 @@ bool UI::ColorPicker(float* col, bool alphabar)
 	ImGui::ColorConvertRGBtoHSV(color.Value.x, color.Value.y, color.Value.z, hue, saturation, value);
 
 	ImColor colors[] = {
-			ImColor(255, 0, 0),
-			ImColor(255, 255, 0),
-			ImColor(0, 255, 0),
-			ImColor(0, 255, 255),
-			ImColor(0, 0, 255),
-			ImColor(255, 0, 255),
-			ImColor(255, 0, 0)
-	};
+	    ImColor(255, 0, 0),
+	    ImColor(255, 255, 0),
+	    ImColor(0, 255, 0),
+	    ImColor(0, 255, 255),
+	    ImColor(0, 0, 255),
+	    ImColor(255, 0, 255),
+	    ImColor(255, 0, 0)};
 
 	for (int i = 0; i < 6; i++)
 	{
 		draw_list->AddRectFilledMultiColor(
-				ImVec2(picker_pos.x + SV_PICKER_SIZE.x + SPACING, picker_pos.y + i * (SV_PICKER_SIZE.y / 6)),
-				ImVec2(picker_pos.x + SV_PICKER_SIZE.x + SPACING + HUE_PICKER_WIDTH,
-					   picker_pos.y + (i + 1) * (SV_PICKER_SIZE.y / 6)),
-				colors[i],
-				colors[i],
-				colors[i + 1],
-				colors[i + 1]
-		);
+		    ImVec2(picker_pos.x + SV_PICKER_SIZE.x + SPACING, picker_pos.y + i * (SV_PICKER_SIZE.y / 6)),
+		    ImVec2(picker_pos.x + SV_PICKER_SIZE.x + SPACING + HUE_PICKER_WIDTH,
+				 picker_pos.y + (i + 1) * (SV_PICKER_SIZE.y / 6)),
+		    colors[i],
+		    colors[i],
+		    colors[i + 1],
+		    colors[i + 1]);
 	}
 
 	draw_list->AddLine(
-			ImVec2(picker_pos.x + SV_PICKER_SIZE.x + SPACING - 2, picker_pos.y + hue * SV_PICKER_SIZE.y),
-			ImVec2(picker_pos.x + SV_PICKER_SIZE.x + SPACING + 2 + HUE_PICKER_WIDTH, picker_pos.y + hue * SV_PICKER_SIZE.y),
-			ImColor(255, 255, 255)
-	);
+	    ImVec2(picker_pos.x + SV_PICKER_SIZE.x + SPACING - 2, picker_pos.y + hue * SV_PICKER_SIZE.y),
+	    ImVec2(picker_pos.x + SV_PICKER_SIZE.x + SPACING + 2 + HUE_PICKER_WIDTH, picker_pos.y + hue * SV_PICKER_SIZE.y),
+	    ImColor(255, 255, 255));
 
 	if (alphabar)
 	{
 		float alpha = col[3];
 
 		draw_list->AddRectFilledMultiColor(
-				ImVec2(picker_pos.x + SV_PICKER_SIZE.x + 2 * SPACING + HUE_PICKER_WIDTH, picker_pos.y),
-				ImVec2(picker_pos.x + SV_PICKER_SIZE.x + 2 * SPACING + 2 * HUE_PICKER_WIDTH, picker_pos.y + SV_PICKER_SIZE.y),
-				ImColor(0, 0, 0), ImColor(0, 0, 0), ImColor(255, 255, 255), ImColor(255, 255, 255)
-		);
+		    ImVec2(picker_pos.x + SV_PICKER_SIZE.x + 2 * SPACING + HUE_PICKER_WIDTH, picker_pos.y),
+		    ImVec2(picker_pos.x + SV_PICKER_SIZE.x + 2 * SPACING + 2 * HUE_PICKER_WIDTH, picker_pos.y + SV_PICKER_SIZE.y),
+		    ImColor(0, 0, 0), ImColor(0, 0, 0), ImColor(255, 255, 255), ImColor(255, 255, 255));
 
 		draw_list->AddLine(
-				ImVec2(picker_pos.x + SV_PICKER_SIZE.x + 2 * (SPACING - 2) + HUE_PICKER_WIDTH, picker_pos.y + alpha * SV_PICKER_SIZE.y),
-				ImVec2(picker_pos.x + SV_PICKER_SIZE.x + 2 * (SPACING + 2) + 2 * HUE_PICKER_WIDTH, picker_pos.y + alpha * SV_PICKER_SIZE.y),
-				ImColor(255.f - alpha, 255.f, 255.f)
-		);
+		    ImVec2(picker_pos.x + SV_PICKER_SIZE.x + 2 * (SPACING - 2) + HUE_PICKER_WIDTH, picker_pos.y + alpha * SV_PICKER_SIZE.y),
+		    ImVec2(picker_pos.x + SV_PICKER_SIZE.x + 2 * (SPACING + 2) + 2 * HUE_PICKER_WIDTH, picker_pos.y + alpha * SV_PICKER_SIZE.y),
+		    ImColor(255.f - alpha, 255.f, 255.f));
 	}
 
 	const ImU32 c_oColorBlack = ImGui::ColorConvertFloat4ToU32(ImVec4(0.f, 0.f, 0.f, 1.f));
@@ -96,22 +91,20 @@ bool UI::ColorPicker(float* col, bool alphabar)
 	ImU32 oHueColor = ImGui::ColorConvertFloat4ToU32(cHueValue);
 
 	draw_list->AddRectFilledMultiColor(
-			ImVec2(picker_pos.x, picker_pos.y),
-			ImVec2(picker_pos.x + SV_PICKER_SIZE.x, picker_pos.y + SV_PICKER_SIZE.y),
-			c_oColorWhite,
-			oHueColor,
-			oHueColor,
-			c_oColorWhite
-	);
+	    ImVec2(picker_pos.x, picker_pos.y),
+	    ImVec2(picker_pos.x + SV_PICKER_SIZE.x, picker_pos.y + SV_PICKER_SIZE.y),
+	    c_oColorWhite,
+	    oHueColor,
+	    oHueColor,
+	    c_oColorWhite);
 
 	draw_list->AddRectFilledMultiColor(
-			ImVec2(picker_pos.x, picker_pos.y),
-			ImVec2(picker_pos.x + SV_PICKER_SIZE.x, picker_pos.y + SV_PICKER_SIZE.y),
-			c_oColorBlackTransparent,
-			c_oColorBlackTransparent,
-			c_oColorBlack,
-			c_oColorBlack
-	);
+	    ImVec2(picker_pos.x, picker_pos.y),
+	    ImVec2(picker_pos.x + SV_PICKER_SIZE.x, picker_pos.y + SV_PICKER_SIZE.y),
+	    c_oColorBlackTransparent,
+	    c_oColorBlackTransparent,
+	    c_oColorBlack,
+	    c_oColorBlack);
 
 	float x = saturation * SV_PICKER_SIZE.x;
 	float y = (1 - value) * SV_PICKER_SIZE.y;
@@ -127,7 +120,7 @@ bool UI::ColorPicker(float* col, bool alphabar)
 	{
 		ImVec2 mouse_pos_in_canvas = ImVec2(ImGui::GetIO().MousePos.x - picker_pos.x, ImGui::GetIO().MousePos.y - picker_pos.y);
 
-		if (mouse_pos_in_canvas.x <	0)
+		if (mouse_pos_in_canvas.x < 0)
 			mouse_pos_in_canvas.x = 0;
 		else if (mouse_pos_in_canvas.x >= SV_PICKER_SIZE.x - 1)
 			mouse_pos_in_canvas.x = SV_PICKER_SIZE.x - 1;
@@ -150,7 +143,7 @@ bool UI::ColorPicker(float* col, bool alphabar)
 	{
 		ImVec2 mouse_pos_in_canvas = ImVec2(ImGui::GetIO().MousePos.x - picker_pos.x, ImGui::GetIO().MousePos.y - picker_pos.y);
 
-		if (mouse_pos_in_canvas.y <	0)
+		if (mouse_pos_in_canvas.y < 0)
 			mouse_pos_in_canvas.y = 0;
 		else if (mouse_pos_in_canvas.y >= SV_PICKER_SIZE.y - 1)
 			mouse_pos_in_canvas.y = SV_PICKER_SIZE.y - 1;
@@ -168,7 +161,7 @@ bool UI::ColorPicker(float* col, bool alphabar)
 		{
 			ImVec2 mouse_pos_in_canvas = ImVec2(ImGui::GetIO().MousePos.x - picker_pos.x, ImGui::GetIO().MousePos.y - picker_pos.y);
 
-			if (mouse_pos_in_canvas.y <	0)
+			if (mouse_pos_in_canvas.y < 0)
 				mouse_pos_in_canvas.y = 0;
 			else if (mouse_pos_in_canvas.y >= SV_PICKER_SIZE.y - 1)
 				mouse_pos_in_canvas.y = SV_PICKER_SIZE.y - 1;
@@ -179,13 +172,13 @@ bool UI::ColorPicker(float* col, bool alphabar)
 		}
 	}
 
-	color = ImColor::HSV(hue >= 1 ? hue - 10 * 1e-6 : hue, saturation > 0 ? saturation : 10*1e-6, value > 0 ? value : 1e-6);
+	color = ImColor::HSV(hue >= 1 ? hue - 10 * 1e-6 : hue, saturation > 0 ? saturation : 10 * 1e-6, value > 0 ? value : 1e-6);
 	col[0] = color.Value.x;
 	col[1] = color.Value.y;
 	col[2] = color.Value.z;
 
 	bool widget_used;
-	ImGui::PushItemWidth((alphabar ? SPACING + HUE_PICKER_WIDTH : 0) + SV_PICKER_SIZE.x + SPACING + HUE_PICKER_WIDTH - 2*ImGui::GetStyle().FramePadding.x);
+	ImGui::PushItemWidth((alphabar ? SPACING + HUE_PICKER_WIDTH : 0) + SV_PICKER_SIZE.x + SPACING + HUE_PICKER_WIDTH - 2 * ImGui::GetStyle().FramePadding.x);
 	widget_used = alphabar ? ImGui::ColorEdit4("", col) : ImGui::ColorEdit3("", col);
 	ImGui::PopItemWidth();
 
@@ -225,15 +218,15 @@ bool UI::ColorPicker4(float col[4])
 
 void UI::SetupColors()
 {
-	ImGuiStyle& style = ImGui::GetStyle();
+	ImGuiStyle &style = ImGui::GetStyle();
 
-	ImVec4 mainColorHovered	= ImVec4(Settings::UI::mainColor.Color().Value.x + 0.1f, Settings::UI::mainColor.Color().Value.y + 0.1f, Settings::UI::mainColor.Color().Value.z + 0.1f, Settings::UI::mainColor.Color().Value.w);
+	ImVec4 mainColorHovered = ImVec4(Settings::UI::mainColor.Color().Value.x + 0.1f, Settings::UI::mainColor.Color().Value.y + 0.1f, Settings::UI::mainColor.Color().Value.z + 0.1f, Settings::UI::mainColor.Color().Value.w);
 	ImVec4 mainColorActive = ImVec4(Settings::UI::mainColor.Color().Value.x + 0.2f, Settings::UI::mainColor.Color().Value.y + 0.2f, Settings::UI::mainColor.Color().Value.z + 0.2f, Settings::UI::mainColor.Color().Value.w);
 	//ImVec4 menubarColor = ImVec4(Settings::UI::bodyColor.Color().Value.x, Settings::UI::bodyColor.Color().Value.y, Settings::UI::bodyColor.Color().Value.z, Settings::UI::bodyColor.Color().Value.w - 0.8f);
-	ImVec4 menubarColor = ImVec4(0,0,0,0);
+	ImVec4 menubarColor = ImVec4(0, 0, 0, 0);
 	ImVec4 frameBgColor = ImVec4(Settings::UI::bodyColor.Color().Value.x, Settings::UI::bodyColor.Color().Value.y, Settings::UI::bodyColor.Color().Value.z, Settings::UI::bodyColor.Color().Value.w + .1f);
 	ImVec4 tooltipBgColor = ImVec4(Settings::UI::bodyColor.Color().Value.x, Settings::UI::bodyColor.Color().Value.y, Settings::UI::bodyColor.Color().Value.z, Settings::UI::bodyColor.Color().Value.w + .05f);
-	ImVec4 accentColorHovered	= ImVec4(Settings::UI::accentColor.Color().Value.x + 0.1f, Settings::UI::accentColor.Color().Value.y + 0.1f, Settings::UI::accentColor.Color().Value.z + 0.1f, Settings::UI::accentColor.Color().Value.w);
+	ImVec4 accentColorHovered = ImVec4(Settings::UI::accentColor.Color().Value.x + 0.1f, Settings::UI::accentColor.Color().Value.y + 0.1f, Settings::UI::accentColor.Color().Value.z + 0.1f, Settings::UI::accentColor.Color().Value.w);
 	ImVec4 accentColorActive = ImVec4(Settings::UI::accentColor.Color().Value.x + 0.2f, Settings::UI::accentColor.Color().Value.y + 0.2f, Settings::UI::accentColor.Color().Value.z + 0.2f, Settings::UI::accentColor.Color().Value.w);
 
 	style.Alpha = 1.0f;
@@ -278,7 +271,7 @@ void UI::SetupColors()
 	style.Colors[ImGuiCol_ScrollbarGrab] = Settings::UI::accentColor.Color();
 	style.Colors[ImGuiCol_ScrollbarGrabHovered] = accentColorHovered;
 	style.Colors[ImGuiCol_ScrollbarGrabActive] = accentColorActive;
-	style.Colors[ImGuiCol_CheckMark]  = Settings::UI::accentColor.Color();
+	style.Colors[ImGuiCol_CheckMark] = Settings::UI::accentColor.Color();
 	style.Colors[ImGuiCol_SliderGrab] = accentColorHovered;
 	style.Colors[ImGuiCol_SliderGrabActive] = accentColorActive;
 	style.Colors[ImGuiCol_Button] = Settings::UI::accentColor.Color();
@@ -287,7 +280,7 @@ void UI::SetupColors()
 	style.Colors[ImGuiCol_Header] = Settings::UI::accentColor.Color();
 	style.Colors[ImGuiCol_HeaderHovered] = accentColorHovered;
 	style.Colors[ImGuiCol_HeaderActive] = accentColorActive;
-	style.Colors[ImGuiCol_Separator] =  Settings::UI::mainColor.Color();
+	style.Colors[ImGuiCol_Separator] = Settings::UI::mainColor.Color();
 	style.Colors[ImGuiCol_SeparatorHovered] = mainColorHovered;
 	style.Colors[ImGuiCol_SeparatorActive] = mainColorActive;
 	style.Colors[ImGuiCol_ResizeGrip] = Settings::UI::accentColor.Color();
@@ -299,7 +292,37 @@ void UI::SetupColors()
 	style.Colors[ImGuiCol_PlotLines] = Settings::UI::mainColor.Color();
 	style.Colors[ImGuiCol_PlotLinesHovered] = mainColorHovered;
 	style.Colors[ImGuiCol_PlotHistogram] = Settings::UI::mainColor.Color();
-	style.Colors[ImGuiCol_PlotHistogramHovered] =  mainColorHovered;
+	style.Colors[ImGuiCol_PlotHistogramHovered] = mainColorHovered;
 	style.Colors[ImGuiCol_TextSelectedBg] = mainColorHovered;
 	style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.75f);
+}
+
+void UI::SetupMainMenuColor()
+{
+	ImGuiStyle *style = &ImGui::GetStyle();
+	ImGui::StyleColorsDark();
+
+	style->Alpha = 1.f;
+	style->WindowRounding = 1.f;
+	style->FramePadding = ImVec2(4, 3);
+	style->WindowPadding = ImVec2(8, 8);
+	style->ItemInnerSpacing = ImVec2(4, 4);
+	style->ItemSpacing = ImVec2(8, 4);
+	style->FrameRounding = 5.f;
+	style->ScrollbarSize = 2.f;
+	style->ScrollbarRounding = 12.f;
+
+	ImVec4 *colors = ImGui::GetStyle().Colors;
+	colors[ImGuiCol_ChildBg] = ImColor(24, 29, 59, 0);
+	colors[ImGuiCol_Border] = ImVec4(0.07f, 0.07f, 0.11f, 0.50f);
+	colors[ImGuiCol_FrameBg] = ImColor(2, 19, 30, 255); // Check Box
+	colors[ImGuiCol_FrameBgActive] = ImColor(25, 25, 33, 255);
+	colors[ImGuiCol_FrameBgHovered] = ImColor(25, 25, 33, 255);
+	colors[ImGuiCol_Header] = ImColor(25, 25, 152, 255);
+	colors[ImGuiCol_HeaderActive] = ImColor(28, 28, 36, 255);
+	colors[ImGuiCol_HeaderHovered] = ImColor(30, 30, 38, 255);
+	colors[ImGuiCol_PopupBg] = ImColor(35, 35, 45, 255);
+	colors[ImGuiCol_Button] = ImColor(2, 19, 30, 255);
+	colors[ImGuiCol_ButtonHovered] = ImColor(1, 8, 12, 255);
+	colors[ImGuiCol_ButtonActive] = ImColor(2, 19, 30, 255);
 }

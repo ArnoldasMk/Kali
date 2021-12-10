@@ -2,7 +2,7 @@
 #include "ATGUI/atgui.h"
 #include "settings.h"
 
-#include "Hacks/grenadeprediction.h"
+#include "Features/grenadeprediction.h"
 
 #include "../Utils/util.h"
 

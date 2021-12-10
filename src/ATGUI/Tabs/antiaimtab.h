@@ -1,6 +1,7 @@
 #pragma once
-
-namespace HvH
+#include "../../settings.h"
+#include "../tooltip.h"
+namespace AntiAim
 {
-	void RenderTab();
+	void RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex);
 }

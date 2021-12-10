@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../tooltip.h"
+#include "../../settings.h"
 
 namespace Legitbot
 {
-	void RenderTab();
+	void RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex);
 }

@@ -10,11 +10,12 @@ namespace UI
 	void SetVisible(bool visible);
 	bool DrawImWatermark();
 	void SetupColors();
+	void SetupMainMenuColor();
 	void SetupWindows();
-	bool ColorPicker(float* col, bool alphabar);
+	bool ColorPicker(float *col, bool alphabar);
 	bool ColorPicker3(float col[3]);
 	bool ColorPicker4(float col[4]);
-	void KeyBindButton(ButtonCode_t* key);
+	void KeyBindButton(ButtonCode_t *key);
 	void UpdateWeaponSettings();
 	void ReloadWeaponSettings();
 	void UpdateRageWeaponSettings();
@@ -23,8 +24,7 @@ namespace UI
 	void angleIndicator();
 }
 
-
-inline void SetTooltip(const char* text)
+inline void SetTooltip(const char *text)
 {
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("%s", text);

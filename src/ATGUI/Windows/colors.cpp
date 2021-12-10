@@ -63,10 +63,12 @@ void Colors::RenderWindow()
 			{ "UI Body", &Settings::UI::bodyColor },
 			{ "UI Font", &Settings::UI::fontColor },
 			{ "UI Accent", &Settings::UI::accentColor },
+
 			{ "FOV Circle", &Settings::ESP::FOVCrosshair::color },
 			{ "Spread", &Settings::ESP::Spread::color },
 			{ "SpreadLimit", &Settings::ESP::Spread::spreadLimitColor},
 			{ "Hitmarker", &Settings::ESP::Hitmarker::color },
+
 			{ "ESP - Enemy", &Settings::ESP::enemyColor },
 			{ "ESP - Team", &Settings::ESP::allyColor },
 			{ "ESP - Enemy Visible", &Settings::ESP::enemyVisibleColor },
@@ -76,6 +78,7 @@ void Colors::RenderWindow()
 			{ "ESP - CT Visible", &Settings::ESP::ctVisibleColor },
 			{ "ESP - T Visible", &Settings::ESP::tVisibleColor },
 			{ "ESP - LocalPlayer", &Settings::ESP::localplayerColor },
+			//Local
 			{ "ESP - Bomb", &Settings::ESP::bombColor },
 			{ "ESP - Bomb Defusing", &Settings::ESP::bombDefusingColor },
 			{ "ESP - Hostage", &Settings::ESP::hostageColor },
@@ -90,10 +93,12 @@ void Colors::RenderWindow()
 			{ "ESP - Molotov", &Settings::ESP::molotovColor },
 			{ "ESP - Bump Mine", &Settings::ESP::mineColor },
 			{ "ESP - Breach Charge", &Settings::ESP::chargeColor },
+
 			{ "ESP - Skeleton (Team)", &Settings::ESP::Skeleton::allyColor },
 			{ "ESP - Skeleton (Enemy)", &Settings::ESP::Skeleton::enemyColor },
 			{ "ESP - Player Info (Team)", &Settings::ESP::allyInfoColor },
 			{ "ESP - Player Info (Enemy)", &Settings::ESP::enemyInfoColor },
+			//Local
 			{ "ESP - Danger Zone: Weapon Upgrade", &Settings::ESP::DangerZone::upgradeColor },
 			{ "ESP - Danger Zone: Loot Crate", &Settings::ESP::DangerZone::lootcrateColor },
 			{ "ESP - Danger Zone: Radar Jammer", &Settings::ESP::DangerZone::radarjammerColor },
@@ -106,19 +111,24 @@ void Colors::RenderWindow()
 			{ "ESP - Danger Zone: Tablet", &Settings::ESP::DangerZone::tabletColor },
 			{ "ESP - Danger Zone: Healthshot", &Settings::ESP::DangerZone::healthshotColor },
 			{ "ESP - Danger Zone: Melee", &Settings::ESP::DangerZone::meleeColor },
+
 			{ "Chams - Team", &Settings::ESP::Chams::allyColor },
 			{ "Chams - Team Visible", &Settings::ESP::Chams::allyVisibleColor },
+			
 			{ "Chams - Enemy", &Settings::ESP::Chams::enemyColor },
 			{ "Chams - Enemy Visible", &Settings::ESP::Chams::enemyVisibleColor },
 			{ "Chams - LocalPlayer", &Settings::ESP::Chams::localplayerColor },
+
 			{ "Chams - Arms", &Settings::ESP::Chams::Arms::color },
 			{ "Chams - Weapon", &Settings::ESP::Chams::Weapon::color },
+
 			{ "Grenade Helper - Aim Line", &Settings::GrenadeHelper::aimLine },
 			{ "Grenade Helper - Aim Dot", &Settings::GrenadeHelper::aimDot },
 			{ "Grenade Helper - HE Info", &Settings::GrenadeHelper::infoHE },
 			{ "Grenade Helper - Smoke Info", &Settings::GrenadeHelper::infoSmoke },
 			{ "Grenade Helper - Molotov Info", &Settings::GrenadeHelper::infoMolotov },
 			{ "Grenade Helper - Flash Info", &Settings::GrenadeHelper::infoFlash },
+			// Local
 			{ "Grenade Prediction - Line", &Settings::GrenadePrediction::color },
 			{ "Event log", &Settings::Eventlog::color },
 			{ "Radar - Enemy", &Settings::Radar::enemyColor },
@@ -131,6 +141,7 @@ void Colors::RenderWindow()
 			{ "Radar - T Visible", &Settings::Radar::tVisibleColor },
 			{ "Radar - Bomb", &Settings::Radar::bombColor },
 			{ "Radar - Bomb Defusing", &Settings::Radar::bombDefusingColor },
+
 			{ "Glow - Team", &Settings::ESP::Glow::allyColor },
 			{ "Glow - Enemy", &Settings::ESP::Glow::enemyColor },
 			{ "Glow - Enemy Visible", &Settings::ESP::Glow::enemyVisibleColor },
@@ -139,6 +150,7 @@ void Colors::RenderWindow()
 			{ "Glow - Grenade", &Settings::ESP::Glow::grenadeColor },
 			{ "Glow - Defuser", &Settings::ESP::Glow::defuserColor },
 			{ "Glow - Chicken", &Settings::ESP::Glow::chickenColor },
+
 			{ "Sky", &Settings::NoSky::color },
 			{ "Walls", &Settings::ASUSWalls::color },
 	};

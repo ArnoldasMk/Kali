@@ -1,6 +1,6 @@
 /*#include "hooks.h"
 #include "../interfaces.h"
-#include "../Hacks/fakelag.h"
+#include "../Features/fakelag.h"
 #include "../hooker.h"
 #include "../Utils/xorstring.h"
 

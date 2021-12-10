@@ -2,7 +2,7 @@
 
 #include "../interfaces.h"
 
-#include "../Hacks/skinchanger.h"
+#include "../Features/skinchanger.h"
 
 typedef bool (*FireEventClientSideFn) (void*, IGameEvent*);
 

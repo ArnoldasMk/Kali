@@ -11732,3 +11732,171 @@ void ImGui::DebugNodeViewport(ImGuiViewportP*) {}
 //-----------------------------------------------------------------------------
 
 #endif // #ifndef IMGUI_DISABLE
+
+bool ImGui::Tab(const char *label, bool selected)
+{
+	ImGuiWindow *window = ImGui::GetCurrentWindow();
+	if (window->SkipItems) {
+		return false;
+	}
+
+	ImGuiContext &g = *GImGui;
+	const ImGuiStyle &style = g.Style;
+	const ImGuiID id = window->GetID(label);
+	const ImVec2 label_size = ImGui::CalcTextSize(label, NULL, true);
+
+	ImVec2 pos = window->DC.CursorPos;
+	ImVec2 size = ImGui::CalcItemSize(ImVec2(140, 40), label_size.x + style.FramePadding.x * 2.0f, label_size.y + style.FramePadding.y * 2.0f);
+
+	const ImRect bb(pos, pos + size);
+	ImGui::ItemSize(size, style.FramePadding.y);
+	if (!ImGui::ItemAdd(bb, id)) {
+		return false;
+	}
+
+	bool hovered, held;
+	bool pressed = ImGui::ButtonBehavior(bb, id, &hovered, &held);
+
+	if (hovered || held) {
+		ImGui::SetMouseCursor(7);
+	}
+
+	if (selected) {
+		window->DrawList->AddRectFilled(ImVec2(bb.Min.x - 3, bb.Min.y - 1), ImVec2(bb.Max.x + 3, bb.Max.y + 0), ImColor(2, 19, 30), 8, 3);
+	} else {
+		if (!hovered) {
+			window->DrawList->AddRectFilled(ImVec2(bb.Min.x + 0, bb.Min.y + 0), ImVec2(bb.Max.x + 0, bb.Max.y + 0), ImColor(2, 6, 11));
+		} else {
+			window->DrawList->AddRectFilled(ImVec2(bb.Min.x + 0, bb.Min.y + 0), ImVec2(bb.Max.x + 0, bb.Max.y + 0), ImColor(2, 19, 30));
+		}
+	}
+
+	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(229 / 255.f, 229 / 255.f, 229 / 255.f, 255 / 255.f));
+	ImGui::RenderText(ImVec2(bb.Min.x + 0 + (105 / 2 - label_size.x / 3), bb.Min.y + style.FramePadding.y + 12), label);
+	ImGui::PopStyleColor();
+
+	return pressed;
+}
+
+
+
+
+
+bool ImGui::Sub(const char *label, bool selected)
+{
+	ImGuiWindow *window = ImGui::GetCurrentWindow();
+	if (window->SkipItems) {
+		return false;
+	}
+
+	ImGuiContext &g = *GImGui;
+	const ImGuiStyle &style = g.Style;
+	const ImGuiID id = window->GetID(label);
+	const ImVec2 label_size = ImGui::CalcTextSize(label, NULL, true);
+	auto draw = ImGui::GetWindowDrawList();
+
+	ImVec2 pos = window->DC.CursorPos;
+	ImVec2 size = ImGui::CalcItemSize(ImVec2(157, 40), label_size.x + style.FramePadding.x * 2.0f, label_size.y + style.FramePadding.y * 2.0f);
+
+	const ImRect bb(pos, pos + size);
+	ImGui::ItemSize(size, style.FramePadding.y);
+	if (!ImGui::ItemAdd(bb, id)) {
+		return false;
+	}
+
+	bool hovered, held;
+	bool pressed = ImGui::ButtonBehavior(bb, id, &hovered, &held);
+
+	if (hovered || held) {
+		ImGui::SetMouseCursor(7);
+	}
+
+	if (selected) {
+		window->DrawList->AddRectFilled(ImVec2(bb.Min.x - 3, bb.Min.y - 1), ImVec2(bb.Max.x + 3, bb.Max.y + 0),
+		                                ImColor(2, 6, 11, 255));
+		draw->AddRectFilled(ImVec2(bb.Min.x - 0, bb.Min.y - 1), ImVec2(bb.Max.x - 147, bb.Max.y + 0), // LEFT CUBE
+		                    ImColor(2, 19, 30));
+	} else {
+		if (!hovered) {
+			window->DrawList->AddRectFilled(ImVec2(bb.Min.x + 0, bb.Min.y + 0), ImVec2(bb.Max.x + 0, bb.Max.y + 0),
+			                                ImColor(2, 19, 30, 0));
+		} else {
+			window->DrawList->AddRectFilled(ImVec2(bb.Min.x + 0, bb.Min.y + 0), ImVec2(bb.Max.x + 0, bb.Max.y + 0),
+			                                ImColor(2, 19, 30, 255));
+		}
+	}
+
+	if (selected) {
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(255 / 255.f, 255 / 255.f, 255 / 255.f, 255 / 255.f));
+		ImGui::RenderText(ImVec2(bb.Min.x + 0 + (105 / 2 - label_size.x / 2), bb.Min.y + style.FramePadding.y + 10), label);
+		ImGui::PopStyleColor();
+	} else {
+		if (!hovered) {
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(255 / 255.f, 255 / 255.f, 255 / 255.f, 255 / 255.f));
+			ImGui::RenderText(ImVec2(bb.Min.x + 0 + (105 / 2 - label_size.x / 2), bb.Min.y + style.FramePadding.y + 10), label);
+			ImGui::PopStyleColor();
+		} else {
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(255 / 255.f, 255 / 255.f, 255 / 255.f, 255 / 255.f));
+			ImGui::RenderText(ImVec2(bb.Min.x + 0 + (105 / 2 - label_size.x / 2), bb.Min.y + style.FramePadding.y + 10), label);
+			ImGui::PopStyleColor();
+		}
+	}
+	return pressed;
+
+}
+bool ImGui::CheckboxFill(const char *label, bool *v)
+{
+	ImGuiWindow *window = GetCurrentWindow();
+	if (window->SkipItems) {
+		return false;
+	}
+
+	ImGuiContext &g = *GImGui;
+	const ImGuiStyle &style = g.Style;
+	const ImGuiID id = window->GetID(label);
+	const ImVec2 label_size = CalcTextSize(label, NULL, true);
+
+	const ImRect check_bb(window->DC.CursorPos, window->DC.CursorPos + ImVec2(label_size.y + style.FramePadding.y * 2,
+	                                                                          label_size.y + style.FramePadding.y * 2));
+	ItemSize(check_bb, style.FramePadding.y);
+
+	ImRect total_bb = check_bb;
+	if (label_size.x > 0) {
+		SameLine(0, style.ItemInnerSpacing.x);
+	}
+	const ImRect text_bb(window->DC.CursorPos + ImVec2(0, style.FramePadding.y),
+	                     window->DC.CursorPos + ImVec2(0, style.FramePadding.y) + label_size);
+	if (label_size.x > 0) {
+		ItemSize(ImVec2(text_bb.GetWidth(), check_bb.GetHeight()), style.FramePadding.y);
+		total_bb = ImRect(ImMin(check_bb.Min, text_bb.Min), ImMax(check_bb.Max, text_bb.Max));
+	}
+
+	if (!ItemAdd(total_bb, id)) {
+		return false;
+	}
+
+	bool hovered, held;
+	bool pressed = ButtonBehavior(total_bb, id, &hovered, &held);
+	if (pressed) {
+		*v = !(*v);
+	}
+	RenderNavHighlight(total_bb, id);
+	RenderFrame(check_bb.Min, check_bb.Max, GetColorU32(
+			(held && hovered) ? ImGuiCol_FrameBgActive : hovered ? ImGuiCol_FrameBgHovered : ImGuiCol_Border), true,
+	            style.FrameRounding);
+	if (*v) {
+		const float check_sz = ImMin(check_bb.GetWidth(), check_bb.GetHeight());
+		const float pad = ImMax(1.0f, (float) (int) (check_sz / 6.0f));
+		window->DrawList->AddRectFilled(check_bb.Min + ImVec2(pad, pad), check_bb.Max - ImVec2(pad, pad),
+		                                GetColorU32(ImGuiCol_CheckMark), style.FrameRounding);
+	}
+
+	if (g.LogEnabled) {
+		LogRenderedText(&text_bb.Min, *v ? "[X]" : "[]");
+	}
+	if (label_size.x > 0.0f) {
+		RenderText(text_bb.Min, label);
+	}
+
+	return pressed;
+}

@@ -7,7 +7,7 @@
 #include "../Utils/xorstring.h"
 #include <SDL2/SDL.h>
 #include "../ImGUI/imgui_internal.h"
-#include "../Hacks/esp.h"
+#include "../Features/esp.h"
 
 std::deque<DrawRequest> Draw::drawRequests = {};
 

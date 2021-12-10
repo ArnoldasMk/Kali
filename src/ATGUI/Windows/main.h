@@ -1,8 +1,9 @@
 #pragma once
 
-namespace Main
-{
+namespace MainMenu{
+
+     void Render();
+
 	extern bool showWindow;
 
-	extern void RenderWindow();
 }

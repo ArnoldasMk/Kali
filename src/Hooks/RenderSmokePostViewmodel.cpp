@@ -1,7 +1,7 @@
 #include "hooks.h"
 
 #include "../interfaces.h"
-#include "../Hacks/nosmoke.h"
+#include "../Features/nosmoke.h"
 
 typedef void (*RenderSmokePostViewmodelFn) (void*);
 
