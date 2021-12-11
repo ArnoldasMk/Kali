@@ -391,7 +391,7 @@ void RagebotNoRecoil(QAngle &angle, CUserCmd *cmd, C_BasePlayer *localplayer, C_
 
 void RagebotAutoCrouch(C_BasePlayer *localplayer, CUserCmd *cmd, C_BaseCombatWeapon *activeWeapon, const RageWeapon_t &currentSettings)
 {
-	if (!localplayer || !localplayer->GetAlive() || !Settings::Ragebot::AutoCrouch::enable)
+	if (!localplayer || !localplayer->GetAlive() || !Settings::Ragebot::AutoCrouch::enabled)
 		return;
 
 	if (activeWeapon->GetNextPrimaryAttack() > globalVars->curtime)

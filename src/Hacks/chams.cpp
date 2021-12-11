@@ -239,7 +239,7 @@ static void DrawFake(void *thisptr, void *context, void *state, const ModelRende
 	int maxClient = engine->GetMaxClients();
 	static matrix3x4_t fakeBoneMatrix[128];
 	float fakeangle = AntiAim::fakeAngle.y - AntiAim::realAngle.y;
-	if (Settings::AntiAim::aaoff)
+	if (Settings::AntiAim::AADisabled::enabled)
 		fakeangle = Settings::AntiAim::offsat;
 	float fakeanglex = 0;
 	CCSGOAnimState fakestate; // One day....

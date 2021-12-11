@@ -29,7 +29,7 @@
 //                         last_double_tap = g_ctx.globals.fixed_tickbase;
 //         }
 
-//         if (!g_cfg.ragebot.enable)
+//         if (!g_cfg.ragebot.enabled)
 //         {
 //                 double_tap_enabled = false;
 //                 double_tap_key = false;

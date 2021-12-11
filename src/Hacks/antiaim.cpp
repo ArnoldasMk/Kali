@@ -566,7 +566,7 @@ if (!CreateMove::sendPacket)
 
 return;
 }
-    if (Settings::AntiAim::ManualAntiAim::Enable)
+    if (Settings::AntiAim::ManualAntiAim::Enabled)
     {
         if(Settings::AntiAim::AutoInvert){
 	if (automatic_direction()){
@@ -704,7 +704,7 @@ if (CreateMove::sendPacket){
                 break;
 
             case AntiAimRealType_Y::Static:
-		if (!(should_break_lby(cmd) && lby::enabled && !Settings::AntiAim::ManualAntiAim::Enable)){
+		if (!(should_break_lby(cmd) && lby::enabled && !Settings::AntiAim::ManualAntiAim::Enabled)){
 	        should_sidemove = true;
                 if (!AntiAim::bSend)
                 angle.y += inverted ? (AntiAim::GetMaxDelta(localplayer->GetAnimState())+ AntiAimOffset) : -(AntiAim::GetMaxDelta(localplayer->GetAnimState()) + AntiAimOffset);
@@ -712,7 +712,7 @@ if (CreateMove::sendPacket){
                 break;
 
             case AntiAimRealType_Y::Jitter:
-                if (!(should_break_lby(cmd) && lby::enabled && !Settings::AntiAim::ManualAntiAim::Enable)){
+                if (!(should_break_lby(cmd) && lby::enabled && !Settings::AntiAim::ManualAntiAim::Enabled)){
                 should_sidemove = true;
                 if (!CreateMove::sendPacket)
                 angle.y = inverted ? AntiAim::realAngle.y - (AntiAim::GetMaxDelta(localplayer->GetAnimState()) + 30) : -(AntiAim::realAngle.y - (AntiAim::GetMaxDelta(localplayer->GetAnimState()) + 30));
@@ -722,7 +722,7 @@ if (CreateMove::sendPacket){
                 break;
 
             case AntiAimRealType_Y::Randome:
-                if (!(should_break_lby(cmd) && lby::enabled && !Settings::AntiAim::ManualAntiAim::Enable)){
+                if (!(should_break_lby(cmd) && lby::enabled && !Settings::AntiAim::ManualAntiAim::Enabled)){
                 should_sidemove = true;
                 if (!AntiAim::bSend)
                 {
@@ -741,7 +741,7 @@ if (CreateMove::sendPacket){
 		}
                 break;
             case AntiAimRealType_Y::JitterSwitch:
-                if (!(should_break_lby(cmd) && lby::enabled && !Settings::AntiAim::ManualAntiAim::Enable)){
+                if (!(should_break_lby(cmd) && lby::enabled && !Settings::AntiAim::ManualAntiAim::Enabled)){
                 should_sidemove = true;
                 if ( !(cmd->tick_count%16) )
                 sw = !sw;
@@ -749,7 +749,7 @@ if (CreateMove::sendPacket){
 		}
                 break;
             case AntiAimRealType_Y::Spin:
-                if (!(should_break_lby(cmd) && lby::enabled && !Settings::AntiAim::ManualAntiAim::Enable)){
+                if (!(should_break_lby(cmd) && lby::enabled && !Settings::AntiAim::ManualAntiAim::Enabled)){
                 should_sidemove = true;
 			factor =  360.0 / M_PHI;
 			factor *= JitterPercent;
@@ -758,7 +758,7 @@ if (CreateMove::sendPacket){
                 break;
 
         case AntiAimRealType_Y::JitterRandom:
-                if (!(should_break_lby(cmd) && lby::enabled && !Settings::AntiAim::ManualAntiAim::Enable)){
+                if (!(should_break_lby(cmd) && lby::enabled && !Settings::AntiAim::ManualAntiAim::Enabled)){
                 should_sidemove = true;
                 int stuff = JitterPercent;
                 float randNum = (rand()%(stuff-(-stuff) + 1) + -stuff);
@@ -784,7 +784,7 @@ static void DoAntiAimX(QAngle& angle, CUserCmd* cmd)
 { 
         static auto invert_jitter = false;
         static auto should_invert = false;
-if (Settings::AntiAim::LegitAntiAim::enable)
+if (Settings::AntiAim::LegitAntiAim::enabled)
 	return;
                        static auto std = 0;
                         std++;
@@ -961,7 +961,7 @@ static void DoManuaAntiAim(C_BasePlayer* localplayer, QAngle& angle)
 
     static bool Bpressed = false;
     
-    if (!Settings::AntiAim::ManualAntiAim::Enable)
+    if (!Settings::AntiAim::ManualAntiAim::Enabled)
         return;
 
     if ( inputSystem->IsButtonDown(Settings::AntiAim::ManualAntiAim::backButton) && !Bpressed )
@@ -1033,7 +1033,7 @@ return false;
 
 void AntiAim::CreateMove(CUserCmd* cmd)
 {
-    if (!Settings::AntiAim::RageAntiAim::enable && !Settings::AntiAim::LBYBreaker::enabled && !Settings::AntiAim::LegitAntiAim::enable && !Settings::AntiAim::RageAntiAim::customaa::enabled)
+    if (!Settings::AntiAim::RageAntiAim::enabled && !Settings::AntiAim::LBYBreaker::enabled && !Settings::AntiAim::LegitAntiAim::enabled && !Settings::AntiAim::RageAntiAim::customaa::enabled)
         return;
     C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
     if (!localplayer || !localplayer->GetAlive())
@@ -1061,7 +1061,7 @@ Sidemove(cmd);
 if( Settings::AntiAim::LBYBreaker::enabled ){
         LBYBreak(Settings::AntiAim::LBYBreaker::offset, angle, localplayer);
     }
-    else if (Settings::AntiAim::RageAntiAim::enable) // responsible for reage anti aim or varity of anti aims .. 
+    else if (Settings::AntiAim::RageAntiAim::enabled) // responsible for reage anti aim or varity of anti aims .. 
     {
         DoManuaAntiAim(localplayer, angle);
         if (Settings::AntiAim::RageAntiAim::atTheTarget)
@@ -1079,7 +1079,7 @@ if( Settings::AntiAim::LBYBreaker::enabled ){
 	AirAntiAim(localplayer,cmd, angle);
 	}
 	}
-    else if (Settings::AntiAim::LegitAntiAim::enable) // Responsible for legit anti aim activated when the legit anti aim is enabled
+    else if (Settings::AntiAim::LegitAntiAim::enabled) // Responsible for legit anti aim activated when the legit anti aim is enabled
         DoLegitAntiAim(localplayer, angle, AntiAim::bSend, cmd);
   //          LBYBreak(CreateMove::lastTickViewAngles.y, angle, localplayer);
    Math::NormalizeAngles(angle);
@@ -1087,7 +1087,7 @@ if( Settings::AntiAim::LBYBreaker::enabled ){
 
    //angle = NormalizeAsYaw(angle);
    Math::ClampAngles(angle);
-if (!Settings::AntiAim::LegitAntiAim::enable){
+if (!Settings::AntiAim::LegitAntiAim::enabled){
     if (!AntiAim::bSend){
  AntiAim::fakeAngle = angle;
 	}
@@ -1117,7 +1117,7 @@ else {
 
 void AntiAim::FrameStageNotify(ClientFrameStage_t stage)
 {
-   if (!Settings::AntiAim::LegitAntiAim::enable)
+   if (!Settings::AntiAim::LegitAntiAim::enabled)
         return;
 
     C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
@@ -1143,7 +1143,7 @@ void AntiAim::FrameStageNotify(ClientFrameStage_t stage)
 
 void AntiAim::OverrideView(CViewSetup *pSetup)
 {
-    if (!Settings::AntiAim::RageAntiAim::enable && !Settings::AntiAim::LBYBreaker::enabled && !Settings::AntiAim::LegitAntiAim::enable)
+    if (!Settings::AntiAim::RageAntiAim::enabled && !Settings::AntiAim::LBYBreaker::enabled && !Settings::AntiAim::LegitAntiAim::enabled)
         return;
 
     C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());

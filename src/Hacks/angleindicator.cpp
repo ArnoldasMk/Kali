@@ -47,7 +47,7 @@ void AngleIndicator::Paint( ) {
     Draw::AddLine( centerX, centerY, leftDesyncMaxX, leftDesyncMaxY, basicColor ); // Left Max
     Draw::AddLine( centerX, centerY, rightDesyncMaxX, rightDesyncMaxY, basicColor ); // Right Max
 
-    if( Settings::AntiAim::RageAntiAim::enable )
+    if( Settings::AntiAim::RageAntiAim::enabled )
     {
         Draw::AddLine( centerX, centerY, realX, realY, realColor ); // Real Line
     }

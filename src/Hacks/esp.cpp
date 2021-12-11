@@ -136,7 +136,7 @@ static void DrawManualAntiaim()
 	static int width, height;
 	engine->GetScreenSize(width, height);
 	auto color = Color::FromImColor(Settings::ESP::manualAAColor.Color());
-	if (Settings::AntiAim::ManualAntiAim::Enable)
+	if (Settings::AntiAim::ManualAntiAim::Enabled)
 	{
 		if (AntiAim::ManualAntiAim::alignLeft)
 		{
@@ -151,7 +151,7 @@ static void DrawManualAntiaim()
 			Draw::triangle(Vector2D(width / 2 + 55, height / 2 - 10), Vector2D(width / 2 + 75, height / 2), Vector2D(width / 2 + 55, height / 2 + 10), color);
 		}
 	}
-	else if (Settings::AntiAim::LegitAntiAim::enable)
+	else if (Settings::AntiAim::LegitAntiAim::enabled)
 	{
 		if (Settings::AntiAim::LegitAntiAim::inverted) //right
 			Draw::triangle(Vector2D(width / 2 + 55, height / 2 - 10), Vector2D(width / 2 + 75, height / 2), Vector2D(width / 2 + 55, height / 2 + 10), color);
@@ -1277,7 +1277,7 @@ static void DrawKeyBinds(int x, int y)
 		Draw::AddText(x + 2, y + 2, "SlowWalk  [Holding]", ImColor(255, 255, 255, 255));
 		y = y + 10;
 	}
-	if (Settings::AntiAim::RageAntiAim::inverted && Settings::AntiAim::RageAntiAim::enable || Settings::AntiAim::LegitAntiAim::inverted)
+	if (Settings::AntiAim::RageAntiAim::inverted && Settings::AntiAim::RageAntiAim::enabled || Settings::AntiAim::LegitAntiAim::inverted)
 	{
 		Draw::AddText(x + 2, y + 3, "AA Inverter [Toggled]", ImColor(255, 255, 255, 255));
 		y = y + 10;
@@ -1292,17 +1292,17 @@ static void DrawKeyBinds(int x, int y)
 		Draw::AddText(x + 2, y + 5, "QuickPeek [Holding]", ImColor(255, 255, 255, 255));
 		y = y + 10;
 	}
-	if (AntiAim::ManualAntiAim::alignLeft && Settings::AntiAim::ManualAntiAim::Enable)
+	if (AntiAim::ManualAntiAim::alignLeft && Settings::AntiAim::ManualAntiAim::Enabled)
 	{
 		Draw::AddText(x + 2, y + 5, "Manual AA [LEFT]", ImColor(255, 255, 255, 255));
 		y = y + 10;
 	}
-	else if (AntiAim::ManualAntiAim::alignBack && Settings::AntiAim::ManualAntiAim::Enable)
+	else if (AntiAim::ManualAntiAim::alignBack && Settings::AntiAim::ManualAntiAim::Enabled)
 	{
 		Draw::AddText(x + 2, y + 5, "Manual AA [BACK]", ImColor(255, 255, 255, 255));
 		y = y + 10;
 	}
-	else if (AntiAim::ManualAntiAim::alignRight && Settings::AntiAim::ManualAntiAim::Enable)
+	else if (AntiAim::ManualAntiAim::alignRight && Settings::AntiAim::ManualAntiAim::Enabled)
 	{
 		Draw::AddText(x + 2, y + 5, "Manual AA [RIGHT]", ImColor(255, 255, 255, 255));
 		y = y + 10;
@@ -2538,7 +2538,7 @@ void ESP::Paint()
 		DrawAATrace(AntiAim::fakeAngle, AntiAim::realAngle);
 		renderRange();
 	}
-	if (Settings::AntiAim::ManualAntiAim::Enable || Settings::AntiAim::LegitAntiAim::enable)
+	if (Settings::AntiAim::ManualAntiAim::Enabled || Settings::AntiAim::LegitAntiAim::enabled)
 	{
 
 		DrawManualAntiaim();
