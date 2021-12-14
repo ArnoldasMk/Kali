@@ -8,42 +8,41 @@
 #include <link.h> // dl_iterate_phdr
 #include <sstream>
 
-IBaseClientDLL* client = nullptr;
-IClientMode* clientMode = nullptr;
-ICommandLine* commandline = nullptr;
-C_CSGameRules** csGameRules = nullptr;
-C_CSPlayerResource** csPlayerResource = nullptr;
-ICvar* cvar = nullptr;
-IVDebugOverlay* debugOverlay = nullptr;
-CEffects* effects = nullptr;
-IEngineClient* engine = nullptr;
-IEngineVGui* engineVGui = nullptr;
-IClientEntityList* entityList = nullptr;
-IGameEventManager2* gameEvents = nullptr;
-IGameMovement* gameMovement = nullptr;
-CGlobalVars* globalVars = nullptr;
-CGlowObjectManager* glowManager = nullptr;
-CInput* input = nullptr;
-IInputInternal* inputInternal = nullptr;
-IInputSystem* inputSystem = nullptr;
-ILauncherMgr* launcherMgr = nullptr;
-ILocalize* localize = nullptr;
-IMaterialSystem* material = nullptr;
-IVModelInfo* modelInfo = nullptr;
-IVModelRender* modelRender = nullptr;
-IMoveHelper* moveHelper = nullptr;
-IVPanel* panel = nullptr;
-IPhysicsSurfaceProps* physics = nullptr;
-IPrediction* prediction = nullptr;
-IEngineSound* sound = nullptr;
-ISurface* surface = nullptr;
-IEngineTrace* trace = nullptr;
-CViewRender* viewRender = nullptr;
-IPanoramaUIEngine* panoramaEngine = nullptr;
-IFileSystem* fileSystem = nullptr;
-IGameTypes* gameTypes = nullptr;
-CItemSystem* itemSystem = nullptr;
-
+IBaseClientDLL *client = nullptr;
+IClientMode *clientMode = nullptr;
+ICommandLine *commandline = nullptr;
+C_CSGameRules **csGameRules = nullptr;
+C_CSPlayerResource **csPlayerResource = nullptr;
+ICvar *cvar = nullptr;
+IVDebugOverlay *debugOverlay = nullptr;
+CEffects *effects = nullptr;
+IEngineClient *engine = nullptr;
+IEngineVGui *engineVGui = nullptr;
+IClientEntityList *entityList = nullptr;
+IGameEventManager2 *gameEvents = nullptr;
+IGameMovement *gameMovement = nullptr;
+CGlobalVars *globalVars = nullptr;
+CGlowObjectManager *glowManager = nullptr;
+CInput *input = nullptr;
+IInputInternal *inputInternal = nullptr;
+IInputSystem *inputSystem = nullptr;
+ILauncherMgr *launcherMgr = nullptr;
+ILocalize *localize = nullptr;
+IMaterialSystem *material = nullptr;
+IVModelInfo *modelInfo = nullptr;
+IVModelRender *modelRender = nullptr;
+IMoveHelper *moveHelper = nullptr;
+IVPanel *panel = nullptr;
+IPhysicsSurfaceProps *physics = nullptr;
+IPrediction *prediction = nullptr;
+IEngineSound *sound = nullptr;
+ISurface *surface = nullptr;
+IEngineTrace *trace = nullptr;
+CViewRender *viewRender = nullptr;
+IPanoramaUIEngine *panoramaEngine = nullptr;
+IFileSystem *fileSystem = nullptr;
+IGameTypes *gameTypes = nullptr;
+CItemSystem *itemSystem = nullptr;
 
 void Interfaces::FindInterfaces()
 {
@@ -69,8 +68,8 @@ void Interfaces::FindInterfaces()
 	sound = GetInterface<IEngineSound>(XORSTR("./bin/linux64/engine_client.so"), XORSTR("IEngineSoundClient"));
 	localize = GetInterface<ILocalize>(XORSTR("./bin/linux64/localize_client.so"), XORSTR("Localize_"));
 	commandline = GetSymbolAddress<CommandLineFn>(XORSTR("./bin/linux64/libtier0_client.so"), XORSTR("CommandLine"))();
-    panoramaEngine = GetInterface<IPanoramaUIEngine>(XORSTR("./bin/linux64/panorama_client.so"), XORSTR("PanoramaUIEngine001"), true);
-	fileSystem = GetInterface<IFileSystem>( XORSTR( "./bin/linux64/filesystem_stdio_client.so" ), XORSTR( "VFileSystem" ) );
+	panoramaEngine = GetInterface<IPanoramaUIEngine>(XORSTR("./bin/linux64/panorama_gl_client.so"), XORSTR("PanoramaUIEngine001"), true);
+	fileSystem = GetInterface<IFileSystem>(XORSTR("./bin/linux64/filesystem_stdio_client.so"), XORSTR("VFileSystem"));
 	gameTypes = GetInterface<IGameTypes>(XORSTR("./csgo/bin/linux64/matchmaking_client.so"), XORSTR("VENGINE_GAMETYPES_VERSION002"), true);
 }
 
@@ -78,21 +77,22 @@ void Interfaces::DumpInterfaces()
 {
 	std::stringstream ss;
 
-	std::vector<const char*> modules;
+	std::vector<const char *> modules;
 
-	dl_iterate_phdr([](struct dl_phdr_info* info, size_t size, void* data) {
+	dl_iterate_phdr([](struct dl_phdr_info *info, size_t size, void *data)
+				 {
 		reinterpret_cast<std::vector<const char*>*>(data)->push_back(info->dlpi_name);
-		return 0;
-	}, &modules);
+		return 0; },
+				 &modules);
 
 	for (auto module : modules)
 	{
-		void* library = dlopen(module, RTLD_NOLOAD | RTLD_NOW);
+		void *library = dlopen(module, RTLD_NOLOAD | RTLD_NOW);
 
 		if (!library)
 			continue;
 
-		void* interfaces_sym = dlsym(library, XORSTR("s_pInterfaceRegs"));
+		void *interfaces_sym = dlsym(library, XORSTR("s_pInterfaceRegs"));
 
 		if (!interfaces_sym)
 		{
@@ -102,16 +102,17 @@ void Interfaces::DumpInterfaces()
 
 		dlclose(library);
 
-		InterfaceReg* interfaces = *reinterpret_cast<InterfaceReg**>(interfaces_sym);
+		InterfaceReg *interfaces = *reinterpret_cast<InterfaceReg **>(interfaces_sym);
 
-		InterfaceReg* cur_interface;
+		InterfaceReg *cur_interface;
 
-		std::set<const char*> interface_name;
+		std::set<const char *> interface_name;
 
-		for (cur_interface = interfaces; cur_interface; cur_interface = cur_interface->m_pNext){
-            cvar->ConsoleDPrintf("%s - %p\n", cur_interface->m_pName, (void*)cur_interface->m_CreateFn);
-            interface_name.insert(cur_interface->m_pName);
-        }
+		for (cur_interface = interfaces; cur_interface; cur_interface = cur_interface->m_pNext)
+		{
+			cvar->ConsoleDPrintf("%s - %p\n", cur_interface->m_pName, (void *)cur_interface->m_CreateFn);
+			interface_name.insert(cur_interface->m_pName);
+		}
 
 		if (interface_name.empty())
 			continue;
