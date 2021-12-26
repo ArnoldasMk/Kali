@@ -10,6 +10,7 @@
 #include "../Tabs/ragebottab.h"
 #include "../Tabs/antiaimtab.h"
 #include "../Tabs/misctab.h"
+#include "../Tabs/playerinfo.h"
 #include "../Tabs/triggerbottab.h"
 #include "../Tabs/visualstab.h"
 #include "../Tabs/skinstab.h"
@@ -29,7 +30,7 @@ enum
 	Visuals,
 	SkinChangerTab,
 	MiscTab,
-	Config,
+	PlayerInfo,
 	Dev,
 };
 
@@ -40,14 +41,14 @@ enum
 	TriggerbotTab,
 };
 
-const char *TabsNames[] = {"Aimbot", "Anti Aim", "Visuals", "Skin Changer", "Misc", "Config"};
+const char *TabsNames[] = {"Aimbot", "Anti Aim", "Visuals", "Skin Changer", "Misc", "Player List"};
 
 std::initializer_list<const char *> subtabAimbot = {"Legitbot", "Ragebot", "Triggerbot"};
-std::initializer_list<const char *> subtabAntiAim = {"Anti Aim"};
+std::initializer_list<const char *> subtabAntiAim = {};
 std::initializer_list<const char *> subtabVisuals = {"Enemy", "Allies", "Local", "Materials", "Menu"};
 std::initializer_list<const char *> subtabSkinChanger = {"Skins", "Models"};
-std::initializer_list<const char *> subtabMisc = {"BunnyHop", "Customize", "Spammer", "Others", "Unload/Eject"};
-std::initializer_list<const char *> subtabConfig = {"Add", "Refresh", "Save", "Remove"};
+std::initializer_list<const char *> subtabMisc = {"Features"};
+std::initializer_list<const char *> subtabPlayerInfo = {};
 std::initializer_list<const char *> subtabDev = {"Options"};
 
 std::vector<std::initializer_list<const char *>> allsubtabs{
@@ -56,7 +57,7 @@ std::vector<std::initializer_list<const char *>> allsubtabs{
     subtabVisuals,
     subtabSkinChanger,
     subtabMisc,
-    subtabConfig,
+    subtabPlayerInfo,
     subtabDev,
 };
 
@@ -82,10 +83,10 @@ static void BgDecorations()
 	draw->AddRectFilled(ImVec2(pos.x, pos.y + 835), ImVec2(pos.x + 1128, pos.y + 865), ImColor(2, 6, 11), 0, 4 | 8); // ImColor(187, 37, 38), 0, 4 | 8);
 
 	draw->AddText(info, 13.f, ImVec2(pos.x + 12, pos.y + 845), ImColor(255, 255, 255), "Kali");
-	//draw->AddText(info, 13.f, ImVec2(pos.x + 100, pos.y + 625), ImColor(255, 255, 255), "Counter-Strike: Global Offensive");
-	//draw->AddText(info, 13.f, ImVec2(pos.x + 860, pos.y + 625), ImColor(255, 255, 255), "Kali");
+	// draw->AddText(info, 13.f, ImVec2(pos.x + 100, pos.y + 625), ImColor(255, 255, 255), "Counter-Strike: Global Offensive");
+	// draw->AddText(info, 13.f, ImVec2(pos.x + 860, pos.y + 625), ImColor(255, 255, 255), "Kali");
 	//
-	// Side Panel Bg
+	//  Side Panel Bg
 	draw->AddRectFilled(ImVec2(pos.x, pos.y + 55), ImVec2(pos.x + 160, pos.y + 835), ImColor(2, 19, 30, 150)); // mColor(0, 0, 0, 150));
 	ImGui::SetCursorPos(ImVec2(10, 10));
 	//
@@ -210,6 +211,7 @@ void MainMenu::Render()
 			aimbotTab();
 			break;
 		case AntiAimTab:
+			draw->AddRectFilled(ImVec2(pos.x, pos.y + 52), ImVec2(pos.x + 160, pos.y + 832), ImColor(4, 3, 5)); // ImColor(0, 0, 0, 150));
 			AntiAim::RenderMainMenu(pos, draw, subtabs);
 			break;
 		case Visuals:
@@ -221,14 +223,12 @@ void MainMenu::Render()
 		case MiscTab:
 			Misc::RenderMainMenu(pos, draw, subtabs);
 			break;
-		case Config:
-			//ConfigTab::RenderMainMenu(pos, draw, subtabs);
-		case Dev:
-			subtabs = 0;
+		case PlayerInfo:
+			draw->AddRectFilled(ImVec2(pos.x, pos.y + 52), ImVec2(pos.x + 160, pos.y + 832), ImColor(4, 3, 5)); // ImColor(0, 0, 0, 150));
+			PlayerInfoTab::RenderMainMenu(pos, draw, subtabs);
 		default:
 			break;
 		}
-
 		ImGui::End();
 	}
 }

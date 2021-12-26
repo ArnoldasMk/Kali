@@ -11765,9 +11765,9 @@ bool ImGui::Tab(const char *label, bool selected)
 		window->DrawList->AddRectFilled(ImVec2(bb.Min.x - 3, bb.Min.y - 1), ImVec2(bb.Max.x + 3, bb.Max.y + 0), ImColor(2, 19, 30), 8, 3);
 	} else {
 		if (!hovered) {
-			window->DrawList->AddRectFilled(ImVec2(bb.Min.x + 0, bb.Min.y + 0), ImVec2(bb.Max.x + 0, bb.Max.y + 0), ImColor(2, 6, 11));
+			window->DrawList->AddRectFilled(ImVec2(bb.Min.x + 0, bb.Min.y + 0), ImVec2(bb.Max.x + 0, bb.Max.y + 0), ImColor(2, 6, 11, 255));
 		} else {
-			window->DrawList->AddRectFilled(ImVec2(bb.Min.x + 0, bb.Min.y + 0), ImVec2(bb.Max.x + 0, bb.Max.y + 0), ImColor(2, 19, 30));
+			window->DrawList->AddRectFilled(ImVec2(bb.Min.x + 0, bb.Min.y + 0), ImVec2(bb.Max.x + 0, bb.Max.y + 0), ImColor(2, 19, 30, 255));
 		}
 	}
 

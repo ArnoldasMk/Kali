@@ -82,7 +82,7 @@ void AntiAim::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
         Settings::AntiAim::AADisabled::enabled == false;
     };
     */
-    ImGui::SetCursorPos(ImVec2(185, 70));
+    ImGui::SetCursorPos(ImVec2(15, 70));
     ImGui::BeginGroup();
     {
         ImGui::Columns(2, nullptr, false);
@@ -104,13 +104,13 @@ void AntiAim::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
         }
         ImGui::EndColumns();
     }
-    ImGui::SetCursorPos(ImVec2(450, 70));
+    ImGui::SetCursorPos(ImVec2(290, 70));
     ImGui::BeginGroup();
     {
         ImGui::Checkbox(XORSTR("Anti Aim Disabled"), &Settings::AntiAim::AADisabled::enabled);
     }
     ImGui::EndGroup();
-    ImGui::SetCursorPos(ImVec2(180, 100));
+    ImGui::SetCursorPos(ImVec2(10, 100));
     ImGui::BeginGroup();
     {
         ImGui::Columns(2, nullptr, false);
@@ -126,7 +126,7 @@ void AntiAim::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
                     {
                         ImGui::Checkbox(XORSTR("Enabled"), &Settings::AntiAim::LegitAntiAim::enabled);
                         Settings::AntiAim::RageAntiAim::enabled == false;
-                        Settings::AntiAim::RageAntiAim::customaa::enabled == false; // -_-
+                        //Settings::AntiAim::RageAntiAim::customaa::enabled == false; // -_-
                         Settings::AntiAim::AADisabled::enabled == false;
                     }
                     ImGui::Columns(2, nullptr, false);
@@ -161,6 +161,7 @@ void AntiAim::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
                     ImGui::EndColumns();
                     ImGui::Separator();
                     ImGui::Text(XORSTR("Features"));
+                    ImGui::Separator();
                     ImGui::Columns(2, nullptr, false);
                     {
                         ImGui::Checkbox(XORSTR("Legit freestand"), &Settings::AntiAim::AutoInvert);
