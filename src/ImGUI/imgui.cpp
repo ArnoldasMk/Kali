@@ -11746,7 +11746,8 @@ bool ImGui::Tab(const char *label, bool selected)
 	const ImVec2 label_size = ImGui::CalcTextSize(label, NULL, true);
 
 	ImVec2 pos = window->DC.CursorPos;
-	ImVec2 size = ImGui::CalcItemSize(ImVec2(140, 40), label_size.x + style.FramePadding.x * 2.0f, label_size.y + style.FramePadding.y * 2.0f);
+	ImVec2 size = ImGui::CalcItemSize(ImVec2(120, 40), label_size.x + style.FramePadding.x * 2.0f,
+	                                  label_size.y + style.FramePadding.y * 2.0f);
 
 	const ImRect bb(pos, pos + size);
 	ImGui::ItemSize(size, style.FramePadding.y);
@@ -11777,7 +11778,6 @@ bool ImGui::Tab(const char *label, bool selected)
 
 	return pressed;
 }
-
 
 
 

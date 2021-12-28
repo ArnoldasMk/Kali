@@ -19,7 +19,6 @@
 #include "../../Features/clantagchanger.h"
 #include "../../Features/valvedscheck.h"
 #include "../../Features/resolver.h"
-#include "../Windows/playerlist.h"
 #include "../Windows/configs.h"
 #include "../../Utils/entity.h"
 #include <stdint.h>
@@ -506,7 +505,6 @@ void Misc::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				ImGui::Checkbox(XORSTR("Attempt NoFall"), &Settings::NoFall::enabled);
 				ImGui::Checkbox(XORSTR("Ragdoll Gravity"), &Settings::RagdollGravity::enabled);
 				ImGui::Checkbox(XORSTR("Show Spectator list"), &Settings::ShowSpectators::enabled);
-				ImGui::Checkbox(XORSTR("Show Player list"), &PlayerList::showWindow);
 				ImGui::Checkbox(XORSTR("AWP Quick Switch"), &Settings::QuickSwitch::enabled);
 				ImGui::Checkbox(XORSTR("Disable Anti Untrusted"), &ValveDSCheck::forceUT);
 			}

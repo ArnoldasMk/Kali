@@ -12,7 +12,6 @@
 #include "Windows/colors.h"
 #include "Windows/configs.h"
 #include "Windows/main.h"
-#include "Windows/playerlist.h"
 #include "Windows/skinmodelchanger.h"
 #include "Windows/showspectators.h"
 #include "../Features/radar.h"
@@ -78,8 +77,6 @@ void UI::SetupWindows()
 		Configs::RenderWindow();
 		// Colors::RenderWindow();
 	}
-
-	PlayerList::RenderWindow();
 	ShowSpectators::RenderWindow();
 	Radar::RenderWindow();
 }

@@ -211,7 +211,7 @@ void MainMenu::Render()
 			aimbotTab();
 			break;
 		case AntiAimTab:
-			draw->AddRectFilled(ImVec2(pos.x, pos.y + 52), ImVec2(pos.x + 160, pos.y + 832), ImColor(4, 3, 5)); // ImColor(0, 0, 0, 150));
+			draw->AddRectFilled(ImVec2(pos.x, pos.y + 52), ImVec2(pos.x + 160, pos.y + 836), ImColor(4, 3, 5)); // ImColor(0, 0, 0, 150));
 			AntiAim::RenderMainMenu(pos, draw, subtabs);
 			break;
 		case Visuals:
