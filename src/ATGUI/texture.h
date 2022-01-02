@@ -5,8 +5,7 @@
 class Texture
 {
 public:
-
-        Texture(const unsigned char* data, const unsigned int& width, const unsigned int& height)
+        Texture(const unsigned char *data, const unsigned int &width, const unsigned int &height)
             : m_width(width), m_height(height), m_bg(255, 255, 255, 255), m_valid(false)
         {
                 m_iTexture = surface->CreateNewTextureID(true);
@@ -21,21 +20,21 @@ public:
                 return m_valid;
         }
 
-	unsigned int GetTextureId() const
-	{
-		return m_iTexture;
-	}
+        unsigned int GetTextureId() const
+        {
+                return m_iTexture;
+        }
 
-	bool Draw(const unsigned int& x, const unsigned int& y, const unsigned int& w, const unsigned int& h)
-	{
-		if (!surface->IsTextureIDValid(m_iTexture))
-			return false;
-		surface->DrawSetColor(m_bg);
-		surface->DrawSetTexture(m_iTexture);
-		surface->DrawTexturedRect(x, y, x+w, y+h);
+        bool Draw(const unsigned int &x, const unsigned int &y, const unsigned int &w, const unsigned int &h)
+        {
+                if (!surface->IsTextureIDValid(m_iTexture))
+                        return false;
+                surface->DrawSetColor(m_bg);
+                surface->DrawSetTexture(m_iTexture);
+                surface->DrawTexturedRect(x, y, x + w, y + h);
 
-		return true;
-	}
+                return true;
+        }
 
 private:
         unsigned int m_width;
@@ -44,5 +43,4 @@ private:
         unsigned int m_iTexture;
         Color m_bg;
         bool m_valid;
-
 };

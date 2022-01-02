@@ -9,16 +9,16 @@
 #include "ragebot.h"
 #include "../Utils/draw.h"
 #include "../SDK/vector.h"
-#define TICK_INTERVAL                   (globalVars->interval_per_tick)
-#define TIME_TO_TICKS( dt )             ( (int)( 0.5f + (float)(dt) / TICK_INTERVAL ) )
-#define TICKS_TO_TIME( t )              ( TICK_INTERVAL *( t ) )
+#define TICK_INTERVAL (globalVars->interval_per_tick)
+#define TIME_TO_TICKS(dt) ((int)(0.5f + (float)(dt) / TICK_INTERVAL))
+#define TICKS_TO_TIME(t) (TICK_INTERVAL * (t))
 
 bool DidHit(trace_t trace)
 {
-        return trace.fraction < 1.0f || trace.allsolid || trace.startsolid;
+    return trace.fraction < 1.0f || trace.allsolid || trace.startsolid;
 }
 
-void Extrapolate(C_BasePlayer* player, Vector origin, Vector velocity, int flags, bool on_ground)
+void Extrapolate(C_BasePlayer *player, Vector origin, Vector velocity, int flags, bool on_ground)
 {
     static const auto sv_gravity = cvar->FindVar("sv_gravity");
     static const auto sv_jump_impulse = cvar->FindVar("sv_jump_impulse");
@@ -49,7 +49,7 @@ void Extrapolate(C_BasePlayer* player, Vector origin, Vector velocity, int flags
             const auto dot = velocity.Dot(t.plane.normal);
             if (dot < 0.f)
                 velocity -= Vector(dot * t.plane.normal.x,
-                    dot * t.plane.normal.y, dot * t.plane.normal.z);
+                                   dot * t.plane.normal.y, dot * t.plane.normal.z);
 
             end = t.endpos + velocity * TICKS_TO_TIME(1.f - t.fraction);
 
@@ -78,47 +78,42 @@ void AnimFix::FrameStageNotify(ClientFrameStage_t stage)
     if (!engine->IsInGame())
         return;
 
-        C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+    C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
 
-   if (!localplayer || !localplayer->GetAlive())
+    if (!localplayer || !localplayer->GetAlive())
         return;
-/*
-static auto backup_abs = localplayer->GetAnimState()->goalFeetYaw;
-if (!input->m_fCameraInThirdPerson){
-localplayer->ClientAnimations(true);
-localplayer->updateClientAnimation();
-localplayer->ClientAnimations(false);
-	return;
-}
-    static int old_tick = 0;
-    if (old_tick != globalVars->tickcount)
+    /*
+    static auto backup_abs = localplayer->GetAnimState()->goalFeetYaw;
+    if (!input->m_fCameraInThirdPerson){
+    localplayer->ClientAnimations(true);
+    localplayer->updateClientAnimation();
+    localplayer->ClientAnimations(false);
+        return;
+    }
+        static int old_tick = 0;
+        if (old_tick != globalVars->tickcount)
+        {
+        old_tick = globalVars->tickcount;
+        localplayer->ClientAnimations(true);
+        localplayer->updateClientAnimation();
+        localplayer->ClientAnimations(false);
+        if (CreateMove::sendPacket)
+        {
+        backup_abs = localplayer->GetAnimState()->goalFeetYaw;
+        }
+       }
+      localplayer->GetAnimState()->goalFeetYaw = 0.f;
+    //  localplayer->SetAbsOrigin(Vector(0, backup_abs,0 ));
+    */
+    int maxClient = engine->GetMaxClients();
+    for (int i = 1; i < maxClient; ++i)
     {
-	old_tick = globalVars->tickcount;
-	localplayer->ClientAnimations(true);
-	localplayer->updateClientAnimation();
-	localplayer->ClientAnimations(false);
-	if (CreateMove::sendPacket)
-	{
-	backup_abs = localplayer->GetAnimState()->goalFeetYaw;
-	}
-   }
-  localplayer->GetAnimState()->goalFeetYaw = 0.f;
-//  localplayer->SetAbsOrigin(Vector(0, backup_abs,0 ));
-*/
-               int maxClient = engine->GetMaxClients();
-               for (int i = 1; i < maxClient; ++i)
-                {
-                        //indx = i;
-                        C_BasePlayer *player = (C_BasePlayer *)entityList->GetClientEntity(i);
+        // indx = i;
+        C_BasePlayer *player = (C_BasePlayer *)entityList->GetClientEntity(i);
 
-                        if (!player 
-                        || player == localplayer 
-                        || player->GetDormant() 
-                        || !player->GetAlive() 
-                        || player->GetImmune()
-                        || Entity::IsTeamMate(player, localplayer))
-                                continue;
+        if (!player || player == localplayer || player->GetDormant() || !player->GetAlive() || player->GetImmune() || Entity::IsTeamMate(player, localplayer))
+            continue;
 
-			Extrapolate(player, player->GetVecOrigin(), player->GetVelocity(), player->GetFlags(), player->GetFlags() & FL_ONGROUND);
-		}
+        Extrapolate(player, player->GetVecOrigin(), player->GetVelocity(), player->GetFlags(), player->GetFlags() & FL_ONGROUND);
+    }
 }

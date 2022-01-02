@@ -116,7 +116,6 @@ static void colorPicker()
 
 void VisualsMaterialConfig::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 {
-	draw->AddRectFilled(ImVec2(pos.x + 180, pos.y + 65), ImVec2(pos.x + 945, pos.y + 95), ImColor(0, 0, 0, 150), 10);
 	ImGui::SetCursorPos(ImVec2(185, 70));
 	ImGui::BeginGroup();
 	{
@@ -390,7 +389,6 @@ void VisualsMaterialConfig::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int si
 
 void VisualsGood::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 {
-	draw->AddRectFilled(ImVec2(pos.x + 180, pos.y + 65), ImVec2(pos.x + 945, pos.y + 95), ImColor(0, 0, 0, 150), 10);
 	ImGui::SetCursorPos(ImVec2(185, 70));
 	ImGui::BeginGroup();
 	{
@@ -522,7 +520,6 @@ void VisualsGood::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex
 }
 void VisualsEnemy::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 {
-	draw->AddRectFilled(ImVec2(pos.x + 180, pos.y + 65), ImVec2(pos.x + 945, pos.y + 95), ImColor(0, 0, 0, 150), 10);
 	ImGui::SetCursorPos(ImVec2(185, 70));
 	ImGui::BeginGroup();
 	{
@@ -608,7 +605,6 @@ void VisualsEnemy::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabInde
 }
 void VisualsLocal::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 {
-	draw->AddRectFilled(ImVec2(pos.x + 180, pos.y + 65), ImVec2(pos.x + 945, pos.y + 95), ImColor(0, 0, 0, 150), 10);
 	ImGui::SetCursorPos(ImVec2(185, 70));
 	ImGui::BeginGroup();
 	{

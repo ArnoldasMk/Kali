@@ -34,9 +34,8 @@ void draw_combo(const char *name, int variable, const char *labels[], int count)
 	ImGui::Combo(std::string(XORSTR("##COMBO__") + std::string(name)).c_str(), &variable, labels, count);
 }
 
-void Misc::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
+void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 {
-
 	const char *mainwep[] = {"None", "Auto", "AWP", "SSG 08"};
 	const char *secwep[] = {"None", "Dual Berettas", "Deagle/Revolver"};
 	const char *altwep[] = {"Grenades", "Armor", "Taser", "Defuser"};
@@ -47,6 +46,95 @@ void Misc::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 	const char *teams[] = {"Allies", "Enemies", "Both"};
 	const char *grenadeTypes[] = {"FLASH", "SMOKE", "MOLOTOV", "HEGRENADE"};
 	const char *throwTypes[] = {"NORMAL", "RUN", "JUMP", "WALK"};
+
+	ImGui::SetCursorPos(ImVec2(180, 100));
+	ImGui::BeginGroup();
+	{
+		ImGui::Columns(2, nullptr, false);
+		{
+			ImGui::BeginChild(XORSTR("##Custom1"), ImVec2(0, 736), true);
+			{
+				ImGui::Separator();
+				ImGui::Text(XORSTR("Movement"));
+				ImGui::Separator();
+				ImGui::Checkbox(XORSTR("Bunny Hop"), &Settings::BHop::enabled);
+				ImGui::Columns(2, nullptr, true);
+				{
+					ImGui::Checkbox(XORSTR("Hop Chance"), &Settings::BHop::Chance::enabled);
+					ImGui::Checkbox(XORSTR("Min Hops"), &Settings::BHop::Hops::enabledMin);
+					ImGui::Checkbox(XORSTR("Max Hops"), &Settings::BHop::Hops::enabledMax);
+					ImGui::Checkbox(XORSTR("Auto Strafe"), &Settings::AutoStrafe::enabled);
+					ImGui::Checkbox(XORSTR("Edge Jump"), &Settings::EdgeJump::enabled);
+				}
+				ImGui::NextColumn();
+				{
+					ImGui::PushItemWidth(-1);
+					ImGui::SliderInt(XORSTR("##BHOPCHANCE"), &Settings::BHop::Chance::value, 0, 100);
+					ImGui::SliderInt(XORSTR("##BHOPMIN"), &Settings::BHop::Hops::Min, 0, 20);
+					ImGui::SliderInt(XORSTR("##BHOPMAX"), &Settings::BHop::Hops::Max, 0, 20);
+					ImGui::PushItemWidth(Settings::AutoStrafe::type == AutostrafeType::AS_RAGE ? ImGui::CalcItemWidth() : -1);
+					ImGui::Combo(XORSTR("##STRAFETYPE"), (int *)&Settings::AutoStrafe::type, strafeTypes, IM_ARRAYSIZE(strafeTypes));
+
+					if (Settings::AutoStrafe::type == AutostrafeType::AS_RAGE)
+					{
+						ImGui::SameLine();
+						ImGui::Checkbox(XORSTR("Silent"), &Settings::AutoStrafe::silent);
+					}
+
+					ImGui::PopItemWidth();
+					UI::KeyBindButton(&Settings::EdgeJump::key);
+				}
+				ImGui::EndColumns();
+				ImGui::Separator();
+				ImGui::Text(XORSTR("FOV"));
+				ImGui::Separator();
+				ImGui::Columns(2, nullptr, true);
+				{
+					ImGui::Checkbox(XORSTR("FOV"), &Settings::FOVChanger::enabled);
+					ImGui::Checkbox(XORSTR("Viewmodel FOV"), &Settings::FOVChanger::viewmodelEnabled);
+					ImGui::Checkbox(XORSTR("Ignore Scope"), &Settings::FOVChanger::ignoreScope);
+				}
+				ImGui::NextColumn();
+				{
+					ImGui::PushItemWidth(-1);
+					ImGui::SliderFloat(XORSTR("##FOVAMOUNT"), &Settings::FOVChanger::value, 0, 180);
+					ImGui::SliderFloat(XORSTR("##MODELFOVAMOUNT"), &Settings::FOVChanger::viewmodelValue, 0, 360);
+					ImGui::PopItemWidth();
+				}
+				ImGui::EndColumns();
+				ImGui::Separator();
+				ImGui::Text(XORSTR("Thirdperson"));
+				ImGui::Separator();
+				ImGui::Columns(2, nullptr, false);
+				{
+					ImGui::Checkbox(XORSTR("Enable Third Person"), &Settings::ThirdPerson::enabled);
+					ImGui::Spacing();
+					ImGui::Text(XORSTR("Third Person Key"));
+				}
+				ImGui::NextColumn();
+				{
+					ImGui::PushItemWidth(-1);
+					ImGui::SliderFloat(XORSTR("##Camera Offset"), &Settings::ThirdPerson::distance, 0.f, 500.f, XORSTR("Camera Offset: %0.f"));
+					UI::KeyBindButton(&Settings::ThirdPerson::toggleThirdPerson);
+					ImGui::PopItemWidth();
+				}
+				ImGui::EndColumns();
+			}
+			ImGui::EndChild();
+		}
+		ImGui::NextColumn();
+		{
+			ImGui::BeginChild(XORSTR("##Custom2"), ImVec2(0, 736), true);
+			{
+			}
+			ImGui::EndChild();
+		}
+		ImGui::EndColumns();
+	}
+	ImGui::EndGroup();
+}
+
+/*
 	ImGui::Columns(2, nullptr, true);
 	{
 		ImGui::BeginChild(XORSTR("Child1"), ImVec2(0, 0), true);
@@ -560,3 +648,4 @@ void Misc::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 		}
 	}
 }
+*/

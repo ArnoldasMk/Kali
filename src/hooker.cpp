@@ -12,9 +12,9 @@
 #include "Features/Tickbase.h"
 #include "Features/fakelag.h"
 //#include "SDK/CInput.h"
-int* nPredictionRandomSeed = nullptr;
-CMoveData* g_MoveData = nullptr;
-bool* s_bOverridePostProcessingDisable = nullptr;
+int *nPredictionRandomSeed = nullptr;
+CMoveData *g_MoveData = nullptr;
+bool *s_bOverridePostProcessingDisable = nullptr;
 /*
 template <typename T>
 static constexpr auto relativeToAbsolute(uintptr_t address) noexcept
@@ -24,24 +24,24 @@ static constexpr auto relativeToAbsolute(uintptr_t address) noexcept
 int*(FindHudElement)(uintptr_t, const char*);
 */
 
-VMT* panelVMT = nullptr;
-VMT* clientVMT = nullptr;
-VMT* modelRenderVMT = nullptr;
-VMT* clientModeVMT = nullptr;
-VMT* gameEventsVMT = nullptr;
-VMT* viewRenderVMT = nullptr;
-VMT* inputInternalVMT = nullptr;
-VMT* materialVMT = nullptr;
-VMT* surfaceVMT = nullptr;
-VMT* launcherMgrVMT = nullptr;
-VMT* engineVGuiVMT = nullptr;
-VMT* soundVMT = nullptr;
-VMT* uiEngineVMT = nullptr;
+VMT *panelVMT = nullptr;
+VMT *clientVMT = nullptr;
+VMT *modelRenderVMT = nullptr;
+VMT *clientModeVMT = nullptr;
+VMT *gameEventsVMT = nullptr;
+VMT *viewRenderVMT = nullptr;
+VMT *inputInternalVMT = nullptr;
+VMT *materialVMT = nullptr;
+VMT *surfaceVMT = nullptr;
+VMT *launcherMgrVMT = nullptr;
+VMT *engineVGuiVMT = nullptr;
+VMT *soundVMT = nullptr;
+VMT *uiEngineVMT = nullptr;
 
 MsgFunc_ServerRankRevealAllFn MsgFunc_ServerRankRevealAll;
 SendClanTagFn SendClanTag;
- WriteUserCmdFn WriteUserCmd;
-//FindHudElementFn FindHudElement;
+WriteUserCmdFn WriteUserCmd;
+// FindHudElementFn FindHudElement;
 SetLocalPlayerReadyFn SetLocalPlayerReady;
 
 RecvVarProxyFn fnSequenceProxyFn;
@@ -55,7 +55,7 @@ LineGoesThroughSmokeFn LineGoesThroughSmoke;
 InitKeyValuesFn InitKeyValues;
 LoadFromBufferFn LoadFromBuffer;
 
-panorama::PanelArray* panorama::panelArray = nullptr;
+panorama::PanelArray *panorama::panelArray = nullptr;
 
 unsigned int Offsets::playerAnimStateOffset = 0;
 unsigned int Offsets::playerAnimOverlayOffset = 0;
@@ -64,20 +64,23 @@ GetSequenceActivityFn GetSeqActivity;
 
 uintptr_t SetAbsOriginFnAddr;
 
-//RandomSeedFn RandomSeed;
-//RandomFloatFn RandomFloat;
-//RandomFloatExpFn RandomFloatExp;
-//RandomIntFn RandomInt;
-//RandomGaussianFloatFn RandomGaussianFloat;
+RandomSeedFn RandomSeed;
+RandomFloatFn RandomFloat;
+RandomFloatExpFn RandomFloatExp;
+RandomIntFn RandomInt;
+RandomGaussianFloatFn RandomGaussianFloat;
 
 SetNamedSkyBoxFn SetNamedSkyBox;
 
 std::vector<dlinfo_t> libraries;
 
 // taken form aixxe's cstrike-basehook-linux
-bool Hooker::GetLibraryInformation(const char* library, uintptr_t* address, size_t* size) {
-	if (libraries.size() == 0) {
-		dl_iterate_phdr([] (struct dl_phdr_info* info, size_t, void*) {
+bool Hooker::GetLibraryInformation(const char *library, uintptr_t *address, size_t *size)
+{
+	if (libraries.size() == 0)
+	{
+		dl_iterate_phdr([](struct dl_phdr_info *info, size_t, void *)
+					 {
 			dlinfo_t library_info = {};
 
 			library_info.library = info->dlpi_name;
@@ -86,11 +89,12 @@ bool Hooker::GetLibraryInformation(const char* library, uintptr_t* address, size
 
 			libraries.push_back(library_info);
 
-			return 0;
-		}, nullptr);
+			return 0; },
+					 nullptr);
 	}
 
-	for (const dlinfo_t& current: libraries) {
+	for (const dlinfo_t &current : libraries)
+	{
 		if (!strcasestr(current.library, library))
 			continue;
 
@@ -106,19 +110,19 @@ bool Hooker::GetLibraryInformation(const char* library, uintptr_t* address, size
 	return false;
 }
 
-bool Hooker::HookRecvProp(const char* className, const char* propertyName, std::unique_ptr<RecvPropHook>& recvPropHook)
+bool Hooker::HookRecvProp(const char *className, const char *propertyName, std::unique_ptr<RecvPropHook> &recvPropHook)
 {
 	// FIXME: Does not search recursively.. yet.
 	// Recursion is a meme, stick to reddit mcswaggens.
-	for (ClientClass* pClass = client->GetAllClasses(); pClass; pClass = pClass->m_pNext)
+	for (ClientClass *pClass = client->GetAllClasses(); pClass; pClass = pClass->m_pNext)
 	{
 		if (strcmp(pClass->m_pNetworkName, className) == 0)
 		{
-			RecvTable* pClassTable = pClass->m_pRecvTable;
+			RecvTable *pClassTable = pClass->m_pRecvTable;
 
 			for (int nIndex = 0; nIndex < pClassTable->m_nProps; nIndex++)
 			{
-				RecvProp* pProp = &pClassTable->m_pProps[nIndex];
+				RecvProp *pProp = &pClassTable->m_pProps[nIndex];
 
 				if (!pProp || strcmp(pProp->m_pVarName, propertyName) != 0)
 					continue;
@@ -134,14 +138,14 @@ bool Hooker::HookRecvProp(const char* className, const char* propertyName, std::
 
 	return false;
 }
-//void Hooker::FindDeathNotices()
+// void Hooker::FindDeathNotices()
 //{
-//if (!ClearDeathNotices) ClearDeathNotices = (void(__thiscall*)(DWORD))UTILS::FindSignature("client_panorama.dll", "55 8B EC 83 EC 0C 53 56 8B 71 58");
-//if (ClearDeathNotices) ClearDeathNotices(((DWORD)deathNotice - 20));
-//} This is for later.
+// if (!ClearDeathNotices) ClearDeathNotices = (void(__thiscall*)(DWORD))UTILS::FindSignature("client_panorama.dll", "55 8B EC 83 EC 0C 53 56 8B 71 58");
+// if (ClearDeathNotices) ClearDeathNotices(((DWORD)deathNotice - 20));
+// } This is for later.
 void Hooker::FindIClientMode()
 {
-    uintptr_t hudprocessinput = reinterpret_cast<uintptr_t>(getvtable(client)[10]);
+	uintptr_t hudprocessinput = reinterpret_cast<uintptr_t>(getvtable(client)[10]);
 	GetClientModeFn GetClientMode = reinterpret_cast<GetClientModeFn>(GetAbsoluteAddress(hudprocessinput + 11, 1, 5));
 
 	clientMode = GetClientMode();
@@ -151,22 +155,22 @@ void Hooker::FindGlobalVars()
 {
 	uintptr_t HudUpdate = reinterpret_cast<uintptr_t>(getvtable(client)[11]);
 
-	globalVars = *reinterpret_cast<CGlobalVars**>(GetAbsoluteAddress(HudUpdate + 13, 3, 7));
+	globalVars = *reinterpret_cast<CGlobalVars **>(GetAbsoluteAddress(HudUpdate + 13, 3, 7));
 }
 
 void Hooker::FindCInput()
 {
 	uintptr_t IN_ActivateMouse = reinterpret_cast<uintptr_t>(getvtable(client)[16]);
 
-	input = **reinterpret_cast<CInput***>(GetAbsoluteAddress(IN_ActivateMouse, 3, 7));
+	input = **reinterpret_cast<CInput ***>(GetAbsoluteAddress(IN_ActivateMouse, 3, 7));
 }
 
 void Hooker::FindGlowManager()
 {
-    // Call right above "Music.StopAllExceptMusic"
+	// Call right above "Music.StopAllExceptMusic"
 	uintptr_t instruction_addr = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
-																	(unsigned char*) XORSTR("\xE8\x00\x00\x00\x00\x48\x8B\x3D\x00\x00\x00\x00\xBE\x01\x00\x00\x00\xC7"),
-																	XORSTR("x????xxx????xxxxxx"));
+													    (unsigned char *)XORSTR("\xE8\x00\x00\x00\x00\x48\x8B\x3D\x00\x00\x00\x00\xBE\x01\x00\x00\x00\xC7"),
+													    XORSTR("x????xxx????xxxxxx"));
 
 	glowManager = reinterpret_cast<GlowObjectManagerFn>(GetAbsoluteAddress(instruction_addr, 1, 5))();
 }
@@ -174,28 +178,28 @@ void Hooker::FindGlowManager()
 void Hooker::FindPlayerResource()
 {
 	uintptr_t instruction_addr = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
-																	(unsigned char*) XORSTR("\x48\x8B\x05\x00\x00\x00\x00\x55\x48\x89\xE5\x48\x85\xC0\x74\x10\x48"),
-																	XORSTR("xxx????xxxxxxxxxx"));
+													    (unsigned char *)XORSTR("\x48\x8B\x05\x00\x00\x00\x00\x55\x48\x89\xE5\x48\x85\xC0\x74\x10\x48"),
+													    XORSTR("xxx????xxxxxxxxxx"));
 
-	csPlayerResource = reinterpret_cast<C_CSPlayerResource**>(GetAbsoluteAddress(instruction_addr, 3, 7));
+	csPlayerResource = reinterpret_cast<C_CSPlayerResource **>(GetAbsoluteAddress(instruction_addr, 3, 7));
 }
 
 void Hooker::FindGameRules()
 {
 	uintptr_t instruction_addr = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
-																	(unsigned char*) XORSTR("\x48\x8B\x05"
-																									"\x00\x00\x00\x00"
-																									"\x48\x8B\x38\x0F\x84"),
-																	XORSTR("xxx????xxxxx"));
+													    (unsigned char *)XORSTR("\x48\x8B\x05"
+																		   "\x00\x00\x00\x00"
+																		   "\x48\x8B\x38\x0F\x84"),
+													    XORSTR("xxx????xxxxx"));
 
-	csGameRules = *reinterpret_cast<C_CSGameRules***>(GetAbsoluteAddress(instruction_addr, 3, 7));
+	csGameRules = *reinterpret_cast<C_CSGameRules ***>(GetAbsoluteAddress(instruction_addr, 3, 7));
 }
 
 void Hooker::FindRankReveal()
 {
 	uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
-																(unsigned char*) XORSTR("\x55\x48\x89\xE5\x41\x54\x53\x48\x89\xFB\x48\x8B\x3D\x00\x00\x00\x00\x48\x85\xFF"),
-																XORSTR("xxxxxxxxxxxxx????xxx"));
+													(unsigned char *)XORSTR("\x55\x48\x89\xE5\x41\x54\x53\x48\x89\xFB\x48\x8B\x3D\x00\x00\x00\x00\x48\x85\xFF"),
+													XORSTR("xxxxxxxxxxxxx????xxx"));
 
 	MsgFunc_ServerRankRevealAll = reinterpret_cast<MsgFunc_ServerRankRevealAllFn>(func_address);
 }
@@ -204,24 +208,24 @@ void Hooker::FindRankReveal()
 void Hooker::FindSendClanTag()
 {
 	uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("engine_client.so"),
-																(unsigned char*) XORSTR("\x55\x48\x89\xE5\x41\x55\x49\x89\xFD\x41\x54\xBF\x48\x00\x00\x00\x49\x89\xF4\x53\x48\x83\xEC\x08\xE8"
-                                                                                                "\x00\x00\x00\x00"
-                                                                                                "\x48\x8D\x35"
-                                                                                                "\x00\x00\x00\x00"
-                                                                                                "\x48\x89\xC7\x48\x89\xC3\xE8"
-                                                                                                "\x00\x00\x00\x00"
-                                                                                                "\x48\x8D\x35"
-                                                                                                "\x00\x00\x00\x00"
-                                                                                                "\x4C\x89\xEA"),
-																XORSTR("xxxxxxxxxxxxxxxxxxxxxxxxx"
-                                                                               "????"
-                                                                               "xxx"
-                                                                               "????"
-                                                                               "xxxxxxx"
-                                                                               "????"
-                                                                               "xxx"
-                                                                               "????"
-                                                                               "xxx" ));
+													(unsigned char *)XORSTR("\x55\x48\x89\xE5\x41\x55\x49\x89\xFD\x41\x54\xBF\x48\x00\x00\x00\x49\x89\xF4\x53\x48\x83\xEC\x08\xE8"
+																	    "\x00\x00\x00\x00"
+																	    "\x48\x8D\x35"
+																	    "\x00\x00\x00\x00"
+																	    "\x48\x89\xC7\x48\x89\xC3\xE8"
+																	    "\x00\x00\x00\x00"
+																	    "\x48\x8D\x35"
+																	    "\x00\x00\x00\x00"
+																	    "\x4C\x89\xEA"),
+													XORSTR("xxxxxxxxxxxxxxxxxxxxxxxxx"
+														  "????"
+														  "xxx"
+														  "????"
+														  "xxxxxxx"
+														  "????"
+														  "xxx"
+														  "????"
+														  "xxx"));
 
 	SendClanTag = reinterpret_cast<SendClanTagFn>(func_address);
 }
@@ -229,7 +233,7 @@ void Hooker::FindSendClanTag()
 void Hooker::FindViewRender()
 {
 	// 48 8D 3D ?? ?? ?? ?? 48 8B 10 48 89 08 48 8D 05 ?? ?? ?? ?? 48 89 05 ?? ?? ?? ?? 48 89 15 ?? ?? ?? ?? E8 ?? ?? ?? ?? F3
-    	// below "PrecacheCSViewScene" about 3 times, look for the one that gets loaded into rdi
+	// below "PrecacheCSViewScene" about 3 times, look for the one that gets loaded into rdi
 	// 48 8D 05 07 D8 11 01    lea     rax, aPrecachecsview ; "PrecacheCSViewScene"
 	// C7 05 27 9F 46 06 00 00+mov     cs:dword_6B6FB88, 0
 	// 48 89 05 28 9F 46 06    mov     cs:qword_6B6FB90, rax
@@ -237,41 +241,41 @@ void Hooker::FindViewRender()
 	// 48 8D 0D 0A 9F 46 06    lea     rcx, qword_6B6FB80
 	// 48 8D 3D 63 A0 46 06    lea     rdi, g_ViewRender
 	uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
-										(unsigned char*) XORSTR("\x48\x8D\x3D\x00\x00\x00\x00\x48\x8B\x10\x48\x89\x08\x48\x8D\x05\x00\x00\x00\x00\x48\x89\x05\x00\x00\x00\x00\x48\x89\x15\x00\x00\x00\x00\xE8\x00\x00\x00\x00\xF3"),
-										XORSTR("xxx????xxxxxxxxx????xxx????xxx????x????x"));
+													(unsigned char *)XORSTR("\x48\x8D\x3D\x00\x00\x00\x00\x48\x8B\x10\x48\x89\x08\x48\x8D\x05\x00\x00\x00\x00\x48\x89\x05\x00\x00\x00\x00\x48\x89\x15\x00\x00\x00\x00\xE8\x00\x00\x00\x00\xF3"),
+													XORSTR("xxx????xxxxxxxxx????xxx????xxx????x????x"));
 
-	viewRender = reinterpret_cast<CViewRender*>(GetAbsoluteAddress(func_address, 3, 7));
+	viewRender = reinterpret_cast<CViewRender *>(GetAbsoluteAddress(func_address, 3, 7));
 }
 
 void Hooker::FindPrediction()
 {
 	uintptr_t seed_instruction_addr = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
-																		 (unsigned char*) XORSTR("\x48\x8B\x05"
-                                                                                                         "\x00\x00\x00\x00"
-                                                                                                         "\x8B\x38\xE8"
-                                                                                                         "\x00\x00\x00\x00"
-                                                                                                         "\x89\xC7"),
-																		 XORSTR("xxx????xxx????xx"));
+														    (unsigned char *)XORSTR("\x48\x8B\x05"
+																			   "\x00\x00\x00\x00"
+																			   "\x8B\x38\xE8"
+																			   "\x00\x00\x00\x00"
+																			   "\x89\xC7"),
+														    XORSTR("xxx????xxx????xx"));
 	uintptr_t helper_instruction_addr = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
-																		   (unsigned char*) XORSTR("\x00\x48\x89\x3D\x00\x00\x00\x00\xC3"),
-																		   XORSTR("xxxx????x"));
+															 (unsigned char *)XORSTR("\x00\x48\x89\x3D\x00\x00\x00\x00\xC3"),
+															 XORSTR("xxxx????x"));
 	uintptr_t movedata_instruction_addr = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
-																			 (unsigned char*) XORSTR("\x48\x8B\x0D"
-																											 "\x00\x00\x00\x00"
-																											 "\x4C\x89\xEA"),
-																			 XORSTR("xxx????xxx"));
+															   (unsigned char *)XORSTR("\x48\x8B\x0D"
+																				  "\x00\x00\x00\x00"
+																				  "\x4C\x89\xEA"),
+															   XORSTR("xxx????xxx"));
 
-	nPredictionRandomSeed = *reinterpret_cast<int**>(GetAbsoluteAddress(seed_instruction_addr, 3, 7));
-	moveHelper = *reinterpret_cast<IMoveHelper**>(GetAbsoluteAddress(helper_instruction_addr + 1, 3, 7));
-	g_MoveData = **reinterpret_cast<CMoveData***>(GetAbsoluteAddress(movedata_instruction_addr, 3, 7));
+	nPredictionRandomSeed = *reinterpret_cast<int **>(GetAbsoluteAddress(seed_instruction_addr, 3, 7));
+	moveHelper = *reinterpret_cast<IMoveHelper **>(GetAbsoluteAddress(helper_instruction_addr + 1, 3, 7));
+	g_MoveData = **reinterpret_cast<CMoveData ***>(GetAbsoluteAddress(movedata_instruction_addr, 3, 7));
 }
 
 void Hooker::FindSetLocalPlayerReady()
 {
 	// xref: "deferred"
 	uintptr_t func_address = PatternFinder::FindPatternInModule((XORSTR("/client_client.so")),
-																(unsigned char*) XORSTR("\x55\x48\x89\xF7\x48\x8D\x35\x00\x00\x00\x00\x48\x89\xE5\xE8\x00\x00\x00\x00\x85\xC0"),
-																XORSTR("xxxxxxx????xxxx????xx"));
+													(unsigned char *)XORSTR("\x55\x48\x89\xF7\x48\x8D\x35\x00\x00\x00\x00\x48\x89\xE5\xE8\x00\x00\x00\x00\x85\xC0"),
+													XORSTR("xxxxxxx????xxxx????xx"));
 
 	SetLocalPlayerReady = reinterpret_cast<SetLocalPlayerReadyFn>(func_address);
 }
@@ -279,13 +283,13 @@ void Hooker::FindSetLocalPlayerReady()
 void Hooker::FindSurfaceDrawing()
 {
 	uintptr_t start_func_address = PatternFinder::FindPatternInModule(XORSTR("vguimatsurface_client.so"),
-																	  (unsigned char*) XORSTR("\x55\x48\x89\xE5\x53\x48\x89\xFB\x48\x83\xEC\x28\x80\x3D"),
-																	  XORSTR("xxxxxxxxxxxxxx"));
+														 (unsigned char *)XORSTR("\x55\x48\x89\xE5\x53\x48\x89\xFB\x48\x83\xEC\x28\x80\x3D"),
+														 XORSTR("xxxxxxxxxxxxxx"));
 	StartDrawing = reinterpret_cast<StartDrawingFn>(start_func_address);
 
 	uintptr_t finish_func_address = PatternFinder::FindPatternInModule(XORSTR("vguimatsurface_client.so"),
-																	   (unsigned char*) XORSTR("\x55\x31\xFF\x48\x89\xE5\x53"),
-																	   XORSTR("xxxxxxx"));
+														  (unsigned char *)XORSTR("\x55\x31\xFF\x48\x89\xE5\x53"),
+														  XORSTR("xxxxxxx"));
 	FinishDrawing = reinterpret_cast<FinishDrawingFn>(finish_func_address);
 }
 
@@ -298,16 +302,16 @@ void Hooker::FindGetLocalClient()
 void Hooker::FindLineGoesThroughSmoke()
 {
 	uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
-																(unsigned char*) XORSTR("\x55\x48\x89\xe5\x41\x56\x41\x55\x41\x54\x53\x48\x83\xec\x30\x66\x0f\xd6\x45\xd0\x8b\x0d"),
-																XORSTR("xxxxxxxxxxxxxxxxxxx?xx"));
+													(unsigned char *)XORSTR("\x55\x48\x89\xe5\x41\x56\x41\x55\x41\x54\x53\x48\x83\xec\x30\x66\x0f\xd6\x45\xd0\x8b\x0d"),
+													XORSTR("xxxxxxxxxxxxxxxxxxx?xx"));
 	LineGoesThroughSmoke = reinterpret_cast<LineGoesThroughSmokeFn>(func_address);
 }
 
 void Hooker::FindInitKeyValues()
 {
 	uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
-																(unsigned char*) XORSTR("\x81\x27\x00\x00\x00\xFF\x55\x31\xC0\x48\x89\xE5\x5D"),
-																XORSTR("xxxxxxxxxxxxx"));
+													(unsigned char *)XORSTR("\x81\x27\x00\x00\x00\xFF\x55\x31\xC0\x48\x89\xE5\x5D"),
+													XORSTR("xxxxxxxxxxxxx"));
 	InitKeyValues = reinterpret_cast<InitKeyValuesFn>(func_address);
 }
 
@@ -328,17 +332,17 @@ void Hooker::FindLoadFromBuffer()
 	// 48 81 EC 88 00 00 00    sub     rsp, 88h
 	// 48 85 D2                test    rdx, rdx
 	uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
-																(unsigned char*) XORSTR("\x55"
-																						"\x48\x89\xE5"
-																						"\x41\x57"
-																						"\x41\x56"
-																						"\x41\x55"
-																						"\x41\x54"
-																						"\x49\x89\xD4"
-																						"\x53"
-																						"\x48\x81\xEC\x00\x00\x00\x00"
-																						"\x48\x85"),
-																XORSTR("xxxxxxxxxxxxxxxxxxx????xx"));
+													(unsigned char *)XORSTR("\x55"
+																	    "\x48\x89\xE5"
+																	    "\x41\x57"
+																	    "\x41\x56"
+																	    "\x41\x55"
+																	    "\x41\x54"
+																	    "\x49\x89\xD4"
+																	    "\x53"
+																	    "\x48\x81\xEC\x00\x00\x00\x00"
+																	    "\x48\x85"),
+													XORSTR("xxxxxxxxxxxxxxxxxxx????xx"));
 	LoadFromBuffer = reinterpret_cast<LoadFromBufferFn>(func_address);
 }
 /*
@@ -359,15 +363,15 @@ void Hooker::FindVstdlibFunctions()
 void Hooker::FindOverridePostProcessingDisable()
 {
 	uintptr_t bool_address = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
-																(unsigned char*) XORSTR("\x80\x3D"
-                                                                                                "\x00\x00\x00\x00\x00"
-                                                                                                "\x89\xB5"
-                                                                                                "\x00\x00"
-                                                                                                "\xFF\xFF"),
-																XORSTR("xx?????xx??xx"));
+													(unsigned char *)XORSTR("\x80\x3D"
+																	    "\x00\x00\x00\x00\x00"
+																	    "\x89\xB5"
+																	    "\x00\x00"
+																	    "\xFF\xFF"),
+													XORSTR("xx?????xx??xx"));
 	bool_address = GetAbsoluteAddress(bool_address, 2, 7);
 
-	s_bOverridePostProcessingDisable = reinterpret_cast<bool*>(bool_address);
+	s_bOverridePostProcessingDisable = reinterpret_cast<bool *>(bool_address);
 }
 
 void Hooker::FindSDLInput()
@@ -378,27 +382,27 @@ void Hooker::FindSDLInput()
 		E8 FD D8 02 00          call    LauncherMgrCreateFunc <------
 	 */
 	uintptr_t startAddr = PatternFinder::FindPatternInModule(XORSTR("launcher_client.so"),
-																(unsigned char*) XORSTR("\x0F\x95\x83"
-																								"\x00\x00\x00\x00"
-																								"\xE8"
-																								"\x00\x00\x00\x00"
-																								"\xE8"),
-																XORSTR("xxx????x????x"));
+												  (unsigned char *)XORSTR("\x0F\x95\x83"
+																	 "\x00\x00\x00\x00"
+																	 "\xE8"
+																	 "\x00\x00\x00\x00"
+																	 "\xE8"),
+												  XORSTR("xxx????x????x"));
 	ILauncherMgrCreateFn createFunc = reinterpret_cast<ILauncherMgrCreateFn>(GetAbsoluteAddress(startAddr + 12, 1, 5));
 	launcherMgr = createFunc();
 }
 
 void Hooker::FindSetNamedSkybox()
 {
-	//55 4C 8D 05 ?? ?? ?? ?? 48 89 E5 41
-    // xref for "skybox/%s%s"
-    uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("engine_client.so"),
-                                                                (unsigned char*) XORSTR("\x55\x4C\x8D\x05"
-                                                                                                "\x00\x00\x00\x00" //??
-                                                                                                "\x48\x89\xE5\x41"),
-                                                                XORSTR("xxxx????xxxx"));
+	// 55 4C 8D 05 ?? ?? ?? ?? 48 89 E5 41
+	// xref for "skybox/%s%s"
+	uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("engine_client.so"),
+													(unsigned char *)XORSTR("\x55\x4C\x8D\x05"
+																	    "\x00\x00\x00\x00" //??
+																	    "\x48\x89\xE5\x41"),
+													XORSTR("xxxx????xxxx"));
 
-    SetNamedSkyBox = reinterpret_cast<SetNamedSkyBoxFn>(func_address);
+	SetNamedSkyBox = reinterpret_cast<SetNamedSkyBoxFn>(func_address);
 }
 
 void Hooker::FindPanelArrayOffset()
@@ -409,9 +413,9 @@ void Hooker::FindPanelArrayOffset()
 	   55                      push    rbp
 	   48 81 C7 B8 01 00 00    add     rdi, 1B8h <--------
 	 */
-	uintptr_t IsValidPanelPointer = reinterpret_cast<uintptr_t>(getvtable( panoramaEngine->AccessUIEngine() )[37]);
-	int32_t offset = *(unsigned int*)(IsValidPanelPointer + 4);
-	panorama::panelArray = *(panorama::PanelArray**) ( ((uintptr_t)panoramaEngine->AccessUIEngine()) + offset + 8);
+	uintptr_t IsValidPanelPointer = reinterpret_cast<uintptr_t>(getvtable(panoramaEngine->AccessUIEngine())[37]);
+	int32_t offset = *(unsigned int *)(IsValidPanelPointer + 4);
+	panorama::panelArray = *(panorama::PanelArray **)(((uintptr_t)panoramaEngine->AccessUIEngine()) + offset + 8);
 }
 
 void Hooker::FindPlayerAnimStateOffset()
@@ -422,213 +426,217 @@ void Hooker::FindPlayerAnimStateOffset()
 	// jz      short loc_C50837
 	// call    AnimState__Reset
 	// 55 48 89 E5 53 48 89 FB 48 83 EC 28 48 8B 05 ?? ?? ?? ?? 48 8B 00
-	uintptr_t C_CSPlayer__Spawn = PatternFinder::FindPatternInModule( XORSTR( "/client_client.so" ),
-																	  ( unsigned char* ) XORSTR("\x55\x48\x89\xE5\x53\x48\x89\xFB\x48\x83\xEC\x28\x48\x8B\x05"
-																										"\x00\x00\x00\x00" //??
-																										"\x48\x8B\x00"),
-																	  XORSTR( "xxxxxxxxxxxxxxx????xxx" ) );
-	Offsets::playerAnimStateOffset = *(unsigned int*)(C_CSPlayer__Spawn + 52);
+	uintptr_t C_CSPlayer__Spawn = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
+														(unsigned char *)XORSTR("\x55\x48\x89\xE5\x53\x48\x89\xFB\x48\x83\xEC\x28\x48\x8B\x05"
+																		    "\x00\x00\x00\x00" //??
+																		    "\x48\x8B\x00"),
+														XORSTR("xxxxxxxxxxxxxxx????xxx"));
+	Offsets::playerAnimStateOffset = *(unsigned int *)(C_CSPlayer__Spawn + 52);
 }
 
-void Hooker::FindPlayerAnimOverlayOffset( )
+void Hooker::FindPlayerAnimOverlayOffset()
 {
-    // C_BaseAnimatingOverlay::GetAnimOverlay - Adding 35 to get to the offset
-    // 55 48 89 E5 41 56 41 55 41 89 F5 41 54 53 48 89 FB 8B
-    Offsets::playerAnimOverlayOffset = *(unsigned int*)(PatternFinder::FindPatternInModule( XORSTR( "/client_client.so" ),
-                                                                               ( unsigned char* ) XORSTR("\x55\x48\x89\xE5\x41\x56\x41\x55\x41\x89\xF5\x41\x54\x53\x48\x89\xFB\x8B"),
-                                                                               XORSTR( "xxxxxxxxxxxxxxxxxx" ) ) + 35);
+	// C_BaseAnimatingOverlay::GetAnimOverlay - Adding 35 to get to the offset
+	// 55 48 89 E5 41 56 41 55 41 89 F5 41 54 53 48 89 FB 8B
+	Offsets::playerAnimOverlayOffset = *(unsigned int *)(PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
+																		   (unsigned char *)XORSTR("\x55\x48\x89\xE5\x41\x56\x41\x55\x41\x89\xF5\x41\x54\x53\x48\x89\xFB\x8B"),
+																		   XORSTR("xxxxxxxxxxxxxxxxxx")) +
+											   35);
 }
 
 void Hooker::FindSequenceActivity()
 {
-    // C_BaseAnimating::GetSequenceActivity()
-    // 83 FE FF                                cmp     esi, 0FFFFFFFFh
-    // 74 6B                                   jz      short loc_7A1F40
-    // 55                                      push    rbp
-    // 48 89 E5                                mov     rbp, rsp
-    // 53                                      push    rbx
-    // 48 89 FB                                mov     rbx, rdi
-    // 48 83 EC 18                             sub     rsp, 18h
-    // 48 8B BF D0 2F 00 00                    mov     rdi, [rdi+2FD0h]
-    // 48 85 FF                                test    rdi, rdi
-    // 74 13                                   jz      short loc_7A1F00
-    // loc_7A1EED:                             ; CODE XREF: GetSequenceActivity+5F↓j
-    // 48 83 3F 00                             cmp     qword ptr [rdi], 0
-    // 74 3E                                   jz      short loc_7A1F31
-    // 48 83 C4 18                             add     rsp, 18h
-    // 31 D2                                   xor     edx, edx
-    // 83 FE FF 74 ?? 55 48 89 E5 53 48 89 FB 48 83 EC ?? 48 8B BF ?? ?? ?? ?? 48 85 FF 74 ?? 48 83 3F 00 74 ?? 48 83 C4 ?? 31
-    uintptr_t funcAddr = PatternFinder::FindPatternInModule( XORSTR( "/client_client.so" ), (unsigned char*) XORSTR( "\x83\xFE\xFF"
-                                                                                                            "\x74\x00"
-                                                                                                            "\x55"
-                                                                                                            "\x48\x89\xE5"
-                                                                                                            "\x53"
-                                                                                                            "\x48\x89\xFB"
-                                                                                                            "\x48\x83\xEC\x00"
-                                                                                                            "\x48\x8B\xBF\x00\x00\x00\x00"
-                                                                                                            "\x48\x85\xFF"
-                                                                                                            "\x74\x00"
-                                                                                                            "\x48\x83\x3F\x00"
-                                                                                                            "\x74\x00"
-                                                                                                            "\x48\x83\xC4\x00"
-                                                                                                            "\x31"), XORSTR( "xxxx?xxxxxxxxxxx?xxx????xxxx?xxxxx?xxx?x" ) );
+	// C_BaseAnimating::GetSequenceActivity()
+	// 83 FE FF                                cmp     esi, 0FFFFFFFFh
+	// 74 6B                                   jz      short loc_7A1F40
+	// 55                                      push    rbp
+	// 48 89 E5                                mov     rbp, rsp
+	// 53                                      push    rbx
+	// 48 89 FB                                mov     rbx, rdi
+	// 48 83 EC 18                             sub     rsp, 18h
+	// 48 8B BF D0 2F 00 00                    mov     rdi, [rdi+2FD0h]
+	// 48 85 FF                                test    rdi, rdi
+	// 74 13                                   jz      short loc_7A1F00
+	// loc_7A1EED:                             ; CODE XREF: GetSequenceActivity+5F↓j
+	// 48 83 3F 00                             cmp     qword ptr [rdi], 0
+	// 74 3E                                   jz      short loc_7A1F31
+	// 48 83 C4 18                             add     rsp, 18h
+	// 31 D2                                   xor     edx, edx
+	// 83 FE FF 74 ?? 55 48 89 E5 53 48 89 FB 48 83 EC ?? 48 8B BF ?? ?? ?? ?? 48 85 FF 74 ?? 48 83 3F 00 74 ?? 48 83 C4 ?? 31
+	uintptr_t funcAddr = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"), (unsigned char *)XORSTR("\x83\xFE\xFF"
+																						    "\x74\x00"
+																						    "\x55"
+																						    "\x48\x89\xE5"
+																						    "\x53"
+																						    "\x48\x89\xFB"
+																						    "\x48\x83\xEC\x00"
+																						    "\x48\x8B\xBF\x00\x00\x00\x00"
+																						    "\x48\x85\xFF"
+																						    "\x74\x00"
+																						    "\x48\x83\x3F\x00"
+																						    "\x74\x00"
+																						    "\x48\x83\xC4\x00"
+																						    "\x31"),
+												 XORSTR("xxxx?xxxxxxxxxxx?xxx????xxxx?xxxxx?xxx?x"));
 
-    GetSeqActivity = reinterpret_cast<GetSequenceActivityFn>( funcAddr );
+	GetSeqActivity = reinterpret_cast<GetSequenceActivityFn>(funcAddr);
 }
 
 void Hooker::FindAbsFunctions()
 {
 	// C_BaseEntity::SetAbsOrigin( )
 	// 55 48 89 E5 41 55 41 54 49 89 F4 53 48 89 FB 48 83 EC ?? E8 ?? ?? ?? ?? F3
-	SetAbsOriginFnAddr = PatternFinder::FindPatternInModule( XORSTR( "/client_client.so" ),
-															 ( unsigned char* ) XORSTR("\x55\x48\x89\xE5\x41\x55\x41\x54\x49\x89\xF4\x53\x48\x89\xFB\x48\x83\xEC"
-																							   "\x00" //??
-																							   "\xE8"
-																							   "\x00\x00\x00\x00" //??
-																							   "\xF3"),
-															 XORSTR( "xxxxxxxxxxxxxxxxxx?x????x" ) );
+	SetAbsOriginFnAddr = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
+												 (unsigned char *)XORSTR("\x55\x48\x89\xE5\x41\x55\x41\x54\x49\x89\xF4\x53\x48\x89\xFB\x48\x83\xEC"
+																	"\x00" //??
+																	"\xE8"
+																	"\x00\x00\x00\x00" //??
+																	"\xF3"),
+												 XORSTR("xxxxxxxxxxxxxxxxxx?x????x"));
 }
 
-typedef CItemSystem* (* GetItemSystemFn)( );
+typedef CItemSystem *(*GetItemSystemFn)();
 
 void Hooker::FindItemSystem()
 {
-    //xref almost any weapon name "weapon_glock" or "weapon_ak47"
-    //above the string find a very commonly used function that has about 100xrefs
-    // ItemSystem() proc near
-    // 55                      push    rbp
-    // 48 89 E5                mov     rbp, rsp
-    // 53                      push    rbx
-    // 48 89 FB                mov     rbx, rdi
-    // 48 83 EC 08             sub     rsp, 8
-    // 48 89 37                mov     [rdi], rsi
-    // E8 9C 69 E3 FF          call    GetItemSystemWrapper
-    // 48 8B 33                mov     rsi, [rbx]
-    // 48 8B 10                mov     rdx, [rax]
-    // 48 89 C7                mov     rdi, rax
-    // FF 92 48 01 00 00       call    qword ptr [rdx+148h]
-    // 48 89 43 08             mov     [rbx+8], rax
-    // E8 84 69 E3 FF          call    GetItemSystemWrapper
-    // 8B 40 3C                mov     eax, [rax+3Ch]
-    // 89 43 10                mov     [rbx+10h], eax
-    // 48 83 C4 08             add     rsp, 8
-    // 5B                      pop     rbx
-    // 5D                      pop     rbp
-    // C3                      retn
-    // -- GetItemSystemWrapper() --
-    // 55                      push    rbp
-    // 48 89 E5                mov     rbp, rsp
-    // E8 87 FB FD FF          call    GetItemSystem
-    // 5D                      pop     rbp
-    // 48 83 C0 08             add     rax, 8
-    // C3                      retn
+	// xref almost any weapon name "weapon_glock" or "weapon_ak47"
+	// above the string find a very commonly used function that has about 100xrefs
+	//  ItemSystem() proc near
+	//  55                      push    rbp
+	//  48 89 E5                mov     rbp, rsp
+	//  53                      push    rbx
+	//  48 89 FB                mov     rbx, rdi
+	//  48 83 EC 08             sub     rsp, 8
+	//  48 89 37                mov     [rdi], rsi
+	//  E8 9C 69 E3 FF          call    GetItemSystemWrapper
+	//  48 8B 33                mov     rsi, [rbx]
+	//  48 8B 10                mov     rdx, [rax]
+	//  48 89 C7                mov     rdi, rax
+	//  FF 92 48 01 00 00       call    qword ptr [rdx+148h]
+	//  48 89 43 08             mov     [rbx+8], rax
+	//  E8 84 69 E3 FF          call    GetItemSystemWrapper
+	//  8B 40 3C                mov     eax, [rax+3Ch]
+	//  89 43 10                mov     [rbx+10h], eax
+	//  48 83 C4 08             add     rsp, 8
+	//  5B                      pop     rbx
+	//  5D                      pop     rbp
+	//  C3                      retn
+	//  -- GetItemSystemWrapper() --
+	//  55                      push    rbp
+	//  48 89 E5                mov     rbp, rsp
+	//  E8 87 FB FD FF          call    GetItemSystem
+	//  5D                      pop     rbp
+	//  48 83 C0 08             add     rax, 8
+	//  C3                      retn
 
+	uintptr_t funcAddr = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"), (unsigned char *)XORSTR("\x55\x48\x89\xE5\x53\x48\x89\xFB\x48\x83\xEC\x08\x48\x89\x37\xE8"
+																						    "\x00\x00\x00\x00" // ??
+																						    "\x48"),
+												 XORSTR("xxxxxxxxxxxxxxxx????x"));
+	funcAddr += 15;						  // add 15 to get to (E8 9C 69 E3 FF          call    GetItemSystemWrapper)
+	funcAddr = GetAbsoluteAddress(funcAddr, 1, 5); // Deref to GetItemSystemWrapper()
+	funcAddr += 4;							  // add 4 to Get to GetItemSystem()
+	funcAddr = GetAbsoluteAddress(funcAddr, 1, 5); // Deref again for the final address.
 
-	uintptr_t funcAddr = PatternFinder::FindPatternInModule( XORSTR( "/client_client.so" ), (unsigned char*) XORSTR("\x55\x48\x89\xE5\x53\x48\x89\xFB\x48\x83\xEC\x08\x48\x89\x37\xE8"
-																									"\x00\x00\x00\x00" // ??
-																									"\x48"), XORSTR( "xxxxxxxxxxxxxxxx????x" ) );
-    funcAddr += 15; // add 15 to get to (E8 9C 69 E3 FF          call    GetItemSystemWrapper)
-    funcAddr = GetAbsoluteAddress( funcAddr, 1, 5 ); // Deref to GetItemSystemWrapper()
-    funcAddr += 4; // add 4 to Get to GetItemSystem()
-    funcAddr = GetAbsoluteAddress( funcAddr, 1, 5 ); // Deref again for the final address.
-
-
-    GetItemSystemFn GetItemSystem = reinterpret_cast<GetItemSystemFn>( funcAddr );
+	GetItemSystemFn GetItemSystem = reinterpret_cast<GetItemSystemFn>(funcAddr);
 	uintptr_t itemSys = (uintptr_t)GetItemSystem();
 	cvar->ConsoleDPrintf("ItemSystem(%p)\n", itemSys);
-	itemSys += sizeof(void*); // 2nd vtable
-    itemSystem = (CItemSystem*)itemSys;
+	itemSys += sizeof(void *); // 2nd vtable
+	itemSystem = (CItemSystem *)itemSys;
 }
-void Hooker::FindSendMove(){
-//"E8 ? ? ? ? E8 ? ? ? ? F2 0F 10 0D ? ? ? ? 45 84 E4 F2 0F 5C 0D ? ? ? ? F2 0F 58 C8 F2 0F 11 0D ? ? ? ? 75 12"
-//meme or legit?
-uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
-                                                                (unsigned char*) XORSTR("\xE8\x00\x00\x00\x00\xE8\x00\x00\x00\x00\xF2\x0F\x10\x0D\x00\x00\x00\x00\x45\x84\xE4\xF2\x0F\x5C\x0D\x00\x00\x00\x00\xF2\x0F\x58\xC8\xF2\x0F\x11\x0D\x00\x00\x00\x00\x75\x12"),
-                                                                XORSTR("x????x????xxxx????xxxxxxx????xxxxxxxx????xx"));
-/*
-    func_address += 6;
-    func_address = GetAbsoluteAddress(func_address, 1, 6);
-    WriteUserCmd = reinterpret_cast<WriteUserCmdFn>(func_address);
-*/
+void Hooker::FindSendMove()
+{
+	//"E8 ? ? ? ? E8 ? ? ? ? F2 0F 10 0D ? ? ? ? 45 84 E4 F2 0F 5C 0D ? ? ? ? F2 0F 58 C8 F2 0F 11 0D ? ? ? ? 75 12"
+	// meme or legit?
+	uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
+													(unsigned char *)XORSTR("\xE8\x00\x00\x00\x00\xE8\x00\x00\x00\x00\xF2\x0F\x10\x0D\x00\x00\x00\x00\x45\x84\xE4\xF2\x0F\x5C\x0D\x00\x00\x00\x00\xF2\x0F\x58\xC8\xF2\x0F\x11\x0D\x00\x00\x00\x00\x75\x12"),
+													XORSTR("x????x????xxxx????xxxxxxx????xxxxxxxx????xx"));
+	/*
+	    func_address += 6;
+	    func_address = GetAbsoluteAddress(func_address, 1, 6);
+	    WriteUserCmd = reinterpret_cast<WriteUserCmdFn>(func_address);
+	*/
 }
 
+void Hooker::FindWriteUserCmd()
+{
+	//                 push    ebp
+	//                 mov     ebp, esp
+	//                 push    edi
+	//                 push    esi
+	//                 push    ebx
+	//                 sub     esp, 2Ch
+	//                 mov     eax, ds:dword_1528EDC
+	//                 mov     edi, [ebp+arg_0]
+	//                 mov     esi, [ebp+arg_4]
+	//                 mov     ebx, [ebp+arg_8]
+	uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
+													(unsigned char *)XORSTR("\x41\x8B\x54\x24\x08"
+																	    "\x48\x8D\x00\x00\x00\x00\x00"),
+													XORSTR("xxxxx"
+														  "xx?????"));
 
-void Hooker::FindWriteUserCmd(){
-//                 push    ebp
-//                 mov     ebp, esp
-//                 push    edi
-//                 push    esi
-//                 push    ebx
-//                 sub     esp, 2Ch
-//                 mov     eax, ds:dword_1528EDC
-//                 mov     edi, [ebp+arg_0]
-//                 mov     esi, [ebp+arg_4]
-//                 mov     ebx, [ebp+arg_8]
-uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
-                                                                (unsigned char*) XORSTR("\x41\x8B\x54\x24\x08"
-                                                                                    "\x48\x8D\x00\x00\x00\x00\x00"),
-                                                                XORSTR("xxxxx"
-                                                                        "xx?????"));
-
-    func_address += 6;
-    func_address = GetAbsoluteAddress(func_address, 1, 6);
-    WriteUserCmd = reinterpret_cast<WriteUserCmdFn>(func_address);
+	func_address += 6;
+	func_address = GetAbsoluteAddress(func_address, 1, 6);
+	WriteUserCmd = reinterpret_cast<WriteUserCmdFn>(func_address);
 }
 #include "Hooks/hooks.h"
 #include "interfaces.h"
 #include "Features/fakelag.h"
 #include "Utils/xorstring.h"
 
-typedef bool (*WriteUserCmdDeltFn) (void* thisptr, int slot, bf_write *buf, int from, int to, bool isnewcommand );
+typedef bool (*WriteUserCmdDeltFn)(void *thisptr, int slot, bf_write *buf, int from, int to, bool isnewcommand);
 
-bool Hooks::WriteUsercmdDeltaToBuffer(void* thisptr, int slot, bf_write *buf, int from, int to, bool isnewcommand){
+bool Hooks::WriteUsercmdDeltaToBuffer(void *thisptr, int slot, bf_write *buf, int from, int to, bool isnewcommand)
+{
 
-    static auto funcAdd = clientVMT->GetOriginalMethod<WriteUserCmdDeltFn>(24);
-//    funcAdd(thisptr,slot, buf, from, to, isnewcommand );
+	static auto funcAdd = clientVMT->GetOriginalMethod<WriteUserCmdDeltFn>(24);
+	//    funcAdd(thisptr,slot, buf, from, to, isnewcommand );
 
-if (FakeLag::shift <= 0)
-     return funcAdd(thisptr, slot, buf, from, to, isnewcommand );
-   if (from != -1)
-      return true;
-if (FakeLag::should_recharge)
-	return funcAdd(thisptr, slot, buf, from, to, isnewcommand );
-//        cvar->ConsoleDPrintf(XORSTR("ye\n"));
+	if (FakeLag::shift <= 0)
+		return funcAdd(thisptr, slot, buf, from, to, isnewcommand);
+	if (from != -1)
+		return true;
+	if (FakeLag::should_recharge)
+		return funcAdd(thisptr, slot, buf, from, to, isnewcommand);
+	//        cvar->ConsoleDPrintf(XORSTR("ye\n"));
 
-    int* numBackupCommands = (int*)(reinterpret_cast <uintptr_t> (buf) - 0x30);
-    int* numNewCommands = (int*)(reinterpret_cast <uintptr_t> (buf) - 0x2C);
-    int32_t newcommands = *numNewCommands;
+	int *numBackupCommands = (int *)(reinterpret_cast<uintptr_t>(buf) - 0x30);
+	int *numNewCommands = (int *)(reinterpret_cast<uintptr_t>(buf) - 0x2C);
+	int32_t newcommands = *numNewCommands;
 
-    int nextcommmand; //= memory->clientState->lastOutgoingCommand + memory->clientState->chokedCommands + 1;
-    int totalcommands = std::min(FakeLag::shift, 14);
-    from = -1;
-    *numNewCommands = totalcommands;
-    *numBackupCommands = 0;
-    for (to = nextcommmand - newcommands + 1; to <= nextcommmand; to++)
-    {
-       if (!(funcAdd(thisptr, slot, buf, from, to, isnewcommand ))){
-        cvar->ConsoleDPrintf(XORSTR("ye\n"));
-            return false;
+	int nextcommmand; //= memory->clientState->lastOutgoingCommand + memory->clientState->chokedCommands + 1;
+	int totalcommands = std::min(FakeLag::shift, 14);
+	from = -1;
+	*numNewCommands = totalcommands;
+	*numBackupCommands = 0;
+	for (to = nextcommmand - newcommands + 1; to <= nextcommmand; to++)
+	{
+		if (!(funcAdd(thisptr, slot, buf, from, to, isnewcommand)))
+		{
+			cvar->ConsoleDPrintf(XORSTR("ye\n"));
+			return false;
+		}
+		from = to;
 	}
-        from = to;
-    }
 
-    CUserCmd lastRealCmd = inputSystem->GetUserCmd(slot, from);
-    CUserCmd fromcmd;
-        fromcmd = lastRealCmd;
-   CUserCmd tocmd = fromcmd;
-    tocmd.tick_count += 200;
-    tocmd.command_number++;
+	CUserCmd lastRealCmd = inputSystem->GetUserCmd(slot, from);
+	CUserCmd fromcmd;
+	fromcmd = lastRealCmd;
+	CUserCmd tocmd = fromcmd;
+	tocmd.tick_count += 200;
+	tocmd.command_number++;
 
-    for (int i = newcommands; i <= totalcommands; i++)
-    {
-        WriteUserCmd(buf, &tocmd, &fromcmd);
-        fromcmd = tocmd;
-        tocmd.command_number++;
-        tocmd.tick_count++;
-    }
-    FakeLag::shift = 0;
+	for (int i = newcommands; i <= totalcommands; i++)
+	{
+		WriteUserCmd(buf, &tocmd, &fromcmd);
+		fromcmd = tocmd;
+		tocmd.command_number++;
+		tocmd.tick_count++;
+	}
+	FakeLag::shift = 0;
 
-    return true;
+	return true;
 }
 
 /*
@@ -636,6 +644,6 @@ if (FakeLag::should_recharge)
 auto hud = (PatternFinder::FindPatternInModule( XORSTR( "/client_client.so" ),( unsigned char* ) XORSTR("\x53\x48\x8D\x3D\x00\x00\x00\x00\x48\x83\xEC\x10\xE8"),XORSTR( "xxxx????xxxxx" )) + 1);
     const auto deathNotice = FindHudElement(hud, "CCSGO_HudDeathNotice");
     //if (!deathNotice)
-      //  return;
+	 //  return;
   //  const auto deathNoticePanel = (*(IVPanel**)(*(deathNotice - 5 + 22) + 4));
 */

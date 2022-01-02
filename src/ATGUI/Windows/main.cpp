@@ -41,13 +41,26 @@ enum
 	TriggerbotTab,
 };
 
+enum
+{
+	Enemy,
+	Allies,
+	Local,
+	Materials,
+	Menu,
+};
+enum
+{
+	Customizations,
+};
+
 const char *TabsNames[] = {"Aimbot", "Anti Aim", "Visuals", "Skin Changer", "Misc", "Player List"};
 
 std::initializer_list<const char *> subtabAimbot = {"Legitbot", "Ragebot", "Triggerbot"};
 std::initializer_list<const char *> subtabAntiAim = {};
 std::initializer_list<const char *> subtabVisuals = {"Enemy", "Allies", "Local", "Materials", "Menu"};
 std::initializer_list<const char *> subtabSkinChanger = {"Skins", "Models"};
-std::initializer_list<const char *> subtabMisc = {"Features"};
+std::initializer_list<const char *> subtabMisc = {"Custom"};
 std::initializer_list<const char *> subtabPlayerInfo = {};
 std::initializer_list<const char *> subtabDev = {"Options"};
 
@@ -95,10 +108,8 @@ static void BgDecorations()
 	//
 }
 
-// Upper Tabs
 static void Tabs()
 {
-
 	static int tab_sizes = IM_ARRAYSIZE(TabsNames);
 	static int tab_gaps = 120;
 	static int tabY = 10;
@@ -117,10 +128,8 @@ static void Tabs()
 	}
 }
 
-// Side Tabs
 static void SubTabs()
 {
-
 	static int tab_gaps = 40;
 	static int tabY;
 	static int tabX = 0;
@@ -160,15 +169,6 @@ static void aimbotTab()
 	}
 }
 
-enum
-{
-	Enemy,
-	Allies,
-	Local,
-	Materials,
-	Menu,
-};
-
 static void VisualsTab()
 {
 	switch (subtabs)
@@ -186,10 +186,29 @@ static void VisualsTab()
 		VisualsMaterialConfig::RenderMainMenu(pos, draw, subtabs);
 		break;
 	case Menu:
-		VisualsMenu::RenderMainMenu(pos, draw, subtabs);
+		// VisualsMenu::RenderMainMenu(pos, draw, subtabs);
 		break;
 	}
 }
+
+static void MiscellaneousTab()
+{
+	switch (subtabs)
+	{
+	case Customizations:
+		MiscCustomizations::RenderMainMenu(pos, draw, subtabs);
+		break;
+		/*
+		case Allies:
+			VisualsGood::RenderMainMenu(pos, draw, subtabs);
+			break;
+		case Local:
+			VisualsLocal::RenderMainMenu(pos, draw, subtabs);
+			break;
+			*/
+	}
+}
+
 void MainMenu::Render()
 {
 	ImVec2 size = ImGui::GetWindowSize();
@@ -221,7 +240,7 @@ void MainMenu::Render()
 			SkinsAndModel::RenderMainMenu(pos, draw, subtabs);
 			break;
 		case MiscTab:
-			Misc::RenderMainMenu(pos, draw, subtabs);
+			MiscellaneousTab();
 			break;
 		case PlayerInfo:
 			draw->AddRectFilled(ImVec2(pos.x, pos.y + 52), ImVec2(pos.x + 160, pos.y + 832), ImColor(4, 3, 5)); // ImColor(0, 0, 0, 150));

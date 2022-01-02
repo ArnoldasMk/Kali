@@ -63,8 +63,8 @@ static bool autoSlow = false;
 static bool predEnabled = false;
 static bool scopeControlEnabled = false;
 static bool TriggerBot = false;
-static bool hitchanceEnaled = false;
-static float hitchance = 100.f;
+static bool hitchanceEnabled = false;
+static float hitchanceValue = 100.f;
 
 void UI::ReloadWeaponSettings()
 {
@@ -106,8 +106,8 @@ void UI::ReloadWeaponSettings()
 	noShootEnabled = Settings::Legitbot::weapons.at(index).noShootEnabled;
 	ignoreJumpEnabled = Settings::Legitbot::weapons.at(index).ignoreJumpEnabled;
 	ignoreEnemyJumpEnabled = Settings::Legitbot::weapons.at(index).ignoreEnemyJumpEnabled;
-	hitchanceEnaled = Settings::Legitbot::weapons.at(index).hitchanceEnaled;
-	hitchance = Settings::Legitbot::weapons.at(index).hitchance;
+	hitchanceEnabled = Settings::Legitbot::weapons.at(index).hitchanceEnabled;
+	hitchanceValue = Settings::Legitbot::weapons.at(index).hitchanceValue;
 	TriggerBot = Settings::Legitbot::weapons.at(index).TriggerBot;
 	smokeCheck = Settings::Legitbot::weapons.at(index).smokeCheck;
 	flashCheck = Settings::Legitbot::weapons.at(index).flashCheck;
@@ -146,7 +146,7 @@ void UI::UpdateWeaponSettings()
 	    .rcsEnabled = rcsEnabled,
 	    .rcsAlwaysOn = rcsAlwaysOn,
 	    .spreadLimitEnabled = spreadLimitEnabled,
-	    .hitchanceEnaled = false,
+	    .hitchanceEnabled = hitchanceEnabled,
 	    .autoPistolEnabled = autoPistolEnabled,
 	    .autoShootEnabled = autoShootEnabled,
 	    .autoScopeEnabled = autoScopeEnabled,
@@ -181,7 +181,7 @@ void UI::UpdateWeaponSettings()
 	    .autoWallValue = autoWallValue,
 	    .spreadLimit = spreadLimit,
 	    .minDamagevalue = 10.0f,
-	    .hitchance = hitchance,
+	    .hitchanceValue = hitchanceValue,
 	};
 
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
@@ -268,7 +268,7 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				ImGui::Separator();
 				ImGui::Text(XORSTR("Accuracy"));
 				ImGui::Separator();
-				ImGui::Columns(2, nullptr, true);
+				ImGui::Columns(2, nullptr, false);
 				{
 					if (ImGui::Checkbox(XORSTR("Auto Aim"), &autoAimEnabled))
 						UI::UpdateWeaponSettings();
@@ -283,7 +283,7 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 					ImGui::PopItemWidth();
 				}
 				ImGui::Columns(1);
-				ImGui::Columns(2, nullptr, true);
+				ImGui::Columns(2, nullptr, false);
 				{
 					if (ImGui::Checkbox(XORSTR("Recoil Control Enabled"), &rcsEnabled))
 						UI::UpdateWeaponSettings();
@@ -301,7 +301,7 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				ImGui::Separator();
 				ImGui::Text(XORSTR("Casual / DM Only"));
 				ImGui::Separator();
-				ImGui::Columns(2, nullptr, true);
+				ImGui::Columns(2, nullptr, false);
 				{
 					if (ImGui::Checkbox(XORSTR("Aim Step"), &aimStepEnabled))
 						UI::UpdateWeaponSettings();
@@ -321,7 +321,7 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				ImGui::Separator();
 				ImGui::Text(XORSTR("Humanizing"));
 				ImGui::Separator();
-				ImGui::Columns(2, nullptr, true);
+				ImGui::Columns(2, nullptr, false);
 				{
 					if (ImGui::Checkbox(XORSTR("Smoothing"), &smoothEnabled))
 						UI::UpdateWeaponSettings();
@@ -448,7 +448,7 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 			{
 				ImGui::Text(XORSTR("Aimkey Only"));
 				ImGui::Separator();
-				ImGui::Columns(2, nullptr, true);
+				ImGui::Columns(2, nullptr, false);
 				{
 					if (ImGui::Checkbox(XORSTR("Enabled"), &aimkeyOnly))
 						UI::UpdateWeaponSettings();
@@ -457,11 +457,11 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				{
 					UI::KeyBindButton(&aimkey);
 				}
-				ImGui::Columns(1, nullptr, true);
+				ImGui::Columns(1, nullptr, false);
 				ImGui::Separator();
 				ImGui::Text(XORSTR("Other Features"));
 				ImGui::Separator();
-				ImGui::Columns(1, nullptr, true);
+				ImGui::Columns(1, nullptr, false);
 				{
 
 					switch (currentWeapon)
@@ -524,41 +524,63 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				ImGui::Separator();
 				ImGui::Text(XORSTR("Misc"));
 				ImGui::Separator();
-				ImGui::Columns(1);
+				ImGui::Columns(2, nullptr, false);
 				{
 					if (ImGui::Checkbox(XORSTR("EngageLock"), &engageLock))
 						UI::UpdateWeaponSettings();
-					if (engageLock)
-					{
-						if (ImGui::Checkbox(XORSTR("Target Reacquisition"), &engageLockTR))
-							UI::UpdateWeaponSettings();
-						if (engageLockTR)
-						{
-							if (ImGui::SliderInt(XORSTR("##TTR"), &engageLockTTR, 0, 1000))
-								UI::UpdateWeaponSettings();
-						}
-					}
+				}
+				ImGui::NextColumn();
+				{
 					if (ImGui::Checkbox(XORSTR("FriendlyFire"), &friendly))
 						UI::UpdateWeaponSettings();
 				}
+				ImGui::EndColumns();
+				if (engageLock)
+				{
+					if (ImGui::Checkbox(XORSTR("Target Reacquisition"), &engageLockTR))
+						UI::UpdateWeaponSettings();
+				}
 				ImGui::Columns(1);
+				{
+					ImGui::PushItemWidth(-1);
+					if (engageLockTR)
+					{
+						if (ImGui::SliderInt(XORSTR("##TTR"), &engageLockTTR, 0, 1000))
+							UI::UpdateWeaponSettings();
+					}
+					ImGui::PopItemWidth();
+				}
 				ImGui::Separator();
 				ImGui::Text(XORSTR("Semirage Options"));
 				ImGui::Separator();
-				if (ImGui::Checkbox(XORSTR("Auto Shoot"), &autoShootEnabled))
-					UI::UpdateWeaponSettings();
-				ImGui::Checkbox(XORSTR("Velocity Check"), &Settings::Legitbot::AutoShoot::velocityCheck);
+				ImGui::Columns(2, nullptr, false);
+				{
+					if (ImGui::Checkbox(XORSTR("Auto Shoot"), &autoShootEnabled))
+						UI::UpdateWeaponSettings();
+				}
+				ImGui::NextColumn();
+				{
+					ImGui::Checkbox(XORSTR("Velocity Check"), &Settings::Legitbot::AutoShoot::velocityCheck);
+				}
+				ImGui::EndColumns();
 				if (ImGui::Checkbox(XORSTR("Spread Limit"), &spreadLimitEnabled))
 					UI::UpdateWeaponSettings();
+				ImGui::PushItemWidth(-1);
 				if (ImGui::SliderFloat(XORSTR("##SPREADLIMIT"), &spreadLimit, 0, 0.1))
 					UI::UpdateWeaponSettings();
+				ImGui::PopItemWidth();
+				if (ImGui::Checkbox(XORSTR("Hit Chance"), &hitchanceEnabled))
+					UI::UpdateWeaponSettings();
+				ImGui::PushItemWidth(-1);
+				if (ImGui::SliderFloat(XORSTR("##hitChance"), &hitchanceValue, 0, 100))
+					UI::UpdateWeaponSettings();
+				ImGui::PopItemWidth();
 				ImGui::Columns(1);
 				ImGui::Separator();
 				ImGui::Text(XORSTR("Autowall"));
 				ImGui::Separator();
 				ImGui::Columns(1);
 				{
-
 					if (ImGui::Checkbox(XORSTR("Autowall Enabled"), &autoWallEnabled))
 						UI::UpdateWeaponSettings();
 				}

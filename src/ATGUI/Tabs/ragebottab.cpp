@@ -316,7 +316,7 @@ void RagebotTab::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				ImGui::SliderFloat(XORSTR("##BODYSCALE"), &BodyScale, 0.0f, 1.0f);
 				ImGui::Separator();
 
-				ImGui::Columns(2);
+				ImGui::Columns(2, nullptr, false);
 				{
 					ImGui::Text(XORSTR("Target Bones"));
 				}
@@ -324,10 +324,9 @@ void RagebotTab::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				{
 					ImGui::Text(XORSTR("Target MultiPoints"));
 				}
+				ImGui::EndColumns();
 				ImGui::Separator();
-				ImGui::Columns(1);
-				ImGui::Separator();
-				ImGui::Columns(2);
+				ImGui::Columns(2, nullptr, false);
 				{
 					if (ImGui::Checkbox(XORSTR("HEAD"), &desireBones[(int)DesireBones::BONE_HEAD]))
 						UI::UpdateRageWeaponSettings();
@@ -357,8 +356,8 @@ void RagebotTab::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 					if (ImGui::Checkbox(XORSTR("LOWER BODY"), &desiredMultiBones[(int)DesireBones::LOWER_BODY]))
 						UI::UpdateRageWeaponSettings();
 				}
+				ImGui::EndColumns();
 				ImGui::Separator();
-				ImGui::Columns(1);
 				ImGui::Text(XORSTR("Other Features"));
 				ImGui::Separator();
 				ImGui::Columns(1, nullptr, false);

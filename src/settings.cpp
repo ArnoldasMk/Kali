@@ -207,8 +207,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
         LegitweaponSetting[XORSTR("SpreadLimit")][XORSTR("Value")] = i.second.spreadLimit;
         LegitweaponSetting[XORSTR("AutoWall")][XORSTR("Enabled")] = i.second.autoWallEnabled;
         LegitweaponSetting[XORSTR("AutoWall")][XORSTR("Value")] = i.second.autoWallValue;
-        LegitweaponSetting[XORSTR("HitChance")][XORSTR("Enabled")] = i.second.hitchanceEnaled;
-        LegitweaponSetting[XORSTR("HitChance")][XORSTR("Value")] = i.second.hitchance;
+        LegitweaponSetting[XORSTR("HitChance")][XORSTR("Enabled")] = i.second.hitchanceEnabled;
+        LegitweaponSetting[XORSTR("HitChance")][XORSTR("Value")] = i.second.hitchanceValue;
         LegitweaponSetting[XORSTR("AutoSlow")][XORSTR("enabled")] = i.second.autoSlow;
         LegitweaponSetting[XORSTR("Prediction")][XORSTR("enabled")] = i.second.predEnabled;
         LegitweaponSetting[XORSTR("ScopeControl")][XORSTR("Enabled")] = i.second.scopeControlEnabled;
@@ -942,7 +942,7 @@ void Settings::LoadConfig(std::string path)
             .rcsEnabled = LegitweaponSetting[XORSTR("RCS")][XORSTR("Enabled")].asBool(),
             .rcsAlwaysOn = LegitweaponSetting[XORSTR("RCS")][XORSTR("AlwaysOn")].asBool(),
             .spreadLimitEnabled = LegitweaponSetting[XORSTR("SpreadLimit")][XORSTR("Enabled")].asBool(),
-            .hitchanceEnaled = LegitweaponSetting[XORSTR("HitChance")][XORSTR("Enabled")].asBool(),
+            .hitchanceEnabled = LegitweaponSetting[XORSTR("HitChance")][XORSTR("Enabled")].asBool(),
             .autoPistolEnabled = LegitweaponSetting[XORSTR("AutoPistol")][XORSTR("Enabled")].asBool(),
             .autoShootEnabled = LegitweaponSetting[XORSTR("AutoShoot")][XORSTR("Enabled")].asBool(),
             .autoScopeEnabled = LegitweaponSetting[XORSTR("AutoScope")][XORSTR("Enabled")].asBool(),

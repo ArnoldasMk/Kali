@@ -354,7 +354,7 @@ struct LegitWeapon_t
 	    rcsEnabled,
 	    rcsAlwaysOn,
 	    spreadLimitEnabled,
-	    hitchanceEnaled,
+	    hitchanceEnabled,
 	    autoPistolEnabled,
 	    autoShootEnabled,
 	    autoScopeEnabled,
@@ -389,7 +389,7 @@ struct LegitWeapon_t
 		 autoWallValue = 10.0f,
 		 spreadLimit = 1.0f,
 		 minDamagevalue = 10.0f,
-		 hitchance = 20;
+		 hitchanceValue = 100.f;
 	bool desiredBones[31];
 	bool operator==(const LegitWeapon_t &another) const
 	{
@@ -439,8 +439,8 @@ struct LegitWeapon_t
 			  this->spreadLimit == another.spreadLimit &&
 			  this->autoWallEnabled == another.autoWallEnabled &&
 			  this->autoWallValue == another.autoWallValue &&
-			  this->hitchanceEnaled == another.hitchanceEnaled &&
-			  this->hitchance == another.hitchance &&
+			  this->hitchanceEnabled == another.hitchanceEnabled &&
+			  this->hitchanceValue == another.hitchanceValue &&
 			  this->autoSlow == another.autoSlow &&
 			  this->predEnabled == another.predEnabled &&
 			  this->autoAimRealDistance == another.autoAimRealDistance &&
@@ -803,6 +803,11 @@ namespace Settings
 		{
 			inline bool enabled = false;
 			inline float value = 0.1f;
+		}
+		namespace HitChance
+		{
+			inline bool enabled = false;
+			inline float value = 80.f;
 		}
 		namespace Prediction
 		{

@@ -115,7 +115,7 @@ void AntiAim::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
     {
         ImGui::Columns(2, nullptr, false);
         {
-            ImGui::BeginChild(XORSTR("##AntiAim1"), ImVec2(0, 730), true);
+            ImGui::BeginChild(XORSTR("##AntiAim1"), ImVec2(0, 736), true);
             {
                 if (Settings::AntiAim::RageAntiAim::enabled == false)
                 {
@@ -357,7 +357,7 @@ void AntiAim::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
         }
         ImGui::NextColumn();
         {
-            ImGui::BeginChild(XORSTR("##AntiAim2"), ImVec2(0, 730), true);
+            ImGui::BeginChild(XORSTR("##AntiAim2"), ImVec2(0, 736), true);
             {
                 ImGui::Separator();
                 ImGui::Text(XORSTR("Features"));

@@ -1,6 +1,7 @@
 
 #include "legitbot.h"
 #include "autowall.h"
+#include <vector>
 
 #include "../Utils/xorstring.h"
 #include "../Utils/math.h"
@@ -9,6 +10,7 @@
 #include "../settings.h"
 #include "../interfaces.h"
 #include "../Utils/PerlinNoise.h"
+#include "../Hooks/hooks.h"
 
 bool Legitbot::aimStepInProgress = false;
 std::vector<int64_t> Legitbot::friends = {};
@@ -17,6 +19,7 @@ std::vector<long> killTimes = {0}; // the Epoch time from when we kill someone
 bool shouldAim;
 QAngle AimStepLastAngle;
 QAngle LegitRCSLPUNCH;
+C_BasePlayer *Legitbot::curtarget;
 
 siv::PerlinNoise perlin(1337);
 
@@ -83,6 +86,71 @@ static bool HeadMultiPoint(C_BasePlayer *player, Vector points[])
 	return true;
 }
 
+#define RandomeFloat(x) (static_cast<double>(static_cast<double>(std::rand()) / static_cast<double>(RAND_MAX / x)))
+
+// https://github.com/acuifex/acuion/blob/master/src/Hacks/aimbot.cpp
+bool Legitbot::HitChance(Vector bestSpot, C_BasePlayer *player, C_BaseCombatWeapon *activeWeapon, float hitChance)
+{
+	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
+
+	Vector src = localplayer->GetEyePosition();
+	QAngle angle = Math::CalcAngle(src, bestSpot);
+	Math::NormalizeAngles(angle);
+
+	Vector forward, right, up;
+	Math::AngleVectors(angle, &forward, &right, &up);
+
+	int hitCount = 0;
+	int NeededHits = static_cast<int>(255.f * (hitChance / 100.f));
+
+	activeWeapon->UpdateAccuracyPenalty();
+	float weap_spread = activeWeapon->GetSpread();
+	float weap_inaccuracy = activeWeapon->GetInaccuracy();
+
+	for (int i = 0; i < 255; i++)
+	{
+		static float val1 = (2.0 * M_PI);
+
+		double b = RandomeFloat(val1);
+		double spread = weap_spread * RandomeFloat(1.0f);
+		double d = RandomeFloat(1.0f);
+		double inaccuracy = weap_inaccuracy * RandomeFloat(1.0f);
+
+		Vector spreadView((cos(b) * inaccuracy) + (cos(d) * spread), (sin(b) * inaccuracy) + (sin(d) * spread), 0), direction;
+
+		direction.x = forward.x + (spreadView.x * right.x) + (spreadView.y * up.x);
+		direction.y = forward.y + (spreadView.x * right.y) + (spreadView.y * up.y);
+		direction.z = forward.z + (spreadView.x * right.z) + (spreadView.y * up.z);
+		direction.Normalize();
+
+		QAngle viewAnglesSpread;
+		Math::VectorAngles(direction, up, viewAnglesSpread);
+		Math::NormalizeAngles(viewAnglesSpread);
+
+		Vector viewForward;
+		Math::AngleVectors(viewAnglesSpread, viewForward);
+		viewForward.Normalize(); // NormalizeInPlace gives me crash for some reason, and Normalize is the same thing as far as i know.
+
+		viewForward = src + (viewForward * activeWeapon->GetCSWpnData()->GetRange());
+
+		trace_t tr;
+		Ray_t ray;
+
+		ray.Init(src, viewForward);
+		trace->ClipRayToEntity(ray, MASK_SHOT | CONTENTS_GRATE, player, &tr);
+
+		if (tr.m_pEntityHit == player)
+			hitCount++;
+
+		if (static_cast<int>((static_cast<float>(hitCount) / 255.f) * 100.f) >= hitChance)
+			return true;
+
+		if ((255 - i + hitCount) < NeededHits)
+			return false;
+	}
+
+	return false;
+}
 static float AutoWallBestSpot(C_BasePlayer *player, Vector &bestSpot)
 {
 	float bestDamage = Settings::Legitbot::AutoWall::value;
@@ -135,19 +203,19 @@ static float GetRealDistanceFOV(float distance, QAngle angle, CUserCmd *cmd)
 {
 	/*    n
 	    w + e
-	      s        'real distance'
-	                      |
+		 s        'real distance'
+					  |
 	   a point -> x --..  v
-	              |     ''-- x <- a guy
-	              |          /
-	             |         /
-	             |       /
-	            | <------------ both of these lines are the same length
-	            |    /      /
-	           |   / <-----'
-	           | /
-	          o
-	     localplayer
+			    |     ''-- x <- a guy
+			    |          /
+			   |         /
+			   |       /
+			  | <------------ both of these lines are the same length
+			  |    /      /
+			 |   / <-----'
+			 | /
+			o
+		localplayer
 	*/
 
 	Vector aimingAt;
@@ -548,8 +616,18 @@ static void AutoSlow(C_BasePlayer *player, float &forward, float &sideMove, floa
 	C_BaseCombatWeapon *activeWeapon = (C_BaseCombatWeapon *)entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
 	if (!activeWeapon || activeWeapon->GetAmmo() == 0)
 		return;
-
-	if (localplayer->GetVelocity().Length() > (activeWeapon->GetCSWpnData()->GetMaxPlayerSpeed() / 3)) // https://youtu.be/ZgjYxBRuagA
+	//
+	if (Settings::Legitbot::SpreadLimit::enabled)
+	{
+		if ((activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) > Settings::Legitbot::SpreadLimit::value)
+		{
+			cmd->buttons |= IN_WALK;
+			forward = -forward;
+			sideMove = -sideMove;
+			cmd->upmove = 0;
+		}
+	}
+	else if (localplayer->GetVelocity().Length() > (activeWeapon->GetCSWpnData()->GetMaxPlayerSpeed() / 3)) // https://youtu.be/ZgjYxBRuagA
 	{
 		cmd->buttons |= IN_WALK;
 		forward = -forward;
@@ -602,7 +680,7 @@ static void AutoPistol(C_BaseCombatWeapon *activeWeapon, CUserCmd *cmd)
 		cmd->buttons &= ~IN_ATTACK;
 }
 
-static void AutoShoot(C_BasePlayer *player, C_BaseCombatWeapon *activeWeapon, CUserCmd *cmd)
+static void AutoShoot(C_BasePlayer *player, Vector bestSpot, C_BaseCombatWeapon *activeWeapon, CUserCmd *cmd)
 {
 	if (!Settings::Legitbot::AutoShoot::enabled)
 		return;
@@ -629,6 +707,12 @@ static void AutoShoot(C_BasePlayer *player, C_BaseCombatWeapon *activeWeapon, CU
 	}
 
 	if (Settings::Legitbot::AutoShoot::velocityCheck && localplayer->GetVelocity().Length() > (activeWeapon->GetCSWpnData()->GetMaxPlayerSpeed() / 3))
+		return;
+	// https://github.com/acuifex/acuion/blob/master/src/Hacks/aimbot.cpp
+
+	if (Settings::Legitbot::SpreadLimit::enabled && ((activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) > Settings::Legitbot::SpreadLimit::value))
+		return;
+	if (Settings::Legitbot::HitChance::enabled && !Legitbot::HitChance(bestSpot, player, activeWeapon, Settings::Legitbot::HitChance::value))
 		return;
 
 	float nextPrimaryAttack = activeWeapon->GetNextPrimaryAttack();
@@ -714,6 +798,7 @@ void Legitbot::CreateMove(CUserCmd *cmd)
 	Vector bestSpot = {0, 0, 0};
 	float bestDamage = 0.0f;
 	C_BasePlayer *player = GetClosestPlayerAndSpot(cmd, !Settings::Legitbot::AutoWall::enabled, &bestSpot, &bestDamage);
+	Legitbot::curtarget = player;
 
 	if (player)
 	{
@@ -734,11 +819,10 @@ void Legitbot::CreateMove(CUserCmd *cmd)
 				Settings::Debug::AutoAim::target = bestSpot; // For Debug showing aimspot.
 			}
 
-			//Only start aimbotting after we reach X shot number in the spray. - Crazily
 			if (Settings::Legitbot::DoAimAfterXShots::enabled)
 			{
 				int shotsFired = localplayer->GetShotsFired();
-				//I think c++ always rounds down but only way to do it with IMGUI Slider anyway.
+				// I think c++ always rounds down but only way to do it with IMGUI Slider anyway.
 				if (shotsFired <= (int)Settings::Legitbot::DoAimAfterXShots::value)
 				{
 
@@ -763,14 +847,12 @@ void Legitbot::CreateMove(CUserCmd *cmd)
 				if (Settings::Legitbot::ErrorMargin::enabled)
 				{
 					static int lastShotFired = 0;
-					if ((localplayer->GetShotsFired() > lastShotFired) || newTarget) //get new random spot when firing a shot or when aiming at a new target
+					if ((localplayer->GetShotsFired() > lastShotFired) || newTarget) // get new random spot when firing a shot or when aiming at a new target
 						lastRandom = ApplyErrorToAngle(&angle, Settings::Legitbot::ErrorMargin::value);
 
 					angle += lastRandom;
 					lastShotFired = localplayer->GetShotsFired();
 				}
-				//This is kindof dirty but provides the desired effect.
-				// Maybe someone better at c++ than I am can edit it later - Crazily & Conarium Software
 
 				if (Settings::Legitbot::CourseRandomization::enabled)
 				{
@@ -779,7 +861,6 @@ void Legitbot::CreateMove(CUserCmd *cmd)
 					const double wavelength = 3;
 					const double amplitude = Settings::Legitbot::CourseRandomization::value;
 
-					//GetSimulationTime was used because we just needed a rapidly changing number.
 					double xVar = localplayer->GetSimulationTime();
 					double yVar = localplayer->GetSimulationTime() - 5;
 					double zVar = localplayer->GetSimulationTime() + 5;
@@ -808,7 +889,7 @@ void Legitbot::CreateMove(CUserCmd *cmd)
 	AutoCrouch(player, cmd);
 	AutoSlow(player, oldForward, oldSideMove, bestDamage, activeWeapon, cmd);
 	AutoPistol(activeWeapon, cmd);
-	AutoShoot(player, activeWeapon, cmd);
+	AutoShoot(player, bestSpot, activeWeapon, cmd);
 	AutoCock(player, activeWeapon, cmd);
 	RCS(angle, player, cmd);
 	Smooth(player, angle);
@@ -906,8 +987,8 @@ void Legitbot::UpdateValues()
 	Settings::Legitbot::AutoWall::value = currentWeaponSetting.autoWallValue;
 	Settings::Legitbot::AutoSlow::enabled = currentWeaponSetting.autoSlow;
 	Settings::Legitbot::ScopeControl::enabled = currentWeaponSetting.scopeControlEnabled;
-	Settings::Legitbot::ShootAssist::Hitchance::enabled = currentWeaponSetting.hitchanceEnaled;
-	Settings::Legitbot::ShootAssist::Hitchance::value = currentWeaponSetting.hitchance;
+	Settings::Legitbot::HitChance::enabled = currentWeaponSetting.hitchanceEnabled;
+	Settings::Legitbot::HitChance::value = currentWeaponSetting.hitchanceValue;
 
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 		Settings::Legitbot::AutoAim::desiredBones[bone] = currentWeaponSetting.desiredBones[bone];

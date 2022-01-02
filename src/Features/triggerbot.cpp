@@ -12,7 +12,7 @@ bool TriggercanShoot(C_BasePlayer* localplayer, C_BaseCombatWeapon* activeWeapon
 		return false;
 	if (!activeWeapon || activeWeapon->GetInReload())
 		return false;
-	if (!currentSettings.hitchanceEnaled)
+	if (!currentSettings.hitchanceEnabled)
 	{
 		if ( (activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) <= (activeWeapon->GetCSWpnData()->GetMaxPlayerSpeed() / 3.0f) )
 			return true;
@@ -26,7 +26,7 @@ bool TriggercanShoot(C_BasePlayer* localplayer, C_BaseCombatWeapon* activeWeapon
 	if (hitchance == 0) hitchance = 0.0000001;
 	hitchance = 1/(hitchance);
 	
-	return hitchance >= (currentSettings.hitchance*2);
+	return hitchance >= (currentSettings.hitchanceValue*2);
 }
 
 void Triggerbot::CreateMove(CUserCmd *cmd)

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <algorithm> 
+#include <algorithm>
 #include <deque>
 
 #include "../SDK/IEngineClient.h"
@@ -8,48 +8,45 @@
 #include "../Utils/entity.h"
 
 #ifndef CLAMP
-    #define CLAMP(x, upper, lower) (std::min(upper, std::max(x, lower)))
+#define CLAMP(x, upper, lower) (std::min(upper, std::max(x, lower)))
 #endif
-
-
 
 struct tickInfo
 {
-        int TickCount;
-        float simulationTime;
-        Vector origin;
-        matrix3x4_t BoneMatrix[128];
+    int TickCount;
+    float simulationTime;
+    Vector origin;
+    matrix3x4_t BoneMatrix[128];
 };
 
 class BackTrack
-{   
-    private :
-        struct cvars {
-            ConVar* updateRate;
-            ConVar* maxUpdateRate;
-            ConVar* minUpdateRate;
-            ConVar* interp;
-            ConVar* interpRatio;
-            ConVar* minInterpRatio;
-            ConVar* maxInterpRatio;
-            ConVar* maxUnlag;
-        }cvars;
+{
+private:
+    struct cvars
+    {
+        ConVar *updateRate;
+        ConVar *maxUpdateRate;
+        ConVar *minUpdateRate;
+        ConVar *interp;
+        ConVar *interpRatio;
+        ConVar *minInterpRatio;
+        ConVar *maxInterpRatio;
+        ConVar *maxUnlag;
+    } cvars;
 
-        float LerpTime;
-    public :
-        inline BackTrack(void);
+    float LerpTime;
 
+public:
+    inline BackTrack(void);
 
-        inline float SetLerpTime();
-        inline bool IsTickValid();
-        inline void RemoveInvalidTicks();
-        inline void StoreTicks(C_BasePlayer* enemy);
-        inline void TimeToTicks(CUserCmd* cmd);
+    inline float SetLerpTime();
+    inline bool IsTickValid();
+    inline void RemoveInvalidTicks();
+    inline void StoreTicks(C_BasePlayer *enemy);
+    inline void TimeToTicks(CUserCmd *cmd);
 
-        // void CreatMove(CUserCmd* cmd);
-        // void FrameStageNotify(CUserCmd* cmd);
-
-        
+    // void CreatMove(CUserCmd* cmd);
+    // void FrameStageNotify(CUserCmd* cmd);
 
     // std::deque<BackTrack::tickInfo> BackTrackRecords;
     tickInfo record;
@@ -74,18 +71,18 @@ inline float BackTrack::SetLerpTime()
     if (this->cvars.minUpdateRate && this->cvars.maxUpdateRate)
         this->cvars.updateRate->SetValue(this->cvars.maxUpdateRate->GetInt());
 
-    if(!this->cvars.interpRatio)
+    if (!this->cvars.interpRatio)
         this->cvars.interpRatio->SetValue(float(1));
 
     if (this->cvars.minInterpRatio && this->cvars.maxInterpRatio && this->cvars.minInterpRatio->GetFloat() != 1)
-      this->cvars.interpRatio->SetValue(CLAMP(this->cvars.interpRatio->GetFloat(), this->cvars.minInterpRatio->GetFloat(), this->cvars.maxInterpRatio->GetFloat()));
+        this->cvars.interpRatio->SetValue(CLAMP(this->cvars.interpRatio->GetFloat(), this->cvars.minInterpRatio->GetFloat(), this->cvars.maxInterpRatio->GetFloat()));
 
     LerpTime = std::max(this->cvars.interp->GetFloat(), (this->cvars.interpRatio->GetFloat() / this->cvars.updateRate->GetInt()));
 }
 
 inline bool BackTrack::IsTickValid()
 {
-    float& time = this->record.simulationTime;
+    float &time = this->record.simulationTime;
     float correct = 0.f;
     this->SetLerpTime();
     correct += LerpTime;
@@ -99,9 +96,7 @@ inline bool BackTrack::IsTickValid()
     return false;
 }
 
-
-
-inline void BackTrack::StoreTicks(C_BasePlayer* enemy)
+inline void BackTrack::StoreTicks(C_BasePlayer *enemy)
 {
 
     this->record.origin = enemy->GetAbsOrigin();
@@ -110,9 +105,9 @@ inline void BackTrack::StoreTicks(C_BasePlayer* enemy)
     enemy->SetupBones(this->record.BoneMatrix, 128, 256, globalVars->curtime);
 }
 
-inline void BackTrack::TimeToTicks(CUserCmd* cmd) 
+inline void BackTrack::TimeToTicks(CUserCmd *cmd)
 {
     this->SetLerpTime();
-    float time  = this->record.simulationTime + this->LerpTime;
+    float time = this->record.simulationTime + this->LerpTime;
     cmd->tick_count = static_cast<int>(0.5f + time / globalVars->interval_per_tick);
 }

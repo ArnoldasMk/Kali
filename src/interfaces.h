@@ -59,11 +59,11 @@ extern LoadFromBufferFn LoadFromBuffer;
 
 extern GetLocalClientFn GetLocalClient;
 
-//extern RandomSeedFn RandomSeed;
-//extern RandomFloatFn RandomFloat;
-//extern RandomFloatExpFn RandomFloatExp;
-//extern RandomIntFn RandomInt;
-//extern RandomGaussianFloatFn RandomGaussianFloat;
+extern RandomSeedFn RandomSeed;
+extern RandomFloatFn RandomFloat;
+extern RandomFloatExpFn RandomFloatExp;
+extern RandomIntFn RandomInt;
+extern RandomGaussianFloatFn RandomGaussianFloat;
 
 extern SetNamedSkyBoxFn SetNamedSkyBox;
 

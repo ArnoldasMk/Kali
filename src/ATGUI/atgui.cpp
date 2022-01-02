@@ -83,7 +83,6 @@ void UI::SetupWindows()
 
 void UI::angleIndicator()
 {
-
 	ImGui::SetNextWindowPos(ImVec2(0, 400), ImGuiCond_Always);
 	ImGui::SetNextWindowSize(ImVec2(100, 0), ImGuiCond_Always);
 
