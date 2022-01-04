@@ -81,7 +81,7 @@ public:
 	float_t m_flCycle;
 	void *m_pOwner;   // 0x38 // player's thisptr
 	char pad_0038[8]; // 0x40
-};				   //Size: 0x0048
+};				   // Size: 0x0048
 
 class ICollideable
 {
@@ -508,6 +508,10 @@ public:
 	QAngle *GetVAngles()
 	{
 		return (QAngle *)((uintptr_t)this + offsets.DT_BasePlayer.deadflag + 0x4);
+	}
+	int GetHitboxSetCount()
+	{
+		return *(int *)((uintptr_t)this + offsets.DT_BaseAnimating.m_nHitboxSet);
 	}
 };
 

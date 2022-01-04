@@ -217,9 +217,10 @@ void Settings::LoadDefaultsOrSave(std::string path)
         LegitweaponSetting[XORSTR("MinDamage")][XORSTR("enabled")] = i.second.mindamage;
         LegitweaponSetting[XORSTR("MinDamage")][XORSTR("Value")] = i.second.minDamagevalue;
         LegitweaponSetting[XORSTR("Autowall")][XORSTR("enabled")] = i.second.autoWall;
-
+        /*
         for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
             LegitweaponSetting[XORSTR("DesiredBones")][XORSTR("Bones")][bone] = i.second.desiredBones[bone];
+        */
 
 #undef LegitweaponSetting
     }
@@ -978,9 +979,10 @@ void Settings::LoadConfig(std::string path)
             .spreadLimit = LegitweaponSetting[XORSTR("SpreadLimit")][XORSTR("Value")].asFloat(),
             .minDamagevalue = LegitweaponSetting[XORSTR("MinDamage")][XORSTR("Value")].asFloat(),
         };
-
+        /*
         for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
             weapon.desiredBones[bone] = LegitweaponSetting[XORSTR("DesiredBones")][XORSTR("Bones")][bone].asBool();
+        */
         Settings::Legitbot::weapons.at(weaponID) = weapon;
     }
     GetVal(settings[XORSTR("Legitbot")][XORSTR("AutoCrouch")][XORSTR("enabled")], &Settings::Legitbot::AutoCrouch::enabled);

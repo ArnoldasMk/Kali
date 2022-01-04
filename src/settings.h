@@ -341,6 +341,7 @@ struct LegitWeapon_t
 {
 	bool silent,
 	    friendly,
+	    closestHitbox,
 	    engageLock,
 	    engageLockTR,
 	    aimkeyOnly,
@@ -391,11 +392,16 @@ struct LegitWeapon_t
 		 minDamagevalue = 10.0f,
 		 hitchanceValue = 100.f;
 	bool desiredBones[31];
+	HitboxFlags desiredHitboxes;
+
 	bool operator==(const LegitWeapon_t &another) const
 	{
 		for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 		{
+			
 			if (this->desiredBones[bone] != another.desiredBones[bone])
+				return false;
+			if (this->desiredHitboxes != another.desiredHitboxes)
 				return false;
 		}
 		return this->silent == another.silent &&
@@ -706,7 +712,8 @@ namespace Settings
 			    false, false, false, false, false,			   // left leg
 			    false, false, false, false, false			   // right leg
 			};
-
+			inline HitboxFlags desiredHitboxes = HitboxFlags::HEAD;
+			inline bool closestHitbox = false;
 			inline bool engageLock = false;
 			inline bool engageLockTR = false; // Target Reacquisition ( re-target after getting a kill when spraying ).
 			inline int engageLockTTR = 700;   // Time to Target Reacquisition in ms

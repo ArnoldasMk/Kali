@@ -1,4 +1,8 @@
 #include "autowall.h"
+#include "legitbot.h"
+#include "../Utils/math.h"
+#include "../Utils/entity.h"
+#include "../interfaces.h"
 
 static float GetHitgroupDamageMultiplier(HitGroups iHitGroup)
 {
@@ -109,7 +113,6 @@ static bool TraceToExit(Vector &end, trace_t *enter_trace, Vector start, Vector 
 
 	return false;
 }
-
 static bool HandleBulletPenetration(CCSWeaponInfo *weaponInfo, AutoWall::FireBulletData &data)
 {
 	surfacedata_t *enter_surface_data = physics->GetSurfaceData(data.enter_trace.surface.surfaceProps);
@@ -179,8 +182,7 @@ static bool HandleBulletPenetration(CCSWeaponInfo *weaponInfo, AutoWall::FireBul
 
 	return true;
 }
-
-static void TraceLine(Vector vecAbsStart, Vector vecAbsEnd, unsigned int mask, C_BasePlayer *ignore, trace_t *ptr)
+static void TraceLine(Vector vecAbsStart, Vector vecAbsEnd, unsigned int mask, C_BasePlayer* ignore, trace_t* ptr)
 {
 	Ray_t ray;
 	ray.Init(vecAbsStart, vecAbsEnd);
@@ -190,18 +192,14 @@ static void TraceLine(Vector vecAbsStart, Vector vecAbsEnd, unsigned int mask, C
 	trace->TraceRay(ray, mask, &filter, ptr);
 }
 
-static bool SimulateFireBullet(C_BaseCombatWeapon *pWeapon, bool teamCheck, AutoWall::FireBulletData &data)
+static bool SimulateFireBullet(C_BaseCombatWeapon* pWeapon, bool teamCheck, AutoWall::FireBulletData& data)
 {
-	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
-	if (!localplayer || !localplayer->GetAlive())
-		return false;
-	if (!pWeapon || pWeapon->GetInReload())
-		return false;
-	CCSWeaponInfo *weaponInfo = pWeapon->GetCSWpnData();
+	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+	CCSWeaponInfo* weaponInfo = pWeapon->GetCSWpnData();
 
 	data.penetrate_count = 4;
 	data.trace_length = 0.0f;
-	data.current_damage = (float)weaponInfo->GetDamage();
+	data.current_damage = (float) weaponInfo->GetDamage();
 
 	while (data.penetrate_count > 0 && data.current_damage >= 1.0f)
 	{
@@ -227,7 +225,7 @@ static bool SimulateFireBullet(C_BaseCombatWeapon *pWeapon, bool teamCheck, Auto
 			data.trace_length += data.enter_trace.fraction * data.trace_length_remaining;
 			data.current_damage *= powf(weaponInfo->GetRangeModifier(), data.trace_length * 0.002f);
 
-			C_BasePlayer *player = (C_BasePlayer *)data.enter_trace.m_pEntityHit;
+			C_BasePlayer* player = (C_BasePlayer*) data.enter_trace.m_pEntityHit;
 			if (teamCheck && Entity::IsTeamMate(player, localplayer))
 				return false;
 
@@ -270,14 +268,11 @@ int AutoWall::GetDamage(const Vector &point, bool teamCheck)
 	return -1.0f;
 }
 
-int AutoWall::GetDamage(const Vector &point, bool teamCheck, FireBulletData &fdata)
+float AutoWall::GetDamage(const Vector& point, bool teamCheck, FireBulletData& fData)
 {
-	int damage = -1;
+	float damage = 0.f;
 	Vector dst = point;
-	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
-
-	if (!localplayer || !localplayer->GetAlive())
-		return -1;
+	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 	FireBulletData data;
 	data.src = localplayer->GetEyePosition();
 	data.filter.pSkip = localplayer;
@@ -285,17 +280,17 @@ int AutoWall::GetDamage(const Vector &point, bool teamCheck, FireBulletData &fda
 	QAngle angles = Math::CalcAngle(data.src, dst);
 	Math::AngleVectors(angles, data.direction);
 
-	Vector tmp = data.direction;
-	data.direction = tmp.Normalize();
+    Vector tmp = data.direction;
+    data.direction = tmp.Normalize();
 
-	C_BaseCombatWeapon *activeWeapon = (C_BaseCombatWeapon *)entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
+	C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
 	if (!activeWeapon)
-		return -1;
+		return -1.0f;
 
 	if (SimulateFireBullet(activeWeapon, teamCheck, data))
 		damage = data.current_damage;
 
-	fdata = data;
+	fData = data;
 
 	return damage;
 }

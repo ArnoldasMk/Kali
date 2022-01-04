@@ -13,7 +13,7 @@ void Offsets::GetNetVarOffsets()
 	offsets.DT_BasePlayer.m_viewPunchAngle = NetVarManager::GetOffset(tables, XORSTR("DT_BasePlayer"), XORSTR("m_viewPunchAngle"));
 	offsets.DT_BasePlayer.m_vecViewOffset = NetVarManager::GetOffset(tables, XORSTR("DT_BasePlayer"), XORSTR("m_vecViewOffset[0]"));
 	offsets.DT_BasePlayer.m_nTickBase = NetVarManager::GetOffset(tables, XORSTR("DT_BasePlayer"), XORSTR("m_nTickBase"));
-        offsets.DT_BasePlayer.m_nTickBaseShift = NetVarManager::GetOffset(tables, XORSTR("DT_BasePlayer"), XORSTR("m_nTickBaseShift"));
+	offsets.DT_BasePlayer.m_nTickBaseShift = NetVarManager::GetOffset(tables, XORSTR("DT_BasePlayer"), XORSTR("m_nTickBaseShift"));
 	offsets.DT_BasePlayer.m_vecVelocity = NetVarManager::GetOffset(tables, XORSTR("DT_BasePlayer"), XORSTR("m_vecVelocity[0]"));
 	offsets.DT_BasePlayer.m_iHealth = NetVarManager::GetOffset(tables, XORSTR("DT_BasePlayer"), XORSTR("m_iHealth"));
 	offsets.DT_BasePlayer.m_lifeState = NetVarManager::GetOffset(tables, XORSTR("DT_BasePlayer"), XORSTR("m_lifeState"));
@@ -23,7 +23,7 @@ void Offsets::GetNetVarOffsets()
 	offsets.DT_BasePlayer.m_hViewModel = NetVarManager::GetOffset(tables, XORSTR("DT_BasePlayer"), XORSTR("m_hViewModel[0]"));
 	offsets.DT_BasePlayer.m_szLastPlaceName = NetVarManager::GetOffset(tables, XORSTR("DT_BasePlayer"), XORSTR("m_szLastPlaceName"));
 	offsets.DT_BasePlayer.deadflag = NetVarManager::GetOffset(tables, XORSTR("DT_BasePlayer"), XORSTR("deadflag"));
-	offsets.DT_BasePlayer.m_clientAnimation = NetVarManager::GetOffset(tables, XORSTR("DT_BaseAnimating"), XORSTR("m_bClientSideAnimation") ); // function for animate
+	offsets.DT_BasePlayer.m_clientAnimation = NetVarManager::GetOffset(tables, XORSTR("DT_BaseAnimating"), XORSTR("m_bClientSideAnimation")); // function for animate
 
 	offsets.DT_BaseEntity.m_flAnimTime = NetVarManager::GetOffset(tables, XORSTR("DT_BaseEntity"), XORSTR("m_flAnimTime"));
 	offsets.DT_BaseEntity.m_flSimulationTime = NetVarManager::GetOffset(tables, XORSTR("DT_BaseEntity"), XORSTR("m_flSimulationTime"));
@@ -33,7 +33,7 @@ void Offsets::GetNetVarOffsets()
 	offsets.DT_BaseEntity.m_MoveType = offsets.DT_BaseEntity.m_nRenderMode + 1;
 	offsets.DT_BaseEntity.m_Collision = NetVarManager::GetOffset(tables, XORSTR("DT_BaseEntity"), XORSTR("m_Collision"));
 	offsets.DT_BaseEntity.m_bSpotted = NetVarManager::GetOffset(tables, XORSTR("DT_BaseEntity"), XORSTR("m_bSpotted"));
- 	offsets.DT_BaseEntity.m_bSpottedByMask = NetVarManager::GetOffset(tables, XORSTR("DT_BaseEntity"), XORSTR("m_bSpottedByMask"));
+	offsets.DT_BaseEntity.m_bSpottedByMask = NetVarManager::GetOffset(tables, XORSTR("DT_BaseEntity"), XORSTR("m_bSpottedByMask"));
 
 	offsets.DT_BaseCombatCharacter.m_hActiveWeapon = NetVarManager::GetOffset(tables, XORSTR("DT_BaseCombatCharacter"), XORSTR("m_hActiveWeapon"));
 	offsets.DT_BaseCombatCharacter.m_hMyWeapons = NetVarManager::GetOffset(tables, XORSTR("DT_BaseCombatCharacter"), XORSTR("m_hMyWeapons")) / 2;
@@ -90,7 +90,6 @@ void Offsets::GetNetVarOffsets()
 	offsets.DT_PlantedC4.m_flDefuseLength = NetVarManager::GetOffset(tables, XORSTR("DT_PlantedC4"), XORSTR("m_flDefuseLength"));
 	offsets.DT_PlantedC4.m_nBombSite = NetVarManager::GetOffset(tables, XORSTR("DT_PlantedC4"), XORSTR("m_nBombSite"));
 
-
 	offsets.DT_CSPlayer.m_iShotsFired = NetVarManager::GetOffset(tables, XORSTR("DT_CSPlayer"), XORSTR("m_iShotsFired"));
 	offsets.DT_CSPlayer.m_angEyeAngles[0] = NetVarManager::GetOffset(tables, XORSTR("DT_CSPlayer"), XORSTR("m_angEyeAngles[0]"));
 	offsets.DT_CSPlayer.m_angEyeAngles[1] = NetVarManager::GetOffset(tables, XORSTR("DT_CSPlayer"), XORSTR("m_angEyeAngles[1]"));
@@ -108,8 +107,8 @@ void Offsets::GetNetVarOffsets()
 	offsets.DT_CSPlayer.m_flFlashMaxAlpha = NetVarManager::GetOffset(tables, XORSTR("DT_CSPlayer"), XORSTR("m_flFlashMaxAlpha"));
 	offsets.DT_CSPlayer.m_flLowerBodyYawTarget = NetVarManager::GetOffset(tables, XORSTR("DT_CSPlayer"), XORSTR("m_flLowerBodyYawTarget"));
 	offsets.DT_CSPlayer.m_nSurvivalTeam = NetVarManager::GetOffset(tables, XORSTR("DT_CSPlayer"), XORSTR("m_nSurvivalTeam"));
-        offsets.DT_CSPlayer.m_vecMaxs = NetVarManager::GetOffset(tables, XORSTR("DT_CSPlayerResource"), XORSTR("m_vecMaxs"));
-        offsets.DT_CSPlayer.m_vecMins = NetVarManager::GetOffset(tables, XORSTR("DT_CSPlayerResource"), XORSTR("m_vecMins"));
+	offsets.DT_CSPlayer.m_vecMaxs = NetVarManager::GetOffset(tables, XORSTR("DT_CSPlayerResource"), XORSTR("m_vecMaxs"));
+	offsets.DT_CSPlayer.m_vecMins = NetVarManager::GetOffset(tables, XORSTR("DT_CSPlayerResource"), XORSTR("m_vecMins"));
 
 	offsets.DT_BaseAttributableItem.m_iItemDefinitionIndex = NetVarManager::GetOffset(tables, XORSTR("DT_BaseAttributableItem"), XORSTR("m_iItemDefinitionIndex"));
 	offsets.DT_BaseAttributableItem.m_iItemIDHigh = NetVarManager::GetOffset(tables, XORSTR("DT_BaseAttributableItem"), XORSTR("m_iItemIDHigh"));
@@ -128,7 +127,7 @@ void Offsets::GetNetVarOffsets()
 
 	offsets.DT_WeaponCSBase.m_bReloadVisuallyComplete = NetVarManager::GetOffset(tables, XORSTR("DT_WeaponCSBase"), XORSTR("m_bReloadVisuallyComplete"));
 	offsets.DT_WeaponCSBase.m_fAccuracyPenalty = NetVarManager::GetOffset(tables, XORSTR("DT_WeaponCSBase"), XORSTR("m_fAccuracyPenalty"));
-    offsets.DT_WeaponCSBase.m_flPostponeFireReadyTime = NetVarManager::GetOffset(tables, XORSTR("DT_WeaponCSBase"), XORSTR("m_flPostponeFireReadyTime"));
+	offsets.DT_WeaponCSBase.m_flPostponeFireReadyTime = NetVarManager::GetOffset(tables, XORSTR("DT_WeaponCSBase"), XORSTR("m_flPostponeFireReadyTime"));
 
 	offsets.DT_WeaponC4.m_bStartedArming = NetVarManager::GetOffset(tables, XORSTR("DT_WeaponC4"), XORSTR("m_bStartedArming"));
 
@@ -241,4 +240,14 @@ void Offsets::GetNetVarOffsets()
 	offsets.DT_PhysPropLootCrate.m_iHealth = NetVarManager::GetOffset(tables, XORSTR("DT_PhysPropLootCrate"), XORSTR("m_iHealth"));
 	offsets.DT_PhysPropLootCrate.m_iMaxHealth = NetVarManager::GetOffset(tables, XORSTR("DT_PhysPropLootCrate"), XORSTR("m_iMaxHealth"));
 
+	offsets.DT_BaseAnimating.m_nSequence = NetVarManager::GetOffset(tables, XORSTR("DT_BaseAnimating"), XORSTR("m_nSequence"));
+	offsets.DT_BaseAnimating.m_bClientSideAnimation = NetVarManager::GetOffset(tables, XORSTR("DT_BaseAnimating"), XORSTR("m_bClientSideAnimation"));
+	offsets.DT_BaseAnimating.m_nSkin = NetVarManager::GetOffset(tables, XORSTR("DT_BaseAnimating"), XORSTR("m_nSkin"));
+	offsets.DT_BaseAnimating.m_nBody = NetVarManager::GetOffset(tables, XORSTR("DT_BaseAnimating"), XORSTR("m_nBody"));
+	offsets.DT_BaseAnimating.m_flPoseParameter = NetVarManager::GetOffset(tables, XORSTR("DT_BaseAnimating"), XORSTR("m_flPoseParameter"));
+	offsets.DT_BaseAnimating.m_nForceBone = NetVarManager::GetOffset(tables, XORSTR("DT_BaseAnimating"), XORSTR("m_nForceBone"));
+	offsets.DT_BaseAnimating.m_nHitboxSet = NetVarManager::GetOffset(tables, XORSTR("DT_BaseAnimating"), XORSTR("m_nHitboxSet"));
+	offsets.DT_BaseAnimating.m_nMuzzleFlashParity = NetVarManager::GetOffset(tables, XORSTR("DT_BaseAnimating"), XORSTR("m_nMuzzleFlashParity"));
+	offsets.DT_BaseAnimating.m_hLightingOrigin = NetVarManager::GetOffset(tables, XORSTR("DT_BaseAnimating"), XORSTR("m_hLightingOrigin"));
+	offsets.DT_BaseAnimating.m_bClientSideFrameReset = NetVarManager::GetOffset(tables, XORSTR("DT_BaseAnimating"), XORSTR("m_bClientSideFrameReset"));
 }
