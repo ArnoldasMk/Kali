@@ -597,6 +597,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("ESP")][XORSTR("Hitmarker")][XORSTR("Sounds")][XORSTR("sound")] = (int)Settings::ESP::Hitmarker::Sounds::sound;
     settings[XORSTR("ESP")][XORSTR("HeadDot")][XORSTR("enabled")] = Settings::ESP::HeadDot::enabled;
     settings[XORSTR("ESP")][XORSTR("HeadDot")][XORSTR("size")] = Settings::ESP::HeadDot::size;
+    settings[XORSTR("ESP")][XORSTR("HeadDotEnemy")][XORSTR("enabled")] = Settings::ESP::FilterEnemy::HeadDot::enabled;
+    settings[XORSTR("ESP")][XORSTR("HeadDotAlise")][XORSTR("enabled")] = Settings::ESP::FilterAlise::HeadDot::enabled;
     settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("enabled")] = Settings::ESP::Spread::enabled;
     settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("HitChance")] = Settings::ESP::Spread::spreadLimit;
     LoadColor(settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("color")], Settings::ESP::Spread::color);
@@ -1377,6 +1379,8 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("ESP")][XORSTR("Hitmarker")][XORSTR("Sounds")][XORSTR("sound")], (int*)&Settings::ESP::Hitmarker::Sounds::sound);
     GetVal(settings[XORSTR("ESP")][XORSTR("HeadDot")][XORSTR("enabled")], &Settings::ESP::HeadDot::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("HeadDot")][XORSTR("size")], &Settings::ESP::HeadDot::size);
+    GetVal(settings[XORSTR("ESP")][XORSTR("HeadDotEnemy")][XORSTR("enabled")], &Settings::ESP::FilterEnemy::HeadDot::enabled);
+    GetVal(settings[XORSTR("ESP")][XORSTR("HeadDotAlise")][XORSTR("enabled")], &Settings::ESP::FilterAlise::HeadDot::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("enabled")], &Settings::ESP::Spread::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("HitChance")], &Settings::ESP::Spread::spreadLimit);
     GetVal(settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("color")], &Settings::ESP::Spread::color);
