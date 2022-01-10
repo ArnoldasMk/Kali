@@ -92,8 +92,8 @@ void UI::ReloadWeaponSettings()
 	smoothSaltMultiplier = Settings::Legitbot::weapons.at(index).smoothSaltMultiplier;
 	errorMarginEnabled = Settings::Legitbot::weapons.at(index).errorMarginEnabled;
 	errorMarginValue = Settings::Legitbot::weapons.at(index).errorMarginValue;
-	// curveEnabled = Settings::Legitbot::weapons.at(index).curveAmount;
-	// curveAmount = Settings::Legitbot::weapons.at(index).curveAmount;
+	curveEnabled = Settings::Legitbot::weapons.at(index).curveAmount;
+	curveAmount = Settings::Legitbot::weapons.at(index).curveAmount;
 	autoAimEnabled = Settings::Legitbot::weapons.at(index).autoAimEnabled;
 	autoAimValue = Settings::Legitbot::weapons.at(index).LegitautoAimFov;
 	aimStepEnabled = Settings::Legitbot::weapons.at(index).aimStepEnabled;
