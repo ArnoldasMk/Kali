@@ -350,6 +350,7 @@ struct LegitWeapon_t
 	    doAimAfterXShotsEnabled,
 	    smoothSaltEnabled,
 	    errorMarginEnabled,
+	    curveEnabled,
 	    autoAimEnabled,
 	    aimStepEnabled,
 	    rcsEnabled,
@@ -377,11 +378,13 @@ struct LegitWeapon_t
 	Bone bone = BONE_HEAD;
 	SmoothType smoothType = SmoothType::SLOW_END;
 	ButtonCode_t aimkey = ButtonCode_t ::MOUSE_MIDDLE;
+
 	float smoothAmount = 1.0f;
 	float courseRandomizationAmount = 2.0f,
 		 doAimAfterXShotsAmount = 0.0f,
 		 smoothSaltMultiplier = 0.0f,
 		 errorMarginValue = 0.0f,
+		 curveAmount = 0.5f,
 		 LegitautoAimFov = 15.0f,
 		 aimStepMin = 25.0f,
 		 aimStepMax = 35.0f,
@@ -392,7 +395,6 @@ struct LegitWeapon_t
 		 minDamagevalue = 10.0f,
 		 hitchanceValue = 100.f;
 	bool desiredBones[31];
-	HitboxFlags desiredHitboxes;
 
 	bool operator==(const LegitWeapon_t &another) const
 	{
@@ -400,8 +402,6 @@ struct LegitWeapon_t
 		{
 			
 			if (this->desiredBones[bone] != another.desiredBones[bone])
-				return false;
-			if (this->desiredHitboxes != another.desiredHitboxes)
 				return false;
 		}
 		return this->silent == another.silent &&
@@ -425,6 +425,8 @@ struct LegitWeapon_t
 			  this->smoothSaltMultiplier == another.smoothSaltMultiplier &&
 			  this->errorMarginEnabled == another.errorMarginEnabled &&
 			  this->errorMarginValue == another.errorMarginValue &&
+			  this->curveEnabled == another.curveEnabled &&
+			  this->curveAmount == another.curveAmount &&
 			  this->autoAimEnabled == another.autoAimEnabled &&
 			  this->LegitautoAimFov == another.LegitautoAimFov &&
 			  this->aimStepEnabled == another.aimStepEnabled &&
@@ -699,6 +701,12 @@ namespace Settings
 			inline float value = 0.0f;
 		}
 
+		namespace Curve
+		{
+			inline bool enabled = false;
+			inline float value = 0.5f;
+		}
+
 		namespace AutoAim
 		{
 			inline bool enabled = false;
@@ -712,8 +720,6 @@ namespace Settings
 			    false, false, false, false, false,			   // left leg
 			    false, false, false, false, false			   // right leg
 			};
-			inline HitboxFlags desiredHitboxes = HitboxFlags::HEAD;
-			inline bool closestHitbox = false;
 			inline bool engageLock = false;
 			inline bool engageLockTR = false; // Target Reacquisition ( re-target after getting a kill when spraying ).
 			inline int engageLockTTR = 700;   // Time to Target Reacquisition in ms

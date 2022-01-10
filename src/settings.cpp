@@ -187,6 +187,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
         LegitweaponSetting[XORSTR("Smooth")][XORSTR("Salting")][XORSTR("Multiplier")] = i.second.smoothSaltMultiplier;
         LegitweaponSetting[XORSTR("ErrorMargin")][XORSTR("Enabled")] = i.second.errorMarginEnabled;
         LegitweaponSetting[XORSTR("ErrorMargin")][XORSTR("Value")] = i.second.errorMarginValue;
+        LegitweaponSetting[XORSTR("Curve")][XORSTR("Enabled")] = i.second.curveEnabled;
+        LegitweaponSetting[XORSTR("Curve")][XORSTR("Amount")] = i.second.curveAmount;
         LegitweaponSetting[XORSTR("AutoAim")][XORSTR("Enabled")] = i.second.autoAimEnabled;
         LegitweaponSetting[XORSTR("AutoAim")][XORSTR("LegitFOV")] = i.second.LegitautoAimFov;
         LegitweaponSetting[XORSTR("AimStep")][XORSTR("Enabled")] = i.second.aimStepEnabled;
@@ -938,6 +940,7 @@ void Settings::LoadConfig(std::string path)
             .doAimAfterXShotsEnabled = LegitweaponSetting[XORSTR("DoAimAfterXShots")][XORSTR("Enabled")].asBool(),
             .smoothSaltEnabled = LegitweaponSetting[XORSTR("Smooth")][XORSTR("Salting")][XORSTR("Enabled")].asBool(),
             .errorMarginEnabled = LegitweaponSetting[XORSTR("ErrorMargin")][XORSTR("Enabled")].asBool(),
+            .curveEnabled = LegitweaponSetting[XORSTR("Curve")][XORSTR("Enabled")].asBool(),
             .autoAimEnabled = LegitweaponSetting[XORSTR("AutoAim")][XORSTR("Enabled")].asBool(),
             .aimStepEnabled = LegitweaponSetting[XORSTR("AimStep")][XORSTR("Enabled")].asBool(),
             .rcsEnabled = LegitweaponSetting[XORSTR("RCS")][XORSTR("Enabled")].asBool(),
@@ -970,6 +973,7 @@ void Settings::LoadConfig(std::string path)
             .doAimAfterXShotsAmount = LegitweaponSetting[XORSTR("DoAimAfterXShots")][XORSTR("Amount")].asFloat(),
             .smoothSaltMultiplier = LegitweaponSetting[XORSTR("Smooth")][XORSTR("Salting")][XORSTR("Multiplier")].asFloat(),
             .errorMarginValue = LegitweaponSetting[XORSTR("ErrorMargin")][XORSTR("Value")].asFloat(),
+            .curveAmount = LegitweaponSetting[XORSTR("Curve")][XORSTR("Amount")].asFloat(),
             .LegitautoAimFov = LegitweaponSetting[XORSTR("AutoAim")][XORSTR("LegitFOV")].asFloat(),
             .aimStepMin = LegitweaponSetting[XORSTR("AimStep")][XORSTR("min")].asFloat(),
             .aimStepMax = LegitweaponSetting[XORSTR("AimStep")][XORSTR("max")].asFloat(),

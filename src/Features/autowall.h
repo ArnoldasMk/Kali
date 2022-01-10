@@ -22,6 +22,6 @@ namespace AutoWall
 	};
 
 	int GetDamage(const Vector &vecPoint, bool teamCheck);
-	float GetDamage(const Vector &point, bool teamCheck, FireBulletData& fdata);
+	float GetDamage(const Vector& vecPoint, bool teamCheck, FireBulletData& fData);
 	int GetDamage(C_BasePlayer *player, const Vector &point, bool teamCheck, FireBulletData &fdata);
 }

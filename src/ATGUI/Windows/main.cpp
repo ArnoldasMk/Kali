@@ -36,13 +36,6 @@ enum
 
 enum
 {
-	LegitbotTab,
-	RageTab,
-	TriggerbotTab,
-};
-
-enum
-{
 	Enemy,
 	Allies,
 	Local,
@@ -56,7 +49,7 @@ enum
 
 const char *TabsNames[] = {"Aimbot", "Anti Aim", "Visuals", "Skin Changer", "Misc", "Player List"};
 
-std::initializer_list<const char *> subtabAimbot = {"Legitbot", "Ragebot", "Triggerbot"};
+std::initializer_list<const char *> subtabAimbot = {};
 std::initializer_list<const char *> subtabAntiAim = {};
 std::initializer_list<const char *> subtabVisuals = {"Enemy", "Allies", "Local", "Materials", "Menu"};
 std::initializer_list<const char *> subtabSkinChanger = {"Skins", "Models"};
@@ -152,7 +145,7 @@ static void SubTabs()
 		}
 	}
 }
-
+/*
 static void aimbotTab()
 {
 	switch (subtabs)
@@ -168,7 +161,7 @@ static void aimbotTab()
 		break;
 	}
 }
-
+*/
 static void VisualsTab()
 {
 	switch (subtabs)
@@ -227,10 +220,11 @@ void MainMenu::Render()
 		switch (tabs)
 		{
 		case AimbotTab:
-			aimbotTab();
+			draw->AddRectFilled(ImVec2(pos.x, pos.y + 52), ImVec2(pos.x + 160, pos.y + 836), ImColor(4, 3, 5));
+			Legitbot::RenderMainMenu(pos, draw, subtabs);
 			break;
 		case AntiAimTab:
-			draw->AddRectFilled(ImVec2(pos.x, pos.y + 52), ImVec2(pos.x + 160, pos.y + 836), ImColor(4, 3, 5)); // ImColor(0, 0, 0, 150));
+			draw->AddRectFilled(ImVec2(pos.x, pos.y + 52), ImVec2(pos.x + 160, pos.y + 836), ImColor(4, 3, 5));
 			AntiAim::RenderMainMenu(pos, draw, subtabs);
 			break;
 		case Visuals:
@@ -243,7 +237,7 @@ void MainMenu::Render()
 			MiscellaneousTab();
 			break;
 		case PlayerInfo:
-			draw->AddRectFilled(ImVec2(pos.x, pos.y + 52), ImVec2(pos.x + 160, pos.y + 832), ImColor(4, 3, 5)); // ImColor(0, 0, 0, 150));
+			draw->AddRectFilled(ImVec2(pos.x, pos.y + 52), ImVec2(pos.x + 160, pos.y + 832), ImColor(4, 3, 5));
 			PlayerInfoTab::RenderMainMenu(pos, draw, subtabs);
 		default:
 			break;

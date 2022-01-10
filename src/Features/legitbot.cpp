@@ -55,7 +55,7 @@ static bool HeadMultiPoint(C_BasePlayer *player, Vector points[])
 	studiohdr_t *hdr = modelInfo->GetStudioModel(pModel);
 	if (!hdr)
 		return false;
-	mstudiobbox_t *bbox = hdr->pHitbox((int)Hitbox2::HITBOX_HEAD, 0);
+	mstudiobbox_t *bbox = hdr->pHitbox((int)Hitbox::HITBOX_HEAD, 0);
 	if (!bbox)
 		return false;
 
@@ -152,73 +152,18 @@ bool Legitbot::HitChance(Vector bestSpot, C_BasePlayer *player, C_BaseCombatWeap
 	return false;
 }
 
-static bool IsFlagSetForHitbox(int flags, int hitbox)
-{
-	switch (hitbox)
-	{
-	case Hitbox2::HITBOX_HEAD:
-		return flags & HitboxFlags::HEAD;
-	case Hitbox2::HITBOX_NECK:
-		return flags & HitboxFlags::NECK;
-	case Hitbox2::HITBOX_PELVIS:
-		return flags & HitboxFlags::PELVIS;
-	case Hitbox2::HITBOX_STOMACH:
-		return flags & HitboxFlags::STOMACH;
-	case Hitbox2::HITBOX_CHEST:
-	case Hitbox2::HITBOX_LOWER_CHEST:
-	case Hitbox2::HITBOX_UPPER_CHEST:
-		return flags & HitboxFlags::CHEST;
-	case Hitbox2::HITBOX_LEFT_THIGH:
-	case Hitbox2::HITBOX_RIGHT_THIGH:
-	case Hitbox2::HITBOX_LEFT_CALF:
-	case Hitbox2::HITBOX_RIGHT_CALF:
-		return flags & HitboxFlags::LEGS;
-	case Hitbox2::HITBOX_LEFT_FOOT:
-	case Hitbox2::HITBOX_RIGHT_FOOT:
-		return flags & HitboxFlags::FEET;
-	case Hitbox2::HITBOX_LEFT_HAND:
-	case Hitbox2::HITBOX_RIGHT_HAND:
-		return flags & HitboxFlags::HANDS;
-	case Hitbox2::HITBOX_LEFT_UPPER_ARM:
-	case Hitbox2::HITBOX_RIGHT_UPPER_ARM:
-	case Hitbox2::HITBOX_LEFT_FOREARM:
-	case Hitbox2::HITBOX_RIGHT_FOREARM:
-		return flags & HitboxFlags::ARMS;
-	default:
-	{
-		cvar->ConsoleDPrintf(XORSTR("Warning: Wrong hitbox (%d) fed into IsFlagSetForHitbox\n"), hitbox);
-		return false;
-	}
-	}
-}
 static float AutoWallBestSpot(C_BasePlayer *player, Vector &bestSpot)
 {
-	model_t *model = player->GetModel();
-	if (!model)
-		return 0.f;
-
-	studiohdr_t *hdr = modelInfo->GetStudioModel(model);
-	if (!hdr)
-		return 0.f;
-
-	mstudiohitboxset_t *hitboxSet = hdr->pHitboxSet(player->GetHitboxSetCount());
-	if (!hitboxSet)
-		return 0.f;
-
 	float bestDamage = Settings::Legitbot::AutoWall::value;
-	const int hitboxFlags = Settings::Legitbot::AutoAim::desiredHitboxes;
+	const std::unordered_map<int, int> *modelType = BoneMaps::GetModelTypeBoneMap(player);
 
-	for (int i = 0; i < hitboxSet->numhitboxes; i++)
+	static int len = sizeof(Settings::Legitbot::AutoAim::desiredBones) / sizeof(Settings::Legitbot::AutoAim::desiredBones[0]);
+
+	for (int i = 0; i < len; i++)
 	{
-		if (!IsFlagSetForHitbox(hitboxFlags, i))
+		if (!Settings::Legitbot::AutoAim::desiredBones[i])
 			continue;
-
-		mstudiobbox_t *hitbox = hitboxSet->pHitbox(i);
-
-		if (!hitbox)
-			continue;
-
-		if (i == Hitbox2::HITBOX_HEAD) // head multipoint
+		if (i == CONST_BONE_HEAD) // head multipoint
 		{
 			Vector headPoints[headVectors];
 			if (!HeadMultiPoint(player, headPoints))
@@ -236,7 +181,9 @@ static float AutoWallBestSpot(C_BasePlayer *player, Vector &bestSpot)
 				}
 			}
 		}
-		int boneID = hitbox->bone;
+		int boneID = (*modelType).at(i);
+		if (boneID == BONE_INVALID) // bone not available on this modeltype.
+			continue;
 
 		Vector bone3D = player->GetBonePosition(boneID);
 
@@ -247,6 +194,7 @@ static float AutoWallBestSpot(C_BasePlayer *player, Vector &bestSpot)
 			bestSpot = bone3D;
 			if (boneDamage > player->GetHealth())
 				return boneDamage;
+
 			bestDamage = boneDamage;
 		}
 	}
@@ -400,7 +348,7 @@ static C_BasePlayer *GetClosestPlayerAndSpot(CUserCmd *cmd, bool visibleCheck, V
 
 	if (lockedOn)
 	{
-		if (lockedOn->GetAlive() && !Settings::Legitbot::AutoAim::closestHitbox && !Entity::IsSpotVisibleThroughEnemies(lockedOn, lockedOn->GetBonePosition((int)Settings::Legitbot::bone)))
+		if (lockedOn->GetAlive() && !Settings::Legitbot::AutoAim::closestBone && !Entity::IsSpotVisibleThroughEnemies(lockedOn, lockedOn->GetBonePosition((int)Settings::Legitbot::bone)))
 		{
 			lockedOn = nullptr;
 			return nullptr;
@@ -423,7 +371,7 @@ static C_BasePlayer *GetClosestPlayerAndSpot(CUserCmd *cmd, bool visibleCheck, V
 				return nullptr;
 			}
 
-			if (Settings::Legitbot::AutoAim::closestHitbox)
+			if (Settings::Legitbot::AutoAim::closestBone)
 			{
 				Vector tempSpot = GetClosestSpot(cmd, localplayer, lockedOn, aimTargetType);
 				if (tempSpot.IsZero())
@@ -462,7 +410,7 @@ static C_BasePlayer *GetClosestPlayerAndSpot(CUserCmd *cmd, bool visibleCheck, V
 
 		Legitbot::targetAimbot = i;
 		Vector eVecTarget = player->GetBonePosition((int)Settings::Legitbot::bone);
-		if (Settings::Legitbot::AutoAim::closestHitbox)
+		if (Settings::Legitbot::AutoAim::closestBone)
 		{
 			Vector tempSpot = GetClosestSpot(cmd, localplayer, player, aimTargetType);
 			if (tempSpot.IsZero() || !Entity::IsSpotVisibleThroughEnemies(player, tempSpot))
@@ -937,8 +885,17 @@ void Legitbot::CreateMove(CUserCmd *cmd)
 					localEye = VelocityExtrapolate(localplayer, localEye); // get eye pos next tick
 					bestSpot = VelocityExtrapolate(player, bestSpot);		// get target pos next tick
 				}
-				angle = Math::CalcAngle(localEye, bestSpot);
 
+				angle = Math::CalcAngle(localEye, bestSpot);
+				if (Settings::Legitbot::Smooth::enabled && Settings::Legitbot::Curve::enabled) 
+				{
+					float dist = Math::ClampYaw(angle.y - oldAngle.y);
+					if (dist > 180.0f) dist = 360.0f - dist;
+					bestSpot += Vector(0, 0, Settings::Legitbot::Curve::value * dist);
+					angle = Math::CalcAngle(localEye, bestSpot);		
+				}
+
+				angle = Math::CalcAngle(localEye, bestSpot);
 				if (Settings::Legitbot::ErrorMargin::enabled)
 				{
 					static int lastShotFired = 0;
@@ -1087,5 +1044,4 @@ void Legitbot::UpdateValues()
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 		Settings::Legitbot::AutoAim::desiredBones[bone] = currentWeaponSetting.desiredBones[bone];
 	Settings::Legitbot::AutoAim::realDistance = currentWeaponSetting.autoAimRealDistance;
-	Settings::Legitbot::AutoAim::desiredHitboxes = currentWeaponSetting.desiredHitboxes;
 }

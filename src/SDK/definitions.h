@@ -574,30 +574,6 @@ enum class Hitbox : int
 	HITBOX_ARMS,
 };
 
-enum Hitbox2
-{
-	HITBOX_HEAD = 0,
-	HITBOX_NECK,
-	HITBOX_PELVIS,
-	HITBOX_STOMACH,
-	HITBOX_LOWER_CHEST,
-	HITBOX_CHEST,
-	HITBOX_UPPER_CHEST,
-	HITBOX_RIGHT_THIGH,
-	HITBOX_LEFT_THIGH,
-	HITBOX_RIGHT_CALF,
-	HITBOX_LEFT_CALF,
-	HITBOX_RIGHT_FOOT,
-	HITBOX_LEFT_FOOT,
-	HITBOX_RIGHT_HAND,
-	HITBOX_LEFT_HAND,
-	HITBOX_RIGHT_UPPER_ARM,
-	HITBOX_RIGHT_FOREARM,
-	HITBOX_LEFT_UPPER_ARM,
-	HITBOX_LEFT_FOREARM,
-	HITBOX_COUNT,
-};
-
 enum class HitGroups : int
 {
 	HITGROUP_GENERIC = 0,
@@ -611,18 +587,6 @@ enum class HitGroups : int
     HITGROUP_GEAR, 
 };
 
-enum HitboxFlags
-{
-    HEAD = 1 << 0,
-    NECK = 1 << 1,
-    PELVIS = 1 << 2,
-    STOMACH = 1 << 3,
-    CHEST = 1 << 4,
-    LEGS = 1 << 5,
-    FEET = 1 << 6,
-    HANDS = 1 << 7,
-    ARMS = 1 << 8
-};
 enum class CSWeaponType : int
 {
 	WEAPONTYPE_KNIFE = 0,
