@@ -92,8 +92,8 @@ void UI::ReloadWeaponSettings()
 	smoothSaltMultiplier = Settings::Legitbot::weapons.at(index).smoothSaltMultiplier;
 	errorMarginEnabled = Settings::Legitbot::weapons.at(index).errorMarginEnabled;
 	errorMarginValue = Settings::Legitbot::weapons.at(index).errorMarginValue;
-	//curveEnabled = Settings::Legitbot::weapons.at(index).curveAmount;
-	//curveAmount = Settings::Legitbot::weapons.at(index).curveAmount;
+	// curveEnabled = Settings::Legitbot::weapons.at(index).curveAmount;
+	// curveAmount = Settings::Legitbot::weapons.at(index).curveAmount;
 	autoAimEnabled = Settings::Legitbot::weapons.at(index).autoAimEnabled;
 	autoAimValue = Settings::Legitbot::weapons.at(index).LegitautoAimFov;
 	aimStepEnabled = Settings::Legitbot::weapons.at(index).aimStepEnabled;
@@ -579,73 +579,59 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				ImGui::Separator();
 				ImGui::Text(XORSTR("Triggerbot"));
 				ImGui::Separator();
-
-				if (ImGui::Checkbox(XORSTR("Trigger bot"), &TriggerBot))
-					UI::UpdateWeaponSettings();
-				if (TriggerBot)
+				ImGui::Columns(2, nullptr, false);
 				{
-					ImGui::SameLine();
-					if (ImGui::BeginCombo(XORSTR("##Filter"), XORSTR("Filter")))
-					{
-						ImGui::Selectable(XORSTR("Enemies"), &Settings::Triggerbot::Filters::enemies, ImGuiSelectableFlags_DontClosePopups);
-						ImGui::Selectable(XORSTR("Walls"), &Settings::Triggerbot::Filters::walls, ImGuiSelectableFlags_DontClosePopups);
-						ImGui::Selectable(XORSTR("Head"), &Settings::Triggerbot::Filters::head, ImGuiSelectableFlags_DontClosePopups);
-						ImGui::Selectable(XORSTR("Chest"), &Settings::Triggerbot::Filters::chest, ImGuiSelectableFlags_DontClosePopups);
-						ImGui::Selectable(XORSTR("Legs"), &Settings::Triggerbot::Filters::legs, ImGuiSelectableFlags_DontClosePopups);
-						ImGui::Selectable(XORSTR("Allies"), &Settings::Triggerbot::Filters::allies, ImGuiSelectableFlags_DontClosePopups);
-						ImGui::Selectable(XORSTR("Smoke check"), &Settings::Triggerbot::Filters::smokeCheck, ImGuiSelectableFlags_DontClosePopups);
-						ImGui::Selectable(XORSTR("Flash check"), &Settings::Triggerbot::Filters::flashCheck, ImGuiSelectableFlags_DontClosePopups);
-						ImGui::Selectable(XORSTR("Stomach"), &Settings::Triggerbot::Filters::stomach, ImGuiSelectableFlags_DontClosePopups);
-						ImGui::Selectable(XORSTR("Arms"), &Settings::Triggerbot::Filters::arms, ImGuiSelectableFlags_DontClosePopups);
-						ImGui::EndCombo();
-					}
-
-					ImGui::Columns(2, nullptr, false);
-					{
-						ImGui::ItemSize(ImVec2(0.0f, 0.0f), 0.0f);
-						ImGui::Text(XORSTR("Trigger Key"));
-					}
-					ImGui::NextColumn();
-					{
-						UI::KeyBindButton(&Settings::Triggerbot::key);
-					}
-					ImGui::EndColumns();
+					if (ImGui::Checkbox(XORSTR("Trigger bot"), &TriggerBot))
+						UI::UpdateWeaponSettings();
+				}
+				ImGui::NextColumn();
+				{
+					ImGui::Text(XORSTR("Trigger Key"));
+					UI::KeyBindButton(&Settings::Triggerbot::key);
+				}
+				ImGui::EndColumns();
+				ImGui::Columns(2, nullptr, false);
+				{
 					if (ImGui::Checkbox(XORSTR("HitChance"), &hitchanceEnabled))
 						UI::UpdateWeaponSettings();
-
-					if (hitchanceEnabled)
-					{
-						ImGui::SameLine();
-						ImGui::PushItemWidth(-1);
-						if (ImGui::SliderFloat(XORSTR("##HitchanceValue"), &hitchanceValue, 0, 100, XORSTR("Hitchance: %0.f")))
-							UI::UpdateWeaponSettings();
-						ImGui::PopItemWidth();
-					}
-
-					ImGui::Checkbox(XORSTR("Random Delay"), &Settings::Triggerbot::RandomDelay::enabled);
-
-					if (Settings::Triggerbot::RandomDelay::enabled)
-					{
-						ImGui::SameLine();
-						ImGui::PushItemWidth(-1);
-						if (ImGui::BeginCombo(XORSTR("##RandomeDelay"), XORSTR("Random Min Max")))
-						{
-
-							if (Settings::Triggerbot::RandomDelay::lastRoll != 0)
-								ImGui::Text(XORSTR("Last delay: %dms"), Settings::Triggerbot::RandomDelay::lastRoll);
-							ImGui::Text(XORSTR("Minimum ms"));
-							ImGui::SliderInt(XORSTR("##TRIGGERRANDOMLOW"), &Settings::Triggerbot::RandomDelay::lowBound, 5, 220);
-							if (Settings::Triggerbot::RandomDelay::lowBound >= Settings::Triggerbot::RandomDelay::highBound)
-								Settings::Triggerbot::RandomDelay::highBound = Settings::Triggerbot::RandomDelay::lowBound + 1;
-							ImGui::Text(XORSTR("Maximum ms"));
-							ImGui::SliderInt(XORSTR("##TRIGGERRANDOMHIGH"), &Settings::Triggerbot::RandomDelay::highBound, (Settings::Triggerbot::RandomDelay::lowBound + 1), 225);
-
-							ImGui::EndCombo();
-						}
-						ImGui::PopItemWidth();
-					}
 				}
-				ImGui::Columns(1);
+				ImGui::NextColumn();
+				{
+					ImGui::PushItemWidth(-1);
+					if (ImGui::SliderFloat(XORSTR("##HitchanceValue"), &hitchanceValue, 0, 100, XORSTR("Hitchance: %0.f")))
+						UI::UpdateWeaponSettings();
+					ImGui::PopItemWidth();
+				}
+				ImGui::EndColumns();
+				ImGui::Columns(2, nullptr, false);
+				{
+					ImGui::PushItemWidth(-1);
+					ImGui::Checkbox(XORSTR("Random Delay"), &Settings::Triggerbot::RandomDelay::enabled);
+					if (Settings::Triggerbot::RandomDelay::lastRoll != 0)
+						ImGui::Text(XORSTR("Last delay: %dms"), Settings::Triggerbot::RandomDelay::lastRoll);
+					ImGui::Text(XORSTR("Minimum ms"));
+					ImGui::SliderInt(XORSTR("##TRIGGERRANDOMLOW"), &Settings::Triggerbot::RandomDelay::lowBound, 5, 220);
+					if (Settings::Triggerbot::RandomDelay::lowBound >= Settings::Triggerbot::RandomDelay::highBound)
+						Settings::Triggerbot::RandomDelay::highBound = Settings::Triggerbot::RandomDelay::lowBound + 1;
+					ImGui::Text(XORSTR("Maximum ms"));
+					ImGui::SliderInt(XORSTR("##TRIGGERRANDOMHIGH"), &Settings::Triggerbot::RandomDelay::highBound, (Settings::Triggerbot::RandomDelay::lowBound + 1), 225);
+					ImGui::PopItemWidth();
+				}
+				ImGui::NextColumn();
+				{
+					ImGui::Text(XORSTR("Filters"));
+					ImGui::Checkbox(XORSTR("Enemies"), &Settings::Triggerbot::Filters::enemies);
+					ImGui::Checkbox(XORSTR("Walls"), &Settings::Triggerbot::Filters::walls);
+					ImGui::Checkbox(XORSTR("Head"), &Settings::Triggerbot::Filters::head);
+					ImGui::Checkbox(XORSTR("Chest"), &Settings::Triggerbot::Filters::chest);
+					ImGui::Checkbox(XORSTR("Legs"), &Settings::Triggerbot::Filters::legs);
+					ImGui::Checkbox(XORSTR("Allies"), &Settings::Triggerbot::Filters::allies);
+					ImGui::Checkbox(XORSTR("Smoke check"), &Settings::Triggerbot::Filters::smokeCheck);
+					ImGui::Checkbox(XORSTR("Flash check"), &Settings::Triggerbot::Filters::flashCheck);
+					ImGui::Checkbox(XORSTR("Stomach"), &Settings::Triggerbot::Filters::stomach);
+					ImGui::Checkbox(XORSTR("Arms"), &Settings::Triggerbot::Filters::arms);
+				}
+				ImGui::EndColumns();
 				ImGui::Separator();
 				if (currentWeapon > ItemDefinitionIndex::INVALID && Settings::Legitbot::weapons.find(currentWeapon) != Settings::Legitbot::weapons.end())
 				{
