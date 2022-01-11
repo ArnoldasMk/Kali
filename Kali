@@ -402,7 +402,7 @@ function __main__() {
     unload
     ;;
   -c | --clean)
-    echo_orange "Cleaning the mess :)"
+    echo_orange "Cleaning.."
     clean
     ;;
   -u | --update)
@@ -412,7 +412,7 @@ function __main__() {
     update_force
     ;;
   -ru | --reverce-update)
-    reverce_update
+    reverse_update
     ;;
   -k | --kill)
     kill_process

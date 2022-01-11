@@ -437,14 +437,14 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 		}
 		ImGui::NextColumn();
 		{
-			ImGui::BeginChild(XORSTR("COL2"), ImVec2(0, 736), true);
+			ImGui::BeginChild(XORSTR("COL2"), ImVec2(0, 701), true);
 			{
 				ImGui::Separator();
 				ImGui::Text(XORSTR("Aimkey Only"));
 				ImGui::Separator();
 				ImGui::Columns(2, nullptr, false);
 				{
-					if (ImGui::Checkbox(XORSTR("Enabled"), &aimkeyOnly))
+					if (ImGui::Checkbox(XORSTR("Aimkey"), &aimkeyOnly))
 						UI::UpdateWeaponSettings();
 				}
 				ImGui::NextColumn();
@@ -581,7 +581,7 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				ImGui::Separator();
 				ImGui::Columns(2, nullptr, false);
 				{
-					if (ImGui::Checkbox(XORSTR("Trigger bot"), &TriggerBot))
+					if (ImGui::Checkbox(XORSTR("Enabled"), &TriggerBot))
 						UI::UpdateWeaponSettings();
 				}
 				ImGui::NextColumn();
@@ -603,10 +603,16 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 					ImGui::PopItemWidth();
 				}
 				ImGui::EndColumns();
+				ImGui::Separator();
+				ImGui::Text(XORSTR("Triggerbot Random Delay"));
+				ImGui::Separator();
 				ImGui::Columns(2, nullptr, false);
 				{
+					ImGui::Checkbox(XORSTR("Enabled"), &Settings::Triggerbot::RandomDelay::enabled);
+				}
+				ImGui::NextColumn();
+				{
 					ImGui::PushItemWidth(-1);
-					ImGui::Checkbox(XORSTR("Random Delay"), &Settings::Triggerbot::RandomDelay::enabled);
 					if (Settings::Triggerbot::RandomDelay::lastRoll != 0)
 						ImGui::Text(XORSTR("Last delay: %dms"), Settings::Triggerbot::RandomDelay::lastRoll);
 					ImGui::Text(XORSTR("Minimum ms"));
@@ -617,14 +623,34 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 					ImGui::SliderInt(XORSTR("##TRIGGERRANDOMHIGH"), &Settings::Triggerbot::RandomDelay::highBound, (Settings::Triggerbot::RandomDelay::lowBound + 1), 225);
 					ImGui::PopItemWidth();
 				}
+				ImGui::EndColumns();
+				ImGui::Separator();
+				ImGui::Text(XORSTR("Triggerbot Auto Knife & Zeus"));
+				ImGui::Separator();
+				ImGui::Columns(2, nullptr, false);
+				{
+					ImGui::Checkbox(XORSTR("Auto Knife"), &Settings::AutoKnife::enabled);
+					ImGui::Checkbox(XORSTR("On Key"), &Settings::AutoKnife::onKey);
+				}
 				ImGui::NextColumn();
 				{
-					ImGui::Text(XORSTR("Filters"));
+					ImGui::Checkbox(XORSTR("Enemies"), &Settings::AutoKnife::Filters::enemies);
+					ImGui::Checkbox(XORSTR("Allies"), &Settings::AutoKnife::Filters::allies);
+				}
+				ImGui::EndColumns();
+				ImGui::Separator();
+				ImGui::Text(XORSTR("Triggerbot Filters"));
+				ImGui::Separator();
+				ImGui::Columns(2, nullptr, false);
+				{
 					ImGui::Checkbox(XORSTR("Enemies"), &Settings::Triggerbot::Filters::enemies);
 					ImGui::Checkbox(XORSTR("Walls"), &Settings::Triggerbot::Filters::walls);
 					ImGui::Checkbox(XORSTR("Head"), &Settings::Triggerbot::Filters::head);
 					ImGui::Checkbox(XORSTR("Chest"), &Settings::Triggerbot::Filters::chest);
 					ImGui::Checkbox(XORSTR("Legs"), &Settings::Triggerbot::Filters::legs);
+				}
+				ImGui::NextColumn();
+				{
 					ImGui::Checkbox(XORSTR("Allies"), &Settings::Triggerbot::Filters::allies);
 					ImGui::Checkbox(XORSTR("Smoke check"), &Settings::Triggerbot::Filters::smokeCheck);
 					ImGui::Checkbox(XORSTR("Flash check"), &Settings::Triggerbot::Filters::flashCheck);
@@ -633,6 +659,10 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				}
 				ImGui::EndColumns();
 				ImGui::Separator();
+			}
+			ImGui::EndChild();
+			ImGui::BeginChild(XORSTR("Reset"), ImVec2(0, 30), false);
+			{
 				if (currentWeapon > ItemDefinitionIndex::INVALID && Settings::Legitbot::weapons.find(currentWeapon) != Settings::Legitbot::weapons.end())
 				{
 					if (ImGui::Button(XORSTR("Clear Weapon Settings"), ImVec2(-1, 0)))
