@@ -11,7 +11,7 @@
 #include "../Tabs/antiaimtab.h"
 #include "../Tabs/misctab.h"
 #include "../Tabs/playerinfo.h"
-#include "../Tabs/triggerbottab.h"
+// #include "../Tabs/triggerbottab.h"
 #include "../Tabs/visualstab.h"
 #include "../Tabs/skinstab.h"
 #include "../Tabs/modelstab.h"
