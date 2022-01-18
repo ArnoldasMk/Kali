@@ -3,4 +3,4 @@
 namespace SniperCrosshair
 {
 	bool DrawCrosshair();
-};
+}

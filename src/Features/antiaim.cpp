@@ -525,9 +525,9 @@ static void CustomAA(C_BasePlayer *const localplayer, QAngle &angle, CUserCmd *c
             angle.y += randang ? standang : (rand() % (standang - (-standang) + 1) + -standang); // stand
         else if (!(localplayer->GetFlags() & FL_ONGROUND) && airang != 0)
             angle.y += randang ? airang : (rand() % (airang - (-airang) + 1) + -airang); // air
-        else if (!Settings::AntiAim::SlowWalk::enabled || !inputSystem->IsButtonDown(Settings::AntiAim::SlowWalk::key))
+        else if (!Settings::SlowWalk::enabled || !inputSystem->IsButtonDown(Settings::SlowWalk::key))
             angle.y += randang ? moveang : (rand() % (moveang - (-moveang) + 1) + -moveang); // move
-        else if (Settings::AntiAim::SlowWalk::enabled && inputSystem->IsButtonDown(Settings::AntiAim::SlowWalk::key))
+        else if (Settings::SlowWalk::enabled && inputSystem->IsButtonDown(Settings::SlowWalk::key))
             angle.y += randang ? slowang : (rand() % (slowang - (-slowang) + 1) + -slowang); // slow walk
         else if (Settings::AntiAim::FakeDuck::enabled && inputSystem->IsButtonDown(Settings::AntiAim::FakeDuck::fakeDuckKey))
             angle.y += randang ? duckang : (rand() % (duckang - (-duckang) + 1) + -duckang);

@@ -9,7 +9,7 @@
 #include "interfaces.h"
 #include "offsets.h"
 #include "Utils/GlobalVars.h"
-#include "Features/Tickbase.h"
+// #include "Features/Tickbase.h"
 #include "Features/fakelag.h"
 //#include "SDK/CInput.h"
 int *nPredictionRandomSeed = nullptr;
