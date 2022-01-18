@@ -1623,6 +1623,12 @@ namespace Settings
 		inline MaterialSystem_Config_t config = {};
 	}
 
+	namespace Nightmode
+	{
+		inline bool enabled;
+		inline int value;
+	}
+
 	namespace Dlights
 	{
 		inline bool enabled = false;

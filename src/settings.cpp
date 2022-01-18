@@ -365,6 +365,9 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("AutoBuy")][XORSTR("main")] = (int)Settings::AutoBuy::main;
     settings[XORSTR("AutoBuy")][XORSTR("secondary")] = (int)Settings::AutoBuy::secondary;
 
+    settings[XORSTR("Nightmode")][XORSTR("enabled")] = Settings::Nightmode::enabled;
+    settings[XORSTR("Nightmode")][XORSTR("value")] = Settings::Nightmode::value;
+
     /*
      * legit anti aim settings
      */
@@ -1159,7 +1162,9 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("AutoBuy")][XORSTR("defuser")], &Settings::AutoBuy::defuser);
     GetVal(settings[XORSTR("AutoBuy")][XORSTR("main")], (int*)&Settings::AutoBuy::main);
     GetVal(settings[XORSTR("AutoBuy")][XORSTR("secondary")], (int*)&Settings::AutoBuy::secondary);
-
+    
+    GetVal(settings[XORSTR("Nightmode")][XORSTR("enabled")], &Settings::Nightmode::enabled);
+    GetVal(settings[XORSTR("Nightmode")][XORSTR("value")], &Settings::Nightmode::value);
     /*
      *Legit Anti AIm Settings Saving
      */

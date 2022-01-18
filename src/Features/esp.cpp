@@ -3,6 +3,7 @@
 #include "../SDK/INetChannel.h"
 #include "esp.h"
 #include "autowall.h"
+#include "nightmode.h"
 #include "../fonts.h"
 #include "../settings.h"
 #include "../interfaces.h"
@@ -641,7 +642,7 @@ void DrawFH(int x, int y)
 
 	float server_time = TICKS_TO_TIME(localplayer->GetTickBase());
 
-	Vector2D tsize = Draw::GetTextSize(XORSTR("Fake Head"), esp_font);
+	// Vector2D tsize = Draw::GetTextSize(XORSTR("Fake Head"), esp_font);
 	Draw::AddText(x, y + 35, XORSTR("Fake Head"), fakeass_head() ? ImColor(0, 255, 0, 255) : ImColor(255, 0, 0, 255));
 	float woop = (next_break - server_time);
 	Draw::AddRectFilled(x, y + 50, x + (woop * 11), y + 60, fakeass_head() ? ImColor(0, 255, 0, 255) : ImColor(255, 0, 0, 255));
@@ -766,18 +767,18 @@ static void DrawTracer(C_BasePlayer *player, TracerType &tracerType)
 	}
 	else
 	{
-		auto isOnScreen = [](Vector origin, Vector &screen) -> bool
-		{
-			if (!world_to_screen(origin, screen))
-				return false;
-			static int iScreenWidth, iScreenHeight;
-			engine->GetScreenSize(iScreenWidth, iScreenHeight);
+		// auto isOnScreen = [](Vector origin, Vector &screen) -> bool
+		// {
+		// 	if (!world_to_screen(origin, screen))
+		// 		return false;
+		// 	static int iScreenWidth, iScreenHeight;
+		// 	engine->GetScreenSize(iScreenWidth, iScreenHeight);
 
-			auto xOk = iScreenWidth > screen.x;
-			auto yOk = iScreenHeight > screen.y;
+		// 	auto xOk = iScreenWidth > screen.x;
+		// 	auto yOk = iScreenHeight > screen.y;
 
-			return xOk && yOk;
-		};
+		// 	return xOk && yOk;
+		// };
 		Vector screenPos;
 
 		//       if (isOnScreen(player->GetAbsOrigin(), screenPos))
@@ -1277,7 +1278,7 @@ static void DrawKeyBinds(int x, int y)
 		Draw::AddText(x + 2, y + 2, "SlowWalk  [Holding]", ImColor(255, 255, 255, 255));
 		y = y + 10;
 	}
-	if (Settings::AntiAim::RageAntiAim::inverted && Settings::AntiAim::RageAntiAim::enabled || Settings::AntiAim::LegitAntiAim::inverted)
+	if ((Settings::AntiAim::RageAntiAim::inverted && Settings::AntiAim::RageAntiAim::enabled) || Settings::AntiAim::LegitAntiAim::inverted)
 	{
 		Draw::AddText(x + 2, y + 3, "AA Inverter [Toggled]", ImColor(255, 255, 255, 255));
 		y = y + 10;
@@ -2467,6 +2468,10 @@ void ESP::Paint()
 		else if (client->m_ClassID == EClassIds::CFish && Settings::ESP::Filters::fishes)
 		{
 			DrawFish(entity);
+		}
+		else if (client->m_ClassID == EClassIds::CEnvTonemapController)
+		{
+			Nightmode::onTonemap((CEnvTonemapController*)entity);
 		}
 		else if (Settings::ESP::Filters::throwables && strstr(client->m_pNetworkName, XORSTR("Projectile")))
 		{
