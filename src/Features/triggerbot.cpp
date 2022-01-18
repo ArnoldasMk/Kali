@@ -6,15 +6,14 @@
 #include "../Utils/math.h"
 #include "../Utils/entity.h"
 
-bool TriggercanShoot(C_BasePlayer* localplayer, C_BaseCombatWeapon* activeWeapon, const LegitWeapon_t& currentSettings)
+bool TriggerCanShoot(C_BasePlayer* localplayer, C_BaseCombatWeapon* activeWeapon, const LegitWeapon_t& currentSettings)
 {
-	if(!localplayer || !localplayer->GetAlive() )
+	if (!localplayer || !localplayer->GetAlive())
 		return false;
 	if (!activeWeapon || activeWeapon->GetInReload())
 		return false;
-	if (!currentSettings.hitchanceEnabled)
-	{
-		if ( (activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) <= (activeWeapon->GetCSWpnData()->GetMaxPlayerSpeed() / 3.0f) )
+	if (!currentSettings.triggerHitchanceEnabled) {
+		if ((activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) <= (activeWeapon->GetCSWpnData()->GetMaxPlayerSpeed() / 3.0f))
 			return true;
 		else
 			return false;
@@ -22,11 +21,11 @@ bool TriggercanShoot(C_BasePlayer* localplayer, C_BaseCombatWeapon* activeWeapon
 	
 	activeWeapon->UpdateAccuracyPenalty();
 	float hitchance = activeWeapon->GetInaccuracy();
-	// hitchance = activeWeapon->GetInaccuracy();
-	if (hitchance == 0) hitchance = 0.0000001;
-	hitchance = 1/(hitchance);
+	if (hitchance == 0)
+		hitchance = 0.0000001;
+	hitchance = 1 / (hitchance);
 	
-	return hitchance >= (currentSettings.hitchanceValue*2);
+	return hitchance >= (currentSettings.triggerHitchanceValue * 2);
 }
 
 void Triggerbot::CreateMove(CUserCmd *cmd)
@@ -50,7 +49,7 @@ void Triggerbot::CreateMove(CUserCmd *cmd)
 	if (!inputSystem->IsButtonDown(Settings::Triggerbot::key))
 		return;
 
-	if ( !TriggercanShoot(localplayer, activeWeapon, currentWeaponSetting))
+	if (!TriggerCanShoot(localplayer, activeWeapon, currentWeaponSetting))
 		return;
 
 	if (Settings::Triggerbot::Filters::flashCheck && localplayer->IsFlashed())
@@ -65,8 +64,8 @@ void Triggerbot::CreateMove(CUserCmd *cmd)
 	static int localMax = Settings::Triggerbot::RandomDelay::highBound;
 	static int randomDelay = localMin + rand() % (localMax - localMin);
 
-	if( localMin != Settings::Triggerbot::RandomDelay::lowBound || localMax != Settings::Triggerbot::RandomDelay::highBound ) // Done in case Low/high bounds change before the next triggerbot shot.
-	{
+	// Done in case low/high bounds change before the next triggerbot shot.
+	if (localMin != Settings::Triggerbot::RandomDelay::lowBound || localMax != Settings::Triggerbot::RandomDelay::highBound) {
 		localMin = Settings::Triggerbot::RandomDelay::lowBound;
 		localMax = Settings::Triggerbot::RandomDelay::highBound;
 		randomDelay = localMin + rand() % (localMax - localMin);
@@ -85,16 +84,13 @@ void Triggerbot::CreateMove(CUserCmd *cmd)
 	traceStart = localplayer->GetEyePosition();
 	traceEnd = traceStart + (traceEnd * 8192.0f);
 
-	if (Settings::Triggerbot::Filters::walls)
-	{
+	if (Settings::Triggerbot::Filters::walls) {
 		AutoWall::FireBulletData data;
 		if (AutoWall::GetDamage(traceEnd, !Settings::Triggerbot::Filters::allies, data) == 0.0f)
 			return;
 
 		tr = data.enter_trace;
-	}
-	else
-	{
+	} else {
 		Ray_t ray;
 		ray.Init(traceStart, traceEnd);
 		CTraceFilter traceFilter;
@@ -158,39 +154,37 @@ void Triggerbot::CreateMove(CUserCmd *cmd)
 	ItemDefinitionIndex itemDefinitionIndex = *activeWeapon->GetItemDefinitionIndex();
 	if (itemDefinitionIndex == ItemDefinitionIndex::WEAPON_KNIFE || itemDefinitionIndex >= ItemDefinitionIndex::WEAPON_KNIFE_BAYONET)
 		return;
-	if (Settings::Legitbot::AutoShoot::autoscope)
-	    if (Util::Items::IsScopeable(*activeWeapon->GetItemDefinitionIndex()) && !localplayer->IsScoped() && !(cmd->buttons & IN_ATTACK2) )
-	    {
+	if (Settings::Legitbot::AutoShoot::autoscope) {
+	    if (Util::Items::IsScopeable(*activeWeapon->GetItemDefinitionIndex()) && !localplayer->IsScoped() && !(cmd->buttons & IN_ATTACK2) ) {
 			cmd->buttons |= IN_ATTACK2;
 			return; // will go to the next tick
 	    }
+	}
 	CSWeaponType weaponType = activeWeapon->GetCSWpnData()->GetWeaponType();
 	if (weaponType == CSWeaponType::WEAPONTYPE_C4 || weaponType == CSWeaponType::WEAPONTYPE_GRENADE)
 		return;
 
-	if (activeWeapon->GetNextPrimaryAttack() > globalVars->curtime)
-	{
+	if (activeWeapon->GetNextPrimaryAttack() > globalVars->curtime) {
 		if (*activeWeapon->GetItemDefinitionIndex() == ItemDefinitionIndex::WEAPON_REVOLVER)
 			cmd->buttons &= ~IN_ATTACK2;
 		else
 			cmd->buttons &= ~IN_ATTACK;
-	}
-	else
-	{
-		if (Settings::Triggerbot::RandomDelay::enabled && currentTime_ms - oldTimeStamp < randomDelay)
-		{
+	} else {
+		if (Settings::Triggerbot::RandomDelay::enabled && currentTime_ms - oldTimeStamp < randomDelay) {
 			timeStamp = oldTimeStamp;
 			return;
 		}
 
 		if (*activeWeapon->GetItemDefinitionIndex() == ItemDefinitionIndex::WEAPON_REVOLVER)
 			cmd->buttons |= IN_ATTACK2;
-		else if ( !(cmd->buttons & IN_ATTACK) )
+		else if (!(cmd->buttons & IN_ATTACK))
 			cmd->buttons |= IN_ATTACK;
-		if(Settings::Triggerbot::RandomDelay::enabled)
+		
+		if (Settings::Triggerbot::RandomDelay::enabled)
 			Settings::Triggerbot::RandomDelay::lastRoll = randomDelay;
 
 		randomDelay = localMin + rand() % (localMax - localMin);
 	}
+	
 	timeStamp = currentTime_ms;
 }

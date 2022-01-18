@@ -219,6 +219,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
         LegitweaponSetting[XORSTR("MinDamage")][XORSTR("enabled")] = i.second.mindamage;
         LegitweaponSetting[XORSTR("MinDamage")][XORSTR("Value")] = i.second.minDamagevalue;
         LegitweaponSetting[XORSTR("Autowall")][XORSTR("enabled")] = i.second.autoWall;
+        LegitweaponSetting[XORSTR("triggerHitchanceEnabled")][XORSTR("enabled")] = i.second.triggerHitchanceEnabled;
+        LegitweaponSetting[XORSTR("triggerHitchanceValue")][XORSTR("enabled")] = i.second.triggerHitchanceValue;
         /*
         for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
             LegitweaponSetting[XORSTR("DesiredBones")][XORSTR("Bones")][bone] = i.second.desiredBones[bone];
@@ -960,9 +962,11 @@ void Settings::LoadConfig(std::string path)
             .autoSlow = LegitweaponSetting[XORSTR("AutoSlow")][XORSTR("enabled")].asBool(),
             .predEnabled = LegitweaponSetting[XORSTR("Prediction")][XORSTR("enabled")].asBool(),
             .scopeControlEnabled = LegitweaponSetting[XORSTR("ScopeControl")][XORSTR("Enabled")].asBool(),
-            .TriggerBot = LegitweaponSetting[XORSTR("TriggerBot")][XORSTR("enabled")].asBool(),
             .mindamage = LegitweaponSetting[XORSTR("MinDamage")][XORSTR("enabled")].asBool(),
             .autoWall = LegitweaponSetting[XORSTR("Autowall")][XORSTR("enabled")].asBool(),
+            .TriggerBot = LegitweaponSetting[XORSTR("TriggerBot")][XORSTR("enabled")].asBool(),
+            .triggerHitchanceEnabled = LegitweaponSetting[XORSTR("TriggerBot")][XORSTR("triggerHitchanceEnabled")].asBool(),
+            .triggerHitchanceValue = LegitweaponSetting[XORSTR("TriggerBot")][XORSTR("triggerHitchanceValue")].asFloat(),
 
             .engageLockTTR = LegitweaponSetting[XORSTR("engageLockTTR")].asInt(),
             .bone = LegitweaponSetting[XORSTR("TargetBone")].asInt(),

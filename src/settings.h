@@ -370,10 +370,11 @@ struct LegitWeapon_t
 	    autoSlow,
 	    predEnabled,
 	    scopeControlEnabled,
-	    TriggerBot,
 	    mindamage,
-	    autoWall;
-
+	    autoWall,
+	    TriggerBot,
+	    triggerHitchanceEnabled;
+	float triggerHitchanceValue = 100.f;
 	int engageLockTTR = 700;
 	Bone bone = BONE_HEAD;
 	SmoothType smoothType = SmoothType::SLOW_END;
