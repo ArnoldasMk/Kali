@@ -250,4 +250,11 @@ void Offsets::GetNetVarOffsets()
 	offsets.DT_BaseAnimating.m_nMuzzleFlashParity = NetVarManager::GetOffset(tables, XORSTR("DT_BaseAnimating"), XORSTR("m_nMuzzleFlashParity"));
 	offsets.DT_BaseAnimating.m_hLightingOrigin = NetVarManager::GetOffset(tables, XORSTR("DT_BaseAnimating"), XORSTR("m_hLightingOrigin"));
 	offsets.DT_BaseAnimating.m_bClientSideFrameReset = NetVarManager::GetOffset(tables, XORSTR("DT_BaseAnimating"), XORSTR("m_bClientSideFrameReset"));
+
+	offsets.DT_EnvTonemapController.m_bUseCustomAutoExposureMin = NetVarManager::GetOffset(tables, XORSTR("DT_EnvTonemapController"), XORSTR("m_bUseCustomAutoExposureMin"));
+	offsets.DT_EnvTonemapController.m_bUseCustomAutoExposureMax = NetVarManager::GetOffset(tables, XORSTR("DT_EnvTonemapController"), XORSTR("m_bUseCustomAutoExposureMax"));
+	offsets.DT_EnvTonemapController.m_bUseCustomBloomScale = NetVarManager::GetOffset(tables, XORSTR("DT_EnvTonemapController"), XORSTR("m_bUseCustomBloomScale"));
+	offsets.DT_EnvTonemapController.m_flCustomAutoExposureMin = NetVarManager::GetOffset(tables, XORSTR("DT_EnvTonemapController"), XORSTR("m_flCustomAutoExposureMin"));
+	offsets.DT_EnvTonemapController.m_flCustomAutoExposureMax = NetVarManager::GetOffset(tables, XORSTR("DT_EnvTonemapController"), XORSTR("m_flCustomAutoExposureMax"));
+	offsets.DT_EnvTonemapController.m_flCustomBloomScale = NetVarManager::GetOffset(tables, XORSTR("DT_EnvTonemapController"), XORSTR("m_flCustomBloomScale"));
 }

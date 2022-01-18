@@ -299,6 +299,16 @@ struct COffsets
 		std::ptrdiff_t m_hLightingOrigin;
 		std::ptrdiff_t m_bClientSideFrameReset;
 	} DT_BaseAnimating;
+	
+	struct
+	{
+		std::ptrdiff_t m_bUseCustomAutoExposureMin;
+		std::ptrdiff_t m_bUseCustomAutoExposureMax;
+		std::ptrdiff_t m_bUseCustomBloomScale;
+		std::ptrdiff_t m_flCustomAutoExposureMin;
+		std::ptrdiff_t m_flCustomAutoExposureMax;
+		std::ptrdiff_t m_flCustomBloomScale;
+	} DT_EnvTonemapController;
 };
 
 namespace Offsets

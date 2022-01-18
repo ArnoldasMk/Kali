@@ -836,21 +836,25 @@ void VisualsLocal::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabInde
 				ImGui::Separator();
 				ImGui::Text(XORSTR("Fog modulation"));
 				ImGui::Separator();
-				ImGui::Columns(1);
+				ImGui::Columns(3, nullptr, false);
 				{
-					ImGui::Columns(3, nullptr, false);
-					{
-						ImGui::Checkbox(XORSTR("Enabled"), &Settings::ESP::customfog::enabled);
-					}
-					ImGui::NextColumn();
-					{
-						ImGui::SliderFloat(XORSTR("##CUSTOMFOGDENSITY"), &Settings::ESP::customfog::density, 0, 100, XORSTR("Density: %0.f"));
-					}
-					ImGui::NextColumn();
-					{
-						ImGui::SliderInt(XORSTR("##CUSTOMFOGDISTANCE"), &Settings::ESP::customfog::distance, 0, 2500, XORSTR("Distance: %0.f"));
-					}
+					ImGui::Checkbox(XORSTR("Enabled"), &Settings::ESP::customfog::enabled);
 				}
+				ImGui::NextColumn();
+				{
+					ImGui::SliderFloat(XORSTR("##CUSTOMFOGDENSITY"), &Settings::ESP::customfog::density, 0, 100, XORSTR("Density: %0.f"));
+				}
+				ImGui::NextColumn();
+				{
+					ImGui::SliderInt(XORSTR("##CUSTOMFOGDISTANCE"), &Settings::ESP::customfog::distance, 0, 2500, XORSTR("Distance: %0.f"));
+				}
+				ImGui::EndColumns();
+				ImGui::Separator();
+				// ImGui::Text(XORSTR("Nightmode"));
+				ImGui::Checkbox(XORSTR("Nightmode"), &Settings::Nightmode::enabled);
+				ImGui::PushItemWidth(-1);
+				ImGui::SliderInt(XORSTR("##NIGHTMODEVAL"), &Settings::Nightmode::value, 0, 100, XORSTR("Nightmode: %0.f"));
+				ImGui::PopItemWidth();
 			}
 			ImGui::EndChild();
 		}
