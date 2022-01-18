@@ -63,9 +63,11 @@ static bool autoAimRealDistance = false;
 static bool autoSlow = false;
 static bool predEnabled = false;
 static bool scopeControlEnabled = false;
-static bool TriggerBot = false;
 static bool hitchanceEnabled = false;
 static float hitchanceValue = 100.f;
+static bool TriggerBot = false;
+static bool triggerHitchanceEnabled = false;
+static float triggerHitchanceValue = 100.f;
 
 void UI::ReloadWeaponSettings()
 {
@@ -111,7 +113,6 @@ void UI::ReloadWeaponSettings()
 	ignoreEnemyJumpEnabled = Settings::Legitbot::weapons.at(index).ignoreEnemyJumpEnabled;
 	hitchanceEnabled = Settings::Legitbot::weapons.at(index).hitchanceEnabled;
 	hitchanceValue = Settings::Legitbot::weapons.at(index).hitchanceValue;
-	TriggerBot = Settings::Legitbot::weapons.at(index).TriggerBot;
 	smokeCheck = Settings::Legitbot::weapons.at(index).smokeCheck;
 	flashCheck = Settings::Legitbot::weapons.at(index).flashCheck;
 	spreadLimitEnabled = Settings::Legitbot::weapons.at(index).spreadLimitEnabled;
@@ -120,6 +121,10 @@ void UI::ReloadWeaponSettings()
 	autoSlow = Settings::Legitbot::weapons.at(index).autoSlow;
 	predEnabled = Settings::Legitbot::weapons.at(index).predEnabled;
 	scopeControlEnabled = Settings::Legitbot::weapons.at(index).scopeControlEnabled;
+	TriggerBot = Settings::Legitbot::weapons.at(index).TriggerBot;
+	triggerHitchanceValue = Settings::Legitbot::weapons.at(index).triggerHitchanceValue;
+	triggerHitchanceEnabled = Settings::Legitbot::weapons.at(index).triggerHitchanceEnabled;
+
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 		desiredBones[bone] = Settings::Legitbot::weapons.at(index).desiredBones[bone];
 }
@@ -130,7 +135,6 @@ void UI::UpdateWeaponSettings()
 		Settings::Legitbot::weapons[currentWeapon] = LegitWeapon_t();
 
 	LegitWeapon_t settings = {
-
 	    .silent = silent,
 	    .friendly = friendly,
 	    .engageLock = engageLock,
@@ -159,8 +163,10 @@ void UI::UpdateWeaponSettings()
 	    .autoSlow = autoSlow,
 	    .predEnabled = predEnabled,
 	    .scopeControlEnabled = scopeControlEnabled,
-	    .TriggerBot = TriggerBot,
 	    .mindamage = 0,
+	    .TriggerBot = TriggerBot,
+	    .triggerHitchanceEnabled = triggerHitchanceEnabled,
+	    .triggerHitchanceValue = triggerHitchanceValue,
 
 	    .engageLockTTR = engageLockTTR,
 	    .bone = bone,
@@ -569,7 +575,7 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				ImGui::PushItemWidth(-1);
 				if (ImGui::SliderFloat(XORSTR("##SPREADLIMIT"), &spreadLimit, 0, 0.1))
 					UI::UpdateWeaponSettings();
-				if (ImGui::SliderFloat(XORSTR("##hitChance"), &hitchanceValue, 0, 100))
+				if (ImGui::SliderFloat(XORSTR("##HITCHANCE"), &hitchanceValue, 0, 100))
 					UI::UpdateWeaponSettings();
 				ImGui::PopItemWidth();
 			}
@@ -592,18 +598,17 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				ImGui::EndColumns();
 				ImGui::Columns(2, nullptr, false);
 				{
-					if (ImGui::Checkbox(XORSTR("HitChance"), &hitchanceEnabled))
+					if (ImGui::Checkbox(XORSTR("Trigger Hit Chance"), &hitchanceEnabled))
 						UI::UpdateWeaponSettings();
 				}
 				ImGui::NextColumn();
 				{
 					ImGui::PushItemWidth(-1);
-					if (ImGui::SliderFloat(XORSTR("##HitchanceValue"), &hitchanceValue, 0, 100, XORSTR("Hitchance: %0.f")))
+					if (ImGui::SliderFloat(XORSTR("##TRIGGERHITCHANCE"), &hitchanceValue, 0, 100, XORSTR("Trigger Hitchance: %0.f")))
 						UI::UpdateWeaponSettings();
 					ImGui::PopItemWidth();
 				}
 				ImGui::EndColumns();
-				ImGui::Separator();
 				ImGui::Text(XORSTR("Triggerbot Random Delay"));
 				ImGui::Separator();
 				ImGui::Columns(2, nullptr, false);
