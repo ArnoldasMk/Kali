@@ -357,12 +357,13 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("viewmodely")][XORSTR("y")] = Settings::SvCheats::viewmodel::y;
     settings[XORSTR("viewmodelz")][XORSTR("z")] = Settings::SvCheats::viewmodel::z;
 
-    settings[XORSTR("BuyBot")][XORSTR("enabled")] = Settings::buybot::enabled;
-    settings[XORSTR("BuyBot")][XORSTR("scout")] = Settings::buybot::scout;
-    settings[XORSTR("BuyBot")][XORSTR("autosniper")] = Settings::buybot::autosniper;
-    settings[XORSTR("BuyBot")][XORSTR("AWP")] = Settings::buybot::awp;
-    settings[XORSTR("BuyBot")][XORSTR("wep")] = (int)Settings::buybot::wep;
-    settings[XORSTR("BuyBot")][XORSTR("sec")] = (int)Settings::buybot::sec;
+    settings[XORSTR("AutoBuy")][XORSTR("enabled")] = Settings::AutoBuy::enabled;
+    settings[XORSTR("AutoBuy")][XORSTR("armor")] = Settings::AutoBuy::armor;
+    settings[XORSTR("AutoBuy")][XORSTR("taser")] = Settings::AutoBuy::taser;
+    settings[XORSTR("AutoBuy")][XORSTR("defuser")] = Settings::AutoBuy::defuser;
+    settings[XORSTR("AutoBuy")][XORSTR("nades")] = Settings::AutoBuy::nades;
+    settings[XORSTR("AutoBuy")][XORSTR("main")] = (int)Settings::AutoBuy::main;
+    settings[XORSTR("AutoBuy")][XORSTR("secondary")] = (int)Settings::AutoBuy::secondary;
 
     /*
      * legit anti aim settings
@@ -804,10 +805,10 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("FakeLag")][XORSTR("microphone")] = Settings::FakeLag::microphone;
     settings[XORSTR("FakeLag")][XORSTR("microphoneKey")] = Settings::FakeLag::microphoneKey;
 
-    settings[XORSTR("SlowWalk")][XORSTR("enabled")] = Settings::AntiAim::SlowWalk::enabled;
-    settings[XORSTR("SlowWalk")][XORSTR("key")] = Settings::AntiAim::SlowWalk::key;
-    settings[XORSTR("SlowWalk")][XORSTR("mode")] = (int)Settings::AntiAim::SlowWalk::mode;
-    settings[XORSTR("SlowWalk")][XORSTR("Speed")] = Settings::AntiAim::SlowWalk::Speed;
+    settings[XORSTR("SlowWalk")][XORSTR("enabled")] = Settings::SlowWalk::enabled;
+    settings[XORSTR("SlowWalk")][XORSTR("key")] = Settings::SlowWalk::key;
+    settings[XORSTR("SlowWalk")][XORSTR("mode")] = (int)Settings::SlowWalk::mode;
+    settings[XORSTR("SlowWalk")][XORSTR("speed")] = Settings::SlowWalk::speed;
 
     settings[XORSTR("AutoAccept")][XORSTR("enabled")] = Settings::AutoAccept::enabled;
 
@@ -1151,12 +1152,13 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("viewmodely")][XORSTR("y")], &Settings::SvCheats::viewmodel::y);
     GetVal(settings[XORSTR("viewmodelz")][XORSTR("z")], &Settings::SvCheats::viewmodel::z);
 
-    GetVal(settings[XORSTR("BuyBot")][XORSTR("enabled")], &Settings::buybot::enabled);
-    GetVal(settings[XORSTR("BuyBot")][XORSTR("scout")], &Settings::buybot::scout);
-    GetVal(settings[XORSTR("BuyBot")][XORSTR("autosniper")], &Settings::buybot::autosniper);
-    GetVal(settings[XORSTR("BuyBot")][XORSTR("AWP")], &Settings::buybot::awp);
-    GetVal(settings[XORSTR("BuyBot")][XORSTR("wep")], (int *)&Settings::buybot::wep);
-    GetVal(settings[XORSTR("BuyBot")][XORSTR("sec")], (int *)&Settings::buybot::sec);
+    GetVal(settings[XORSTR("AutoBuy")][XORSTR("enabled")], &Settings::AutoBuy::enabled);
+    GetVal(settings[XORSTR("AutoBuy")][XORSTR("nades")], &Settings::AutoBuy::nades);
+    GetVal(settings[XORSTR("AutoBuy")][XORSTR("armor")], &Settings::AutoBuy::armor);
+    GetVal(settings[XORSTR("AutoBuy")][XORSTR("taser")], &Settings::AutoBuy::taser);
+    GetVal(settings[XORSTR("AutoBuy")][XORSTR("defuser")], &Settings::AutoBuy::defuser);
+    GetVal(settings[XORSTR("AutoBuy")][XORSTR("main")], (int*)&Settings::AutoBuy::main);
+    GetVal(settings[XORSTR("AutoBuy")][XORSTR("secondary")], (int*)&Settings::AutoBuy::secondary);
 
     /*
      *Legit Anti AIm Settings Saving
@@ -1643,10 +1645,10 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("FakeLag")][XORSTR("microphone")], &Settings::FakeLag::microphone);
     GetButtonCode(settings[XORSTR("FakeLag")][XORSTR("microphoneKey")], &Settings::FakeLag::microphoneKey);
 
-    GetVal(settings[XORSTR("SlowWalk")][XORSTR("enabled")], &Settings::AntiAim::SlowWalk::enabled);
-    GetButtonCode(settings[XORSTR("SlowWalk")][XORSTR("key")], &Settings::AntiAim::SlowWalk::key);
-    GetVal(settings[XORSTR("SlowWalk")][XORSTR("mode")], (int *)&Settings::AntiAim::SlowWalk::mode);
-    GetVal(settings[XORSTR("SlowWalk")][XORSTR("Speed")], &Settings::AntiAim::SlowWalk::Speed);
+    GetVal(settings[XORSTR("SlowWalk")][XORSTR("enabled")], &Settings::SlowWalk::enabled);
+    GetButtonCode(settings[XORSTR("SlowWalk")][XORSTR("key")], &Settings::SlowWalk::key);
+    GetVal(settings[XORSTR("SlowWalk")][XORSTR("mode")], (int*)&Settings::SlowWalk::mode);
+    GetVal(settings[XORSTR("SlowWalk")][XORSTR("speed")], &Settings::SlowWalk::speed);
 
     GetVal(settings[XORSTR("AutoAccept")][XORSTR("enabled")], &Settings::AutoAccept::enabled);
 

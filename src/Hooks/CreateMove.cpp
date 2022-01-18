@@ -27,10 +27,8 @@
 #include "../Features/ragdollgravity.h"
 #include "../Features/lagcomp.h"
 #include "../Features/fakeduck.h"
-#include "../Features/Tickbase.h"
 #include "../Features/silentWalk.h"
 #include "../Features/quickswitch.h"
-#include "../Features/fakewalk.h"
 #include "../Features/memeangle.h"
 #include "../Features/global.h"
 
@@ -54,9 +52,9 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
 
 		/* run code that affects movement before prediction */
 		BHop::CreateMove(cmd);
-                AutoStrafe::CreateMove(cmd);
-                global::CreateMove(cmd);
-                SilentWalk::CreateMove(cmd);
+            AutoStrafe::CreateMove(cmd);
+        global::CreateMove(cmd);
+        SilentWalk::CreateMove(cmd);
 		NoDuckCooldown::CreateMove(cmd);
 		ShowRanks::CreateMove(cmd);
 		AutoDefuse::CreateMove(cmd);
@@ -68,17 +66,15 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
 		NoFall::PrePredictionCreateMove(cmd);
 		PredictionSystem::StartPrediction(cmd);
 		FakeLag::CreateMove(cmd);
-		FakeeWalk::CreateMove(cmd);
 		LagComp::CreateMove(cmd);
 		Legitbot::CreateMove(cmd);
 		Ragebot::CreateMove(cmd);
-		Tickbase::run(cmd, CreateMove::sendPacket);
 		Triggerbot::CreateMove(cmd);
 		AutoKnife::CreateMove(cmd);
         memeangles::CreateMove(cmd);
     	AntiAim::CreateMove(cmd);
 		FakeDuck::CreateMove(cmd);
-		FakeWalk::CreateMove(cmd);
+		SlowWalk::CreateMove(cmd);
 		ESP::CreateMove(cmd);
 		TracerEffect::CreateMove(cmd);
  		QuickSwitch::CreateMove(cmd);

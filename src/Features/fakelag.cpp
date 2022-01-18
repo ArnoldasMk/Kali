@@ -3,7 +3,6 @@
 #include "../settings.h"
 #include "../interfaces.h"
 #include "../Hooks/hooks.h"
-#include "Tickbase.h"
 #include <climits>
 #ifndef absol
         #define absol(x) x < 0 ? x*-1 : x

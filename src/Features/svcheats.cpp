@@ -4,6 +4,7 @@
 #include "../settings.h"
 #include "../Utils/xorstring.h"
 
+
 void SvCheats::FrameStageNotify(ClientFrameStage_t stage)
 {
     if (!Settings::SvCheats::enabled)
@@ -78,10 +79,5 @@ trajectory->SetValue(Settings::SvCheats::grenadetraj::enabled);
 timez->SetValue(2);
 }
 if (Settings::SvCheats::svcheats::enabled)
-{
    svcheats->SetValue(Settings::SvCheats::svcheats::enabled);
-}
-else {
-}
-
 }

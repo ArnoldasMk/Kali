@@ -12,17 +12,6 @@
 
 void AntiAim::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 {
-    /*
-    const char *pitchCustomType[] = {
-        "Up",
-        "Down",
-        "Zero",
-        "Fake Zero",
-        "Fake Up",
-        "Fake Down",
-        "Fake Jitter",
-    };
-    */
     const char *aaState[] = {
         "Stand",
         "Air",
@@ -405,15 +394,15 @@ void AntiAim::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
                 ImGui::Columns(2, nullptr, false);
                 {
                     ImGui::PushItemWidth(-1);
-                    ImGui::Checkbox(XORSTR("Slow Walk"), &Settings::AntiAim::SlowWalk::enabled);
-                    ImGui::Combo(XORSTR("##SLOWTYPE"), (int *)&Settings::AntiAim::SlowWalk::mode, slowType, IM_ARRAYSIZE(slowType));
+                    ImGui::Checkbox(XORSTR("Slow Walk"), &Settings::SlowWalk::enabled);
+                    ImGui::Combo(XORSTR("##SLOWTYPE"), (int *)&Settings::SlowWalk::mode, slowType, IM_ARRAYSIZE(slowType));
                 }
                 ImGui::NextColumn();
                 {
                     ImGui::PushItemWidth(-1);
-                    UI::KeyBindButton(&Settings::AntiAim::SlowWalk::key);
-                    if (Settings::AntiAim::SlowWalk::mode == SlowMode::SAFETY)
-                        ImGui::SliderFloat(XORSTR("##SlowWalkSPeed"), &Settings::AntiAim::SlowWalk::Speed, 0, 100, XORSTR("Amount: %0.f"));
+                    UI::KeyBindButton(&Settings::SlowWalk::key);
+                    if (Settings::SlowWalk::mode == SlowMode::SAFETY)
+                        ImGui::SliderFloat(XORSTR("##SlowWalkSPeed"), &Settings::SlowWalk::speed, 0, 100, XORSTR("Amount: %0.f"));
                 }
                 ImGui::EndColumns();
                 ImGui::Separator();
