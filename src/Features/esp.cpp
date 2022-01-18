@@ -18,7 +18,6 @@
 #include "../ATGUI/atgui.h"
 #include "../Resources/tux.h"
 #include "antiaim.h"
-#include "Tickbase.h"
 #include "fakelag.h"
 #include "../Utils/patternfinder.h"
 #include "global.h"
@@ -1273,7 +1272,7 @@ static void DrawKeyBinds(int x, int y)
 		Draw::AddText(x + 2, y + 1, "AutoBlock  [Holding]", ImColor(255, 255, 255, 255));
 		y = y + 10;
 	}
-	if (inputSystem->IsButtonDown(Settings::AntiAim::SlowWalk::key) && Settings::AntiAim::SlowWalk::enabled)
+	if (inputSystem->IsButtonDown(Settings::SlowWalk::key) && Settings::SlowWalk::enabled)
 	{
 		Draw::AddText(x + 2, y + 2, "SlowWalk  [Holding]", ImColor(255, 255, 255, 255));
 		y = y + 10;

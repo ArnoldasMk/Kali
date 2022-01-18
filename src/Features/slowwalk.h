@@ -3,7 +3,7 @@
 #include "../SDK/IClientEntity.h"
 #include "../SDK/IInputSystem.h"
 
-namespace FakeWalk
+namespace SlowWalk
 {
     void CreateMove(CUserCmd* cmd);
-};
+}

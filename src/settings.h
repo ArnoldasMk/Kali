@@ -273,7 +273,7 @@ enum class AntiAimRealType_Y : int
 	Spin,
 };
 
-enum class MainWep : int
+enum class MainWeapon : int
 {
 	NONE,
 	AUTO,
@@ -281,19 +281,11 @@ enum class MainWep : int
 	SCOUT,
 };
 
-enum class SecWep : int
+enum class SecondaryWeapon : int
 {
 	NONE,
 	DUAL,
 	DEAGLE,
-};
-
-enum class AltWep : int
-{
-	GRENADES,
-	ARMOR,
-	TASER,
-	DEFUSER,
 };
 
 enum class AntiAimFakeType_y : int
@@ -1013,13 +1005,7 @@ namespace Settings
 		{
 			inline bool enabled;
 		}
-		namespace SlowWalk
-		{
-			inline SlowMode mode = SlowMode::ACCURATE;
-			inline float Speed;
-			inline bool enabled;
-			inline ButtonCode_t key;
-		}
+		
 		namespace Type
 		{
 			inline AntiAimType antiaimType = AntiAimType::LegitAntiAim;
@@ -1118,9 +1104,15 @@ namespace Settings
 		{
 			inline bool enabled = false;
 		}
-
 	}
 
+	namespace SlowWalk
+	{
+		inline bool enabled;
+		inline float speed;
+		inline SlowMode mode = SlowMode::ACCURATE;
+		inline ButtonCode_t key = KEY_LSHIFT;
+	}
 	namespace Resolver
 	{
 		inline bool lby;
@@ -2118,15 +2110,15 @@ namespace Settings
 	{
 		inline bool enabled;
 	}
-	namespace buybot
+	namespace AutoBuy
 	{
-		inline MainWep wep;
-		inline SecWep sec;
-		inline AltWep alt;
 		inline bool enabled = false;
-		inline bool scout = false;
-		inline bool autosniper = false;
-		inline bool awp = false;
+		inline MainWeapon main;
+		inline SecondaryWeapon secondary;
+		inline bool defuser = false;
+		inline bool nades = false;
+		inline bool taser = false;
+		inline bool armor = false;
 	}
 	namespace Debug
 	{

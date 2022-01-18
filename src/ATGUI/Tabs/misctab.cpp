@@ -36,8 +36,8 @@ void draw_combo(const char *name, int variable, const char *labels[], int count)
 
 void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 {
-	const char *mainwep[] = {"None", "Auto", "AWP", "SSG 08"};
-	const char *secwep[] = {"None", "Dual Berettas", "Deagle/Revolver"};
+	const char *mainWeapons[] = {"None", "Auto", "AWP", "SSG 08"};
+	const char *secondaryWeapons[] = {"None", "Dual Berettas", "Deagle/Revolver"};
 	const char *altwep[] = {"Grenades", "Armor", "Taser", "Defuser"};
 	const char *strafeTypes[] = {"Forwards", "Backwards", "Left", "Right", "Rage", "Directional"};
 	const char *animationTypes[] = {"Static", "Marquee", "Words", "Letters"};
@@ -361,16 +361,15 @@ void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideT
 				}
 
 				ImGui::Separator();
-				ImGui::Checkbox(XORSTR("BuyBot"), &Settings::buybot::enabled);
-				if (Settings::buybot::enabled)
-				{
-					ImGui::Combo(XORSTR("###MAINWAEP"), (int *)&Settings::buybot::wep, mainwep, IM_ARRAYSIZE(mainwep));
-					ImGui::Combo(XORSTR("###SECWAEP"), (int *)&Settings::buybot::sec, secwep, IM_ARRAYSIZE(secwep));
-					if (ImGui::BeginCombo(XORSTR("##FilterOptions"), XORSTR("Other")))
-					{
-						ImGui::Selectable(XORSTR("Grenades"), &Settings::buybot::scout, ImGuiSelectableFlags_DontClosePopups);
-						ImGui::Selectable(XORSTR("Armor"), &Settings::buybot::autosniper, ImGuiSelectableFlags_DontClosePopups);
-						ImGui::Selectable(XORSTR("Taser"), &Settings::buybot::awp, ImGuiSelectableFlags_DontClosePopups);
+				ImGui::Checkbox(XORSTR("AutoBuy"), &Settings::AutoBuy::enabled);
+				if (Settings::AutoBuy::enabled) {
+					ImGui::Combo(XORSTR("###MAINWAEP"), (int *)&Settings::AutoBuy::main, mainWeapons, IM_ARRAYSIZE(mainWeapons));
+					ImGui::Combo(XORSTR("###SECWAEP"), (int *)&Settings::AutoBuy::secondary, secondaryWeapons, IM_ARRAYSIZE(secondaryWeapons));
+					if (ImGui::BeginCombo(XORSTR("##FilterOptions"), XORSTR("Other"))) {
+						ImGui::Selectable(XORSTR("Grenades"), &Settings::AutoBuy::nades, ImGuiSelectableFlags_DontClosePopups);
+						ImGui::Selectable(XORSTR("Armor"), &Settings::AutoBuy::armor, ImGuiSelectableFlags_DontClosePopups);
+						ImGui::Selectable(XORSTR("Taser"), &Settings::AutoBuy::taser, ImGuiSelectableFlags_DontClosePopups);
+						ImGui::Selectable(XORSTR("Defuser"), &Settings::AutoBuy::defuser, ImGuiSelectableFlags_DontClosePopups);
 						ImGui::EndCombo();
 					}
 				}

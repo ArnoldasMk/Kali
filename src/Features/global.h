@@ -16,5 +16,4 @@ namespace global {
     inline int tickcount;
     inline C_BasePlayer* local;
     void CreateMove(CUserCmd*);
-
 }

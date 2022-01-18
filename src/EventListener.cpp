@@ -14,7 +14,7 @@
 #include "Features/valvedscheck.h"
 #include "Features/voterevealer.h"
 #include "Features/esp.h"
-#include "Features/buybot.h"
+#include "Features/autobuy.h"
 #include "interfaces.h"
 #include "SDK/IGameEvent.h"
 #include "settings.h"
@@ -36,7 +36,7 @@ void EventListener::FireGameEvent(IGameEvent* event)
     Ragebot::FireGameEvent(event);
     AntiAim::FireGameEvent(event);
     Hitmarkers::FireGameEvent(event);
-    buybot::FireGameEvent(event);
+    AutoBuy::FireGameEvent(event);
     Eventlog::FireGameEvent(event);
     NameStealer::FireGameEvent(event);
     VoteRevealer::FireGameEvent(event);
