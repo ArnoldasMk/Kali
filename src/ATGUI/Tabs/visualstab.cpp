@@ -865,8 +865,6 @@ void VisualsLocal::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabInde
 				ImGui::Separator();
 				ImGui::Text("ESP Features");
 				ImGui::Separator();
-				//ImGui::Text(XORSTR("Only on Key"));
-				//UI::KeyBindButton(&Settings::ESP::key);
 				ImGui::Columns(2, nullptr, false);
 				{
 					ImGui::Checkbox(XORSTR("Skybox Changer"), &Settings::SkyBox::enabled);
@@ -961,22 +959,6 @@ void VisualsLocal::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabInde
 					ImGui::Checkbox(XORSTR("Localplayer only"), &Settings::ESP::tracebullet::local);
 				}
 				ImGui::EndColumns();
-				ImGui::Separator();
-				ImGui::Columns(3, nullptr, false);
-				{
-					ImGui::Checkbox(XORSTR("Show Keybinds"), &Settings::ESP::KeyBinds);
-				}
-				ImGui::NextColumn();
-				{
-					int width, height;
-					ImGui::SliderInt(XORSTR("##X"), &Settings::ESP::keybi::x, 0, 1920, XORSTR("X: %0.f"));
-				}
-				ImGui::NextColumn();
-				{
-					ImGui::SliderInt(XORSTR("##Y"), &Settings::ESP::keybi::y, 0, 1080, XORSTR("Y: %0.f"));
-				}
-				ImGui::EndColumns();
-				ImGui::Columns(1);
 				ImGui::Separator();
 				ImGui::Text(XORSTR("Debug"));
 				ImGui::Separator();

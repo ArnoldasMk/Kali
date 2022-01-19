@@ -94,4 +94,9 @@ public:
 		typedef void (* oClientCmd_Unrestricted)(void*, const char*);
 		return getvfunc<oClientCmd_Unrestricted>(this, 113)(this, szCmdString);
 	}
+	
+	bool IsVoiceRecording() {
+        typedef bool (*Fn)(void*);
+        return getvfunc<Fn>(this, 225)(this);
+    }
 };

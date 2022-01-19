@@ -11,14 +11,14 @@ static bool FirstDuck = false;
 int choked;
 void FakeDuck::CreateMove(CUserCmd *cmd)
 {
-	if (!Settings::AntiAim::FakeDuck::enabled)
+	if (!Settings::FakeDuck::enabled)
 		return;
 
 	C_BasePlayer* localplayer = (C_BasePlayer*)entityList->GetClientEntity(engine->GetLocalPlayer());
     if (!localplayer || !localplayer->GetAlive())
 		return;
 
-	if (!inputSystem->IsButtonDown(Settings::AntiAim::FakeDuck::fakeDuckKey))
+	if (!inputSystem->IsButtonDown(Settings::FakeDuck::key))
 	{
 		FirstDuck = false;
 		return;
@@ -56,10 +56,10 @@ if (FirstDuck){
 
 void FakeDuck::OverrideView(CViewSetup *pSetup)
 {
-	if (!Settings::AntiAim::FakeDuck::enabled)
+	if (!Settings::FakeDuck::enabled)
 		return;
 
-	if (!inputSystem->IsButtonDown(Settings::AntiAim::FakeDuck::fakeDuckKey))
+	if (!inputSystem->IsButtonDown(Settings::FakeDuck::key))
 		return;
 
 	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());

@@ -80,30 +80,3 @@ void UI::SetupWindows()
 	ShowSpectators::RenderWindow();
 	Radar::RenderWindow();
 }
-
-void UI::angleIndicator()
-{
-	ImGui::SetNextWindowPos(ImVec2(0, 400), ImGuiCond_Always);
-	ImGui::SetNextWindowSize(ImVec2(100, 0), ImGuiCond_Always);
-
-	ImGui::SetNextWindowBgAlpha(0.0f);
-	ImGuiStyle &style = ImGui::GetStyle();
-	style.WindowBorderSize = 0.0f;
-	if (ImGui::Begin(XORSTR("##indecator"), (bool *)false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize))
-		;
-	{
-		int width, height;
-		engine->GetScreenSize(width, height);
-
-		if (AntiAim::ManualAntiAim::alignBack)
-		{
-			Draw::ImText(ImVec2(500, 500), ImColor(255, 255, 255, 255), XORSTR("v"), nullptr, 0.0f, nullptr, ImFontFlags_Shadow);
-		}
-		else if (AntiAim::ManualAntiAim::alignLeft)
-			Draw::ImText(ImVec2(width / 2 - 10, height / 2), ImColor(54, 154, 255, 255), XORSTR("<"), nullptr, 0.0f, nullptr, ImFontFlags_Shadow);
-		else if (AntiAim::ManualAntiAim::alignRight)
-			Draw::ImText(ImVec2(width / 2 + 10, height / 2), ImColor(54, 154, 255, 255), XORSTR(">"), nullptr, 0.0f, nullptr, ImFontFlags_Shadow);
-
-		ImGui::End();
-	}
-}

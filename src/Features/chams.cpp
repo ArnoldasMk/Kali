@@ -239,17 +239,13 @@
 		int maxClient = engine->GetMaxClients();
 		static matrix3x4_t fakeBoneMatrix[128];
 		float fakeangle = AntiAim::fakeAngle.y - AntiAim::realAngle.y;
-		if (Settings::AntiAim::AADisabled::enabled == true)
-			fakeangle = Settings::AntiAim::offsat;
-		float fakeanglex = 0;
-		CCSGOAnimState fakestate; // One day....
 		static Vector OutPos;
 		for (int i = 0; i < 128; i++)
 		{
-			Math::AngleMatrix(Vector(fakeanglex, fakeangle, 0), fakeBoneMatrix[i]);
+			Math::AngleMatrix(Vector(0, fakeangle, 0), fakeBoneMatrix[i]);
 			matrix::MatrixMultiply(fakeBoneMatrix[i], pCustomBoneToWorld[i]);
 			Vector BonePos = Vector(pCustomBoneToWorld[i][0][3], pCustomBoneToWorld[i][1][3], pCustomBoneToWorld[i][2][3]) - pInfo.origin;
-			Math::VectorRotate(BonePos, Vector(fakeanglex, fakeangle, 0), OutPos);
+			Math::VectorRotate(BonePos, Vector(0, fakeangle, 0), OutPos);
 			OutPos += pInfo.origin;
 			fakeBoneMatrix[i][0][3] = OutPos.x;
 			fakeBoneMatrix[i][1][3] = OutPos.y;
@@ -261,7 +257,7 @@
 			Fake_meterial->AlphaModulate(0.5f);
 		}
 		static matrix3x4_t BodyBoneMatrix[128];
-		if (Settings::AntiAim::FakeDuck::enabled && inputSystem->IsButtonDown(Settings::AntiAim::FakeDuck::fakeDuckKey))
+		if (Settings::FakeDuck::enabled && inputSystem->IsButtonDown(Settings::FakeDuck::key))
 		{
 			if (CreateMove::sendPacket)
 			{
@@ -281,7 +277,7 @@
 		Fake_meterial->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Settings::ESP::FilterLocalPlayer::Chams::type == ChamsType::WIREFRAME);
 
 		modelRender->ForcedMaterialOverride(Fake_meterial);
-		if (Settings::ESP::SyncFake || (localplayer->GetVelocity().Length2D() < 2.05f && Settings::FakeLag::enabled) || (Settings::AntiAim::FakeDuck::enabled && inputSystem->IsButtonDown(Settings::AntiAim::FakeDuck::fakeDuckKey)))
+		if (Settings::ESP::SyncFake || (localplayer->GetVelocity().Length2D() < 2.05f && Settings::FakeLag::enabled) || (Settings::FakeDuck::enabled && inputSystem->IsButtonDown(Settings::FakeDuck::key)))
 			modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, BodyBoneMatrix);
 		else
 			modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, fakeBoneMatrix);

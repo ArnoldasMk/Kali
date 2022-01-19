@@ -1,7 +1,7 @@
 #include "thirdperson.h"
-#include "antiaim.h"
-#include "../Utils/xorstring.h"
-
+// #include "antiaim.h"
+// #include "../Utils/xorstring.h"
+#include "../Hooks/hooks.h"
 #include "../settings.h"
 #include "../interfaces.h"
 
@@ -78,8 +78,8 @@ void ThirdPerson::FrameStageNotify(ClientFrameStage_t stage)
 
 		if (localplayer && localplayer->GetAlive() && Settings::ThirdPerson::enabled && input->m_fCameraInThirdPerson)
 		{
-			if (Settings::AntiAim::RageAntiAim::enabled || Settings::AntiAim::LegitAntiAim::enabled)
-				*localplayer->GetVAngles() = AntiAim::realAngle;
+			if (Settings::AntiAim::enabled)
+				*localplayer->GetVAngles() = CreateMove::lastTickViewAngles;
 		}
 	}
 }
