@@ -1,7 +1,7 @@
 #pragma GCC diagnostic ignored "-Wwrite-strings"
 #pragma GCC diagnostic ignored "-Wformat-security"
 
-#include "antiaimtab.h"
+#include "hvhtab.h"
 
 #include "../../interfaces.h"
 #include "../../Utils/xorstring.h"
@@ -10,7 +10,7 @@
 #include "../../ImGUI/imgui_internal.h"
 #include "../atgui.h"
 
-void AntiAim::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
+void HvH::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 {
     const char *aaState[] = {
         "Stand",

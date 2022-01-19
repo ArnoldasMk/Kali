@@ -65,7 +65,7 @@ static bool predEnabled = false;
 static bool scopeControlEnabled = false;
 static bool hitchanceEnabled = false;
 static float hitchanceValue = 100.f;
-static bool TriggerBot = false;
+static bool triggerBotEnabled = false;
 static bool triggerHitchanceEnabled = false;
 static float triggerHitchanceValue = 100.f;
 
@@ -121,7 +121,7 @@ void UI::ReloadWeaponSettings()
 	autoSlow = Settings::Legitbot::weapons.at(index).autoSlow;
 	predEnabled = Settings::Legitbot::weapons.at(index).predEnabled;
 	scopeControlEnabled = Settings::Legitbot::weapons.at(index).scopeControlEnabled;
-	TriggerBot = Settings::Legitbot::weapons.at(index).TriggerBot;
+	triggerBotEnabled = Settings::Legitbot::weapons.at(index).triggerBotEnabled;
 	triggerHitchanceValue = Settings::Legitbot::weapons.at(index).triggerHitchanceValue;
 	triggerHitchanceEnabled = Settings::Legitbot::weapons.at(index).triggerHitchanceEnabled;
 
@@ -163,10 +163,8 @@ void UI::UpdateWeaponSettings()
 	    .autoSlow = autoSlow,
 	    .predEnabled = predEnabled,
 	    .scopeControlEnabled = scopeControlEnabled,
-	    .mindamage = 0,
-	    .TriggerBot = TriggerBot,
+	    .triggerBotEnabled = triggerBotEnabled,
 	    .triggerHitchanceEnabled = triggerHitchanceEnabled,
-	    .triggerHitchanceValue = triggerHitchanceValue,
 
 	    .engageLockTTR = engageLockTTR,
 	    .bone = bone,
@@ -185,6 +183,8 @@ void UI::UpdateWeaponSettings()
 	    .spreadLimit = spreadLimit,
 	    .minDamagevalue = 10.0f,
 	    .hitchanceValue = hitchanceValue,
+	    .triggerHitchanceValue = triggerHitchanceValue,
+
 	};
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 		settings.desiredBones[bone] = desiredBones[bone];
@@ -587,7 +587,7 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				ImGui::Separator();
 				ImGui::Columns(2, nullptr, false);
 				{
-					if (ImGui::Checkbox(XORSTR("Enabled"), &TriggerBot))
+					if (ImGui::Checkbox(XORSTR("Enabled"), &triggerBotEnabled))
 						UI::UpdateWeaponSettings();
 				}
 				ImGui::NextColumn();
@@ -598,13 +598,13 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				ImGui::EndColumns();
 				ImGui::Columns(2, nullptr, false);
 				{
-					if (ImGui::Checkbox(XORSTR("Trigger Hit Chance"), &hitchanceEnabled))
+					if (ImGui::Checkbox(XORSTR("Hit Chance"), &triggerHitchanceEnabled))
 						UI::UpdateWeaponSettings();
 				}
 				ImGui::NextColumn();
 				{
 					ImGui::PushItemWidth(-1);
-					if (ImGui::SliderFloat(XORSTR("##TRIGGERHITCHANCE"), &hitchanceValue, 0, 100, XORSTR("Trigger Hitchance: %0.f")))
+					if (ImGui::SliderFloat(XORSTR("##TRIGGERHITCHANCE"), &triggerHitchanceValue, 0, 100, XORSTR("Hitchance: %0.f")))
 						UI::UpdateWeaponSettings();
 					ImGui::PopItemWidth();
 				}

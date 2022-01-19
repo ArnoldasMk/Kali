@@ -35,33 +35,34 @@
 bool CreateMove::sendPacket = true;
 QAngle CreateMove::lastTickViewAngles = QAngle(0);
 
-typedef bool (*CreateMoveFn) (void*, float, CUserCmd*);
+typedef bool (*CreateMoveFn)(void *, float, CUserCmd *);
 
-bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
+bool Hooks::CreateMove(void *thisptr, float flInputSampleTime, CUserCmd *cmd)
 {
 	clientModeVMT->GetOriginalMethod<CreateMoveFn>(25)(thisptr, flInputSampleTime, cmd);
 
 	if (cmd && cmd->command_number)
 	{
-        // Special thanks to Gre-- I mean Heep ( https://www.unknowncheats.me/forum/counterstrike-global-offensive/290258-updating-bsendpacket-linux.html )
-        uintptr_t* rbp;
-		
-        asm volatile("mov %%rbp, %0" : "=r" (rbp));
-        bool *sendPacket = ((*(bool **)rbp) - (int)24);
-        CreateMove::sendPacket = true;
+		// Special thanks to Gre-- I mean Heep ( https://www.unknowncheats.me/forum/counterstrike-global-offensive/290258-updating-bsendpacket-linux.html )
+		uintptr_t *rbp;
+
+		asm volatile("mov %%rbp, %0"
+				   : "=r"(rbp));
+		bool *sendPacket = ((*(bool **)rbp) - (int)24);
+		CreateMove::sendPacket = true;
 
 		/* run code that affects movement before prediction */
 		BHop::CreateMove(cmd);
-            AutoStrafe::CreateMove(cmd);
-        global::CreateMove(cmd);
-        SilentWalk::CreateMove(cmd);
+		AutoStrafe::CreateMove(cmd);
+		global::CreateMove(cmd);
+		SilentWalk::CreateMove(cmd);
 		NoDuckCooldown::CreateMove(cmd);
 		ShowRanks::CreateMove(cmd);
 		AutoDefuse::CreateMove(cmd);
 		JumpThrow::CreateMove(cmd);
 		GrenadeHelper::CreateMove(cmd);
-        GrenadePrediction::CreateMove( cmd );
-        EdgeJump::PrePredictionCreateMove(cmd);
+		GrenadePrediction::CreateMove(cmd);
+		EdgeJump::PrePredictionCreateMove(cmd);
 		Autoblock::CreateMove(cmd);
 		NoFall::PrePredictionCreateMove(cmd);
 		PredictionSystem::StartPrediction(cmd);
@@ -71,24 +72,23 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
 		Ragebot::CreateMove(cmd);
 		Triggerbot::CreateMove(cmd);
 		AutoKnife::CreateMove(cmd);
-        memeangles::CreateMove(cmd);
-    	AntiAim::CreateMove(cmd);
+		memeangles::CreateMove(cmd);
+		AntiAim::CreateMove(cmd);
 		FakeDuck::CreateMove(cmd);
 		SlowWalk::CreateMove(cmd);
 		ESP::CreateMove(cmd);
 		TracerEffect::CreateMove(cmd);
- 		QuickSwitch::CreateMove(cmd);
+		QuickSwitch::CreateMove(cmd);
 		RagdollGravity::CreateMove(cvar);
 		PredictionSystem::EndPrediction();
 		EdgeJump::PostPredictionCreateMove(cmd);
 		NoFall::PostPredictionCreateMove(cmd);
 
-        *sendPacket = CreateMove::sendPacket;
+		*sendPacket = CreateMove::sendPacket;
 
-        if (CreateMove::sendPacket)
-            CreateMove::lastTickViewAngles = cmd->viewangles;
+		if (CreateMove::sendPacket)
+			CreateMove::lastTickViewAngles = cmd->viewangles;
 	}
 
 	return false;
 }
-

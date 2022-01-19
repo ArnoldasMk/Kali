@@ -362,11 +362,9 @@ struct LegitWeapon_t
 	    autoSlow,
 	    predEnabled,
 	    scopeControlEnabled,
-	    mindamage,
-	    autoWall,
-	    TriggerBot,
+	    triggerBotEnabled,
 	    triggerHitchanceEnabled;
-	float triggerHitchanceValue = 100.f;
+
 	int engageLockTTR = 700;
 	Bone bone = BONE_HEAD;
 	SmoothType smoothType = SmoothType::SLOW_END;
@@ -386,14 +384,16 @@ struct LegitWeapon_t
 		 autoWallValue = 10.0f,
 		 spreadLimit = 1.0f,
 		 minDamagevalue = 10.0f,
-		 hitchanceValue = 100.f;
+		 hitchanceValue = 100.f,
+		 triggerHitchanceValue = 100.f;
+
 	bool desiredBones[31];
 
 	bool operator==(const LegitWeapon_t &another) const
 	{
 		for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 		{
-			
+
 			if (this->desiredBones[bone] != another.desiredBones[bone])
 				return false;
 		}
@@ -445,9 +445,7 @@ struct LegitWeapon_t
 			  this->autoSlow == another.autoSlow &&
 			  this->predEnabled == another.predEnabled &&
 			  this->autoAimRealDistance == another.autoAimRealDistance &&
-			  this->TriggerBot == another.TriggerBot &&
-			  this->mindamage == another.mindamage &&
-			  this->autoWall == another.autoWall &&
+			  this->triggerBotEnabled == another.triggerBotEnabled &&
 			  this->scopeControlEnabled == another.scopeControlEnabled;
 	}
 } const defaultSettings{};
@@ -463,7 +461,6 @@ struct RageWeapon_t
 	    autoScopeEnabled,
 	    autoSlow,
 	    scopeControlEnabled,
-	    DoubleFire,
 	    BacktrackEnabled,
 	    OnshotEnabled;
 
@@ -508,8 +505,7 @@ struct RageWeapon_t
 			  this->BacktrackEnabled == Ragebotanother.BacktrackEnabled &&
 			  this->BacktrackValue == Ragebotanother.BacktrackValue &&
 			  this->mindmgoveridekey == Ragebotanother.mindmgoveridekey &&
-			  this->onshotkey == Ragebotanother.onshotkey &&
-			  this->DoubleFire == Ragebotanother.DoubleFire;
+			  this->onshotkey == Ragebotanother.onshotkey;
 	}
 
 } const ragedefault{};
@@ -721,17 +717,6 @@ namespace Settings
 		namespace ShootAssist
 		{
 			inline bool enabled = false;
-
-			namespace ShotDelay
-			{
-				inline float Value = 100.f;
-			}
-			namespace MinShotFire
-
-			{
-				inline int value = 6;
-			} // namespace MinShotFire
-
 			namespace Hitchance
 			{
 				inline bool enabled = false;
@@ -858,29 +843,16 @@ namespace Settings
 		inline ButtonCode_t dmgkey;
 		inline impactType impacttype = impactType::ITSME;
 
-		namespace exploits
-		{
-			inline ButtonCode_t doubletapKey;
-			inline bool doubletapToggle;
-			inline bool enabled;
-			inline bool doubletap;
-			inline DtSpeed doubletapSpeed = DtSpeed::INSTANT;
-		}
-
-		inline float test;
-
 		namespace quickpeek
 		{
 			inline ButtonCode_t key;
 			inline bool enabled;
 			inline ColorVar color = ImColor(255, 255, 255, 190);
 		}
-		inline bool DoubleTap;
 		inline float MinDamage = 50.f;
 		inline bool enabled = false;
 		inline bool silent = false;
 		inline bool friendly = false;
-		inline bool DoubleFire = false;
 
 		inline DamagePrediction damagePrediction = DamagePrediction::damage;
 		inline EnemySelectionType enemySelectionType = EnemySelectionType::CLosestToCrosshair;
@@ -1005,7 +977,6 @@ namespace Settings
 		{
 			inline bool enabled;
 		}
-		
 		namespace Type
 		{
 			inline AntiAimType antiaimType = AntiAimType::LegitAntiAim;

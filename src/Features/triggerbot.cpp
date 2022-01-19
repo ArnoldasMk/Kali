@@ -43,7 +43,7 @@ void Triggerbot::CreateMove(CUserCmd *cmd)
 		index = *activeWeapon->GetItemDefinitionIndex();
 	const LegitWeapon_t& currentWeaponSetting = Settings::Legitbot::weapons.at(index);
 
-	if (!currentWeaponSetting.TriggerBot)
+	if (!currentWeaponSetting.triggerBotEnabled)
 		return;
 
 	if (!inputSystem->IsButtonDown(Settings::Triggerbot::key))

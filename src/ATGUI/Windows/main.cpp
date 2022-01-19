@@ -8,10 +8,9 @@
 #include "../Tabs/legitbottab.h"
 #include "../Tabs/visualstab.h"
 #include "../Tabs/ragebottab.h"
-#include "../Tabs/antiaimtab.h"
+#include "../Tabs/hvhtab.h"
 #include "../Tabs/misctab.h"
 #include "../Tabs/playerinfo.h"
-// #include "../Tabs/triggerbottab.h"
 #include "../Tabs/visualstab.h"
 #include "../Tabs/skinstab.h"
 #include "../Tabs/modelstab.h"
@@ -26,7 +25,7 @@ static int subtabs = 0;
 enum
 {
 	AimbotTab,
-	AntiAimTab,
+	HvHTab,
 	Visuals,
 	SkinChangerTab,
 	MiscTab,
@@ -47,10 +46,10 @@ enum
 	Customizations,
 };
 
-const char *TabsNames[] = {"Aimbot", "Anti Aim", "Visuals", "Skin Changer", "Misc", "Player List"};
+const char *TabsNames[] = {"Aimbot", "HvH", "Visuals", "Skin Changer", "Misc", "Player List"};
 
 std::initializer_list<const char *> subtabAimbot = {};
-std::initializer_list<const char *> subtabAntiAim = {};
+std::initializer_list<const char *> subtabHvHTab = {};
 std::initializer_list<const char *> subtabVisuals = {"Enemy", "Allies", "Local", "Materials", "Menu"};
 std::initializer_list<const char *> subtabSkinChanger = {"Skins", "Models"};
 std::initializer_list<const char *> subtabMisc = {"Custom"};
@@ -59,7 +58,7 @@ std::initializer_list<const char *> subtabDev = {"Options"};
 
 std::vector<std::initializer_list<const char *>> allsubtabs{
     subtabAimbot,
-    subtabAntiAim,
+    subtabHvHTab,
     subtabVisuals,
     subtabSkinChanger,
     subtabMisc,
@@ -145,23 +144,6 @@ static void SubTabs()
 		}
 	}
 }
-/*
-static void aimbotTab()
-{
-	switch (subtabs)
-	{
-	case LegitbotTab:
-		Legitbot::RenderMainMenu(pos, draw, subtabs);
-		break;
-	case RageTab:
-		RagebotTab::RenderMainMenu(pos, draw, subtabs);
-		break;
-	default:
-		Triggerbot::RenderMainMenu(pos, draw, subtabs);
-		break;
-	}
-}
-*/
 static void VisualsTab()
 {
 	switch (subtabs)
@@ -223,9 +205,9 @@ void MainMenu::Render()
 			draw->AddRectFilled(ImVec2(pos.x, pos.y + 52), ImVec2(pos.x + 160, pos.y + 836), ImColor(4, 3, 5));
 			Legitbot::RenderMainMenu(pos, draw, subtabs);
 			break;
-		case AntiAimTab:
+		case HvHTab:
 			draw->AddRectFilled(ImVec2(pos.x, pos.y + 52), ImVec2(pos.x + 160, pos.y + 836), ImColor(4, 3, 5));
-			AntiAim::RenderMainMenu(pos, draw, subtabs);
+			HvH::RenderMainMenu(pos, draw, subtabs);
 			break;
 		case Visuals:
 			VisualsTab();

@@ -30,7 +30,6 @@ static float MinDamage = 50.f;
 static float BodyScale = 0.1f;
 static float HeadScale = 0.1f;
 static bool autoSlow = false;
-static bool doubleFire = false;
 static bool scopeControlEnabled = false;
 void UI::ReloadRageWeaponSettings()
 {
@@ -48,7 +47,6 @@ void UI::ReloadRageWeaponSettings()
 	HitChange = Settings::Ragebot::weapons.at(index).HitChance;
 	MinDamage = Settings::Ragebot::weapons.at(index).MinDamage;
 	autoSlow = Settings::Ragebot::weapons.at(index).autoSlow;
-	doubleFire = Settings::Ragebot::weapons.at(index).DoubleFire;
 	scopeControlEnabled = Settings::Ragebot::weapons.at(index).scopeControlEnabled;
 	damagePrediction = Settings::Ragebot::weapons.at(index).DmagePredictionType;
 	enemySelectionType = Settings::Ragebot::weapons.at(index).enemySelectionType;
@@ -80,7 +78,6 @@ void UI::UpdateRageWeaponSettings()
 	    .autoScopeEnabled = autoScopeEnabled,
 	    .autoSlow = autoSlow,
 	    .scopeControlEnabled = scopeControlEnabled,
-	    .DoubleFire = doubleFire,
 
 	    .MinDamage = MinDamage,
 	    .HitChance = HitChange,
