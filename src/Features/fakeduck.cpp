@@ -7,59 +7,55 @@
 #include "valvedscheck.h"
 #include "../../Utils/xorstring.h"
 
-static bool FirstDuck = false;
+static bool firstDuck = false;
 int choked;
+
 void FakeDuck::CreateMove(CUserCmd *cmd)
 {
-	if (!Settings::AntiAim::FakeDuck::enabled)
+	if (!Settings::FakeDuck::enabled)
 		return;
 
 	C_BasePlayer* localplayer = (C_BasePlayer*)entityList->GetClientEntity(engine->GetLocalPlayer());
     if (!localplayer || !localplayer->GetAlive())
 		return;
 
-	if (!inputSystem->IsButtonDown(Settings::AntiAim::FakeDuck::fakeDuckKey))
-	{
-		FirstDuck = false;
+	if (!inputSystem->IsButtonDown(Settings::FakeDuck::key)) {
+		firstDuck = false;
 		return;
-	}else {
-		FirstDuck = true;
-		}
+	} else {
+		firstDuck = true;
+	}
 
-if (FirstDuck){
+	if (firstDuck) {
 		int amount;
-                cmd->buttons |= IN_BULLRUSH;
+        cmd->buttons |= IN_BULLRUSH;
+		
 		if ((*csGameRules)->IsValveDS())
 		    amount = 7;
 		else
 		    amount = 14;
-                if (choked <= amount / 2){
-                        cmd->buttons &= ~IN_DUCK;
-			//if (choked > (amount / 3) + 1 )
-			//	localplayer->GetAnimState()->duckProgress = 0.f;
-			//else
-			//	localplayer->GetAnimState()->duckProgress = 1.0;
-                }else{
-                        cmd->buttons |= IN_DUCK;
-			//localplayer->GetAnimState()->duckProgress = 1.0;
-               } if (choked < amount){
-			choked++;
-                        CreateMove::sendPacket = false;   // choke
-		}
-                else{
-                       CreateMove::sendPacket = true;    // send packet
-		       choked = 0;
+		if (choked <= amount / 2) {
+            cmd->buttons &= ~IN_DUCK;
+        } else {
+			cmd->buttons |= IN_DUCK;
 		}
 
-}
+		if (choked < amount) {
+			choked++;
+	        CreateMove::sendPacket = false;   // choke
+		} else {
+			CreateMove::sendPacket = true;    // send packet
+			choked = 0;
+		}
+	}
 }
 
 void FakeDuck::OverrideView(CViewSetup *pSetup)
 {
-	if (!Settings::AntiAim::FakeDuck::enabled)
+	if (!Settings::FakeDuck::enabled)
 		return;
 
-	if (!inputSystem->IsButtonDown(Settings::AntiAim::FakeDuck::fakeDuckKey))
+	if (!inputSystem->IsButtonDown(Settings::FakeDuck::key))
 		return;
 
 	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());

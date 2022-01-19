@@ -598,13 +598,13 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				ImGui::EndColumns();
 				ImGui::Columns(2, nullptr, false);
 				{
-					if (ImGui::Checkbox(XORSTR("Trigger Hit Chance"), &hitchanceEnabled))
+					if (ImGui::Checkbox(XORSTR("Trigger Hit Chance"), &triggerHitchanceEnabled))
 						UI::UpdateWeaponSettings();
 				}
 				ImGui::NextColumn();
 				{
 					ImGui::PushItemWidth(-1);
-					if (ImGui::SliderFloat(XORSTR("##TRIGGERHITCHANCE"), &hitchanceValue, 0, 100, XORSTR("Trigger Hitchance: %0.f")))
+					if (ImGui::SliderFloat(XORSTR("##TRIGGERHITCHANCE"), &triggerHitchanceValue, 0, 100, XORSTR("Trigger Hitchance: %0.f")))
 						UI::UpdateWeaponSettings();
 					ImGui::PopItemWidth();
 				}

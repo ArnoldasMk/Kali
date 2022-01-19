@@ -286,53 +286,11 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("Triggerbot")][XORSTR("RandomDelay")][XORSTR("enabled")] = Settings::Triggerbot::RandomDelay::enabled;
     settings[XORSTR("Triggerbot")][XORSTR("RandomDelay")][XORSTR("lowBound")] = Settings::Triggerbot::RandomDelay::lowBound;
     settings[XORSTR("Triggerbot")][XORSTR("RandomDelay")][XORSTR("highBound")] = Settings::Triggerbot::RandomDelay::highBound;
-    settings[XORSTR("AntiAim")][XORSTR("chokeonshot")] = Settings::AntiAim::ChokeOnShot;
-    settings[XORSTR("AntiAim")][XORSTR("AutoInvert")] = Settings::AntiAim::AutoInvert;
-    settings[XORSTR("AntiAim")][XORSTR("arms")] = Settings::AntiAim::arms;
-
-    settings[XORSTR("AntiAim")][XORSTR("pitchtype")] = (int)Settings::AntiAim::pitchtype;
-    settings[XORSTR("AntiAim")][XORSTR("Type")] = (int)Settings::AntiAim::Type::antiaimType;
-    settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("no_enemy")] = Settings::AntiAim::AutoDisable::noEnemy;
-    settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("knife_held")] = Settings::AntiAim::AutoDisable::knifeHeld;
-    settings[XORSTR("AntiAim")][XORSTR("FakeDuck")][XORSTR("enabled")] = Settings::AntiAim::FakeDuck::enabled;
-    settings[XORSTR("AntiAim")][XORSTR("FakeDuck")][XORSTR("fakeDuckKey")] = Util::GetButtonName(Settings::AntiAim::FakeDuck::fakeDuckKey);
-
+   
     settings[XORSTR("SilentWalk")][XORSTR("Key")] = Util::GetButtonName(Settings::SilentWalk::key);
     settings[XORSTR("SilentWalk")][XORSTR("enabled")] = Settings::SilentWalk::enabled;
 
     settings[XORSTR("AnimationMemes")][XORSTR("enabled")] = Settings::AnimMemes::enabled;
-
-    settings[XORSTR("AntiAim")][XORSTR("airspin")][XORSTR("enabled")] = Settings::AntiAim::airspin::enabled;
-
-    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("fakepeek")] = Settings::AntiAim::RageAntiAim::fakepeek;
-    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("fakeheadkey")] = Util::GetButtonName(Settings::AntiAim::RageAntiAim::fakeheadkey);
-
-    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("lby")][XORSTR("enabled")] = Settings::AntiAim::RageAntiAim::lby::enabled;
-    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("lby")][XORSTR("type")] = (int)Settings::AntiAim::RageAntiAim::lby::type;
-
-    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("legitkey")][XORSTR("enabled")] = Settings::AntiAim::RageAntiAim::legitkey::enabled;
-    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("legitkey")][XORSTR("key")] = Util::GetButtonName(Settings::AntiAim::RageAntiAim::legitkey::key);
-
-    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("enabled")] = Settings::AntiAim::RageAntiAim::enabled;
-    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("invertonhurt")] = Settings::AntiAim::RageAntiAim::invertOnHurt;
-    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Fake Percent")] = Settings::AntiAim::RageAntiAim::AntiAImPercent;
-    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Real Jitter Percent")] = Settings::AntiAim::RageAntiAim::JitterPercent;
-    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Static Offset")] = Settings::AntiAim::RageAntiAim::AntiAimOffset;
-    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("togglekey")] = Util::GetButtonName(Settings::AntiAim::RageAntiAim::InvertKey);
-    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("inverted")] = Settings::AntiAim::RageAntiAim::inverted;
-    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Type")] = (int)Settings::AntiAim::RageAntiAim::Type;
-    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("LbyMode")] = (int)Settings::AntiAim::RageAntiAim::lbym;
-    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("atTheTarget")] = Settings::AntiAim::RageAntiAim::atTheTarget;
-    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("SendReal")] = Settings::AntiAim::RageAntiAim::SendReal;
-    settings[XORSTR("AntiAim")][XORSTR("ManualAntiAim")][XORSTR("Enabled")] = Settings::AntiAim::ManualAntiAim::Enabled;
-    settings[XORSTR("AntiAim")][XORSTR("ManualAntiAim")][XORSTR("backButton")] = Settings::AntiAim::ManualAntiAim::backButton;
-    settings[XORSTR("AntiAim")][XORSTR("ManualAntiAim")][XORSTR("RightButton")] = Settings::AntiAim::ManualAntiAim::RightButton;
-    settings[XORSTR("AntiAim")][XORSTR("ManualAntiAim")][XORSTR("LeftButton")] = Settings::AntiAim::ManualAntiAim::LeftButton;
-
-    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("offset")] = Settings::AntiAim::RageAntiAim::offset;
-    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("pitchJitter")] = Settings::AntiAim::RageAntiAim::pitchJitter;
-    settings[XORSTR("AntiAim")][XORSTR("LBYJitter")] = Settings::AntiAim::lbyjitter;
-    settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("bodylean")] = Settings::AntiAim::RageAntiAim::bodylean;
 
     settings[XORSTR("SvCheats")][XORSTR("enabled")] = Settings::SvCheats::enabled;
     settings[XORSTR("SvCheatss")][XORSTR("enabled")] = Settings::SvCheats::svcheats::enabled;
@@ -368,21 +326,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("Nightmode")][XORSTR("enabled")] = Settings::Nightmode::enabled;
     settings[XORSTR("Nightmode")][XORSTR("value")] = Settings::Nightmode::value;
 
-    /*
-     * legit anti aim settings
-     */
-    settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("enabled")] = Settings::AntiAim::LegitAntiAim::enabled;
-    settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("togglekey")] = Util::GetButtonName(Settings::AntiAim::LegitAntiAim::InvertKey);
-    settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("inverted")] = Settings::AntiAim::LegitAntiAim::inverted;
-    settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("type")] = (int)Settings::AntiAim::LegitAntiAim::legitAAtype;
-    // END
-
-    settings[XORSTR("AntiAim")][XORSTR("Yaw")][XORSTR("type")] = (int)Settings::AntiAim::Yaw::typeReal;
-    settings[XORSTR("AntiAim")][XORSTR("Yaw")][XORSTR("type_fake")] = (int)Settings::AntiAim::Yaw::typeFake;
-    settings[XORSTR("AntiAim")][XORSTR("HeadEdge")][XORSTR("enabled")] = Settings::AntiAim::HeadEdge::enabled;
-    settings[XORSTR("AntiAim")][XORSTR("HeadEdge")][XORSTR("distance")] = Settings::AntiAim::HeadEdge::distance;
-    settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("enabled")] = Settings::AntiAim::LBYBreaker::enabled;
-    settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("offset")] = Settings::AntiAim::LBYBreaker::offset;
+   
     settings[XORSTR("Resolver")][XORSTR("resolve_allAP")] = Settings::Resolver::resolveAllAP;
     settings[XORSTR("Resolver")][XORSTR("resolve_all")] = Settings::Resolver::resolveAll;
     settings[XORSTR("Resolver")][XORSTR("manual")] = Settings::Resolver::manual;
@@ -413,9 +357,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
     settings[XORSTR("UI")][XORSTR("particles")] = Settings::UI::particles;
 
-    settings[XORSTR("ESP")][XORSTR("KeybindsY")] = Settings::ESP::keybi::y;
-    settings[XORSTR("ESP")][XORSTR("KeybindsX")] = Settings::ESP::keybi::x;
-    settings[XORSTR("ESP")][XORSTR("showKeybinds")] = Settings::ESP::KeyBinds;
     settings[XORSTR("ESP")][XORSTR("DrawAATrace")][XORSTR("enabled")] = Settings::ESP::DrawAATrace::enabled;
     settings[XORSTR("ESP")][XORSTR("Draw Molotov")][XORSTR("enabled")] = Settings::ESP::Drawfire::enabled;
     settings[XORSTR("ESP")][XORSTR("showDormant")] = Settings::ESP::showDormant;
@@ -806,7 +747,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("FakeLag")][XORSTR("value")] = Settings::FakeLag::value;
     settings[XORSTR("FakeLag")][XORSTR("adaptive")] = Settings::FakeLag::adaptive;
     settings[XORSTR("FakeLag")][XORSTR("microphone")] = Settings::FakeLag::microphone;
-    settings[XORSTR("FakeLag")][XORSTR("microphoneKey")] = Settings::FakeLag::microphoneKey;
 
     settings[XORSTR("SlowWalk")][XORSTR("enabled")] = Settings::SlowWalk::enabled;
     settings[XORSTR("SlowWalk")][XORSTR("key")] = Settings::SlowWalk::key;
@@ -1079,16 +1019,7 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("Triggerbot")][XORSTR("RandomDelay")][XORSTR("enabled")], &Settings::Triggerbot::RandomDelay::enabled);
     GetVal(settings[XORSTR("Triggerbot")][XORSTR("RandomDelay")][XORSTR("lowBound")], &Settings::Triggerbot::RandomDelay::lowBound);
     GetVal(settings[XORSTR("Triggerbot")][XORSTR("RandomDelay")][XORSTR("highBound")], &Settings::Triggerbot::RandomDelay::highBound);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("AutoInvert")], &Settings::AntiAim::AutoInvert);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("arms")], &Settings::AntiAim::arms);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("chokeonshot")], &Settings::AntiAim::ChokeOnShot);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Type")], (int *)&Settings::AntiAim::Type::antiaimType);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Yaw")][XORSTR("type")], (int *)&Settings::AntiAim::Yaw::typeReal);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Pitchtype")], (int *)&Settings::AntiAim::pitchtype);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("no_enemy")], &Settings::AntiAim::AutoDisable::noEnemy);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("knife_held")], &Settings::AntiAim::AutoDisable::knifeHeld);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("FakeDuck")][XORSTR("enabled")], &Settings::AntiAim::FakeDuck::enabled);
-    GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("FakeDuck")][XORSTR("fakeDuckKey")], &Settings::AntiAim::FakeDuck::fakeDuckKey);
+
     GetVal(settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("enabled")], &Settings::Ragebot::quickpeek::enabled);
     GetVal(settings[XORSTR("Ragebot")][XORSTR("headscale")], &Settings::Ragebot::HeadScale);
     GetVal(settings[XORSTR("Ragebot")][XORSTR("bodyscale")], &Settings::Ragebot::BodyScale);
@@ -1100,37 +1031,6 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("SilentWalk")][XORSTR("enabled")], &Settings::SilentWalk::enabled);
     GetButtonCode(settings[XORSTR("SilentWalk")][XORSTR("Key")], &Settings::SilentWalk::key);
 
-    // Rage AA
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("airspin")][XORSTR("enabled")], &Settings::AntiAim::airspin::enabled);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("enabled")], &Settings::AntiAim::RageAntiAim::enabled);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("invertonhurt")], &Settings::AntiAim::RageAntiAim::invertOnHurt);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Fake Percent")], &Settings::AntiAim::RageAntiAim::AntiAImPercent);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Static Offset")], &Settings::AntiAim::RageAntiAim::AntiAimOffset);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Real Jitter Percent")], &Settings::AntiAim::RageAntiAim::JitterPercent);
-    GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("togglekey")], &Settings::AntiAim::RageAntiAim::InvertKey);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("inverted")], &Settings::AntiAim::RageAntiAim::inverted);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Type")], (int *)&Settings::AntiAim::RageAntiAim::Type);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("LbyMode")], (int *)&Settings::AntiAim::RageAntiAim::lbym);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("lby")][XORSTR("type")], (int *)&Settings::AntiAim::RageAntiAim::lby::type);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("lby")][XORSTR("enabled")], &Settings::AntiAim::RageAntiAim::lby::enabled);
-
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("fakepeek")], &Settings::AntiAim::RageAntiAim::fakepeek);
-    GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("fakeheadkey")], &Settings::AntiAim::RageAntiAim::fakeheadkey);
-
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("legitkey")][XORSTR("enabled")], &Settings::AntiAim::RageAntiAim::legitkey::enabled);
-    GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("legitkey")][XORSTR("key")], &Settings::AntiAim::RageAntiAim::legitkey::key);
-
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("atTheTarget")], &Settings::AntiAim::RageAntiAim::atTheTarget);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("SendReal")], &Settings::AntiAim::RageAntiAim::SendReal);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("ManualAntiAim")][XORSTR("Enabled")], &Settings::AntiAim::ManualAntiAim::Enabled);
-    GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("ManualAntiAim")][XORSTR("backButton")], &Settings::AntiAim::ManualAntiAim::backButton);
-    GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("ManualAntiAim")][XORSTR("RightButton")], &Settings::AntiAim::ManualAntiAim::RightButton);
-    GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("ManualAntiAim")][XORSTR("LeftButton")], &Settings::AntiAim::ManualAntiAim::LeftButton);
-
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("Offset")], &Settings::AntiAim::RageAntiAim::offset);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("pitchJitter")], &Settings::AntiAim::RageAntiAim::pitchJitter);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("LBYJitter")], &Settings::AntiAim::lbyjitter);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Rage AntiAim")][XORSTR("bodylean")], &Settings::AntiAim::RageAntiAim::bodylean);
 
     GetVal(settings[XORSTR("SvCheats")][XORSTR("enabled")], &Settings::SvCheats::enabled);
     GetVal(settings[XORSTR("SvCheatss")][XORSTR("enabled")], &Settings::SvCheats::svcheats::enabled);
@@ -1165,21 +1065,7 @@ void Settings::LoadConfig(std::string path)
     
     GetVal(settings[XORSTR("Nightmode")][XORSTR("enabled")], &Settings::Nightmode::enabled);
     GetVal(settings[XORSTR("Nightmode")][XORSTR("value")], &Settings::Nightmode::value);
-    /*
-     *Legit Anti AIm Settings Saving
-     */
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("enabled")], &Settings::AntiAim::LegitAntiAim::enabled);
-    GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("togglekey")], &Settings::AntiAim::LegitAntiAim::InvertKey);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("inverted")], &Settings::AntiAim::LegitAntiAim::inverted);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("RealPercentage")], &Settings::AntiAim::LegitAntiAim::RealPercentage);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("RealPercentageInCroutch")], &Settings::AntiAim::LegitAntiAim::RealPercentageInCroutch);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("Legit AntiAim")][XORSTR("type")], (int *)&Settings::AntiAim::LegitAntiAim::legitAAtype);
-    // End legit Anti aim settings Features
-
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("HeadEdge")][XORSTR("enabled")], &Settings::AntiAim::HeadEdge::enabled);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("HeadEdge")][XORSTR("distance")], &Settings::AntiAim::HeadEdge::distance);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("enabled")], &Settings::AntiAim::LBYBreaker::enabled);
-    GetVal(settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("offset")], &Settings::AntiAim::LBYBreaker::offset);
+   
     GetVal(settings[XORSTR("Resolver")][XORSTR("resolve_allAP")], &Settings::Resolver::resolveAllAP);
     GetVal(settings[XORSTR("Resolver")][XORSTR("rPitch")], &Settings::Resolver::rPitch);
 
@@ -1210,9 +1096,6 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("ESP")][XORSTR("manualAAColor")], &Settings::ESP::manualAAColor);
     GetVal(settings[XORSTR("UI")][XORSTR("particles")], &Settings::UI::particles);
 
-    GetVal(settings[XORSTR("ESP")][XORSTR("KeybindsY")], &Settings::ESP::keybi::y);
-    GetVal(settings[XORSTR("ESP")][XORSTR("KeybindsX")], &Settings::ESP::keybi::x);
-    GetVal(settings[XORSTR("ESP")][XORSTR("showKeybinds")], &Settings::ESP::KeyBinds);
     GetVal(settings[XORSTR("ESP")][XORSTR("Draw Molotov")][XORSTR("enabled")], &Settings::ESP::Drawfire::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("DrawAATrace")][XORSTR("enabled")], &Settings::ESP::DrawAATrace::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("showDormant")], &Settings::ESP::showDormant);
@@ -1648,7 +1531,6 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("FakeLag")][XORSTR("value")], &Settings::FakeLag::value);
     GetVal(settings[XORSTR("FakeLag")][XORSTR("adaptive")], &Settings::FakeLag::adaptive);
     GetVal(settings[XORSTR("FakeLag")][XORSTR("microphone")], &Settings::FakeLag::microphone);
-    GetButtonCode(settings[XORSTR("FakeLag")][XORSTR("microphoneKey")], &Settings::FakeLag::microphoneKey);
 
     GetVal(settings[XORSTR("SlowWalk")][XORSTR("enabled")], &Settings::SlowWalk::enabled);
     GetButtonCode(settings[XORSTR("SlowWalk")][XORSTR("key")], &Settings::SlowWalk::key);

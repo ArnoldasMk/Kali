@@ -2,13 +2,9 @@
 
 #include "../settings.h"
 #include "../interfaces.h"
-#include "../Hooks/hooks.h"
-#include "../../Utils/xorstring.h"
-#include "../Utils/math.h"
-#include "../Utils/entity.h"
-#include "../interfaces.h"
-#include "../Utils/draw.h"
 #include "../SDK/vector.h"
+#include "../Hooks/hooks.h"
+#include "../Utils/entity.h"
 
 void SlowWalk::CreateMove(CUserCmd* cmd)
 {

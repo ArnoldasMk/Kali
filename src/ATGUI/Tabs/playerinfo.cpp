@@ -85,20 +85,20 @@ void PlayerInfoTab::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabInd
 					char *teamName;
 					switch ((TeamID)team)
 					{
-					case TeamID::TEAM_UNASSIGNED:
-						teamName = strdup(XORSTR("Unassigned"));
-						break;
-					case TeamID::TEAM_SPECTATOR:
-						teamName = strdup(XORSTR("Spectator"));
-						break;
-					case TeamID::TEAM_TERRORIST:
-						teamName = strdup(XORSTR("Terrorist"));
-						break;
-					case TeamID::TEAM_COUNTER_TERRORIST:
-						teamName = strdup(XORSTR("Counter Terrorist"));
-						break;
-					default:
-						teamName = strdup("");
+						case TeamID::TEAM_UNASSIGNED:
+							teamName = strdup(XORSTR("Unassigned"));
+							break;
+						case TeamID::TEAM_SPECTATOR:
+							teamName = strdup(XORSTR("Spectator"));
+							break;
+						case TeamID::TEAM_TERRORIST:
+							teamName = strdup(XORSTR("Terrorist"));
+							break;
+						case TeamID::TEAM_COUNTER_TERRORIST:
+							teamName = strdup(XORSTR("Counter Terrorist"));
+							break;
+						default:
+							teamName = strdup("");
 					}
 
 					for (auto it : players[(TeamID)team])

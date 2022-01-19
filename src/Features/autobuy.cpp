@@ -2,12 +2,9 @@
 #include <string>
 
 #include "../Utils/xorstring.h"
-#include "../Utils/entity.h"
 #include "../settings.h"
-#include "../fonts.h"
 #include "../interfaces.h"
-#include "../Utils/draw.h"
-#include "../Hooks/hooks.h"
+#include "global.h"
 
 void AutoBuy::FireGameEvent(IGameEvent* event)
 {
@@ -21,8 +18,7 @@ void AutoBuy::FireGameEvent(IGameEvent* event)
 	switch (Settings::AutoBuy::main)
 	{
 		case MainWeapon::AUTO:
-			buystring += "buy scar20;";
-			buystring += "buy g3sg1;"; // TODO: team detection
+			buystring += global::local->GetTeam() == TeamID::TEAM_COUNTER_TERRORIST ? "buy scar20;" : "buy g3sg1;";
 			break;
 		case MainWeapon::AWP:
 			buystring += "buy awp;";
@@ -31,6 +27,8 @@ void AutoBuy::FireGameEvent(IGameEvent* event)
         case MainWeapon::SCOUT:
         	buystring += "buy ssg08;";
 			break;
+
+		default: break;
 	}
 
     switch (Settings::AutoBuy::secondary)
@@ -42,6 +40,8 @@ void AutoBuy::FireGameEvent(IGameEvent* event)
     	case SecondaryWeapon::DEAGLE:
     		buystring += "buy deagle;";
     		break;
+
+		default: break;
     }
 
 	if (Settings::AutoBuy::nades)

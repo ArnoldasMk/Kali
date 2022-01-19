@@ -9,30 +9,10 @@
 #endif
 int ticksMax = 50;
 int ticks_allowed = 0;
-bool CheckPeaking(CUserCmd* cmd){
-        float forMove = absol(cmd->forwardmove);
-        float sideMove = absol(cmd->sidemove);
-        if (sideMove > forMove) {
-                C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
-                if (!localplayer || !localplayer->GetAlive()){
-                        return false;
-                }
 
-                if ( localplayer->GetVelocity().Length2D() > 100.f )
-                        return true;
-        }       
-        return false;
-}
-void LagSpike(CUserCmd* cmd, int lagTick){
-        if (!CheckPeaking){
-                ticksMax = 16;
-                return;
-        }
-
+void LagSpike(CUserCmd* cmd, int lagTick) {
         ticksMax = 25;
         FakeLag::ticks = 0;
-
-
 }
 void FakeLag::CreateMove(CUserCmd* cmd)
 {
@@ -41,23 +21,21 @@ void FakeLag::CreateMove(CUserCmd* cmd)
 		return;
 	if (!Settings::FakeLag::enabled)
 		return;
-	if (Settings::FakeLag::microphone)
-	{
-	    if(inputSystem->IsButtonDown(Settings::FakeLag::microphoneKey))
+	if (Settings::FakeLag::microphone && engine->IsVoiceRecording())
 		return;
-	}
-		int velocity2d = localplayer->GetVelocity().Length2D();
-                int max_choke;
+	
+	int velocity2d = localplayer->GetVelocity().Length2D();
+	int max_choke;
  const auto netchannel = GetLocalClient(-1)->m_NetChannel;
   int pakets = netchannel->m_nChokedPackets;
 
-		if (cmd->buttons & IN_ATTACK && Settings::FakeLag::shiftshot){
-                FakeLag::shift = 16;
-		cmd->buttons &= IN_ATTACK;
-			ticks_allowed = 0;
-                //cmd->buttons &= ~IN_ATTACK;
+		// if (cmd->buttons & IN_ATTACK && Settings::FakeLag::shiftshot){
+  //               FakeLag::shift = 16;
+		// cmd->buttons &= IN_ATTACK;
+		// 	ticks_allowed = 0;
+  //               //cmd->buttons &= ~IN_ATTACK;
 
-		}else
+		// }else
 		  FakeLag::shift = 0;
        	FakeLag::should_recharge = false;
 
@@ -90,7 +68,7 @@ void FakeLag::CreateMove(CUserCmd* cmd)
                 CreateMove::sendPacket = true;
    		C_BaseCombatWeapon* activeWeapon = ( C_BaseCombatWeapon* ) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon() );
 
-		if (Settings::AntiAim::ChokeOnShot && activeWeapon->GetCSWpnData()->GetWeaponType() != CSWeaponType::WEAPONTYPE_GRENADE)
+		if (Settings::FakeLag::ChokeOnShot && activeWeapon->GetCSWpnData()->GetWeaponType() != CSWeaponType::WEAPONTYPE_GRENADE)
 		max_choke = 25;
     		}
 
@@ -106,7 +84,7 @@ void FakeLag::CreateMove(CUserCmd* cmd)
                 }
                 else
                         max_choke = Settings::FakeLag::value;
-		}else if ( !(cmd->buttons & IN_ATTACK) || !(Settings::AntiAim::ChokeOnShot) ) max_choke = Settings::FakeLag::value;
+		}else if ( !(cmd->buttons & IN_ATTACK) || !(Settings::FakeLag::ChokeOnShot) ) max_choke = Settings::FakeLag::value;
 
 		 if (FakeLag::ticks >= max_choke || ((*csGameRules)->IsValveDS() && pakets > 6)){
 			CreateMove::sendPacket = true;

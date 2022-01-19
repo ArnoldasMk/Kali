@@ -151,26 +151,20 @@ static void SwapWindow(SDL_Window* window)
 
     UI::SetupMainMenuColor();
     
-    // if (!UI::isVisible)
-    // {
-        ImGui::NewFrame();
-            ImGui::SetNextWindowPos( ImVec2( 0, 0 ), ImGuiCond_Always );
-            ImGui::SetNextWindowSize( ImVec2( w , h), ImGuiCond_Always );
-            ImGui::SetNextWindowBgAlpha( 0.0f );
-            ImGuiStyle& style = ImGui::GetStyle();
-            style.WindowBorderSize = 0.0f;
-            ImGui::Begin( XORSTR("##mainFrame"), (bool*)true, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiColumnsFlags_NoBorder | ImGuiWindowFlags_NoResize);
-                UI::DrawImWatermark();
-                UI::SetupWindows();
-                UI::angleIndicator();
-                //UI::DrawImWatermark();
-                Hooks::PaintImGui(); // Process ImGui Draw Commands
-            ImGui::End();
-        
-	    ImGui::EndFrame();
-    // }
-	//ImGui::GetCurrentContext()->Font->DisplayOffset = ImVec2(0.f, 0.f);
-	//ImGui::GetCurrentContext()->Font->DisplayOffset = ImVec2(0.0f, 0.0f);
+    
+    ImGui::NewFrame();
+        ImGui::SetNextWindowPos( ImVec2( 0, 0 ), ImGuiCond_Always );
+        ImGui::SetNextWindowSize( ImVec2( w , h), ImGuiCond_Always );
+        ImGui::SetNextWindowBgAlpha( 0.0f );
+        ImGuiStyle& style = ImGui::GetStyle();
+        style.WindowBorderSize = 0.0f;
+        ImGui::Begin(XORSTR("##mainFrame"), (bool*)true, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiColumnsFlags_NoBorder | ImGuiWindowFlags_NoResize);
+            UI::DrawImWatermark();
+            UI::SetupWindows();
+            Hooks::PaintImGui(); // Process ImGui Draw Commands
+        ImGui::End();
+    
+    ImGui::EndFrame();
 
 	ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

@@ -10,339 +10,305 @@
 #include "../../ImGUI/imgui_internal.h"
 #include "../atgui.h"
 
+
 void AntiAim::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 {
-    const char *aaState[] = {
-        "Stand",
-        "Air",
-        "Move",
-        "Slow Walk",
-        "Fake Duck",
-        "Lby Update",
-    };
-    const char *LegitAAType[] = {
-        "OverWatchProof",
-        "FakeLegitAA",
-        "Experimental"};
+    static int currentType = 0; // Stand
+ 
     static char *slowType[] = {
-        "Safety",
-        "Accuracy",
-    };
-    const char *yType[] = {
-        "NONE",
-        "Static",
-        "Balanced",
-        "Jitter",
-        "Brainfuck Fake Fake AA",
-        "JitterRandom",
-        "P100 SPIN",
-    };
-    const char *pitchType[] = {
-        "Up",
-        "Down",
-        "Zero",
-        "Emotion",
-        "Fake Zero",
-        "Fake Up",
-        "Fake Down",
-        "Fake Jitter",
+        "Safety", "Accuracy",
     };
 
-    const char *lbyType[] = {
-        "Normal",
-        "Opposite",
-        "Sway",
+    static const char* movementType[] = {
+        "Stand", "Move", "Air", "SlowWalk",
     };
-    const char *RageAntiAimType[] = {
-        "Default Rage",
-        "Free Stand",
+
+    static const char* yawType[] = {
+        "None", "Jitter", "RandomJitter", "SPIN",
     };
-    /*
-    else if (Settings::AntiAim::RageAntiAim::enabled == true)
-    {
-        Settings::AntiAim::LegitAntiAim::enabled == false;
-        Settings::AntiAim::RageAntiAim::customaa::enabled == false; // -_-
-        Settings::AntiAim::AADisabled::enabled == false;
-    }
-    else if (Settings::AntiAim::RageAntiAim::customaa::enabled == true)
-    {
-        Settings::AntiAim::LegitAntiAim::enabled == false;
-        Settings::AntiAim::RageAntiAim::enabled == false;
-        Settings::AntiAim::AADisabled::enabled == false;
+
+    static const char* pitchType[] = {
+        "None", "UP", "DOWN", "DANCE", "CUSTOM",
     };
-    */
-    ImGui::SetCursorPos(ImVec2(15, 70));
-    ImGui::BeginGroup();
-    {
-        ImGui::Columns(2, nullptr, false);
-        {
-            if (ImGui::Checkbox(XORSTR("Rage Anti Aim"), &Settings::AntiAim::RageAntiAim::enabled))
-            {
-                Settings::AntiAim::LegitAntiAim::enabled == false;  
-                Settings::AntiAim::AADisabled::enabled == false;
-            }
-        }
-        ImGui::NextColumn();
-        {
-            /* // SOON
-            if (Settings::AntiAim::RageAntiAim::enabled == true)
-            {
-                ImGui::Checkbox(XORSTR("Custom Anti Aim"), &Settings::AntiAim::RageAntiAim::customaa::enabled);
-            }
-            */
-        }
-        ImGui::EndColumns();
-    }
-    ImGui::SetCursorPos(ImVec2(290, 70));
-    ImGui::BeginGroup();
-    {
-        ImGui::Checkbox(XORSTR("Anti Aim Disabled"), &Settings::AntiAim::AADisabled::enabled);
-    }
-    ImGui::EndGroup();
-    ImGui::SetCursorPos(ImVec2(10, 100));
+
+    static const char* desyncType[] = {
+        "None", "Static", "Jitter", "RandomJitter",
+    };
+
     ImGui::BeginGroup();
     {
         ImGui::Columns(2, nullptr, false);
         {
             ImGui::BeginChild(XORSTR("##AntiAim1"), ImVec2(0, 736), true);
             {
-                if (Settings::AntiAim::RageAntiAim::enabled == false)
-                {
-                    ImGui::Separator();
-                    ImGui::Text(XORSTR("Legit Anti Aim"));
-                    ImGui::Separator();
-                    ImGui::Columns(1);
-                    {
-                        ImGui::Checkbox(XORSTR("Enabled"), &Settings::AntiAim::LegitAntiAim::enabled);
-                        Settings::AntiAim::RageAntiAim::enabled == false;
-                        //Settings::AntiAim::RageAntiAim::customaa::enabled == false; // -_-
-                        Settings::AntiAim::AADisabled::enabled == false;
-                    }
-                    ImGui::Columns(2, nullptr, false);
-                    {
-                        ImGui::Text(XORSTR("Anti Aim Type"));
-                    }
-                    ImGui::NextColumn();
-                    {
-                        ImGui::PushItemWidth(-1);
-                        ImGui::Combo(XORSTR("##LegitAAType"), (int *)&Settings::AntiAim::LegitAntiAim::legitAAtype, LegitAAType, IM_ARRAYSIZE(LegitAAType));
-                    }
-                    ImGui::EndColumns();
-                    ImGui::Columns(2, nullptr, false);
-                    {
-                        ImGui::Text(XORSTR("InvertKey"));
-                    }
-                    ImGui::NextColumn();
-                    {
-                        ImGui::PushItemWidth(-1);
-                        UI::KeyBindButton(&Settings::AntiAim::LegitAntiAim::InvertKey);
-                    }
-                    ImGui::EndColumns();
-                    ImGui::Columns(2, nullptr, false);
-                    {
-                        ImGui::Text(XORSTR("Yaw Desync Angle"));
-                    }
-                    ImGui::NextColumn();
-                    {
-                        ImGui::PushItemWidth(-1);
-                        ImGui::SliderFloat(XORSTR("##mEES"), &Settings::AntiAim::offsat, -180, 180, "%.0f");
-                    }
-                    ImGui::EndColumns();
-                    ImGui::Separator();
-                    ImGui::Text(XORSTR("Features"));
-                    ImGui::Separator();
-                    ImGui::Columns(2, nullptr, false);
-                    {
-                        ImGui::Checkbox(XORSTR("Legit freestand"), &Settings::AntiAim::AutoInvert);
-                    }
-                    ImGui::NextColumn();
-                    {
-                        ImGui::Checkbox(XORSTR("Set arms to fake side"), &Settings::AntiAim::arms);
-                    }
-                    ImGui::EndColumns();
-                }
-                else if (Settings::AntiAim::RageAntiAim::enabled == true, Settings::AntiAim::RageAntiAim::customaa::enabled == false)
-                {
-
-                    ImGui::Separator();
-                    ImGui::Text(XORSTR("Rage Anti Aim"));
-                    ImGui::Separator();
-                    ImGui::Columns(2, nullptr, false);
-                    {
-                        ImGui::Text(XORSTR("Anti Aim Type"));
-                    }
-                    ImGui::NextColumn();
-                    {
-                        ImGui::PushItemWidth(-1);
-                        ImGui::Combo(XORSTR("##RageAntiAimType"), (int *)&Settings::AntiAim::RageAntiAim::Type, RageAntiAimType, IM_ARRAYSIZE(RageAntiAimType));
-                        ImGui::PopItemWidth();
-                    }
-                    ImGui::EndColumns();
+                ImGui::Checkbox("AntiAim", &Settings::AntiAim::enabled);
+                ImGui::SameLine();
+                ImGui::PushItemWidth(-1);
+                ImGui::Combo(XORSTR("##MOVTYPES"), (int*)&currentType, movementType, IM_ARRAYSIZE(movementType));
+                ImGui::PopItemWidth();
+                if (currentType == 0) { // stand
                     ImGui::Columns(2, nullptr, false);
                     {
                         ImGui::Text(XORSTR("Yaw"));
-                    }
-                    ImGui::NextColumn();
-                    {
-                        ImGui::PushItemWidth(-1);
-                        ImGui::Combo(XORSTR("##YACTUALTYPE"), (int *)&Settings::AntiAim::Yaw::typeReal, yType, IM_ARRAYSIZE(yType));
-                        ImGui::PopItemWidth();
-                    }
-                    ImGui::EndColumns();
-                    ImGui::Columns(2, nullptr, false);
-                    {
+                        ImGui::Spacing();
                         ImGui::Text(XORSTR("Pitch"));
+                        ImGui::Spacing();
+                        ImGui::Text(XORSTR("Desync"));
                     }
                     ImGui::NextColumn();
                     {
                         ImGui::PushItemWidth(-1);
-                        ImGui::Combo(XORSTR("##PITCHTYPE"), (int *)&Settings::AntiAim::pitchtype, pitchType, IM_ARRAYSIZE(pitchType));
+                        ImGui::Combo(XORSTR("##YAW_STAND"), (int*)&Settings::AntiAim::Stand::Yaw::type, yawType, IM_ARRAYSIZE(yawType));
+                        ImGui::Combo(XORSTR("##PITCH_STAND"), (int*)&Settings::AntiAim::Stand::Pitch::type, pitchType, IM_ARRAYSIZE(pitchType));
+                        ImGui::Combo(XORSTR("##DESYNC_STAND"), (int*)&Settings::AntiAim::Stand::Desync::type, desyncType, IM_ARRAYSIZE(desyncType));
                         ImGui::PopItemWidth();
+
+                        ImGui::EndColumns();
                     }
-                    ImGui::EndColumns();
+                    ImGui::PushItemWidth(-1);
+                    if (Settings::AntiAim::Stand::Pitch::type == AntiAimPitch::CUSTOM)
+                        ImGui::SliderInt(XORSTR("##PITCH_CUSTOM_1"), &Settings::AntiAim::Stand::Pitch::custom, -89, 89, XORSTR("Pitch: %0.f"));
+                    switch (Settings::AntiAim::Stand::Desync::type)
+                    {
+                        case AntiAimDesync::STATIC:
+                            ImGui::SliderInt(XORSTR("##DESYNC_OFFSET_1"), &Settings::AntiAim::Stand::Desync::offset, 0, 58, XORSTR("Desync offset: %0.f"));
+                            break;
+
+                        case AntiAimDesync::JITTER:
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_LEFT_1"), &Settings::AntiAim::Stand::Desync::jitterLeft, 0, 58, XORSTR("Desync jitter(left): %0.f"));
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_RIGHT_1"), &Settings::AntiAim::Stand::Desync::jitterRight, 1, 58, XORSTR("Desync jitter(right): %0.f"));
+                            break;
+
+                        case AntiAimDesync::RANDOMJITTER:
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_LEFT_1"), &Settings::AntiAim::Stand::Desync::jitterLeft, 0, 58, XORSTR("Desync jitter(left min): %0.f"));
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_LEFT_MAX_1"), &Settings::AntiAim::Stand::Desync::jitterLeftMax, 0, 58, XORSTR("Desync jitter(left max): %0.f"));
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_RIGHT_1"), &Settings::AntiAim::Stand::Desync::jitterRight, 1, 58, XORSTR("Desync jitter(right min): %0.f"));
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_RIGHT_MAX_1"), &Settings::AntiAim::Stand::Desync::jitterRightMax, 1, 58, XORSTR("Desync jitter(right max): %0.f"));
+                            break;
+                        default: break;
+                    }
+                    switch(Settings::AntiAim::Stand::Yaw::type)
+                    {
+                        case AntiAimYaw::JITTER:
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_LEFT_1"), &Settings::AntiAim::Stand::Yaw::jitterLeft, 0, 58, XORSTR("Yaw jitter(left): %0.f"));
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_RIGHT_1"), &Settings::AntiAim::Stand::Yaw::jitterRight, 0, 58, XORSTR("Yaw jitter(right): %0.f"));
+                            break;
+                        case AntiAimYaw::RANDOMJITTER:
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_LEFT_1"), &Settings::AntiAim::Stand::Yaw::jitterLeft, 0, 58, XORSTR("Yaw jitter(left min): %0.f"));
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_LEFT_MAX_1"), &Settings::AntiAim::Stand::Yaw::jitterLeftMax, 0, 58, XORSTR("Yaw jitter(left max): %0.f"));
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_RIGHT_1"), &Settings::AntiAim::Stand::Yaw::jitterRight, 1, 58, XORSTR("Yaw jitter(right min): %0.f"));
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_RIGHT_MAX_1"), &Settings::AntiAim::Stand::Yaw::jitterRightMax, 1, 58, XORSTR("Yaw jitter(right max): %0.f"));
+                            break;
+                        case AntiAimYaw::SPIN:
+                            ImGui::SliderInt(XORSTR("##YAW_SPINF_1"), &Settings::AntiAim::Stand::Yaw::spinFactor, 0, 360, XORSTR("Yaw spinFactor: %0.f"));
+                            break;
+                        default: break;
+                    }
+                    ImGui::PopItemWidth();
+                } else if (currentType == 1) { // move
                     ImGui::Columns(2, nullptr, false);
                     {
-                        if (Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Randome || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::JitterSwitch || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::JitterRandom || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Spin)
-                            ImGui::Text(XORSTR("Jitter Amount (Percent)"));
-                        if (Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Static)
-                            ImGui::Text(XORSTR("Static Offset"));
+                        ImGui::Text(XORSTR("Yaw"));
+                        ImGui::Spacing();
+                        ImGui::Text(XORSTR("Pitch"));
+                        ImGui::Spacing();
+                        ImGui::Text(XORSTR("Desync"));
                     }
                     ImGui::NextColumn();
                     {
                         ImGui::PushItemWidth(-1);
-                        if (Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Randome || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::JitterSwitch || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::JitterRandom || Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Spin)
-                            ImGui::SliderFloat(XORSTR("##RealJitterPercentage"), &Settings::AntiAim::RageAntiAim::JitterPercent, 1, 100, "%.0f ");
-                        if (Settings::AntiAim::Yaw::typeReal == AntiAimRealType_Y::Static)
-                            ImGui::SliderFloat(XORSTR("##StaticPercentage"), &Settings::AntiAim::RageAntiAim::AntiAimOffset, 1, 360, "%.0f");
+                        ImGui::Combo(XORSTR("##YAW_MOVE"), (int*)&Settings::AntiAim::Movement::Yaw::type, yawType, IM_ARRAYSIZE(yawType));
+                        ImGui::Combo(XORSTR("##PITCH_MOVE"), (int*)&Settings::AntiAim::Movement::Pitch::type, pitchType, IM_ARRAYSIZE(pitchType));
+                        ImGui::Combo(XORSTR("##DESYNC_MOVE"), (int*)&Settings::AntiAim::Movement::Desync::type, desyncType, IM_ARRAYSIZE(desyncType));
                         ImGui::PopItemWidth();
+                        ImGui::EndColumns();
                     }
-                    ImGui::EndColumns();
+                    ImGui::PushItemWidth(-1);
+                    if (Settings::AntiAim::Movement::Pitch::type == AntiAimPitch::CUSTOM)
+                        ImGui::SliderInt(XORSTR("##PITCH_CUSTOM_2"), &Settings::AntiAim::Movement::Pitch::custom, -89, 89, XORSTR("Pitch: %0.f"));
+                    switch (Settings::AntiAim::Movement::Desync::type)
+                    {
+                        case AntiAimDesync::STATIC:
+                            ImGui::SliderInt(XORSTR("##DESYNC_OFFSET_2"), &Settings::AntiAim::Movement::Desync::offset, 0, 58, XORSTR("Desync offset: %0.f"));
+                            break;
+
+                        case AntiAimDesync::JITTER:
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_LEFT_2"), &Settings::AntiAim::Movement::Desync::jitterLeft, 0, 58, XORSTR("Desync jitter(left): %0.f"));
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_RIGHT_2"), &Settings::AntiAim::Movement::Desync::jitterRight, 1, 58, XORSTR("Desync jitter(right): %0.f"));
+                            break;
+
+                        case AntiAimDesync::RANDOMJITTER:
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_LEFT_2"), &Settings::AntiAim::Movement::Desync::jitterLeft, 0, 58, XORSTR("Desync jitter(left min): %0.f"));
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_LEFT_MAX_2"), &Settings::AntiAim::Movement::Desync::jitterLeftMax, 0, 58, XORSTR("Desync jitter(left max): %0.f"));
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_RIGHT_2"), &Settings::AntiAim::Movement::Desync::jitterRight, 1, 58, XORSTR("Desync jitter(right min): %0.f"));
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_RIGHT_MAX_2"), &Settings::AntiAim::Movement::Desync::jitterRightMax, 1, 58, XORSTR("Desync jitter(right max): %0.f"));
+                            break;
+                        default: break;
+                    }
+                    switch(Settings::AntiAim::Movement::Yaw::type)
+                    {
+                        case AntiAimYaw::JITTER:
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_LEFT_2"), &Settings::AntiAim::Movement::Yaw::jitterLeft, 0, 58, XORSTR("Yaw jitter(left): %0.f"));
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_RIGHT_2"), &Settings::AntiAim::Movement::Yaw::jitterRight, 0, 58, XORSTR("Yaw jitter(right): %0.f"));
+                            break;
+                        case AntiAimYaw::RANDOMJITTER:
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_LEFT_2"), &Settings::AntiAim::Movement::Yaw::jitterLeft, 0, 58, XORSTR("Yaw jitter(left min): %0.f"));
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_LEFT_MAX_2"), &Settings::AntiAim::Movement::Yaw::jitterLeftMax, 0, 58, XORSTR("Yaw jitter(left max): %0.f"));
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_RIGHT_2"), &Settings::AntiAim::Movement::Yaw::jitterRight, 1, 58, XORSTR("Yaw jitter(right min): %0.f"));
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_RIGHT_MAX_2"), &Settings::AntiAim::Movement::Yaw::jitterRightMax, 1, 58, XORSTR("Yaw jitter(right max): %0.f"));
+                            break;
+                        case AntiAimYaw::SPIN:
+                            ImGui::SliderInt(XORSTR("##YAW_SPINF_2"), &Settings::AntiAim::Movement::Yaw::spinFactor, 0, 360, XORSTR("Yaw spinFactor: %0.f"));
+                            break;
+                        default: break;
+                    }
+                    ImGui::PopItemWidth();
+                } else if (currentType == 2) { // air
                     ImGui::Columns(2, nullptr, false);
                     {
-                        ImGui::Text(XORSTR("Body Lean Amount"));
+                        ImGui::Text(XORSTR("Yaw"));
+                        ImGui::Spacing();
+                        ImGui::Text(XORSTR("Pitch"));
+                        ImGui::Spacing();
+                        ImGui::Text(XORSTR("Desync"));
                     }
                     ImGui::NextColumn();
                     {
                         ImGui::PushItemWidth(-1);
-                        ImGui::SliderFloat(XORSTR("##BodyLeanAmmount"), &Settings::AntiAim::RageAntiAim::bodylean, 1, 100, "%.0f"); // I think it's not working tho, idk
-                        ToolTip::Show(XORSTR("This feature might be broken, use carefully"), ImGui::IsItemHovered());
+                        ImGui::Combo(XORSTR("##YAW_MOVE"), (int*)&Settings::AntiAim::Air::Yaw::type, yawType, IM_ARRAYSIZE(yawType));
+                        ImGui::Combo(XORSTR("##PITCH_MOVE"), (int*)&Settings::AntiAim::Air::Pitch::type, pitchType, IM_ARRAYSIZE(pitchType));
+                        ImGui::Combo(XORSTR("##DESYNC_MOVE"), (int*)&Settings::AntiAim::Air::Desync::type, desyncType, IM_ARRAYSIZE(desyncType));
                         ImGui::PopItemWidth();
+                        ImGui::EndColumns();
                     }
-                    ImGui::EndColumns();
+                    ImGui::PushItemWidth(-1);
+                    if (Settings::AntiAim::Air::Pitch::type == AntiAimPitch::CUSTOM)
+                        ImGui::SliderInt(XORSTR("##PITCH_CUSTOM_3"), &Settings::AntiAim::Air::Pitch::custom, -89, 89, XORSTR("Pitch: %0.f"));
+                    switch (Settings::AntiAim::Air::Desync::type)
+                    {
+                        case AntiAimDesync::STATIC:
+                            ImGui::SliderInt(XORSTR("##DESYNC_OFFSET_3"), &Settings::AntiAim::Air::Desync::offset, 0, 58, XORSTR("Desync offset: %0.f"));
+                            break;
+
+                        case AntiAimDesync::JITTER:
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_LEFT_3"), &Settings::AntiAim::Air::Desync::jitterLeft, 0, 58, XORSTR("Desync jitter(left): %0.f"));
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_RIGHT_3"), &Settings::AntiAim::Air::Desync::jitterRight, 1, 58, XORSTR("Desync jitter(right): %0.f"));
+                            break;
+
+                        case AntiAimDesync::RANDOMJITTER:
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_LEFT_3"), &Settings::AntiAim::Air::Desync::jitterLeft, 0, 58, XORSTR("Desync jitter(left min): %0.f"));
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_LEFT_MAX_3"), &Settings::AntiAim::Air::Desync::jitterLeftMax, 0, 58, XORSTR("Desync jitter(left max): %0.f"));
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_RIGHT_3"), &Settings::AntiAim::Air::Desync::jitterRight, 1, 58, XORSTR("Desync jitter(right min): %0.f"));
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_RIGHT_MAX_3"), &Settings::AntiAim::Air::Desync::jitterRightMax, 1, 58, XORSTR("Desync jitter(right max): %0.f"));
+                            break;
+                        default: break;
+                    }
+                    switch(Settings::AntiAim::Air::Yaw::type)
+                    {
+                        case AntiAimYaw::JITTER:
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_LEFT_3"), &Settings::AntiAim::Air::Yaw::jitterLeft, 0, 58, XORSTR("Yaw jitter(left): %0.f"));
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_RIGHT_3"), &Settings::AntiAim::Air::Yaw::jitterRight, 0, 58, XORSTR("Yaw jitter(right): %0.f"));
+                            break;
+                        case AntiAimYaw::RANDOMJITTER:
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_LEFT_3"), &Settings::AntiAim::Air::Yaw::jitterLeft, 0, 58, XORSTR("Yaw jitter(left min): %0.f"));
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_LEFT_MAX_3"), &Settings::AntiAim::Air::Yaw::jitterLeftMax, 0, 58, XORSTR("Yaw jitter(left max): %0.f"));
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_RIGHT_3"), &Settings::AntiAim::Air::Yaw::jitterRight, 1, 58, XORSTR("Yaw jitter(right min): %0.f"));
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_RIGHT_MAX_3"), &Settings::AntiAim::Air::Yaw::jitterRightMax, 1, 58, XORSTR("Yaw jitter(right max): %0.f"));
+                            break;
+                        case AntiAimYaw::SPIN:
+                            ImGui::SliderInt(XORSTR("##YAW_SPINF_3"), &Settings::AntiAim::Air::Yaw::spinFactor, 0, 360, XORSTR("Yaw spinFactor: %0.f"));
+                            break;
+                        default: break;
+                    }
+                    ImGui::PopItemWidth();
+                } else if (currentType == 3) { // slowwalk
                     ImGui::Columns(2, nullptr, false);
                     {
-                        ImGui::Text(XORSTR("InvertKey"));
-                    }
-                    ImGui::NextColumn();
-                    {
-                        UI::KeyBindButton(&Settings::AntiAim::RageAntiAim::InvertKey);
-                    }
-                    ImGui::EndColumns();
-                    ImGui::Columns(1);
-                    {
-                        ImGui::Checkbox(XORSTR("At Targets (alpha)"), &Settings::AntiAim::RageAntiAim::atTheTarget);
-                        ImGui::Checkbox(XORSTR("Invert on hurt"), &Settings::AntiAim::RageAntiAim::invertOnHurt);
-                        ImGui::Checkbox(XORSTR("Legit AA on E"), &Settings::AntiAim::RageAntiAim::legitkey::enabled);
-                    }
-                    ImGui::Separator();
-                    ImGui::Text(XORSTR("Manual Anti Aim"));
-                    ImGui::Separator();
-                    ImGui::Columns(2, nullptr, false);
-                    {
-                        ImGui::Checkbox(XORSTR("Enabled"), &Settings::AntiAim::ManualAntiAim::Enabled);
-                    }
-                    ImGui::NextColumn();
-                    {
-                        ImGui::Checkbox(XORSTR("Auto Direction"), &Settings::AntiAim::AutoInvert);
-                    }
-                    ImGui::EndColumns();
-                    ImGui::Columns(2, nullptr, false);
-                    {
-                        ImGui::Text("Align Right");
+                        ImGui::Text(XORSTR("Yaw"));
+                        ImGui::Spacing();
+                        ImGui::Text(XORSTR("Pitch"));
+                        ImGui::Spacing();
+                        ImGui::Text(XORSTR("Desync"));
                     }
                     ImGui::NextColumn();
                     {
                         ImGui::PushItemWidth(-1);
-                        UI::KeyBindButton(&Settings::AntiAim::ManualAntiAim::RightButton);
+                        ImGui::Combo(XORSTR("##YAW_MOVE"), (int*)&Settings::AntiAim::SlowWalk::Yaw::type, yawType, IM_ARRAYSIZE(yawType));
+                        ImGui::Combo(XORSTR("##PITCH_MOVE"), (int*)&Settings::AntiAim::SlowWalk::Pitch::type, pitchType, IM_ARRAYSIZE(pitchType));
+                        ImGui::Combo(XORSTR("##DESYNC_MOVE"), (int*)&Settings::AntiAim::SlowWalk::Desync::type, desyncType, IM_ARRAYSIZE(desyncType));
                         ImGui::PopItemWidth();
+                        ImGui::EndColumns();
                     }
-                    ImGui::EndColumns();
-                    ImGui::Columns(2, nullptr, false);
+                    ImGui::PushItemWidth(-1);
+                    if (Settings::AntiAim::SlowWalk::Pitch::type == AntiAimPitch::CUSTOM)
+                        ImGui::SliderInt(XORSTR("##PITCH_CUSTOM_4"), &Settings::AntiAim::SlowWalk::Pitch::custom, -89, 89, XORSTR("Pitch: %0.f"));
+                    switch (Settings::AntiAim::SlowWalk::Desync::type)
                     {
-                        ImGui::Text("Align Back");
+                        case AntiAimDesync::STATIC:
+                            ImGui::SliderInt(XORSTR("##DESYNC_OFFSET_4"), &Settings::AntiAim::SlowWalk::Desync::offset, 0, 58, XORSTR("Desync offset: %0.f"));
+                            break;
+
+                        case AntiAimDesync::JITTER:
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_LEFT_4"), &Settings::AntiAim::SlowWalk::Desync::jitterLeft, 0, 58, XORSTR("Desync jitter(left): %0.f"));
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_RIGHT_4"), &Settings::AntiAim::SlowWalk::Desync::jitterRight, 1, 58, XORSTR("Desync jitter(right): %0.f"));
+                            break;
+
+                        case AntiAimDesync::RANDOMJITTER:
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_LEFT_4"), &Settings::AntiAim::SlowWalk::Desync::jitterLeft, 0, 58, XORSTR("Desync jitter(left min): %0.f"));
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_LEFT_MAX_4"), &Settings::AntiAim::SlowWalk::Desync::jitterLeftMax, 0, 58, XORSTR("Desync jitter(left max): %0.f"));
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_RIGHT_4"), &Settings::AntiAim::SlowWalk::Desync::jitterRight, 1, 58, XORSTR("Desync jitter(right min): %0.f"));
+                            ImGui::SliderInt(XORSTR("##DESYNC_JITTER_RIGHT_MAX_4"), &Settings::AntiAim::SlowWalk::Desync::jitterRightMax, 1, 58, XORSTR("Desync jitter(right max): %0.f"));
+                            break;
+                        default: break;
                     }
-                    ImGui::NextColumn();
+                    switch(Settings::AntiAim::SlowWalk::Yaw::type)
                     {
-                        ImGui::PushItemWidth(-1);
-                        UI::KeyBindButton(&Settings::AntiAim::ManualAntiAim::backButton);
-                        ImGui::PopItemWidth();
+                        case AntiAimYaw::JITTER:
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_LEFT_4"), &Settings::AntiAim::SlowWalk::Yaw::jitterLeft, 0, 58, XORSTR("Yaw jitter(left): %0.f"));
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_RIGHT_4"), &Settings::AntiAim::SlowWalk::Yaw::jitterRight, 0, 58, XORSTR("Yaw jitter(right): %0.f"));
+                            break;
+                        case AntiAimYaw::RANDOMJITTER:
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_LEFT_4"), &Settings::AntiAim::SlowWalk::Yaw::jitterLeft, 0, 58, XORSTR("Yaw jitter(left min): %0.f"));
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_LEFT_MAX_4"), &Settings::AntiAim::SlowWalk::Yaw::jitterLeftMax, 0, 58, XORSTR("Yaw jitter(left max): %0.f"));
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_RIGHT_4"), &Settings::AntiAim::SlowWalk::Yaw::jitterRight, 1, 58, XORSTR("Yaw jitter(right min): %0.f"));
+                            ImGui::SliderInt(XORSTR("##YAW_JITTER_RIGHT_MAX_4"), &Settings::AntiAim::SlowWalk::Yaw::jitterRightMax, 1, 58, XORSTR("Yaw jitter(right max): %0.f"));
+                            break;
+                        case AntiAimYaw::SPIN:
+                            ImGui::SliderInt(XORSTR("##YAW_SPINF_4"), &Settings::AntiAim::SlowWalk::Yaw::spinFactor, 0, 360, XORSTR("Yaw spinFactor: %0.f"));
+                            break;
+                        default: break;
                     }
-                    ImGui::EndColumns();
-                    ImGui::Columns(2, nullptr, false);
-                    {
-                        ImGui::Text("Align Left");
-                    }
-                    ImGui::NextColumn();
-                    {
-                        ImGui::PushItemWidth(-1);
-                        UI::KeyBindButton(&Settings::AntiAim::ManualAntiAim::LeftButton);
-                        ImGui::PopItemWidth();
-                    }
-                    ImGui::EndColumns();
-                    ImGui::Separator();
-                    ImGui::Text(XORSTR("Edging(Alfa)"));
-                    ImGui::Separator();
-                    ImGui::Columns(2, nullptr, false);
-                    {
-                        ImGui::Checkbox(XORSTR("Enabled"), &Settings::AntiAim::HeadEdge::enabled);
-                    }
-                    ImGui::NextColumn();
-                    {
-                        ImGui::PushItemWidth(-1);
-                        ImGui::SliderFloat(XORSTR("##EDGEDISTANCE"), &Settings::AntiAim::HeadEdge::distance, 20, 30, "Distance: %0.0f");
-                        ImGui::PopItemWidth();
-                    }
-                    ImGui::EndColumns();
-                    ImGui::Separator();
-                    ImGui::Text(XORSTR("LBY"));
-                    ImGui::Separator();
-                    ImGui::Columns(2, nullptr, false);
-                    {
-                        ImGui::Checkbox(XORSTR("Break LBY"), &Settings::AntiAim::RageAntiAim::lby::enabled);
-                    }
-                    ImGui::NextColumn();
-                    {
-                        ImGui::PushItemWidth(-1);
-                        ImGui::Combo(XORSTR("##LbyType"), (int *)&Settings::AntiAim::RageAntiAim::lbym, lbyType, IM_ARRAYSIZE(lbyType));
-                    }
-                    ImGui::EndColumns();
+                    ImGui::PopItemWidth();
                 }
-                /* SOON
-                else if (Settings::AntiAim::RageAntiAim::customaa::enabled == true, Settings::AntiAim::RageAntiAim::enabled == true)
+                ImGui::Separator();
+                ImGui::Checkbox("Manual Direction", &Settings::AntiAim::Manual::enabled);
+                ImGui::Columns(2);
                 {
-                    ImGui::Separator();
-                    ImGui::Text(XORSTR("Custom Anti Aim"));
-                    ImGui::Separator();
-                    ImGui::SliderInt(XORSTR("##YAWANGLE"), &Settings::AntiAim::RageAntiAim::customaa::standang, -180, 180, "Yaw Desync Angle : %.0f");
-                    ImGui::SliderInt(XORSTR("##YAWAIRANGLE"), &Settings::AntiAim::RageAntiAim::customaa::airang, -180, 180, "Yaw Desync Angle : %.0f");
-                    ImGui::Columns(2, nullptr, false);
-                    {
-                        ImGui::ItemSize(ImVec2(0.0f, 0.0f), 0.0f);
-                        ImGui::Text(XORSTR("Pitch"));
-                    }
-                    ImGui::NextColumn();
-                    {
-                        ImGui::PushItemWidth(-1);
-                        ImGui::Combo(XORSTR("##PITCHTYPE"), (int *)&Settings::AntiAim::pitchtype, pitchType, IM_ARRAYSIZE(pitchType));
-                        ImGui::PopItemWidth();
-                    }
-                    ImGui::EndColumns();
-                    ImGui::Checkbox(XORSTR("Randomize Yaw"), &Settings::AntiAim::RageAntiAim::customaa::sidemove);
-                    ImGui::Checkbox(XORSTR("Micromovements"), &Settings::AntiAim::RageAntiAim::customaa::sidemove);
+                    ImGui::Text("Left key");
+                    ImGui::Spacing();
+                    ImGui::Text("Back key");
+                    ImGui::Spacing();
+                    ImGui::Text("Right key");
+                    ImGui::Spacing();
+                    ImGui::Text("Desync/LBY invert key");
                 }
-                */
+                ImGui::NextColumn();
+                {
+                    UI::KeyBindButton(&Settings::AntiAim::Manual::left);
+                    UI::KeyBindButton(&Settings::AntiAim::Manual::back);
+                    UI::KeyBindButton(&Settings::AntiAim::Manual::right);
+                    UI::KeyBindButton(&Settings::AntiAim::dFlipKey);
+                }
+                ImGui::EndColumns();
+                // static bool untrustedFeatures = false;
+                // if (ImGui::Button(XORSTR("untrusted")))
+                //     untrustedFeatures = !untrustedFeatures;
+                // if (untrustedFeatures) {
+                //     ImGui::Text(XORSTR("ALL FEATURES HERE ARE UNSTABLE OR CAN PRODUCE UNTRUSTED."));
+                //     ImGui::Checkbox(XORSTR("z-roll test"), &Settings::AntiAim::ExperimentalZFLIP);
+                // }
+                ImGui::EndChild();
             }
-            ImGui::EndChild();
         }
         ImGui::NextColumn();
         {
@@ -355,19 +321,16 @@ void AntiAim::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
                 ImGui::Columns(2, nullptr, false);
                 {
                     ImGui::Checkbox(XORSTR("QuickPeek"), &Settings::Ragebot::quickpeek::enabled);
-                    ImGui::Checkbox(XORSTR("FakeDuck"), &Settings::AntiAim::FakeDuck::enabled);
-                    ImGui::Checkbox(XORSTR("Fake Peek"), &Settings::AntiAim::RageAntiAim::fakepeek);
+                    ImGui::Checkbox(XORSTR("FakeDuck"), &Settings::FakeDuck::enabled);
 
                     ImGui::Checkbox(XORSTR("Angle Indicator"), &Settings::AngleIndicator::enabled);
-                    ImGui::Checkbox(XORSTR("Spin on air"), &Settings::AntiAim::airspin::enabled);
                     ImGui::Checkbox(XORSTR("Animation Memes"), &Settings::AnimMemes::enabled);
-                    ImGui::Checkbox(XORSTR("Choke OnShot"), &Settings::AntiAim::ChokeOnShot);
+                    ImGui::Checkbox(XORSTR("Choke OnShot"), &Settings::FakeLag::ChokeOnShot);
                 }
                 ImGui::NextColumn();
                 {
                     UI::KeyBindButton(&Settings::Ragebot::quickpeek::key);
-                    UI::KeyBindButton(&Settings::AntiAim::FakeDuck::fakeDuckKey);
-                    UI::KeyBindButton(&Settings::AntiAim::RageAntiAim::fakeheadkey);
+                    UI::KeyBindButton(&Settings::FakeDuck::key);
                 }
                 ImGui::EndColumns();
                 ImGui::Separator();
@@ -376,16 +339,14 @@ void AntiAim::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
                 ImGui::Columns(2, nullptr, false);
                 {
                     ImGui::Checkbox(XORSTR("Fake Lag"), &Settings::FakeLag::enabled);
-                    ImGui::Checkbox(XORSTR("Fake Lag Mic Key"), &Settings::FakeLag::microphone);
-                    ImGui::Checkbox(XORSTR("Random Fake Lag"), &Settings::AntiAim::randomLag::enabled);
+                    // ImGui::Checkbox(XORSTR("Disable Fake Lag when Voice Recording"), &Settings::FakeLag::microphone);
                     ImGui::Checkbox(XORSTR("Adaptive Fake Lag"), &Settings::FakeLag::adaptive);
                 }
                 ImGui::NextColumn();
                 {
                     ImGui::PushItemWidth(-1);
                     ImGui::SliderInt(XORSTR("##FAKELAGAMOUNT"), &Settings::FakeLag::value, 0, 15, XORSTR("Amount: %0.f"));
-                    UI::KeyBindButton(&Settings::FakeLag::microphoneKey);
-                    UI::KeyBindButton(&Settings::FakeLag::ckey);
+                    ImGui::PopItemWidth();
                 }
                 ImGui::EndColumns();
                 ImGui::Separator();
@@ -486,6 +447,17 @@ void AntiAim::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
                     }
                 }
                 ImGui::EndColumns();
+                ImGui::Separator();
+                const char* resolverType[] = {
+                "NONE",
+                "Experimental",
+                "ApuWare",
+            "EXP (LegitAA)",
+            "EXP (Rage)",
+            };
+                                    ImGui::TextWrapped(XORSTR("Resolver Type"));
+
+        ImGui::Combo(XORSTR("##ResolverType"), (int*)&Settings::Resolver::resolverType, resolverType, IM_ARRAYSIZE(resolverType));
             }
             ImGui::EndChild();
         }
