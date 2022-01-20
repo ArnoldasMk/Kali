@@ -17,8 +17,8 @@ std::string GetTime() {
 }
 
 void Watermark::Paint() {
-	// std::string text;
-	// text += "Kali | ";
+	// std::string text = Settings::Watermark::customName;
+	// text += " | ";
 	// text += getpwuid(getuid())->pw_name;
 	// text += " | ";
 	// text += (engine->IsInGame() && csPlayerResource) ? csPlayerResource->GetPing(engine->GetLocalPlayer()) : "0";

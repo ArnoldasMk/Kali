@@ -1063,6 +1063,7 @@ namespace Settings
 		inline SlowMode mode = SlowMode::ACCURATE;
 		inline ButtonCode_t key = KEY_LSHIFT;
 	}
+
 	namespace Resolver
 	{
 		inline bool lby;
@@ -1076,8 +1077,8 @@ namespace Settings
 		inline bool forcebrute = false;
 		inline bool resolveAllAP;
 		inline resolverType resolverType = resolverType::NONE;
-
 	}
+
 	namespace bullettracers
 	{
 		inline bool enabled = false;
@@ -1087,6 +1088,7 @@ namespace Settings
 	{
 		inline bool VelGraph;
 		inline bool SyncFake;
+		
 		namespace tracebullet
 		{
 			inline bool local;
@@ -1094,24 +1096,20 @@ namespace Settings
 			inline ColorVar enemycolor;
 			inline ColorVar friendcolor;
 		}
+
 		namespace arrows
 		{
 			inline int distance;
 			inline int size;
 			inline ColorVar color;
 		}
+
 		namespace taserrange
 		{
 			inline bool enabled;
 			inline ColorVar color;
 		}
-		namespace customfog
-		{
-			inline bool enabled;
-			inline ColorVar color;
-			inline int distance;
-			inline float density;
-		}
+
 		namespace indicators
 		{
 			inline bool enabled;
@@ -1157,11 +1155,6 @@ namespace Settings
 		inline ColorVar allyInfoColor = ImColor(255, 255, 255, 255);
 		inline ColorVar enemyInfoColor = ImColor(255, 255, 255, 255);
 
-		namespace Watermark
-		{
-			inline bool enabled = true;
-			inline ColorVar color = ImColor(215, 5, 252, 255);
-		}
 		namespace Drawfire
 		{
 			inline bool enabled = false;
@@ -1172,7 +1165,6 @@ namespace Settings
 		}
 		namespace FilterEnemy
 		{
-
 			namespace playerInfo
 			{
 				inline bool enabled = false;
@@ -1570,6 +1562,20 @@ namespace Settings
 		inline int value;
 	}
 
+	namespace Watermark
+	{
+		inline bool enabled;
+
+		inline bool showFps;
+		inline bool showPing;
+		inline bool showFakeLag;
+		inline bool showTime;
+		inline bool useFakeUserName;
+		inline bool useFakeCheatName;
+		inline std::string fakeUserName;
+		inline std::string fakeCheatName;
+	}
+
 	namespace Dlights
 	{
 		inline bool enabled = false;
@@ -1638,12 +1644,6 @@ namespace Settings
 			inline bool enabledMin = false;
 			inline int Min = 3;
 		}
-	}
-	namespace FakeWalk
-	{
-		inline bool enabled;
-		inline int speed;
-		inline ButtonCode_t key;
 	}
 
 	namespace NoDuckCooldown

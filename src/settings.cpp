@@ -325,6 +325,91 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("Nightmode")][XORSTR("Enabled")] = Settings::Nightmode::enabled;
     settings[XORSTR("Nightmode")][XORSTR("Value")] = Settings::Nightmode::value;
 
+    settings[XORSTR("Watermark")][XORSTR("enabled")] = Settings::Watermark::enabled;
+    settings[XORSTR("Watermark")][XORSTR("showFps")] = Settings::Watermark::showFps;
+    settings[XORSTR("Watermark")][XORSTR("showPing")] = Settings::Watermark::showPing;
+    settings[XORSTR("Watermark")][XORSTR("showFakeLag")] = Settings::Watermark::showFakeLag;
+    settings[XORSTR("Watermark")][XORSTR("showTime")] = Settings::Watermark::showTime;
+    settings[XORSTR("Watermark")][XORSTR("useFakeUserName")] = Settings::Watermark::useFakeUserName;
+    settings[XORSTR("Watermark")][XORSTR("useFakeCheatName")] = Settings::Watermark::useFakeCheatName;
+    settings[XORSTR("Watermark")][XORSTR("fakeUserName")] = Settings::Watermark::fakeUserName;
+    settings[XORSTR("Watermark")][XORSTR("fakeCheatName")] = Settings::Watermark::fakeCheatName;
+
+    settings[XORSTR("AntiAim")][XORSTR("enabled")] = Settings::AntiAim::enabled;
+    settings[XORSTR("AntiAim")][XORSTR("dFlipKey")] = Util::GetButtonName(Settings::AntiAim::dFlipKey);
+    //
+    settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Yaw")][XORSTR("type")] = (int)Settings::AntiAim::Stand::Yaw::type;
+    settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Yaw")][XORSTR("jitterLeft")] = Settings::AntiAim::Stand::Yaw::jitterLeft;
+    settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Yaw")][XORSTR("jitterRight")] = Settings::AntiAim::Stand::Yaw::jitterRight;
+    settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Yaw")][XORSTR("jitterLeftMax")] = Settings::AntiAim::Stand::Yaw::jitterLeftMax;
+    settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Yaw")][XORSTR("jitterRightMax")] = Settings::AntiAim::Stand::Yaw::jitterRightMax;
+    settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Yaw")][XORSTR("spinFactor")] = Settings::AntiAim::Stand::Yaw::spinFactor;
+    //
+    settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Pitch")][XORSTR("type")] = (int)Settings::AntiAim::Stand::Pitch::type;
+    settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Pitch")][XORSTR("custom")] = Settings::AntiAim::Stand::Pitch::custom;
+    //
+    settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Desync")][XORSTR("type")] = (int)Settings::AntiAim::Stand::Desync::type;
+    settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Desync")][XORSTR("jitterLeft")] = Settings::AntiAim::Stand::Desync::jitterLeft;
+    settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Desync")][XORSTR("jitterRight")] = Settings::AntiAim::Stand::Desync::jitterRight;
+    settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Desync")][XORSTR("jitterLeftMax")] = Settings::AntiAim::Stand::Desync::jitterLeftMax;
+    settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Desync")][XORSTR("jitterRightMax")] = Settings::AntiAim::Stand::Desync::jitterRightMax;
+    settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Desync")][XORSTR("offset")] = Settings::AntiAim::Stand::Desync::offset;
+    //
+    //
+    settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Yaw")][XORSTR("type")] = (int)Settings::AntiAim::Movement::Yaw::type;
+    settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Yaw")][XORSTR("jitterLeft")] = Settings::AntiAim::Movement::Yaw::jitterLeft;
+    settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Yaw")][XORSTR("jitterRight")] = Settings::AntiAim::Movement::Yaw::jitterRight;
+    settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Yaw")][XORSTR("jitterLeftMax")] = Settings::AntiAim::Movement::Yaw::jitterLeftMax;
+    settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Yaw")][XORSTR("jitterRightMax")] = Settings::AntiAim::Movement::Yaw::jitterRightMax;
+    settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Yaw")][XORSTR("spinFactor")] = Settings::AntiAim::Movement::Yaw::spinFactor;
+    //
+    settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Pitch")][XORSTR("type")] = (int)Settings::AntiAim::Movement::Pitch::type;
+    settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Pitch")][XORSTR("custom")] = Settings::AntiAim::Movement::Pitch::custom;
+    //
+    settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Desync")][XORSTR("type")] = (int)Settings::AntiAim::Movement::Desync::type;
+    settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Desync")][XORSTR("jitterLeft")] = Settings::AntiAim::Movement::Desync::jitterLeft;
+    settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Desync")][XORSTR("jitterRight")] = Settings::AntiAim::Movement::Desync::jitterRight;
+    settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Desync")][XORSTR("jitterLeftMax")] = Settings::AntiAim::Movement::Desync::jitterLeftMax;
+    settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Desync")][XORSTR("jitterRightMax")] = Settings::AntiAim::Movement::Desync::jitterRightMax;
+    settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Desync")][XORSTR("offset")] = Settings::AntiAim::Movement::Desync::offset;
+    //
+    //
+    settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Yaw")][XORSTR("type")] = (int)Settings::AntiAim::Air::Yaw::type;
+    settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Yaw")][XORSTR("jitterLeft")] = Settings::AntiAim::Air::Yaw::jitterLeft;
+    settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Yaw")][XORSTR("jitterRight")] = Settings::AntiAim::Air::Yaw::jitterRight;
+    settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Yaw")][XORSTR("jitterLeftMax")] = Settings::AntiAim::Air::Yaw::jitterLeftMax;
+    settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Yaw")][XORSTR("jitterRightMax")] = Settings::AntiAim::Air::Yaw::jitterRightMax;
+    settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Yaw")][XORSTR("spinFactor")] = Settings::AntiAim::Air::Yaw::spinFactor;
+    //
+    settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Pitch")][XORSTR("type")] = (int)Settings::AntiAim::Air::Pitch::type;
+    settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Pitch")][XORSTR("custom")] = Settings::AntiAim::Air::Pitch::custom;
+    //
+    settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Desync")][XORSTR("type")] = (int)Settings::AntiAim::Air::Desync::type;
+    settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Desync")][XORSTR("jitterLeft")] = Settings::AntiAim::Air::Desync::jitterLeft;
+    settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Desync")][XORSTR("jitterRight")] = Settings::AntiAim::Air::Desync::jitterRight;
+    settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Desync")][XORSTR("jitterLeftMax")] = Settings::AntiAim::Air::Desync::jitterLeftMax;
+    settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Desync")][XORSTR("jitterRightMax")] = Settings::AntiAim::Air::Desync::jitterRightMax;
+    settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Desync")][XORSTR("offset")] = Settings::AntiAim::Air::Desync::offset;
+    //
+    //
+    settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Yaw")][XORSTR("type")] = (int)Settings::AntiAim::SlowWalk::Yaw::type;
+    settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Yaw")][XORSTR("jitterLeft")] = Settings::AntiAim::SlowWalk::Yaw::jitterLeft;
+    settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Yaw")][XORSTR("jitterRight")] = Settings::AntiAim::SlowWalk::Yaw::jitterRight;
+    settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Yaw")][XORSTR("jitterLeftMax")] = Settings::AntiAim::SlowWalk::Yaw::jitterLeftMax;
+    settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Yaw")][XORSTR("jitterRightMax")] = Settings::AntiAim::SlowWalk::Yaw::jitterRightMax;
+    settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Yaw")][XORSTR("spinFactor")] = Settings::AntiAim::SlowWalk::Yaw::spinFactor;
+    //
+    settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Pitch")][XORSTR("type")] = (int)Settings::AntiAim::SlowWalk::Pitch::type;
+    settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Pitch")][XORSTR("custom")] = Settings::AntiAim::SlowWalk::Pitch::custom;
+    //
+    settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Desync")][XORSTR("type")] = (int)Settings::AntiAim::SlowWalk::Desync::type;
+    settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Desync")][XORSTR("jitterLeft")] = Settings::AntiAim::SlowWalk::Desync::jitterLeft;
+    settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Desync")][XORSTR("jitterRight")] = Settings::AntiAim::SlowWalk::Desync::jitterRight;
+    settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Desync")][XORSTR("jitterLeftMax")] = Settings::AntiAim::SlowWalk::Desync::jitterLeftMax;
+    settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Desync")][XORSTR("jitterRightMax")] = Settings::AntiAim::SlowWalk::Desync::jitterRightMax;
+    settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Desync")][XORSTR("offset")] = Settings::AntiAim::SlowWalk::Desync::offset;
+    //
+
     settings[XORSTR("Resolver")][XORSTR("resolve_allAP")] = Settings::Resolver::resolveAllAP;
     settings[XORSTR("Resolver")][XORSTR("resolve_all")] = Settings::Resolver::resolveAll;
     settings[XORSTR("Resolver")][XORSTR("manual")] = Settings::Resolver::manual;
@@ -338,11 +423,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
     LoadColor(settings[XORSTR("ESP")][XORSTR("taserrange")][XORSTR("color")], Settings::ESP::taserrange::color);
     settings[XORSTR("ESP")][XORSTR("taserrange")][XORSTR("Enabled")] = Settings::ESP::taserrange::enabled;
-
-    LoadColor(settings[XORSTR("ESP")][XORSTR("customfog")][XORSTR("color")], Settings::ESP::customfog::color);
-    settings[XORSTR("ESP")][XORSTR("customfog")][XORSTR("Enabled")] = Settings::ESP::customfog::enabled;
-    settings[XORSTR("ESP")][XORSTR("customfog")][XORSTR("distance")] = Settings::ESP::customfog::distance;
-    settings[XORSTR("ESP")][XORSTR("customfog")][XORSTR("density")] = Settings::ESP::customfog::density;
 
     LoadColor(settings[XORSTR("ESP")][XORSTR("manualAAColor")], Settings::ESP::manualAAColor);
     settings[XORSTR("Resolver")][XORSTR("Type")] = (int)Settings::Resolver::resolverType;
@@ -363,7 +443,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("ESP")][XORSTR("backend")] = (int)Settings::ESP::backend;
     settings[XORSTR("ESP")][XORSTR("key")] = Util::GetButtonName(Settings::ESP::key);
     LoadColor(settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("color")], Settings::Ragebot::quickpeek::color);
-    LoadColor(settings[XORSTR("ESP")][XORSTR("Watermark")][XORSTR("color")], Settings::ESP::Watermark::color);
     LoadColor(settings[XORSTR("ESP")][XORSTR("enemy_color")], Settings::ESP::enemyColor);
     LoadColor(settings[XORSTR("ESP")][XORSTR("enemy_visible_color")], Settings::ESP::enemyVisibleColor);
     LoadColor(settings[XORSTR("ESP")][XORSTR("ally_color")], Settings::ESP::allyColor);
@@ -1061,8 +1140,18 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("AutoBuy")][XORSTR("main")], (int *)&Settings::AutoBuy::main);
     GetVal(settings[XORSTR("AutoBuy")][XORSTR("secondary")], (int *)&Settings::AutoBuy::secondary);
 
-    GetVal(settings[XORSTR("Nightmode")][XORSTR("Enabled")], &Settings::Nightmode::enabled);
-    GetVal(settings[XORSTR("Nightmode")][XORSTR("Value")], &Settings::Nightmode::value);
+    GetVal(settings[XORSTR("Nightmode")][XORSTR("enabled")], &Settings::Nightmode::enabled);
+    GetVal(settings[XORSTR("Nightmode")][XORSTR("value")], &Settings::Nightmode::value);
+
+    GetVal(settings[XORSTR("Watermark")][XORSTR("enabled")], &Settings::Watermark::enabled);
+    GetVal(settings[XORSTR("Watermark")][XORSTR("showFps")], &Settings::Watermark::showFps);
+    GetVal(settings[XORSTR("Watermark")][XORSTR("showPing")], &Settings::Watermark::showPing);
+    GetVal(settings[XORSTR("Watermark")][XORSTR("showFakeLag")], &Settings::Watermark::showFakeLag);
+    GetVal(settings[XORSTR("Watermark")][XORSTR("showTime")], &Settings::Watermark::showTime);
+    GetVal(settings[XORSTR("Watermark")][XORSTR("useFakeUserName")], &Settings::Watermark::useFakeUserName);
+    GetVal(settings[XORSTR("Watermark")][XORSTR("useFakeCheatName")], &Settings::Watermark::useFakeCheatName);
+    GetVal(settings[XORSTR("Watermark")][XORSTR("fakeUserName")], &Settings::Watermark::fakeUserName);
+    GetVal(settings[XORSTR("Watermark")][XORSTR("fakeCheatName")], &Settings::Watermark::fakeCheatName);
 
     GetVal(settings[XORSTR("Resolver")][XORSTR("resolve_allAP")], &Settings::Resolver::resolveAllAP);
     GetVal(settings[XORSTR("Resolver")][XORSTR("rPitch")], &Settings::Resolver::rPitch);
@@ -1084,13 +1173,7 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("ESP")][XORSTR("taserrange")][XORSTR("color")], &Settings::ESP::taserrange::color);
     GetVal(settings[XORSTR("ESP")][XORSTR("taserrange")][XORSTR("Enabled")], &Settings::ESP::taserrange::enabled);
 
-    GetVal(settings[XORSTR("ESP")][XORSTR("customfog")][XORSTR("color")], &Settings::ESP::customfog::color);
-    GetVal(settings[XORSTR("ESP")][XORSTR("customfog")][XORSTR("Enabled")], &Settings::ESP::customfog::enabled);
-    GetVal(settings[XORSTR("ESP")][XORSTR("customfog")][XORSTR("distance")], &Settings::ESP::customfog::distance);
-    GetVal(settings[XORSTR("ESP")][XORSTR("customfog")][XORSTR("density")], &Settings::ESP::customfog::density);
-
     GetVal(settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("color")], &Settings::Ragebot::quickpeek::color);
-    GetVal(settings[XORSTR("ESP")][XORSTR("Watermark")][XORSTR("color")], &Settings::ESP::Watermark::color);
     GetVal(settings[XORSTR("ESP")][XORSTR("manualAAColor")], &Settings::ESP::manualAAColor);
     GetVal(settings[XORSTR("UI")][XORSTR("particles")], &Settings::UI::particles);
 

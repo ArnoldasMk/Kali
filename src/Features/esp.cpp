@@ -751,37 +751,6 @@ static void Drawlc()
 */
 }
 
-static void CustomFog()
-{
-	if (!Settings::ESP::customfog::enabled)
-		return;
-	// WHY DOESNT IT FUCKING WORK?!
-	static auto fog_override = cvar->FindVar(XORSTR("fog_override")); //-V807
-
-	fog_override->SetValue(1);
-
-	static auto fog_start = cvar->FindVar(XORSTR("fog_start"));
-
-	if (fog_start->GetInt())
-		fog_start->SetValue(0);
-
-	static auto fog_end = cvar->FindVar(XORSTR("fog_end"));
-
-	if (fog_end->GetInt() != Settings::ESP::customfog::distance)
-		fog_end->SetValue(Settings::ESP::customfog::distance);
-
-	static auto fog_maxdensity = cvar->FindVar(XORSTR("fog_maxdensity"));
-
-	if (fog_maxdensity->GetFloat() != (float)Settings::ESP::customfog::density * 0.01f) //-V550
-		fog_maxdensity->SetValue((float)Settings::ESP::customfog::density * 0.01f);
-
-	char buffer_color[12];
-	sprintf(buffer_color, "%i %i %i", Settings::ESP::customfog::color.Color().Value.x, Settings::ESP::customfog::color.Color().Value.y, Settings::ESP::customfog::color.Color().Value.z);
-
-	static auto fog_color = cvar->FindVar(XORSTR("fog_color"));
-
-	fog_color->SetValue(buffer_color);
-}
 static void DrawAimbotSpot()
 {
 	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
@@ -2339,7 +2308,6 @@ void ESP::Paint()
 		DrawScope();
 
 	DrawWatermark(localplayer);
-	CustomFog();
 	if (Settings::ThirdPerson::toggled)
 	{
 		DrawAATrace(AntiAim::fakeAngle, AntiAim::realAngle);
