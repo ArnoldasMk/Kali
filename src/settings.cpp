@@ -45,6 +45,14 @@ void GetVal(Json::Value &config, float *setting)
     *setting = config.asFloat();
 }
 
+void GetVal(Json::Value &config, std::string *setting)
+{
+    if (config.isNull())
+        return;
+
+    *setting = config.asString();
+}
+
 void GetVal(Json::Value &config, ImColor *setting)
 {
     if (config.isNull())
@@ -818,7 +826,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
     settings[XORSTR("View")][XORSTR("NoViewPunch")][XORSTR("Enabled")] = Settings::View::NoViewPunch::enabled;
     settings[XORSTR("View")][XORSTR("NoAimPunch")][XORSTR("Enabled")] = Settings::View::NoAimPunch::enabled;
-    settings[XORSTR("FakeWalk")][XORSTR("Enabled")] = Settings::FakeWalk::enabled;
 
     settings[XORSTR("FakeLag")][XORSTR("enabled")] = Settings::FakeLag::enabled;
     settings[XORSTR("FakeLag")][XORSTR("value")] = Settings::FakeLag::value;
@@ -1606,7 +1613,6 @@ void Settings::LoadConfig(std::string path)
 
     GetVal(settings[XORSTR("View")][XORSTR("NoViewPunch")][XORSTR("Enabled")], &Settings::View::NoViewPunch::enabled);
     GetVal(settings[XORSTR("View")][XORSTR("NoAimPunch")][XORSTR("Enabled")], &Settings::View::NoAimPunch::enabled);
-    GetVal(settings[XORSTR("FakeWalk")][XORSTR("Enabled")], &Settings::FakeWalk::enabled);
 
     GetVal(settings[XORSTR("FakeLag")][XORSTR("enabled")], &Settings::FakeLag::enabled);
     GetVal(settings[XORSTR("FakeLag")][XORSTR("value")], &Settings::FakeLag::value);

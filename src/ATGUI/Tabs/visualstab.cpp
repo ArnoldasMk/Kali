@@ -564,9 +564,9 @@ void VisualsEnemy::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabInde
 					ImGui::Checkbox(XORSTR("Draw Backtrack Chams"), &Settings::Ragebot::backTrack::draw);
 				}
 				ImGui::SameLine();
-				ColorButton::RenderWindow("Enemy Chams", (int)50, ImGui::ColorButton(XORSTR("Chams - Enemy Visible"), (ImVec4)Settings::ESP::enemyVisibleColor.color, 0, ImVec2(19, 19)));
+				ColorButton::RenderWindow("Enemy Chams Visible", (int)50, ImGui::ColorButton(XORSTR("Chams - Enemy Visible"), (ImVec4)Settings::ESP::enemyVisibleColor.color, 0, ImVec2(19, 19)));
 				ImGui::SameLine();
-				ColorButton::RenderWindow("Enemy Chams Hidden", (int)81, ImGui::ColorButton(XORSTR("Enemy Chams Hidden"), (ImVec4)Settings::ESP::enemyColor.color, 0, ImVec2(20, 20)));
+				ColorButton::RenderWindow("Enemy Chams Hidden", (int)81, ImGui::ColorButton(XORSTR("Chams - Enemy Hidden"), (ImVec4)Settings::ESP::enemyColor.color, 0, ImVec2(20, 20)));
 			}
 			ImGui::EndChild();
 		}
@@ -887,7 +887,6 @@ void VisualsLocal::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabInde
 						ImGui::Checkbox(XORSTR("Show Footsteps"), &Settings::ESP::Sounds::enabled);
 						ImGui::Checkbox(XORSTR("Nightmode"), &Settings::Nightmode::enabled);
 					ImGui::Checkbox(XORSTR("No View Punch"), &Settings::View::NoViewPunch::enabled);
-					ImGui::Checkbox(XORSTR("Watermark"), &Settings::ESP::Watermark::enabled);
 					ImGui::Checkbox(XORSTR("Show Hitbox impacts"), &Settings::ESP::showimpacts);
 				}
 				ImGui::NextColumn();

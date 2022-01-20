@@ -461,25 +461,6 @@ static void DrawSprite(int x, int y, int w, int h, C_BaseEntity *entity)
 	// TODO: Handle other sprites
 }
 
-static void DrawWatermark(C_BasePlayer *player)
-{
-	if (!Settings::ESP::Watermark::enabled)
-		return;
-	int lag = TIME_TO_TICKS(player->GetSimulationTime() - player->GetOldSimulationTime());
-	int woop = lag;
-	std::string bombStr = std::to_string(woop);
-
-	Draw::AddRectFilled(1696 + 72 + 22, 2, 1696 + 224, 30, Settings::UI::mainColor.Color());			 // OUTSIDE !
-	Draw::AddRectFilled(1696 + 5 + 72 + 22, 1 + 5, 1696 + 219, 30 - 5, Settings::UI::bodyColor.Color()); // INSIDE
-	Draw::AddRect(1696 - 1 + 72 + 22, 1, 1696 + 224, 31, ImColor(0, 0, 0, 255));					 // OUTSIDE
-	Draw::AddRect(1695 + 5 + 72 + 22, 1 + 5, 1696 + 219, 31 - 5, ImColor(0, 0, 0, 225));				 // INSIDE
-	int fps = static_cast<int>(1.f / globalVars->frametime);
-	std::string fps_string = std::to_string(fps);
-	// std::string name = "Kali | " + fps_string + " fps | 39ms";
-	std::string debugOverlay = std::to_string(fps);
-	std::string name = "Kali.cc | " + fps_string + " fps | " + bombStr + "FL";
-	Draw::AddText(1696 + 10 + 72 + 22, 10.8, name.c_str(), Settings::UI::fontColor.Color()); // TRUE
-}
 static void drawfire(C_BaseEntity *entity)
 {
 	if (!Settings::ESP::Drawfire::enabled)
@@ -505,16 +486,6 @@ static void drawfire(C_BaseEntity *entity)
 		if (time > 489)
 			spawntime = 0;
 	}
-
-	//  static auto size = Vector2D(35.0f, 5.0f);
-	// Draw::FilledCircle(Vector2D(screen_origin.x, screen_origin.y - size.y * 0.5f), 60, 20, Color(15, 15, 15, 187));
-
-	// Draw::FilledRectangle(screen_origin.x - size.x * 0.5f, screen_origin.y - size.y * 0.5f - 1.0f, size.x, size.y, Color(37, 37, 37, 255));
-	// Draw::FilledRectangle(screen_origin.x - size.x * 0.5f + 2.0f, screen_origin.y - size.y * 0.5f, (size.x - 4.0f) * factor, size.y - 2.0f, Color ( 255, 0, 0, 255));
-
-	// Draw::Rectangle(screen_origin.x - size.x * 0.5f, screen_origin.y - size.y * 0.5f, size.x, size.y, Color(7, 7, 7, 255));
-	//  render::get().text(fonts[ESP], screen_origin.x, screen_origin.y - size.y * 0.5f + 12.0f, g_cfg.esp.molotov_timer_color, HFONT_CENTERED_X | HFONT_CENTERED_Y, "FIRE");
-	//  render::get().text(fonts[GRENADES], screen_origin.x + 1.0f, screen_origin.y - size.y * 0.5f - 9.0f, g_cfg.esp.molotov_timer_color, HFONT_CENTERED_X | HFONT_CENTERED_Y, "l");
 }
 
 static void DrawEntity(C_BaseEntity *entity, const char *string, ImColor color, int nadetype)
@@ -2307,7 +2278,6 @@ void ESP::Paint()
 	if (Settings::NoScopeBorder::enabled && localplayer->IsScoped())
 		DrawScope();
 
-	DrawWatermark(localplayer);
 	if (Settings::ThirdPerson::toggled)
 	{
 		DrawAATrace(AntiAim::fakeAngle, AntiAim::realAngle);
