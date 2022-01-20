@@ -299,29 +299,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
     settings[XORSTR("AnimationMemes")][XORSTR("Enabled")] = Settings::AnimMemes::enabled;
 
-    settings[XORSTR("SvCheats")][XORSTR("Enabled")] = Settings::SvCheats::enabled;
-    settings[XORSTR("SvCheatss")][XORSTR("Enabled")] = Settings::SvCheats::svcheats::enabled;
-    settings[XORSTR("SvCheats")][XORSTR("fakelat")] = Settings::SvCheats::fakelat;
-
-    settings[XORSTR("gravity")][XORSTR("Enabled")] = Settings::SvCheats::gravity::enabled;
-    settings[XORSTR("impacts")][XORSTR("Enabled")] = Settings::SvCheats::impacts::enabled;
-    settings[XORSTR("grenadetraj")][XORSTR("Enabled")] = Settings::SvCheats::grenadetraj::enabled;
-    settings[XORSTR("viewmodel")][XORSTR("Enabled")] = Settings::SvCheats::viewmodel::enabled;
-    settings[XORSTR("viewmodelfov")][XORSTR("fov")] = Settings::SvCheats::viewmodel::fov;
-
-    settings[XORSTR("aspect")][XORSTR("Enabled")] = Settings::SvCheats::aspect::enabled;
-    settings[XORSTR("aspect")][XORSTR("var")] = Settings::SvCheats::aspect::var;
-
-    settings[XORSTR("gravity")][XORSTR("Enabled")] = Settings::SvCheats::gravity::enabled;
-    settings[XORSTR("gravity")][XORSTR("amount")] = Settings::SvCheats::gravity::amount;
-
-    settings[XORSTR("bright")][XORSTR("Enabled")] = Settings::SvCheats::bright::enabled;
-    settings[XORSTR("fog")][XORSTR("Enabled")] = Settings::SvCheats::fog::enabled;
-
-    settings[XORSTR("viewmodelx")][XORSTR("x")] = Settings::SvCheats::viewmodel::x;
-    settings[XORSTR("viewmodely")][XORSTR("y")] = Settings::SvCheats::viewmodel::y;
-    settings[XORSTR("viewmodelz")][XORSTR("z")] = Settings::SvCheats::viewmodel::z;
-
     settings[XORSTR("AutoBuy")][XORSTR("Enabled")] = Settings::AutoBuy::enabled;
     settings[XORSTR("AutoBuy")][XORSTR("armor")] = Settings::AutoBuy::armor;
     settings[XORSTR("AutoBuy")][XORSTR("taser")] = Settings::AutoBuy::taser;
@@ -344,6 +321,15 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("Watermark")][XORSTR("fakeCheatName")] = Settings::Watermark::fakeCheatName;
 
     settings[XORSTR("DisableSettingCVars")][XORSTR("enabled")] = Settings::DisableSettingCvars::enabled;
+
+    settings[XORSTR("CVarsOverride")][XORSTR("enabled")] = Settings::CVarsOverride::enabled;
+    settings[XORSTR("CVarsOverride")][XORSTR("fakelat")] = Settings::CVarsOverride::fakeLatency;
+    settings[XORSTR("CVarsOverride")][XORSTR("ragdoll")] = Settings::CVarsOverride::ragdoll;
+    settings[XORSTR("CVarsOverride")][XORSTR("fullbright")] = Settings::CVarsOverride::fullbright;
+    settings[XORSTR("CVarsOverride")][XORSTR("showImpacts")] = Settings::CVarsOverride::showImpacts;
+
+    settings[XORSTR("VoteRevealer")][XORSTR("enabled")] = Settings::VoteRevealer::enabled;
+
 
     settings[XORSTR("AntiAim")][XORSTR("enabled")] = Settings::AntiAim::enabled;
     settings[XORSTR("AntiAim")][XORSTR("dFlipKey")] = Util::GetButtonName(Settings::AntiAim::dFlipKey);
@@ -1118,29 +1104,6 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("SilentWalk")][XORSTR("Enabled")], &Settings::SilentWalk::enabled);
     GetButtonCode(settings[XORSTR("SilentWalk")][XORSTR("Key")], &Settings::SilentWalk::key);
 
-    GetVal(settings[XORSTR("SvCheats")][XORSTR("Enabled")], &Settings::SvCheats::enabled);
-    GetVal(settings[XORSTR("SvCheatss")][XORSTR("Enabled")], &Settings::SvCheats::svcheats::enabled);
-    GetVal(settings[XORSTR("SvCheats")][XORSTR("fakelat")], &Settings::SvCheats::fakelat);
-
-    GetVal(settings[XORSTR("aspect")][XORSTR("Enabled")], &Settings::SvCheats::aspect::enabled);
-    GetVal(settings[XORSTR("aspect")][XORSTR("var")], &Settings::SvCheats::aspect::var);
-
-    GetVal(settings[XORSTR("bright")][XORSTR("Enabled")], &Settings::SvCheats::bright::enabled);
-    GetVal(settings[XORSTR("fog")][XORSTR("Enabled")], &Settings::SvCheats::fog::enabled);
-    GetVal(settings[XORSTR("impacts")][XORSTR("Enabled")], &Settings::SvCheats::impacts::enabled);
-    GetVal(settings[XORSTR("grenadetraj")][XORSTR("Enabled")], &Settings::SvCheats::grenadetraj::enabled);
-
-    GetVal(settings[XORSTR("gravity")][XORSTR("Enabled")], &Settings::SvCheats::gravity::enabled);
-
-    GetVal(settings[XORSTR("viewmodel")][XORSTR("Enabled")], &Settings::SvCheats::viewmodel::enabled);
-    GetVal(settings[XORSTR("viewmodelfov")][XORSTR("fov")], &Settings::SvCheats::viewmodel::fov);
-
-    GetVal(settings[XORSTR("gravity")][XORSTR("amount")], &Settings::SvCheats::gravity::amount);
-
-    GetVal(settings[XORSTR("viewmodelx")][XORSTR("x")], &Settings::SvCheats::viewmodel::x);
-    GetVal(settings[XORSTR("viewmodely")][XORSTR("y")], &Settings::SvCheats::viewmodel::y);
-    GetVal(settings[XORSTR("viewmodelz")][XORSTR("z")], &Settings::SvCheats::viewmodel::z);
-
     GetVal(settings[XORSTR("AutoBuy")][XORSTR("Enabled")], &Settings::AutoBuy::enabled);
     GetVal(settings[XORSTR("AutoBuy")][XORSTR("nades")], &Settings::AutoBuy::nades);
     GetVal(settings[XORSTR("AutoBuy")][XORSTR("armor")], &Settings::AutoBuy::armor);
@@ -1163,6 +1126,14 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("Watermark")][XORSTR("fakeCheatName")], &Settings::Watermark::fakeCheatName);
 
     GetVal(settings[XORSTR("DisableSettingCVars")][XORSTR("enabled")], &Settings::DisableSettingCvars::enabled);
+
+    GetVal(settings[XORSTR("CVarsOverride")][XORSTR("enabled")], &Settings::CVarsOverride::enabled);
+    GetVal(settings[XORSTR("CVarsOverride")][XORSTR("fakelat")], &Settings::CVarsOverride::fakeLatency);
+    GetVal(settings[XORSTR("CVarsOverride")][XORSTR("ragdoll")], &Settings::CVarsOverride::ragdoll);
+    GetVal(settings[XORSTR("CVarsOverride")][XORSTR("fullbright")], &Settings::CVarsOverride::fullbright);
+    GetVal(settings[XORSTR("CVarsOverride")][XORSTR("showImpacts")], &Settings::CVarsOverride::showImpacts);
+
+    GetVal(settings[XORSTR("VoteRevealer")][XORSTR("enabled")], &Settings::VoteRevealer::enabled);
 
     GetVal(settings[XORSTR("AntiAim")][XORSTR("enabled")], &Settings::AntiAim::enabled);
     GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("dFlipKey")], &Settings::AntiAim::dFlipKey);

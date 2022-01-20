@@ -2,8 +2,7 @@
 
 #include "../SDK/definitions.h"
 
-namespace SvCheats
+namespace CVars
 {
-	//Hooks
 	void FrameStageNotify(ClientFrameStage_t stage);
 }

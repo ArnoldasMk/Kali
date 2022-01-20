@@ -1937,63 +1937,13 @@ namespace Settings
 		inline bool enabled = false;
 	}
 
-	namespace SvCheats
+	namespace CVarsOverride
 	{
 		inline bool enabled;
-		inline bool fakelat;
-
-		namespace bloom
-		{
-			inline bool enabled;
-			inline float scale;
-			inline float factor;
-		}
-		namespace gravity
-		{
-			inline bool enabled;
-			inline int amount;
-		}
-
-		namespace aspect
-		{
-			inline bool enabled;
-			inline float var;
-		}
-
-		namespace svcheats
-		{
-			inline bool enabled;
-		}
-
-		namespace bright
-		{
-			inline bool enabled;
-		}
-
-		namespace fog
-		{
-			inline bool enabled;
-		}
-
-		namespace impacts
-		{
-			inline bool enabled;
-		}
-
-		namespace viewmodel
-		{
-			inline bool enabled;
-			inline float fov;
-			inline float x;
-			inline float y;
-			inline float z;
-		}
-
-		namespace grenadetraj
-		{
-			inline bool enabled;
-		}
-
+		inline bool fullbright;
+		inline bool ragdoll;
+		inline bool fakeLatency; // fake ping
+		inline bool showImpacts;
 	}
 
 	namespace DisablePostProcessing
@@ -2055,10 +2005,12 @@ namespace Settings
 	{
 		inline bool enabled = false;
 	}
-	namespace voterevealer
+
+	namespace VoteRevealer
 	{
 		inline bool enabled;
 	}
+	
 	namespace AutoBuy
 	{
 		inline bool enabled = false;
@@ -2069,6 +2021,7 @@ namespace Settings
 		inline bool taser = false;
 		inline bool armor = false;
 	}
+	
 	namespace Debug
 	{
 		namespace AutoWall
