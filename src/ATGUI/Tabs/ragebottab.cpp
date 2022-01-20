@@ -286,7 +286,7 @@ void RagebotTab::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 					UI::KeyBindButton(&Settings::Ragebot::onshot::button);
 					
 					ImGui::SliderFloat(XORSTR("##BACKTRACK"), &Settings::Ragebot::backTrack::time, 0.0f, Settings::CVarsOverride::fakeLatency ? 0.4f : 0.2f);
-					if (Settings::Ragebot::backTrack::time > Settings::CVarsOverride::fakeLatency ? 0.4f : 0.2f)
+					if (Settings::Ragebot::backTrack::time > (Settings::CVarsOverride::fakeLatency ? 0.4f : 0.2f))
 						Settings::Ragebot::backTrack::time = 0.2f;
 					ImGui::PopItemWidth();
 				}
