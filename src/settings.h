@@ -1576,6 +1576,11 @@ namespace Settings
 		inline std::string fakeCheatName;
 	}
 
+	namespace DisableSettingCvars
+	{
+		inline bool enabled;
+	}
+
 	namespace Dlights
 	{
 		inline bool enabled = false;

@@ -343,6 +343,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("Watermark")][XORSTR("fakeUserName")] = Settings::Watermark::fakeUserName;
     settings[XORSTR("Watermark")][XORSTR("fakeCheatName")] = Settings::Watermark::fakeCheatName;
 
+    settings[XORSTR("DisableSettingCVars")][XORSTR("enabled")] = Settings::DisableSettingCvars::enabled;
+
     settings[XORSTR("AntiAim")][XORSTR("enabled")] = Settings::AntiAim::enabled;
     settings[XORSTR("AntiAim")][XORSTR("dFlipKey")] = Util::GetButtonName(Settings::AntiAim::dFlipKey);
     //
@@ -1159,6 +1161,8 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("Watermark")][XORSTR("useFakeCheatName")], &Settings::Watermark::useFakeCheatName);
     GetVal(settings[XORSTR("Watermark")][XORSTR("fakeUserName")], &Settings::Watermark::fakeUserName);
     GetVal(settings[XORSTR("Watermark")][XORSTR("fakeCheatName")], &Settings::Watermark::fakeCheatName);
+
+    GetVal(settings[XORSTR("DisableSettingCVars")][XORSTR("enabled")], &Settings::DisableSettingCvars::enabled);
 
     GetVal(settings[XORSTR("AntiAim")][XORSTR("enabled")], &Settings::AntiAim::enabled);
     GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("dFlipKey")], &Settings::AntiAim::dFlipKey);

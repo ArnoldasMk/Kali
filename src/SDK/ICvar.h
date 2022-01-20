@@ -1,4 +1,5 @@
 #pragma once
+#include "../settings.h" // disable setting cvars
 
 #define FCVAR_NONE					0
 
@@ -68,24 +69,32 @@ public:
 
 	void SetValue(const char* value)
 	{
+		if (Settings::DisableSettingCvars::enabled)
+			return;
 		typedef void (* oSetValue)(void*, const char*);
 		return getvfunc<oSetValue>(this, 17)(this, value);
 	}
 
 	void SetValue(float value)
 	{
+		if (Settings::DisableSettingCvars::enabled)
+			return;
 		typedef void (* oSetValue)(void*, float);
 		return getvfunc<oSetValue>(this, 18)(this, value);
 	}
 
 	void SetValue(int value)
 	{
+		if (Settings::DisableSettingCvars::enabled)
+			return;
 		typedef void (* oSetValue)(void*, int);
 		return getvfunc<oSetValue>(this, 19)(this, value);
 	}
 
 	void SetValue(Color value)
 	{
+		if (Settings::DisableSettingCvars::enabled)
+			return;
 		typedef void (* oSetValue)(void*, Color);
 		return getvfunc<oSetValue>(this, 20)(this, value);
 	}
