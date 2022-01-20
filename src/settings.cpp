@@ -1160,6 +1160,81 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("Watermark")][XORSTR("fakeUserName")], &Settings::Watermark::fakeUserName);
     GetVal(settings[XORSTR("Watermark")][XORSTR("fakeCheatName")], &Settings::Watermark::fakeCheatName);
 
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("enabled")], &Settings::AntiAim::enabled);
+    GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("dFlipKey")], &Settings::AntiAim::dFlipKey);
+    //
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Yaw")][XORSTR("type")], (int*)&Settings::AntiAim::Stand::Yaw::type);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Yaw")][XORSTR("jitterLeft")], &Settings::AntiAim::Stand::Yaw::jitterLeft);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Yaw")][XORSTR("jitterRight")], &Settings::AntiAim::Stand::Yaw::jitterRight);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Yaw")][XORSTR("jitterLeftMax")], &Settings::AntiAim::Stand::Yaw::jitterLeftMax);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Yaw")][XORSTR("jitterRightMax")], &Settings::AntiAim::Stand::Yaw::jitterRightMax);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Yaw")][XORSTR("spinFactor")], &Settings::AntiAim::Stand::Yaw::spinFactor);
+    //
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Pitch")][XORSTR("type")], (int*)&Settings::AntiAim::Stand::Pitch::type);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Pitch")][XORSTR("custom")], &Settings::AntiAim::Stand::Pitch::custom);
+    //
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Desync")][XORSTR("type")], (int*)&Settings::AntiAim::Stand::Desync::type);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Desync")][XORSTR("jitterLeft")], &Settings::AntiAim::Stand::Desync::jitterLeft);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Desync")][XORSTR("jitterRight")], &Settings::AntiAim::Stand::Desync::jitterRight);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Desync")][XORSTR("jitterLeftMax")], &Settings::AntiAim::Stand::Desync::jitterLeftMax);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Desync")][XORSTR("jitterRightMax")], &Settings::AntiAim::Stand::Desync::jitterRightMax);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Stand")][XORSTR("Desync")][XORSTR("offset")], &Settings::AntiAim::Stand::Desync::offset);
+    //
+    //
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Yaw")][XORSTR("type")], (int*)&Settings::AntiAim::Movement::Yaw::type);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Yaw")][XORSTR("jitterLeft")], &Settings::AntiAim::Movement::Yaw::jitterLeft);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Yaw")][XORSTR("jitterRight")], &Settings::AntiAim::Movement::Yaw::jitterRight);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Yaw")][XORSTR("jitterLeftMax")], &Settings::AntiAim::Movement::Yaw::jitterLeftMax);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Yaw")][XORSTR("jitterRightMax")], &Settings::AntiAim::Movement::Yaw::jitterRightMax);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Yaw")][XORSTR("spinFactor")], &Settings::AntiAim::Movement::Yaw::spinFactor);
+    //
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Pitch")][XORSTR("type")], (int*)&Settings::AntiAim::Movement::Pitch::type);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Pitch")][XORSTR("custom")], &Settings::AntiAim::Movement::Pitch::custom);
+    //
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Desync")][XORSTR("type")], (int*)&Settings::AntiAim::Movement::Desync::type);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Desync")][XORSTR("jitterLeft")], &Settings::AntiAim::Movement::Desync::jitterLeft);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Desync")][XORSTR("jitterRight")], &Settings::AntiAim::Movement::Desync::jitterRight);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Desync")][XORSTR("jitterLeftMax")], &Settings::AntiAim::Movement::Desync::jitterLeftMax);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Desync")][XORSTR("jitterRightMax")], &Settings::AntiAim::Movement::Desync::jitterRightMax);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Movement")][XORSTR("Desync")][XORSTR("offset")], &Settings::AntiAim::Movement::Desync::offset);
+    //
+    //
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Yaw")][XORSTR("type")], (int*)&Settings::AntiAim::Air::Yaw::type);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Yaw")][XORSTR("jitterLeft")], &Settings::AntiAim::Air::Yaw::jitterLeft);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Yaw")][XORSTR("jitterRight")], &Settings::AntiAim::Air::Yaw::jitterRight);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Yaw")][XORSTR("jitterLeftMax")], &Settings::AntiAim::Air::Yaw::jitterLeftMax);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Yaw")][XORSTR("jitterRightMax")], &Settings::AntiAim::Air::Yaw::jitterRightMax);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Yaw")][XORSTR("spinFactor")], &Settings::AntiAim::Air::Yaw::spinFactor);
+    //
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Pitch")][XORSTR("type")], (int*)&Settings::AntiAim::Air::Pitch::type);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Pitch")][XORSTR("custom")], &Settings::AntiAim::Air::Pitch::custom);
+    //
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Desync")][XORSTR("type")], (int*)&Settings::AntiAim::Air::Desync::type);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Desync")][XORSTR("jitterLeft")], &Settings::AntiAim::Air::Desync::jitterLeft);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Desync")][XORSTR("jitterRight")], &Settings::AntiAim::Air::Desync::jitterRight);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Desync")][XORSTR("jitterLeftMax")], &Settings::AntiAim::Air::Desync::jitterLeftMax);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Desync")][XORSTR("jitterRightMax")], &Settings::AntiAim::Air::Desync::jitterRightMax);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("Air")][XORSTR("Desync")][XORSTR("offset")], &Settings::AntiAim::Air::Desync::offset);
+    //
+    //
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Yaw")][XORSTR("type")], (int*)&Settings::AntiAim::SlowWalk::Yaw::type);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Yaw")][XORSTR("jitterLeft")], &Settings::AntiAim::SlowWalk::Yaw::jitterLeft);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Yaw")][XORSTR("jitterRight")], &Settings::AntiAim::SlowWalk::Yaw::jitterRight);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Yaw")][XORSTR("jitterLeftMax")], &Settings::AntiAim::SlowWalk::Yaw::jitterLeftMax);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Yaw")][XORSTR("jitterRightMax")], &Settings::AntiAim::SlowWalk::Yaw::jitterRightMax);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Yaw")][XORSTR("spinFactor")], &Settings::AntiAim::SlowWalk::Yaw::spinFactor);
+    //
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Pitch")][XORSTR("type")], (int*)&Settings::AntiAim::SlowWalk::Pitch::type);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Pitch")][XORSTR("custom")], &Settings::AntiAim::SlowWalk::Pitch::custom);
+    //
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Desync")][XORSTR("type")], (int*)&Settings::AntiAim::SlowWalk::Desync::type);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Desync")][XORSTR("jitterLeft")], &Settings::AntiAim::SlowWalk::Desync::jitterLeft);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Desync")][XORSTR("jitterRight")], &Settings::AntiAim::SlowWalk::Desync::jitterRight);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Desync")][XORSTR("jitterLeftMax")], &Settings::AntiAim::SlowWalk::Desync::jitterLeftMax);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Desync")][XORSTR("jitterRightMax")], &Settings::AntiAim::SlowWalk::Desync::jitterRightMax);
+    GetVal(settings[XORSTR("AntiAim")][XORSTR("SlowWalk")][XORSTR("Desync")][XORSTR("offset")], &Settings::AntiAim::SlowWalk::Desync::offset);
+    //
+
     GetVal(settings[XORSTR("Resolver")][XORSTR("resolve_allAP")], &Settings::Resolver::resolveAllAP);
     GetVal(settings[XORSTR("Resolver")][XORSTR("rPitch")], &Settings::Resolver::rPitch);
 
