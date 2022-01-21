@@ -206,7 +206,6 @@ void PlayerInfoTab::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabInd
 					}
 				}
 			}
-			ImGui::End();
 		}
 		ImGui::EndChild();
 	}
