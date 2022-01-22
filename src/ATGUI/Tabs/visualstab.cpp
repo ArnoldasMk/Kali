@@ -131,8 +131,8 @@ void VisualsMaterialConfig::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int si
 			ImGui::SetColumnOffset(1, 500);
 			ImGui::BeginChild(XORSTR("##PlayerVisuals1"), ImVec2(0, 736), true);
 			{
-				ImGui::Separator();
-				ImGui::Columns(1);
+				// ImGui::Separator();
+				// ImGui::Columns(1);
 				ImGui::Text(XORSTR("Display Configuration"));
 				ImGui::Separator();
 
@@ -211,7 +211,7 @@ void VisualsMaterialConfig::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int si
 				ImGui::CheckboxFill(XORSTR("Scale to Output Resolution"), &localFlags[14]);
 				ImGui::CheckboxFill(XORSTR("Using Multiple Windows"), &localFlags[15]);
 				ImGui::CheckboxFill(XORSTR("VR-Mode"), &localFlags[17]);
-				ImGui::Separator();
+				// ImGui::Separator();
 			}
 			ImGui::EndChild();
 
@@ -220,8 +220,8 @@ void VisualsMaterialConfig::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int si
 				ImGui::SetColumnOffset(2, ImGui::GetWindowWidth() / 2 + 226);
 				ImGui::BeginChild(XORSTR("##PlayerVisuals2"), ImVec2(0, 736), true);
 				{
-					ImGui::Separator();
-					ImGui::Columns(1);
+					// ImGui::Separator();
+					// ImGui::Columns(1);
 					ImGui::Text(XORSTR("Customizations"));
 					ImGui::Separator();
 					ImGui::CheckboxFill(XORSTR("EditMode"), &Settings::MaterialConfig::config.bEditMode);
@@ -262,7 +262,7 @@ void VisualsMaterialConfig::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int si
 					ImGui::CheckboxFill(XORSTR("Draw Gray"), &Settings::MaterialConfig::config.m_bDrawGray);
 					ImGui::CheckboxFill(XORSTR("Show Specular"), &Settings::MaterialConfig::config.bShowSpecular);
 					ImGui::CheckboxFill(XORSTR("Show Defuse"), &Settings::MaterialConfig::config.bShowDiffuse);
-					ImGui::Separator();
+					// ImGui::Separator();
 				}
 				ImGui::EndChild();
 			}
@@ -270,8 +270,8 @@ void VisualsMaterialConfig::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int si
 			{
 				ImGui::BeginChild(XORSTR("##PlayerVisuals3"), ImVec2(0, 736), true);
 				{
-					ImGui::Separator();
-					ImGui::Columns(1);
+					// ImGui::Separator();
+					// ImGui::Columns(1);
 					ImGui::Text(XORSTR("Adjustable Display Settings"));
 					ImGui::Separator();
 					ImGui::CheckboxFill(XORSTR("GammaTVEnabled"), &Settings::MaterialConfig::config.m_bGammaTVEnabled);
@@ -377,7 +377,7 @@ void VisualsMaterialConfig::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int si
 							Settings::MaterialConfig::config.SetFlag((unsigned int)(1 << i), localFlags[i]);
 						}
 					}
-					ImGui::Separator();
+					// ImGui::Separator();
 				}
 				ImGui::EndChild();
 			}
