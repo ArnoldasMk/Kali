@@ -31,6 +31,8 @@ static float BodyScale = 0.1f;
 static float HeadScale = 0.1f;
 static bool autoSlow = false;
 static bool scopeControlEnabled = false;
+
+
 void UI::ReloadRageWeaponSettings()
 {
 	ItemDefinitionIndex index = ItemDefinitionIndex::INVALID;
@@ -274,7 +276,6 @@ void RagebotTab::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 					ImGui::PushItemWidth(-1);
 					ImGui::Checkbox(XORSTR("Override Minimun Damage"), &Settings::Ragebot::mindmgoverride);
 					ImGui::Checkbox(XORSTR("Wait for onshot"), &Settings::Ragebot::onshot::enabled);
-					ImGui::Checkbox(XORSTR("Backtrack"), &Settings::Ragebot::backTrack::enabled);
 					ImGui::PopItemWidth();
 				}
 				ImGui::NextColumn();
@@ -282,24 +283,14 @@ void RagebotTab::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 					ImGui::PushItemWidth(-1);
 					UI::KeyBindButton(&Settings::Ragebot::dmgkey);
 					UI::KeyBindButton(&Settings::Ragebot::onshot::button);
-					float time;
-					if (Settings::SvCheats::fakelat)
-						time = 0.4f;
-					else
-						time = 0.2f;
-					ImGui::SliderFloat(XORSTR("##TRACKTIME"), &Settings::Ragebot::backTrack::time, 0.0f, time);
-					if (Settings::Ragebot::backTrack::time > time)
-						Settings::Ragebot::backTrack::time = 0.2f;
 					ImGui::PopItemWidth();
 				}
-				//	ImGui::Checkbox(XORSTR("Resolver"), &Settings::Resolver::resolveAll);
 				ImGui::Separator();
 			}
 			ImGui::EndChild();
 		}
 		ImGui::NextColumn();
 		{
-
 			ImGui::BeginChild(XORSTR("COL2"), ImVec2(0, 736), true);
 			{
 				ImGui::Separator();

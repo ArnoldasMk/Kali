@@ -106,7 +106,6 @@ namespace Colors
 	    {"ESP - Danger Zone: Tablet", &Settings::ESP::DangerZone::tabletColor},
 	    {"ESP - Danger Zone: Healthshot", &Settings::ESP::DangerZone::healthshotColor},
 	    {"ESP - Danger Zone: Melee", &Settings::ESP::DangerZone::meleeColor},
-	    {"ESP - Watermark", &Settings::ESP::Watermark::color},
 	    {"ESP - QuickPeek", &Settings::Ragebot::quickpeek::color},
 	    {"ESP - Manual AA indicators", &Settings::ESP::manualAAColor},
 	    {"ESP - Taser Range", &Settings::ESP::taserrange::color},
@@ -151,8 +150,5 @@ namespace Colors
 	    {"Glow - Chicken", &Settings::ESP::Glow::chickenColor},
 	    {"Sky", &Settings::NoSky::color},
 	    {"Walls", &Settings::ASUSWalls::color},
-	    {"Fog", &Settings::ESP::customfog::color},
-
 	};
-
 }

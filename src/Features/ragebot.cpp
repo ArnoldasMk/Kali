@@ -860,7 +860,7 @@ void Ragebot::CreateMove(CUserCmd *cmd)
 	RagebotAutoR8(player, localplayer, activeWeapon, cmd, Ragebot::BestSpot, angle, oldForward, oldSideMove, currentRageWeaponSetting);
 	if (player)
 		cmd->tick_count = TIME_TO_TICKS(player->GetSimulationTime() + get_interpolation());
-	bool FD = (Settings::AntiAim::FakeDuck::enabled && inputSystem->IsButtonDown(Settings::AntiAim::FakeDuck::fakeDuckKey) && cmd->buttons & IN_DUCK);
+	bool FD = (Settings::FakeDuck::enabled && inputSystem->IsButtonDown(Settings::FakeDuck::key) && cmd->buttons & IN_DUCK);
 	if (player && Ragebot::BestDamage > 0 && !FD)
 	{
 		Resolver::TargetID = player->GetIndex();

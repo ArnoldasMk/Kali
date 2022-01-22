@@ -131,34 +131,6 @@ static void CheckActiveSounds()
 	sounds.m_Size = 0; // Setting this to 0 makes it use the same memory each time instead of grabbing more.
 }
 
-static void DrawManualAntiaim()
-{
-	static int width, height;
-	engine->GetScreenSize(width, height);
-	auto color = Color::FromImColor(Settings::ESP::manualAAColor.Color());
-	if (Settings::AntiAim::ManualAntiAim::Enabled)
-	{
-		if (AntiAim::ManualAntiAim::alignLeft)
-		{
-			Draw::triangle(Vector2D(width / 2 - 55, height / 2 + 10), Vector2D(width / 2 - 75, height / 2), Vector2D(width / 2 - 55, height / 2 - 10), color);
-		}
-		else if (AntiAim::ManualAntiAim::alignBack)
-		{
-			Draw::triangle(Vector2D(width / 2, height / 2 + 80), Vector2D(width / 2 - 10, height / 2 + 60), Vector2D(width / 2 + 10, height / 2 + 60), color);
-		}
-		else if (AntiAim::ManualAntiAim::alignRight)
-		{
-			Draw::triangle(Vector2D(width / 2 + 55, height / 2 - 10), Vector2D(width / 2 + 75, height / 2), Vector2D(width / 2 + 55, height / 2 + 10), color);
-		}
-	}
-	else if (Settings::AntiAim::LegitAntiAim::enabled)
-	{
-		if (Settings::AntiAim::LegitAntiAim::inverted) // right
-			Draw::triangle(Vector2D(width / 2 + 55, height / 2 - 10), Vector2D(width / 2 + 75, height / 2), Vector2D(width / 2 + 55, height / 2 + 10), color);
-		else
-			Draw::triangle(Vector2D(width / 2 - 55, height / 2 + 10), Vector2D(width / 2 - 75, height / 2), Vector2D(width / 2 - 55, height / 2 - 10), color);
-	}
-}
 static float GetArmourHealth(float flDamage, int ArmorValue)
 {
 	float flCurDamage = flDamage;
@@ -489,25 +461,6 @@ static void DrawSprite(int x, int y, int w, int h, C_BaseEntity *entity)
 	// TODO: Handle other sprites
 }
 
-static void DrawWatermark(C_BasePlayer *player)
-{
-	if (!Settings::ESP::Watermark::enabled)
-		return;
-	int lag = TIME_TO_TICKS(player->GetSimulationTime() - player->GetOldSimulationTime());
-	int woop = lag;
-	std::string bombStr = std::to_string(woop);
-
-	Draw::AddRectFilled(1696 + 72 + 22, 2, 1696 + 224, 30, Settings::UI::mainColor.Color());			 // OUTSIDE !
-	Draw::AddRectFilled(1696 + 5 + 72 + 22, 1 + 5, 1696 + 219, 30 - 5, Settings::UI::bodyColor.Color()); // INSIDE
-	Draw::AddRect(1696 - 1 + 72 + 22, 1, 1696 + 224, 31, ImColor(0, 0, 0, 255));					 // OUTSIDE
-	Draw::AddRect(1695 + 5 + 72 + 22, 1 + 5, 1696 + 219, 31 - 5, ImColor(0, 0, 0, 225));				 // INSIDE
-	int fps = static_cast<int>(1.f / globalVars->frametime);
-	std::string fps_string = std::to_string(fps);
-	// std::string name = "Kali | " + fps_string + " fps | 39ms";
-	std::string debugOverlay = std::to_string(fps);
-	std::string name = "Kali.cc | " + fps_string + " fps | " + bombStr + "FL";
-	Draw::AddText(1696 + 10 + 72 + 22, 10.8, name.c_str(), Settings::UI::fontColor.Color()); // TRUE
-}
 static void drawfire(C_BaseEntity *entity)
 {
 	if (!Settings::ESP::Drawfire::enabled)
@@ -533,16 +486,6 @@ static void drawfire(C_BaseEntity *entity)
 		if (time > 489)
 			spawntime = 0;
 	}
-
-	//  static auto size = Vector2D(35.0f, 5.0f);
-	// Draw::FilledCircle(Vector2D(screen_origin.x, screen_origin.y - size.y * 0.5f), 60, 20, Color(15, 15, 15, 187));
-
-	// Draw::FilledRectangle(screen_origin.x - size.x * 0.5f, screen_origin.y - size.y * 0.5f - 1.0f, size.x, size.y, Color(37, 37, 37, 255));
-	// Draw::FilledRectangle(screen_origin.x - size.x * 0.5f + 2.0f, screen_origin.y - size.y * 0.5f, (size.x - 4.0f) * factor, size.y - 2.0f, Color ( 255, 0, 0, 255));
-
-	// Draw::Rectangle(screen_origin.x - size.x * 0.5f, screen_origin.y - size.y * 0.5f, size.x, size.y, Color(7, 7, 7, 255));
-	//  render::get().text(fonts[ESP], screen_origin.x, screen_origin.y - size.y * 0.5f + 12.0f, g_cfg.esp.molotov_timer_color, HFONT_CENTERED_X | HFONT_CENTERED_Y, "FIRE");
-	//  render::get().text(fonts[GRENADES], screen_origin.x + 1.0f, screen_origin.y - size.y * 0.5f - 9.0f, g_cfg.esp.molotov_timer_color, HFONT_CENTERED_X | HFONT_CENTERED_Y, "l");
 }
 
 static void DrawEntity(C_BaseEntity *entity, const char *string, ImColor color, int nadetype)
@@ -585,75 +528,6 @@ static void DrawEntity(C_BaseEntity *entity, const char *string, ImColor color)
 	DrawBox(color, x, y, w, h, entity, Settings::ESP::Boxes::type);
 	Vector2D nameSize = Draw::GetTextSize(string, esp_font);
 	Draw::AddText((int)(x + (w / 2) - (nameSize.x / 2)), y + h + 2, string, color);
-}
-
-static void DrawLag(int x, int y, C_BasePlayer *player)
-{
-	const auto netchannel = GetLocalClient(-1)->m_NetChannel;
-	int lag = netchannel->m_nChokedPackets;
-	int woop = lag * 10;
-	std::string bombStr = std::to_string(woop);
-	Vector2D nameSize = Draw::GetTextSize(bombStr.c_str(), esp_font);
-	float shite = 10.f;
-	Vector sent;
-	//	if (CreateMove::sendPacket)
-	//		sent = player->GetAbsOrigin();
-	//	if (!(player->GetFlags() & FL_ONGROUND))
-	//      debugOverlay->DrawPill(player->GetAbsOrigin(),sent, shite, 255, 0, 255, 100, 3 );
-
-	Draw::AddRectFilled(x, y, x + woop, y + 20, ImColor(0, 40, 0, 255));
-	Draw::AddText(x + woop - nameSize.x, y + 5, bombStr.c_str(), ImColor(255, 255, 255, 255));
-}
-
-bool fakeass_head()
-{
-	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
-
-	if (!localplayer)
-		return false;
-
-	float server_time = TICKS_TO_TIME(localplayer->GetTickBase());
-
-	auto animstate = localplayer->GetAnimState();
-	if (!animstate)
-		return false;
-
-	if (localplayer->GetVelocity().Length2D() > 6.0f || (fabs(animstate->verticalVelocity) > 100.f))
-		next_break = server_time + 1.1f;
-
-	if (next_break < server_time)
-	{
-		next_break = server_time + 1.1f;
-		return true;
-	}
-
-	return false;
-}
-
-void DrawFH(int x, int y)
-{
-	if (!Settings::AntiAim::RageAntiAim::head || !Settings::AntiAim::RageAntiAim::fakepeek)
-		return;
-
-	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
-
-	if (!localplayer->GetAlive())
-		return;
-
-	float server_time = TICKS_TO_TIME(localplayer->GetTickBase());
-
-	// Vector2D tsize = Draw::GetTextSize(XORSTR("Fake Head"), esp_font);
-	Draw::AddText(x, y + 35, XORSTR("Fake Head"), fakeass_head() ? ImColor(0, 255, 0, 255) : ImColor(255, 0, 0, 255));
-	float woop = (next_break - server_time);
-	Draw::AddRectFilled(x, y + 50, x + (woop * 11), y + 60, fakeass_head() ? ImColor(0, 255, 0, 255) : ImColor(255, 0, 0, 255));
-
-	// if (Settings::AntiAim::RageAntiAim::inverted)
-	// Draw::AddText(x + tsize.x - 5, y + 45, XORSTR(">")  ,fakeass_head() ? ImColor( 0, 255, 0, 255 ) : ImColor( 255, 0, 0, 255 ) );
-	// else
-	// Draw::AddText(x, y + 45, XORSTR("<")  ,fakeass_head() ? ImColor( 0, 255, 0, 255 ) : ImColor( 255, 0, 0, 255 ) );
-
-	// NON INVERTED = LEFT
-	// INVERTED = RIGHT
 }
 
 static void DrawSkeleton(C_BasePlayer *player, C_BasePlayer *localplayer)
@@ -815,7 +689,7 @@ static void Drawlc()
 	Vector last_networked_origin;
 	// if ( localplayer->GetVelocity().Length2D() > 30)
 	//  last_networked_origin = Vector(0, 0, 0);
-	if (AntiAim::bSend)
+	if (CreateMove::sendPacket)
 		last_networked_origin = localplayer->GetVecOrigin();
 	Vector lc;
 	debugOverlay->ScreenPosition(last_networked_origin, lc);
@@ -848,37 +722,6 @@ static void Drawlc()
 */
 }
 
-static void CustomFog()
-{
-	if (!Settings::ESP::customfog::enabled)
-		return;
-	// WHY DOESNT IT FUCKING WORK?!
-	static auto fog_override = cvar->FindVar(XORSTR("fog_override")); //-V807
-
-	fog_override->SetValue(1);
-
-	static auto fog_start = cvar->FindVar(XORSTR("fog_start"));
-
-	if (fog_start->GetInt())
-		fog_start->SetValue(0);
-
-	static auto fog_end = cvar->FindVar(XORSTR("fog_end"));
-
-	if (fog_end->GetInt() != Settings::ESP::customfog::distance)
-		fog_end->SetValue(Settings::ESP::customfog::distance);
-
-	static auto fog_maxdensity = cvar->FindVar(XORSTR("fog_maxdensity"));
-
-	if (fog_maxdensity->GetFloat() != (float)Settings::ESP::customfog::density * 0.01f) //-V550
-		fog_maxdensity->SetValue((float)Settings::ESP::customfog::density * 0.01f);
-
-	char buffer_color[12];
-	sprintf(buffer_color, "%i %i %i", Settings::ESP::customfog::color.Color().Value.x, Settings::ESP::customfog::color.Color().Value.y, Settings::ESP::customfog::color.Color().Value.z);
-
-	static auto fog_color = cvar->FindVar(XORSTR("fog_color"));
-
-	fog_color->SetValue(buffer_color);
-}
 static void DrawAimbotSpot()
 {
 	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
@@ -1251,100 +1094,6 @@ static void DrawVelGraph()
 		    heighth / 2 - (std::clamp(next, 0, 450) * .2f) + 200,
 		    ImColor(255, 255, 255, 255));
 	}
-}
-
-static void DrawKeyBinds(int x, int y)
-{
-	int b = x;
-	int c = y;
-	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
-	int width, height;
-	engine->GetScreenSize(width, height);
-	Vector2D nameSize = Draw::GetTextSize(XORSTR("AntiAim Inverter [Toggled]"), esp_font);
-	Draw::AddRectFilled(x - 5, c - 5, x + nameSize.x, y + 80, ImColor(40, 40, 40, 225));
-	Draw::AddRectFilled(x, c, x + nameSize.x - 5, y + 75, ImColor(0, 0, 0, 235));
-	Draw::AddRect(x - 5, c - 5, x + nameSize.x, y + 80, ImColor(200, 200, 200, 50));
-	Draw::AddRect(x, c, x + nameSize.x - 5, y + 75, ImColor(200, 200, 200, 50));
-
-	Draw::AddLine(x, c, x + nameSize.x - 5, c, Settings::ESP::Watermark::color.Color());
-
-	if (inputSystem->IsButtonDown(Settings::Autoblock::key) && Settings::Autoblock::enabled)
-	{
-		Draw::AddText(x + 2, y + 1, "AutoBlock  [Holding]", ImColor(255, 255, 255, 255));
-		y = y + 10;
-	}
-	if (inputSystem->IsButtonDown(Settings::SlowWalk::key) && Settings::SlowWalk::enabled)
-	{
-		Draw::AddText(x + 2, y + 2, "SlowWalk  [Holding]", ImColor(255, 255, 255, 255));
-		y = y + 10;
-	}
-	if ((Settings::AntiAim::RageAntiAim::inverted && Settings::AntiAim::RageAntiAim::enabled) || Settings::AntiAim::LegitAntiAim::inverted)
-	{
-		Draw::AddText(x + 2, y + 3, "AA Inverter [Toggled]", ImColor(255, 255, 255, 255));
-		y = y + 10;
-	}
-	if (inputSystem->IsButtonDown(Settings::AntiAim::FakeDuck::fakeDuckKey) && Settings::AntiAim::FakeDuck::enabled)
-	{
-		Draw::AddText(x + 2, y + 4, "FakeDuck  [Holding]", ImColor(255, 255, 255, 255));
-		y = y + 10;
-	}
-	if (inputSystem->IsButtonDown(Settings::Ragebot::quickpeek::key) && Settings::Ragebot::quickpeek::enabled)
-	{
-		Draw::AddText(x + 2, y + 5, "QuickPeek [Holding]", ImColor(255, 255, 255, 255));
-		y = y + 10;
-	}
-	if (AntiAim::ManualAntiAim::alignLeft && Settings::AntiAim::ManualAntiAim::Enabled)
-	{
-		Draw::AddText(x + 2, y + 5, "Manual AA [LEFT]", ImColor(255, 255, 255, 255));
-		y = y + 10;
-	}
-	else if (AntiAim::ManualAntiAim::alignBack && Settings::AntiAim::ManualAntiAim::Enabled)
-	{
-		Draw::AddText(x + 2, y + 5, "Manual AA [BACK]", ImColor(255, 255, 255, 255));
-		y = y + 10;
-	}
-	else if (AntiAim::ManualAntiAim::alignRight && Settings::AntiAim::ManualAntiAim::Enabled)
-	{
-		Draw::AddText(x + 2, y + 5, "Manual AA [RIGHT]", ImColor(255, 255, 255, 255));
-		y = y + 10;
-	}
-	if (Settings::Resolver::resolveAll && Settings::Resolver::manual && Settings::Resolver::forcebrute)
-	{
-		Draw::AddText(x + 2, y + 5, "Resolver Override [BRUTE]", ImColor(255, 255, 255, 255));
-		y = y + 10;
-	}
-	if (Settings::Ragebot::onshot::enabled && inputSystem->IsButtonDown(Settings::Ragebot::onshot::button))
-	{
-		Draw::AddText(x + 2, y + 5, "Wait for onshot [Holding]", ImColor(255, 255, 255, 255));
-		y = y + 10;
-	}
-
-	/*
-	if (Settings::AntiAim::RageAntiAim::head && Settings::AntiAim::RageAntiAim::fakepeek)
-	{
-
-		float server_time = TICKS_TO_TIME(localplayer->GetTickBase());
-
-		Vector2D tsize = Draw::GetTextSize(XORSTR("Fake Head [       ]"), esp_font);
-		// Draw::AddText(x , y + 35, XORSTR("Fake Head")  ,fakeass_head() ? ImColor( 0, 255, 0, 255 ) : ImColor( 255, 0, 0, 255 ) );
-		float woop = (next_break - server_time);
-		Draw::AddRectFilled(x + tsize.x - 10, y + 5, x + tsize.x - 10 + (woop * 11), y + 5 + nameSize.y, fakeass_head() ? ImColor(0, 255, 0, 255) : ImColor(255, 0, 0, 255));
-
-		Draw::AddText(x + 2, y + 5, "Fake Head [       ]", ImColor(255, 255, 255, 255));
-		y = y + 10;
-
-		// NON INVERTED = LEFT
-		// INVERTED = RIGHT
-	}
-	*/
-
-	// FindHudElement = (PatternFinder::FindPatternInModule( XORSTR( "/client_client.so" ),( unsigned char* ) XORSTR("\xE8\x00\x00\x00\x00\x48\x8D\x50\xE0"),XORSTR( "x????xxxx" )) + 1);
-	// auto hud = (PatternFinder::FindPatternInModule( XORSTR( "/client_client.so" ),( unsigned char* ) XORSTR("\x53\x48\x8D\x3D\x00\x00\x00\x00\x48\x83\xEC\x10\xE8"),XORSTR( "xxxx????xxxxx" )) + 1);
-	//  const auto deathNotice = FindHudElement(hud, "CCSGO_HudDeathNotice");
-	// if (!deathNotice)
-	//  return;
-	//  const auto deathNoticePanel = (*(IVPanel**)(*(deathNotice - 5 + 22) + 4));
-	//    fakePrime = reinterpret_cast<std::uint8_t*>(PatternFinder::FindPatternInModule( XORSTR( "/client_client.so" ),( unsigned char* ) XORSTR("\xE8\x00\x00\x00\x00\x48\x8D\x50\xE0"),XORSTR( "xxxxx" )) - 1);
 }
 
 bool FakeDuckCheck(C_BasePlayer *player)
@@ -2520,12 +2269,8 @@ void ESP::Paint()
 		}
 	}
 	Drawlc();
-	DrawFH(Settings::ESP::keybi::x, Settings::ESP::keybi::y + 85);
-	DrawLag(Settings::ESP::keybi::x, Settings::ESP::keybi::y + 90, localplayer);
 	if (Settings::ESP::VelGraph)
 		DrawVelGraph();
-	if (Settings::ESP::KeyBinds)
-		DrawKeyBinds(Settings::ESP::keybi::x, Settings::ESP::keybi::y);
 	if (Settings::ESP::FOVCrosshair::enabled)
 		DrawFOVCrosshair();
 	if (Settings::ESP::Spread::enabled || Settings::ESP::Spread::spreadLimit)
@@ -2533,17 +2278,10 @@ void ESP::Paint()
 	if (Settings::NoScopeBorder::enabled && localplayer->IsScoped())
 		DrawScope();
 
-	DrawWatermark(localplayer);
-	CustomFog();
 	if (Settings::ThirdPerson::toggled)
 	{
 		DrawAATrace(AntiAim::fakeAngle, AntiAim::realAngle);
 		renderRange();
-	}
-	if (Settings::AntiAim::ManualAntiAim::Enabled || Settings::AntiAim::LegitAntiAim::enabled)
-	{
-
-		DrawManualAntiaim();
 	}
 	DrawIndicators();
 }

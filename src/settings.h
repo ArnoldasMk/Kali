@@ -70,16 +70,6 @@ enum class ClanTagType : int
 	LETTERS,
 };
 
-enum class AAState : int
-{
-	STAND,
-	AIR,
-	MOVE,
-	SLOLWWALK,
-	FAKEDUCK,
-	LBY,
-};
-
 enum class impactType : int
 {
 	ITSME,
@@ -174,17 +164,7 @@ enum class SpriteType : int
 {
 	SPRITE_TUX,
 };
-enum class AntiAimType_X : int
-{
-	STATIC_UP,
-	STATIC_DOWN,
-	FRONT,
-	EMOTION,
-	FRONT_FAKE,
-	DOWN_FAKE,
-	UP_FAKE,
-	FAKE_JITTER,
-};
+
 enum class Sound : int
 {
 
@@ -262,17 +242,6 @@ enum class resolverType : int
 	Rage,
 };
 
-enum class AntiAimRealType_Y : int
-{
-	NONE,
-	Static,
-	Jitter,
-	Randome,
-	JitterSwitch,
-	JitterRandom,
-	Spin,
-};
-
 enum class MainWeapon : int
 {
 	NONE,
@@ -288,39 +257,29 @@ enum class SecondaryWeapon : int
 	DEAGLE,
 };
 
-enum class AntiAimFakeType_y : int
+enum class AntiAimYaw : int
 {
 	NONE,
-	Static,
-	Jitter,
-	Randome,
+	JITTER,
+	RANDOMJITTER,
+	SPIN
 };
 
-enum class AntiAimType : int
+enum class AntiAimPitch : int
 {
-	LegitAntiAim,
-	RageAntiAim,
-	Lagacy,
+	NONE,
+	DOWN,
+	UP,
+	DANCE,
+	CUSTOM
 };
 
-enum class LbyMode : int
+enum class AntiAimDesync : int
 {
-	Normal,
-	Opposite,
-	Sway,
-};
-
-enum class RageAntiAimType : int
-{
-	DefaultRage,
-	FreeStand,
-};
-
-enum class LegitAAType : int
-{
-	OverWatchProof,
-	FakeLegitAA,
-	Experimental,
+	NONE,
+	STATIC,
+	JITTER,
+	RANDOMJITTER,
 };
 
 enum class SkinAndModel : int
@@ -461,14 +420,12 @@ struct RageWeapon_t
 	    autoScopeEnabled,
 	    autoSlow,
 	    scopeControlEnabled,
-	    BacktrackEnabled,
 	    OnshotEnabled;
 
 	float MinDamage = 50.f,
 		 HitChance = 20.f,
 		 BodyScale = 0.1f,
-		 HeadScale = 0.1f,
-		 BacktrackValue = 0.2f;
+		 HeadScale = 0.1f;
 
 	ButtonCode_t onshotkey = ButtonCode_t ::KEY_3;
 	ButtonCode_t mindmgoveridekey = ButtonCode_t ::KEY_5;
@@ -502,8 +459,6 @@ struct RageWeapon_t
 			  this->enemySelectionType == Ragebotanother.enemySelectionType &&
 			  this->BodyScale == Ragebotanother.BodyScale &&
 			  this->HeadScale == Ragebotanother.HeadScale &&
-			  this->BacktrackEnabled == Ragebotanother.BacktrackEnabled &&
-			  this->BacktrackValue == Ragebotanother.BacktrackValue &&
 			  this->mindmgoveridekey == Ragebotanother.mindmgoveridekey &&
 			  this->onshotkey == Ragebotanother.onshotkey;
 	}
@@ -903,13 +858,6 @@ namespace Settings
 			inline bool enabled = false;
 		}
 
-		namespace backTrack
-		{
-			inline bool enabled = false;
-			inline float time = 0.2f;
-			inline bool draw;
-		}
-
 		inline std::unordered_map<ItemDefinitionIndex, RageWeapon_t, Util::IntHash<ItemDefinitionIndex>> weapons = {
 		    {ItemDefinitionIndex::INVALID, ragedefault},
 		};
@@ -961,120 +909,140 @@ namespace Settings
 
 	namespace AntiAim
 	{
-		inline bool arms;
-		inline float offsat;
-		inline bool AutoInvert;
-		inline bool ChokeOnShot;
-		inline float realoffset;
-		inline AntiAimType_X pitchtype = AntiAimType_X::STATIC_DOWN;
-		inline bool lbyjitter;
+		inline bool enabled;
+		inline ButtonCode_t dFlipKey;
 
-		namespace AADisabled
+		inline bool ExperimentalZFLIP = false;
+		
+		namespace Air
 		{
-			inline bool enabled = true;
+			namespace Desync 
+			{
+				inline AntiAimDesync type = AntiAimDesync::NONE;
+				inline int jitterLeft;
+				inline int jitterRight;
+				inline int jitterLeftMax;
+				inline int jitterRightMax;
+				inline int offset;
+			}
+			namespace Yaw
+			{
+				inline AntiAimYaw type = AntiAimYaw::NONE;
+				inline int jitterLeft;
+				inline int jitterRight;
+				inline int jitterLeftMax;
+				inline int jitterRightMax;
+				inline int spinFactor;
+			}
+			namespace Pitch
+			{
+				inline AntiAimPitch type = AntiAimPitch::NONE;
+				inline int custom = -58;
+			}
+
+			inline bool crouch;
 		}
-		namespace airspin
+
+		namespace Stand
+		{
+			namespace Desync 
+			{
+				inline AntiAimDesync type = AntiAimDesync::NONE;
+				inline int jitterLeft;
+				inline int jitterRight;
+				inline int jitterLeftMax;
+				inline int jitterRightMax;
+				inline int offset;
+			}
+			namespace Yaw
+			{
+				inline AntiAimYaw type = AntiAimYaw::NONE;
+				inline int jitterLeft;
+				inline int jitterRight;
+				inline int jitterLeftMax;
+				inline int jitterRightMax;
+				inline int spinFactor;
+			}
+			namespace Pitch
+			{
+				inline AntiAimPitch type = AntiAimPitch::NONE;
+				inline int custom = -58;
+			}
+		}
+
+		namespace Movement
+		{
+			namespace Desync 
+			{
+				inline AntiAimDesync type = AntiAimDesync::NONE;
+				inline int jitterLeft;
+				inline int jitterRight;
+				inline int jitterLeftMax;
+				inline int jitterRightMax;
+				inline int offset;
+			}
+			namespace Yaw
+			{
+				inline AntiAimYaw type = AntiAimYaw::NONE;
+				inline int jitterLeft;
+				inline int jitterRight;
+				inline int jitterLeftMax;
+				inline int jitterRightMax;
+				inline int spinFactor;
+			}
+			namespace Pitch
+			{
+				inline AntiAimPitch type = AntiAimPitch::NONE;
+				inline int custom = -58;
+			}
+		}
+
+		namespace SlowWalk
+		{
+			namespace Desync 
+			{
+				inline AntiAimDesync type = AntiAimDesync::NONE;
+				inline int jitterLeft;
+				inline int jitterRight;
+				inline int jitterLeftMax;
+				inline int jitterRightMax;
+				inline int offset;
+			}
+			namespace Yaw
+			{
+				inline AntiAimYaw type = AntiAimYaw::NONE;
+				inline int jitterLeft;
+				inline int jitterRight;
+				inline int jitterLeftMax;
+				inline int jitterRightMax;
+				inline int spinFactor;
+			}
+			namespace Pitch
+			{
+				inline AntiAimPitch type = AntiAimPitch::NONE;
+				inline int custom = -58;
+			}
+		}
+
+		namespace Manual
 		{
 			inline bool enabled;
+			inline int direction;
+			inline ButtonCode_t right;
+			inline ButtonCode_t back;
+			inline ButtonCode_t left;
 		}
-		namespace Type
-		{
-			inline AntiAimType antiaimType = AntiAimType::LegitAntiAim;
-		}
-		namespace AutoDisable
-		{
-			inline bool noEnemy = false;
-			inline bool knifeHeld = false;
-		}
-		namespace RageAntiAim
-		{
-			inline bool head;
-			inline ButtonCode_t fakeheadkey;
-			inline bool fakepeek;
 
-			namespace customaa
-			{
-				inline AAState aastate = AAState::STAND;
-				inline bool enabled = false;
-				inline bool randang;
-				inline bool sidemove;
-				inline int baseAngle;
-				inline int standang;
-				inline int airang;
-				inline int moveang;
-				inline int slowang;
-				inline int duckang;
-				inline int lbyang;
-			}
-
-			namespace legitkey
-			{
-				inline bool enabled;
-				inline ButtonCode_t key;
-			}
-
-			inline float bodylean;
-			inline bool pitchJitter;
-			inline float offset = 180;
-			inline bool invertOnHurt = false;
-			inline bool enabled = false;
-			inline ButtonCode_t InvertKey;
-			inline bool inverted = false;
-			inline float AntiAImPercent = 100.f;
-			inline float AntiAimOffset = 30.f;
-			inline float JitterPercent = 30.f;
-			inline bool atTheTarget = false;
-			inline bool SendReal = false;
-			inline RageAntiAimType Type = RageAntiAimType::DefaultRage;
-			inline LbyMode lbym = LbyMode::Normal;
-
-			namespace lby
-			{
-				inline LbyMode type = LbyMode::Normal;
-				inline bool enabled;
-			}
-		}
-		namespace LegitAntiAim
-		{
-			inline bool enabled = false;
-			inline bool OverWatchProof = true;
-			inline ButtonCode_t InvertKey = ButtonCode_t::KEY_T;
-			inline bool inverted = false;
-			inline float RealPercentage = 30.f;
-			inline float RealPercentageInCroutch = 30.f;
-			inline LegitAAType legitAAtype = LegitAAType::OverWatchProof;
-		}
-		namespace ManualAntiAim
-		{
-			inline bool Enabled = false;
-			inline ButtonCode_t backButton = ButtonCode_t::KEY_X;
-			inline ButtonCode_t RightButton = ButtonCode_t::KEY_C;
-			inline ButtonCode_t LeftButton = ButtonCode_t::KEY_Z;
-		}
-		namespace Yaw
-		{
-			inline AntiAimRealType_Y typeReal = AntiAimRealType_Y::Static;
-			inline AntiAimFakeType_y typeFake = AntiAimFakeType_y::Static;
-		}
-		namespace HeadEdge
-		{
-			inline bool enabled = false;
-			inline float distance = 25.0f;
-		}
 		namespace LBYBreaker
 		{
-			inline bool enabled = false;
-			inline float offset = 180.0f;
+
 		}
-		namespace FakeDuck
-		{
-			inline bool enabled = false;
-			inline ButtonCode_t fakeDuckKey;
-		}
-		namespace randomLag
-		{
-			inline bool enabled = false;
-		}
+	}
+
+	namespace FakeDuck
+	{
+		inline bool enabled;
+		inline ButtonCode_t key;
 	}
 
 	namespace SlowWalk
@@ -1084,6 +1052,7 @@ namespace Settings
 		inline SlowMode mode = SlowMode::ACCURATE;
 		inline ButtonCode_t key = KEY_LSHIFT;
 	}
+
 	namespace Resolver
 	{
 		inline bool lby;
@@ -1097,8 +1066,8 @@ namespace Settings
 		inline bool forcebrute = false;
 		inline bool resolveAllAP;
 		inline resolverType resolverType = resolverType::NONE;
-
 	}
+
 	namespace bullettracers
 	{
 		inline bool enabled = false;
@@ -1108,6 +1077,7 @@ namespace Settings
 	{
 		inline bool VelGraph;
 		inline bool SyncFake;
+		
 		namespace tracebullet
 		{
 			inline bool local;
@@ -1115,24 +1085,20 @@ namespace Settings
 			inline ColorVar enemycolor;
 			inline ColorVar friendcolor;
 		}
+
 		namespace arrows
 		{
 			inline int distance;
 			inline int size;
 			inline ColorVar color;
 		}
+
 		namespace taserrange
 		{
 			inline bool enabled;
 			inline ColorVar color;
 		}
-		namespace customfog
-		{
-			inline bool enabled;
-			inline ColorVar color;
-			inline int distance;
-			inline float density;
-		}
+
 		namespace indicators
 		{
 			inline bool enabled;
@@ -1143,15 +1109,6 @@ namespace Settings
 
 		inline bool drawback;
 		inline bool showimpacts;
-		inline bool KeyBinds = false;
-
-		namespace keybi
-		{
-			inline int x;
-			inline int y;
-			inline int w;
-			inline int h;
-		}
 		inline ColorVar manualAAColor;
 
 		inline bool showDormant = true;
@@ -1187,11 +1144,6 @@ namespace Settings
 		inline ColorVar allyInfoColor = ImColor(255, 255, 255, 255);
 		inline ColorVar enemyInfoColor = ImColor(255, 255, 255, 255);
 
-		namespace Watermark
-		{
-			inline bool enabled = true;
-			inline ColorVar color = ImColor(215, 5, 252, 255);
-		}
 		namespace Drawfire
 		{
 			inline bool enabled = false;
@@ -1202,7 +1154,6 @@ namespace Settings
 		}
 		namespace FilterEnemy
 		{
-
 			namespace playerInfo
 			{
 				inline bool enabled = false;
@@ -1220,31 +1171,38 @@ namespace Settings
 				inline ColorVar defuserColor = ImColor(49, 27, 146, 255);
 				inline ColorVar chickenColor = ImColor(255, 193, 7, 255);
 			}
+			
 			namespace Skeleton
 			{
 				inline bool enabled = false;
 				inline ColorVar allyColor = ImColor(255, 255, 255, 255);
 				inline ColorVar enemyColor = ImColor(255, 255, 255, 255);
 			}
+
 			namespace HeadDot
 			{
 				inline bool enabled = false;
 				inline float size = 2.0f;
 			}
+
 			namespace Boxes
 			{
 				inline bool enabled = false;
 				inline BoxType type = BoxType::FRAME_2D;
 			}
+
 			namespace BulletTracers
 			{
 				inline bool enabled = false;
 			}
+
 			namespace Chams
 			{
 				inline bool enabled = false;
+				inline bool drawBacktrack;
 				inline ChamsType type = ChamsType::WHITEADDTIVE;
 			}
+
 			namespace HelthBar
 			{
 				inline bool enabled = false;
@@ -1335,42 +1293,50 @@ namespace Settings
 				inline ColorVar defuserColor = ImColor(49, 27, 146, 255);
 				inline ColorVar chickenColor = ImColor(255, 193, 7, 255);
 			}
+
 			namespace RealChams
 			{
 				inline bool enabled = false;
 				inline ChamsType type = ChamsType::WHITEADDTIVE;
 			}
+
 			namespace Chams
 			{
 				inline bool enabled = false;
 				inline ChamsType type = ChamsType::WHITEADDTIVE;
 			}
+
 			namespace Skeleton
 			{
 				inline bool enabled = false;
 				inline ColorVar allyColor = ImColor(255, 255, 255, 255);
 				inline ColorVar enemyColor = ImColor(255, 255, 255, 255);
 			}
+
 			namespace HeadDot
 			{
 				inline bool enabled = false;
 				inline float size = 2.0f;
 			}
+
 			namespace BulletTracers
 			{
 				inline bool enabled = false;
 			}
+
 			namespace Boxes
 			{
 				inline bool enabled = false;
 				inline BoxType type = BoxType::FRAME_2D;
 			}
+
 			namespace HelthBar
 			{
 				inline bool enabled = false;
 				inline BarType type = BarType::VERTICAL;
 				inline BarColorType colorType = BarColorType::HEALTH_BASED;
 			}
+
 			namespace Tracers
 			{
 				inline bool enabled = false;
@@ -1481,7 +1447,6 @@ namespace Settings
 		}
 		namespace Chams
 		{
-
 			inline bool enabled = false;
 			inline HealthColorVar allyColor = ImColor(0, 0, 255, 255);
 			inline HealthColorVar allyVisibleColor = ImColor(0, 255, 0, 255);
@@ -1513,7 +1478,6 @@ namespace Settings
 				inline ColorVar color = ImColor(255, 255, 255, 255);
 				inline ChamsType type = ChamsType::WHITEADDTIVE;
 			}
-
 		}
 
 		// sound esp
@@ -1600,6 +1564,31 @@ namespace Settings
 		inline int value;
 	}
 
+	namespace Watermark
+	{
+		inline bool enabled;
+
+		inline bool showFps;
+		inline bool showPing;
+		inline bool showFakeLag;
+		inline bool showTime;
+		inline bool useFakeUserName;
+		inline bool useFakeCheatName;
+		inline std::string fakeUserName;
+		inline std::string fakeCheatName;
+	}
+
+	namespace DisableSettingCvars
+	{
+		inline bool enabled;
+	}
+
+	namespace Backtrack
+	{
+		inline bool enabled;
+		inline float time;
+	}
+
 	namespace Dlights
 	{
 		inline bool enabled = false;
@@ -1668,12 +1657,6 @@ namespace Settings
 			inline bool enabledMin = false;
 			inline int Min = 3;
 		}
-	}
-	namespace FakeWalk
-	{
-		inline bool enabled;
-		inline int speed;
-		inline ButtonCode_t key;
 	}
 
 	namespace NoDuckCooldown
@@ -1875,13 +1858,10 @@ namespace Settings
 
 	namespace FakeLag
 	{
-		inline bool shiftshot = false;
-		inline bool enabled = false;
+		inline bool enabled;
 		inline int value = 9;
-		inline bool adaptive = false;
-		inline ButtonCode_t ckey;
-		inline bool microphone = false;
-		inline ButtonCode_t microphoneKey = KEY_K;
+		inline bool adaptive;
+		inline bool ChokeOnShot;
 	}
 
 	namespace AutoAccept
@@ -1965,63 +1945,13 @@ namespace Settings
 		inline bool enabled = false;
 	}
 
-	namespace SvCheats
+	namespace CVarsOverride
 	{
 		inline bool enabled;
-		inline bool fakelat;
-
-		namespace bloom
-		{
-			inline bool enabled;
-			inline float scale;
-			inline float factor;
-		}
-		namespace gravity
-		{
-			inline bool enabled;
-			inline int amount;
-		}
-
-		namespace aspect
-		{
-			inline bool enabled;
-			inline float var;
-		}
-
-		namespace svcheats
-		{
-			inline bool enabled;
-		}
-
-		namespace bright
-		{
-			inline bool enabled;
-		}
-
-		namespace fog
-		{
-			inline bool enabled;
-		}
-
-		namespace impacts
-		{
-			inline bool enabled;
-		}
-
-		namespace viewmodel
-		{
-			inline bool enabled;
-			inline float fov;
-			inline float x;
-			inline float y;
-			inline float z;
-		}
-
-		namespace grenadetraj
-		{
-			inline bool enabled;
-		}
-
+		inline bool fullbright;
+		inline bool ragdoll;
+		inline bool fakeLatency; // fake ping
+		inline bool showImpacts;
 	}
 
 	namespace DisablePostProcessing
@@ -2083,10 +2013,12 @@ namespace Settings
 	{
 		inline bool enabled = false;
 	}
-	namespace voterevealer
+
+	namespace VoteRevealer
 	{
 		inline bool enabled;
 	}
+	
 	namespace AutoBuy
 	{
 		inline bool enabled = false;
@@ -2097,6 +2029,7 @@ namespace Settings
 		inline bool taser = false;
 		inline bool armor = false;
 	}
+	
 	namespace Debug
 	{
 		namespace AutoWall

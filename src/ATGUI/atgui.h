@@ -21,7 +21,6 @@ namespace UI
 	void UpdateRageWeaponSettings();
 	void ReloadRageWeaponSettings();
 	void SwapWindow();
-	void angleIndicator();
 }
 
 inline void SetTooltip(const char *text)

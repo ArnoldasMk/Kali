@@ -26,13 +26,6 @@
 
 static char nickname[127] = "";
 
-void draw_combo(const char *name, int variable, const char *labels[], int count)
-{
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 6);
-	ImGui::Text(name);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 5);
-	ImGui::Combo(std::string(XORSTR("##COMBO__") + std::string(name)).c_str(), &variable, labels, count);
-}
 
 void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 {
@@ -340,24 +333,12 @@ void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideT
 				}
 				ImGui::Columns(1);
 				ImGui::Separator();
-				ImGui::Checkbox(XORSTR("Force cvars"), &Settings::SvCheats::enabled);
-				if (Settings::SvCheats::enabled)
-				{
-					ImGui::Checkbox(XORSTR("Ragdoll Override"), &Settings::SvCheats::gravity::enabled);
-					ImGui::Checkbox(XORSTR("Show Impacts"), &Settings::SvCheats::impacts::enabled);
-					ImGui::Checkbox(XORSTR("Viewmodel OVerride"), &Settings::SvCheats::viewmodel::enabled);
-					ImGui::Checkbox(XORSTR("Aspect OVerride"), &Settings::SvCheats::aspect::enabled);
-					ImGui::Checkbox(XORSTR("Fullbright"), &Settings::SvCheats::bright::enabled);
-					ImGui::Checkbox(XORSTR("Fog Override"), &Settings::SvCheats::fog::enabled);
-					ImGui::Checkbox(XORSTR("Show grenade trajectory"), &Settings::SvCheats::grenadetraj::enabled);
-					ImGui::Checkbox(XORSTR("Force svcheats"), &Settings::SvCheats::svcheats::enabled);
-					ImGui::Checkbox(XORSTR("Fake latency"), &Settings::SvCheats::fakelat);
-					ImGui::Checkbox(XORSTR("Bloom"), &Settings::SvCheats::bloom::enabled);
-					if (Settings::SvCheats::bloom::enabled)
-					{
-						ImGui::SliderFloat(XORSTR("##BLOOMFACTOR"), &Settings::SvCheats::bloom::factor, -10, 100);
-						ImGui::SliderFloat(XORSTR("##BLOOMSCALE"), &Settings::SvCheats::bloom::scale, -30, 100);
-					}
+				ImGui::Checkbox(XORSTR("Force cvars"), &Settings::CVarsOverride::enabled);
+				if (Settings::CVarsOverride::enabled) {
+					ImGui::Checkbox(XORSTR("Ragdoll gravity"), &Settings::CVarsOverride::ragdoll);
+					ImGui::Checkbox(XORSTR("Fake Ping"), &Settings::CVarsOverride::fakeLatency);
+					ImGui::Checkbox(XORSTR("Fullbright"), &Settings::CVarsOverride::fullbright);
+					ImGui::Checkbox(XORSTR("Impacts"), &Settings::CVarsOverride::showImpacts);
 				}
 
 				ImGui::Separator();
@@ -487,25 +468,25 @@ void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideT
 				ImGui::Separator();
 				ImGui::Columns(2, nullptr, true);
 				{
-					ImGui::Checkbox(XORSTR("AirStuck"), &Settings::Airstuck::enabled);
+						ImGui::Checkbox(XORSTR("AirStuck"), &Settings::Airstuck::enabled);
+						ImGui::Checkbox(XORSTR("Autoblock"), &Settings::Autoblock::enabled);
+						ImGui::Checkbox(XORSTR("Jump Throw"), &Settings::JumpThrow::enabled);
 					ImGui::Checkbox(XORSTR("Auto Accept"), &Settings::AutoAccept::enabled);
-					ImGui::Checkbox(XORSTR("Autoblock"), &Settings::Autoblock::enabled);
-					ImGui::Checkbox(XORSTR("Jump Throw"), &Settings::JumpThrow::enabled);
 					ImGui::Checkbox(XORSTR("Auto Defuse"), &Settings::AutoDefuse::enabled);
 					ImGui::Checkbox(XORSTR("Sniper Crosshair"), &Settings::SniperCrosshair::enabled);
-					ImGui::Checkbox(XORSTR("Disable post-processing"), &Settings::DisablePostProcessing::enabled);
 					ImGui::Checkbox(XORSTR("No Duck Cooldown"), &Settings::NoDuckCooldown::enabled);
 					ImGui::Checkbox(XORSTR("Fast Walk"), &Settings::SilentWalk::enabled);
+					ImGui::Checkbox(XORSTR("Disable setting cvars"), &Settings::DisableSettingCvars::enabled);
+					ImGui::Checkbox(XORSTR("Disable post-processing"), &Settings::DisablePostProcessing::enabled);
 				}
 				ImGui::NextColumn();
 				{
-					UI::KeyBindButton(&Settings::Airstuck::key);
+						UI::KeyBindButton(&Settings::Airstuck::key);
+						UI::KeyBindButton(&Settings::Autoblock::key);
+						UI::KeyBindButton(&Settings::JumpThrow::key);
 					ImGui::Checkbox(XORSTR("Show Ranks"), &Settings::ShowRanks::enabled);
-					ImGui::Checkbox(XORSTR("Show Votes"), &Settings::voterevealer::enabled);
-					UI::KeyBindButton(&Settings::Autoblock::key);
-					UI::KeyBindButton(&Settings::JumpThrow::key);
+					ImGui::Checkbox(XORSTR("Show Votes"), &Settings::VoteRevealer::enabled);
 					ImGui::Checkbox(XORSTR("Attempt NoFall"), &Settings::NoFall::enabled);
-					ImGui::Checkbox(XORSTR("Ragdoll Gravity"), &Settings::RagdollGravity::enabled);
 					ImGui::Checkbox(XORSTR("Show Spectator list"), &Settings::ShowSpectators::enabled);
 					ImGui::Checkbox(XORSTR("AWP Quick Switch"), &Settings::QuickSwitch::enabled);
 					ImGui::Checkbox(XORSTR("Disable Anti Untrusted"), &ValveDSCheck::forceUT);
@@ -518,12 +499,12 @@ void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideT
 				}
 				if (ImGui::Button(XORSTR("Reset resolver misses")))
 				{
-					C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
+					C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 					int maxClient = engine->GetMaxClients();
 					for (int i = 1; i < maxClient; ++i)
 					{
 						// indx = i;
-						C_BasePlayer *player = (C_BasePlayer *)entityList->GetClientEntity(i);
+						C_BasePlayer *player = (C_BasePlayer*) entityList->GetClientEntity(i);
 
 						if (!player || player == localplayer || Entity::IsTeamMate(player, localplayer))
 							continue;

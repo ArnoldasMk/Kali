@@ -24,7 +24,6 @@
 #include "../Features/esp.h"
 #include "../Features/tracereffect.h"
 #include "../Features/nofall.h"
-#include "../Features/ragdollgravity.h"
 #include "../Features/lagcomp.h"
 #include "../Features/fakeduck.h"
 #include "../Features/silentWalk.h"
@@ -79,7 +78,6 @@ bool Hooks::CreateMove(void *thisptr, float flInputSampleTime, CUserCmd *cmd)
 		ESP::CreateMove(cmd);
 		TracerEffect::CreateMove(cmd);
 		QuickSwitch::CreateMove(cmd);
-		RagdollGravity::CreateMove(cvar);
 		PredictionSystem::EndPrediction();
 		EdgeJump::PostPredictionCreateMove(cmd);
 		NoFall::PostPredictionCreateMove(cmd);

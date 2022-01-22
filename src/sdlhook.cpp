@@ -162,8 +162,6 @@ static void SwapWindow(SDL_Window* window)
             ImGui::Begin( XORSTR("##mainFrame"), (bool*)true, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiColumnsFlags_NoBorder | ImGuiWindowFlags_NoResize);
                 UI::DrawImWatermark();
                 UI::SetupWindows();
-                UI::angleIndicator();
-                //UI::DrawImWatermark();
                 Hooks::PaintImGui(); // Process ImGui Draw Commands
             ImGui::End();
         

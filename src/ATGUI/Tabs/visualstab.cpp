@@ -131,8 +131,8 @@ void VisualsMaterialConfig::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int si
 			ImGui::SetColumnOffset(1, 500);
 			ImGui::BeginChild(XORSTR("##PlayerVisuals1"), ImVec2(0, 736), true);
 			{
-				ImGui::Separator();
-				ImGui::Columns(1);
+				// ImGui::Separator();
+				// ImGui::Columns(1);
 				ImGui::Text(XORSTR("Display Configuration"));
 				ImGui::Separator();
 
@@ -211,7 +211,7 @@ void VisualsMaterialConfig::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int si
 				ImGui::CheckboxFill(XORSTR("Scale to Output Resolution"), &localFlags[14]);
 				ImGui::CheckboxFill(XORSTR("Using Multiple Windows"), &localFlags[15]);
 				ImGui::CheckboxFill(XORSTR("VR-Mode"), &localFlags[17]);
-				ImGui::Separator();
+				// ImGui::Separator();
 			}
 			ImGui::EndChild();
 
@@ -220,8 +220,8 @@ void VisualsMaterialConfig::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int si
 				ImGui::SetColumnOffset(2, ImGui::GetWindowWidth() / 2 + 226);
 				ImGui::BeginChild(XORSTR("##PlayerVisuals2"), ImVec2(0, 736), true);
 				{
-					ImGui::Separator();
-					ImGui::Columns(1);
+					// ImGui::Separator();
+					// ImGui::Columns(1);
 					ImGui::Text(XORSTR("Customizations"));
 					ImGui::Separator();
 					ImGui::CheckboxFill(XORSTR("EditMode"), &Settings::MaterialConfig::config.bEditMode);
@@ -262,7 +262,7 @@ void VisualsMaterialConfig::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int si
 					ImGui::CheckboxFill(XORSTR("Draw Gray"), &Settings::MaterialConfig::config.m_bDrawGray);
 					ImGui::CheckboxFill(XORSTR("Show Specular"), &Settings::MaterialConfig::config.bShowSpecular);
 					ImGui::CheckboxFill(XORSTR("Show Defuse"), &Settings::MaterialConfig::config.bShowDiffuse);
-					ImGui::Separator();
+					// ImGui::Separator();
 				}
 				ImGui::EndChild();
 			}
@@ -270,8 +270,8 @@ void VisualsMaterialConfig::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int si
 			{
 				ImGui::BeginChild(XORSTR("##PlayerVisuals3"), ImVec2(0, 736), true);
 				{
-					ImGui::Separator();
-					ImGui::Columns(1);
+					// ImGui::Separator();
+					// ImGui::Columns(1);
 					ImGui::Text(XORSTR("Adjustable Display Settings"));
 					ImGui::Separator();
 					ImGui::CheckboxFill(XORSTR("GammaTVEnabled"), &Settings::MaterialConfig::config.m_bGammaTVEnabled);
@@ -377,7 +377,7 @@ void VisualsMaterialConfig::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int si
 							Settings::MaterialConfig::config.SetFlag((unsigned int)(1 << i), localFlags[i]);
 						}
 					}
-					ImGui::Separator();
+					// ImGui::Separator();
 				}
 				ImGui::EndChild();
 			}
@@ -561,12 +561,12 @@ void VisualsEnemy::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabInde
 					ImGui::Checkbox(XORSTR("Skeleton"), &Settings::ESP::FilterEnemy::Skeleton::enabled);
 					ImGui::Checkbox(XORSTR("Glow"), &Settings::ESP::Glow::enabled);
 					ImGui::Checkbox(XORSTR("Dormant"), &Settings::ESP::showDormant);
-					ImGui::Checkbox(XORSTR("Draw Backtrack Chams"), &Settings::Ragebot::backTrack::draw);
+					ImGui::Checkbox(XORSTR("Draw Backtrack Chams"), &Settings::ESP::FilterEnemy::Chams::drawBacktrack);
 				}
 				ImGui::SameLine();
-				ColorButton::RenderWindow("Enemy Chams", (int)50, ImGui::ColorButton(XORSTR("Chams - Enemy Visible"), (ImVec4)Settings::ESP::enemyVisibleColor.color, 0, ImVec2(19, 19)));
+				ColorButton::RenderWindow("Enemy Chams Visible", (int)50, ImGui::ColorButton(XORSTR("Chams - Enemy Visible"), (ImVec4)Settings::ESP::enemyVisibleColor.color, 0, ImVec2(19, 19)));
 				ImGui::SameLine();
-				ColorButton::RenderWindow("Enemy Chams Hidden", (int)81, ImGui::ColorButton(XORSTR("Enemy Chams Hidden"), (ImVec4)Settings::ESP::enemyColor.color, 0, ImVec2(20, 20)));
+				ColorButton::RenderWindow("Enemy Chams Hidden", (int)81, ImGui::ColorButton(XORSTR("Chams - Enemy Hidden"), (ImVec4)Settings::ESP::enemyColor.color, 0, ImVec2(20, 20)));
 			}
 			ImGui::EndChild();
 		}
@@ -832,29 +832,6 @@ void VisualsLocal::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabInde
 					}
 				}
 				ImGui::EndColumns();
-				ImGui::Columns(1);
-				ImGui::Separator();
-				ImGui::Text(XORSTR("Fog modulation"));
-				ImGui::Separator();
-				ImGui::Columns(3, nullptr, false);
-				{
-					ImGui::Checkbox(XORSTR("Enabled"), &Settings::ESP::customfog::enabled);
-				}
-				ImGui::NextColumn();
-				{
-					ImGui::SliderFloat(XORSTR("##CUSTOMFOGDENSITY"), &Settings::ESP::customfog::density, 0, 100, XORSTR("Density: %0.f"));
-				}
-				ImGui::NextColumn();
-				{
-					ImGui::SliderInt(XORSTR("##CUSTOMFOGDISTANCE"), &Settings::ESP::customfog::distance, 0, 2500, XORSTR("Distance: %0.f"));
-				}
-				ImGui::EndColumns();
-				ImGui::Separator();
-				// ImGui::Text(XORSTR("Nightmode"));
-				ImGui::Checkbox(XORSTR("Nightmode"), &Settings::Nightmode::enabled);
-				ImGui::PushItemWidth(-1);
-				ImGui::SliderInt(XORSTR("##NIGHTMODEVAL"), &Settings::Nightmode::value, 0, 100, XORSTR("Nightmode: %0.f"));
-				ImGui::PopItemWidth();
 			}
 			ImGui::EndChild();
 		}
@@ -865,8 +842,6 @@ void VisualsLocal::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabInde
 				ImGui::Separator();
 				ImGui::Text("ESP Features");
 				ImGui::Separator();
-				//ImGui::Text(XORSTR("Only on Key"));
-				//UI::KeyBindButton(&Settings::ESP::key);
 				ImGui::Columns(2, nullptr, false);
 				{
 					ImGui::Checkbox(XORSTR("Skybox Changer"), &Settings::SkyBox::enabled);
@@ -906,21 +881,22 @@ void VisualsLocal::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabInde
 				ImGui::EndColumns();
 				ImGui::Columns(2, nullptr, false);
 				{
-					ImGui::Checkbox(XORSTR("Dlights"), &Settings::Dlights::enabled);
-					ImGui::Checkbox(XORSTR("No Flash"), &Settings::Noflash::enabled);
-					ImGui::Checkbox(XORSTR("No Smoke"), &Settings::NoSmoke::enabled);
-					ImGui::Checkbox(XORSTR("Show Footsteps"), &Settings::ESP::Sounds::enabled);
+						ImGui::Checkbox(XORSTR("Dlights"), &Settings::Dlights::enabled);
+						ImGui::Checkbox(XORSTR("No Flash"), &Settings::Noflash::enabled);
+						ImGui::Checkbox(XORSTR("No Smoke"), &Settings::NoSmoke::enabled);
+						ImGui::Checkbox(XORSTR("Show Footsteps"), &Settings::ESP::Sounds::enabled);
+						ImGui::Checkbox(XORSTR("Nightmode"), &Settings::Nightmode::enabled);
 					ImGui::Checkbox(XORSTR("No View Punch"), &Settings::View::NoViewPunch::enabled);
-					ImGui::Checkbox(XORSTR("Watermark"), &Settings::ESP::Watermark::enabled);
 					ImGui::Checkbox(XORSTR("Show Hitbox impacts"), &Settings::ESP::showimpacts);
 				}
 				ImGui::NextColumn();
 				{
 					ImGui::PushItemWidth(-1);
-					ImGui::SliderFloat(XORSTR("##DLIGHTRADIUS"), &Settings::Dlights::radius, 0, 1000, XORSTR("Radius: %0.f"));
-					ImGui::SliderFloat(XORSTR("##NOFLASHAMOUNT"), &Settings::Noflash::value, 0, 255, XORSTR("Amount: %0.f"));
-					ImGui::Combo(XORSTR("##SMOKETYPE"), (int *)&Settings::NoSmoke::type, SmokeTypes, IM_ARRAYSIZE(SmokeTypes));
-					ImGui::SliderInt(XORSTR("##SOUNDSTIME"), &Settings::ESP::Sounds::time, 250, 5000, XORSTR("Timeout: %0.f"));
+						ImGui::SliderFloat(XORSTR("##DLIGHTRADIUS"), &Settings::Dlights::radius, 0, 1000, XORSTR("Radius: %0.f"));
+						ImGui::SliderFloat(XORSTR("##NOFLASHAMOUNT"), &Settings::Noflash::value, 0, 255, XORSTR("Amount: %0.f"));
+						ImGui::Combo(XORSTR("##SMOKETYPE"), (int *)&Settings::NoSmoke::type, SmokeTypes, IM_ARRAYSIZE(SmokeTypes));
+						ImGui::SliderInt(XORSTR("##SOUNDSTIME"), &Settings::ESP::Sounds::time, 250, 5000, XORSTR("Timeout: %0.f"));
+						ImGui::SliderInt(XORSTR("##NIGHTMODE"), &Settings::Nightmode::value, 0, 100, XORSTR("Nightmode: %0.f"));
 					ImGui::PopItemWidth();
 					ImGui::Checkbox(XORSTR("Draw Molotov"), &Settings::ESP::Drawfire::enabled);
 					ImGui::Checkbox(XORSTR("No Aim Punch"), &Settings::View::NoAimPunch::enabled);
@@ -961,22 +937,6 @@ void VisualsLocal::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabInde
 					ImGui::Checkbox(XORSTR("Localplayer only"), &Settings::ESP::tracebullet::local);
 				}
 				ImGui::EndColumns();
-				ImGui::Separator();
-				ImGui::Columns(3, nullptr, false);
-				{
-					ImGui::Checkbox(XORSTR("Show Keybinds"), &Settings::ESP::KeyBinds);
-				}
-				ImGui::NextColumn();
-				{
-					int width, height;
-					ImGui::SliderInt(XORSTR("##X"), &Settings::ESP::keybi::x, 0, 1920, XORSTR("X: %0.f"));
-				}
-				ImGui::NextColumn();
-				{
-					ImGui::SliderInt(XORSTR("##Y"), &Settings::ESP::keybi::y, 0, 1080, XORSTR("Y: %0.f"));
-				}
-				ImGui::EndColumns();
-				ImGui::Columns(1);
 				ImGui::Separator();
 				ImGui::Text(XORSTR("Debug"));
 				ImGui::Separator();
