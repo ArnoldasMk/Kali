@@ -420,14 +420,12 @@ struct RageWeapon_t
 	    autoScopeEnabled,
 	    autoSlow,
 	    scopeControlEnabled,
-	    BacktrackEnabled,
 	    OnshotEnabled;
 
 	float MinDamage = 50.f,
 		 HitChance = 20.f,
 		 BodyScale = 0.1f,
-		 HeadScale = 0.1f,
-		 BacktrackValue = 0.2f;
+		 HeadScale = 0.1f;
 
 	ButtonCode_t onshotkey = ButtonCode_t ::KEY_3;
 	ButtonCode_t mindmgoveridekey = ButtonCode_t ::KEY_5;
@@ -461,8 +459,6 @@ struct RageWeapon_t
 			  this->enemySelectionType == Ragebotanother.enemySelectionType &&
 			  this->BodyScale == Ragebotanother.BodyScale &&
 			  this->HeadScale == Ragebotanother.HeadScale &&
-			  this->BacktrackEnabled == Ragebotanother.BacktrackEnabled &&
-			  this->BacktrackValue == Ragebotanother.BacktrackValue &&
 			  this->mindmgoveridekey == Ragebotanother.mindmgoveridekey &&
 			  this->onshotkey == Ragebotanother.onshotkey;
 	}
@@ -862,13 +858,6 @@ namespace Settings
 			inline bool enabled = false;
 		}
 
-		namespace backTrack
-		{
-			inline bool enabled = false;
-			inline float time = 0.2f;
-			inline bool draw;
-		}
-
 		inline std::unordered_map<ItemDefinitionIndex, RageWeapon_t, Util::IntHash<ItemDefinitionIndex>> weapons = {
 		    {ItemDefinitionIndex::INVALID, ragedefault},
 		};
@@ -1182,31 +1171,38 @@ namespace Settings
 				inline ColorVar defuserColor = ImColor(49, 27, 146, 255);
 				inline ColorVar chickenColor = ImColor(255, 193, 7, 255);
 			}
+			
 			namespace Skeleton
 			{
 				inline bool enabled = false;
 				inline ColorVar allyColor = ImColor(255, 255, 255, 255);
 				inline ColorVar enemyColor = ImColor(255, 255, 255, 255);
 			}
+
 			namespace HeadDot
 			{
 				inline bool enabled = false;
 				inline float size = 2.0f;
 			}
+
 			namespace Boxes
 			{
 				inline bool enabled = false;
 				inline BoxType type = BoxType::FRAME_2D;
 			}
+
 			namespace BulletTracers
 			{
 				inline bool enabled = false;
 			}
+
 			namespace Chams
 			{
 				inline bool enabled = false;
+				inline bool drawBacktrack;
 				inline ChamsType type = ChamsType::WHITEADDTIVE;
 			}
+
 			namespace HelthBar
 			{
 				inline bool enabled = false;
@@ -1297,42 +1293,50 @@ namespace Settings
 				inline ColorVar defuserColor = ImColor(49, 27, 146, 255);
 				inline ColorVar chickenColor = ImColor(255, 193, 7, 255);
 			}
+
 			namespace RealChams
 			{
 				inline bool enabled = false;
 				inline ChamsType type = ChamsType::WHITEADDTIVE;
 			}
+
 			namespace Chams
 			{
 				inline bool enabled = false;
 				inline ChamsType type = ChamsType::WHITEADDTIVE;
 			}
+
 			namespace Skeleton
 			{
 				inline bool enabled = false;
 				inline ColorVar allyColor = ImColor(255, 255, 255, 255);
 				inline ColorVar enemyColor = ImColor(255, 255, 255, 255);
 			}
+
 			namespace HeadDot
 			{
 				inline bool enabled = false;
 				inline float size = 2.0f;
 			}
+
 			namespace BulletTracers
 			{
 				inline bool enabled = false;
 			}
+
 			namespace Boxes
 			{
 				inline bool enabled = false;
 				inline BoxType type = BoxType::FRAME_2D;
 			}
+
 			namespace HelthBar
 			{
 				inline bool enabled = false;
 				inline BarType type = BarType::VERTICAL;
 				inline BarColorType colorType = BarColorType::HEALTH_BASED;
 			}
+
 			namespace Tracers
 			{
 				inline bool enabled = false;
@@ -1443,7 +1447,6 @@ namespace Settings
 		}
 		namespace Chams
 		{
-
 			inline bool enabled = false;
 			inline HealthColorVar allyColor = ImColor(0, 0, 255, 255);
 			inline HealthColorVar allyVisibleColor = ImColor(0, 255, 0, 255);
@@ -1475,7 +1478,6 @@ namespace Settings
 				inline ColorVar color = ImColor(255, 255, 255, 255);
 				inline ChamsType type = ChamsType::WHITEADDTIVE;
 			}
-
 		}
 
 		// sound esp
@@ -1579,6 +1581,12 @@ namespace Settings
 	namespace DisableSettingCvars
 	{
 		inline bool enabled;
+	}
+
+	namespace Backtrack
+	{
+		inline bool enabled;
+		inline float time;
 	}
 
 	namespace Dlights

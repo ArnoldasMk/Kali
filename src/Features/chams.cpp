@@ -398,9 +398,9 @@
 			return;
 		if (!localplayer->GetAlive())
 			return;
-		if (!Settings::Ragebot::backTrack::enabled)
+		if (!Settings::Backtrack::enabled || !Settings::Ragebot::enabled)
 			return;
-		if (!Settings::Ragebot::backTrack::draw)
+		if (!Settings::ESP::FilterEnemy::Chams::drawBacktrack)
 			return;
 
 		Color lag_color = Color::FromImColor(Settings::ESP::Chams::Arms::color.Color());

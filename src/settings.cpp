@@ -268,9 +268,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
     settings[XORSTR("Legitbot")][XORSTR("AutoCrouch")][XORSTR("Enabled")] = Settings::Legitbot::AutoCrouch::enabled;
     settings[XORSTR("Ragebot")][XORSTR("AUtoAcrouth")][XORSTR("Enabled")] = Settings::Ragebot::AutoCrouch::enabled;
-    settings[XORSTR("Ragebot")][XORSTR("BackTrack")][XORSTR("Enabled")] = Settings::Ragebot::backTrack::enabled;
-    settings[XORSTR("Ragebot")][XORSTR("BackTrack")][XORSTR("draw")] = Settings::Ragebot::backTrack::draw;
-    settings[XORSTR("Ragebot")][XORSTR("BackTrack")][XORSTR("time")] = Settings::Ragebot::backTrack::time;
     settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("key")] = Util::GetButtonName(Settings::Ragebot::quickpeek::key);
     settings[XORSTR("Ragebot")][XORSTR("quickpeek")][XORSTR("Enabled")] = Settings::Ragebot::quickpeek::enabled;
     settings[XORSTR("Ragebot")][XORSTR("headscale")] = Settings::Ragebot::HeadScale;
@@ -330,6 +327,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
     settings[XORSTR("VoteRevealer")][XORSTR("enabled")] = Settings::VoteRevealer::enabled;
 
+    settings[XORSTR("Backtrack")][XORSTR("enabled")] = Settings::Backtrack::enabled;
+    settings[XORSTR("Backtrack")][XORSTR("time")] = Settings::Backtrack::time;
 
     settings[XORSTR("AntiAim")][XORSTR("enabled")] = Settings::AntiAim::enabled;
     settings[XORSTR("AntiAim")][XORSTR("dFlipKey")] = Util::GetButtonName(Settings::AntiAim::dFlipKey);
@@ -572,21 +571,23 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
     // Visual Settings for diff players
     // For Enemy
-    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Enemy")][XORSTR("Enabled")] = Settings::ESP::FilterEnemy::Chams::enabled;
+    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Enemy")][XORSTR("enabled")] = Settings::ESP::FilterEnemy::Chams::enabled;
     settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Enemy")][XORSTR("type")] = (int)Settings::ESP::FilterEnemy::Chams::type;
+    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Enemy")][XORSTR("drawBacktrack")], Settings::ESP::FilterEnemy::Chams::drawBacktrack;
+
     // For Local Player
-    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Localplayer")][XORSTR("Enabled")] = Settings::ESP::FilterLocalPlayer::Chams::enabled;
-    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Localplayer")][XORSTR("Fake")] = (int)Settings::ESP::FilterLocalPlayer::Chams::type;
-    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Localplayer")][XORSTR("Real")] = (int)Settings::ESP::FilterLocalPlayer::RealChams::type;
+    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("LocalPlayer")][XORSTR("enabled")] = Settings::ESP::FilterLocalPlayer::Chams::enabled;
+    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("LocalPlayer")][XORSTR("fake")] = (int)Settings::ESP::FilterLocalPlayer::Chams::type;
+    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("LocalPlayer")][XORSTR("real")] = (int)Settings::ESP::FilterLocalPlayer::RealChams::type;
     // For Alise
-    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Alise")][XORSTR("Enabled")] = Settings::ESP::FilterAlise::Chams::enabled;
+    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Alise")][XORSTR("enabled")] = Settings::ESP::FilterAlise::Chams::enabled;
     settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Alise")][XORSTR("type")] = (int)Settings::ESP::FilterAlise::Chams::type;
 
-    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Arms")][XORSTR("Enabled")] = Settings::ESP::Chams::Arms::enabled;
+    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Arms")][XORSTR("enabled")] = Settings::ESP::Chams::Arms::enabled;
     settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Arms")][XORSTR("type")] = (int)Settings::ESP::Chams::Arms::type;
-    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Weapon")][XORSTR("Enabled")] = Settings::ESP::Chams::Weapon::enabled;
+    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Weapon")][XORSTR("enabled")] = Settings::ESP::Chams::Weapon::enabled;
     settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Weapon")][XORSTR("type")] = (int)Settings::ESP::Chams::Weapon::type;
-    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Sleeves")][XORSTR("Enabled")] = Settings::ESP::Chams::Sleeves::enabled;
+    settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Sleeves")][XORSTR("enabled")] = Settings::ESP::Chams::Sleeves::enabled;
     settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Sleeves")][XORSTR("type")] = (int)Settings::ESP::Chams::Sleeves::type;
     LoadColor(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Sleeves")][XORSTR("color")], Settings::ESP::Chams::Sleeves::color);
 
@@ -1068,9 +1069,6 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("Legitbot")][XORSTR("Enabled")], &Settings::Legitbot::enabled);
     GetVal(settings[XORSTR("Ragebot")][XORSTR("Enabled")], &Settings::Ragebot::enabled);
     GetVal(settings[XORSTR("Ragebot")][XORSTR("AUtoAcrouth")][XORSTR("Enabled")], &Settings::Ragebot::AutoCrouch::enabled);
-    GetVal(settings[XORSTR("Ragebot")][XORSTR("BackTrack")][XORSTR("Enabled")], &Settings::Ragebot::backTrack::enabled);
-    GetVal(settings[XORSTR("Ragebot")][XORSTR("BackTrack")][XORSTR("draw")], &Settings::Ragebot::backTrack::draw);
-    GetVal(settings[XORSTR("Ragebot")][XORSTR("BackTrack")][XORSTR("time")], &Settings::Ragebot::backTrack::time);
     GetVal(settings[XORSTR("Ragebot")][XORSTR("onshot")][XORSTR("Enabled")], &Settings::Ragebot::onshot::enabled);
     GetButtonCode(settings[XORSTR("Ragebot")][XORSTR("onshot")][XORSTR("key")], &Settings::Ragebot::onshot::button);
 
@@ -1134,6 +1132,9 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("CVarsOverride")][XORSTR("showImpacts")], &Settings::CVarsOverride::showImpacts);
 
     GetVal(settings[XORSTR("VoteRevealer")][XORSTR("enabled")], &Settings::VoteRevealer::enabled);
+
+    GetVal(settings[XORSTR("Backtrack")][XORSTR("enabled")], &Settings::Backtrack::enabled);
+    GetVal(settings[XORSTR("Backtrack")][XORSTR("time")], &Settings::Backtrack::time);
 
     GetVal(settings[XORSTR("AntiAim")][XORSTR("enabled")], &Settings::AntiAim::enabled);
     GetButtonCode(settings[XORSTR("AntiAim")][XORSTR("dFlipKey")], &Settings::AntiAim::dFlipKey);
@@ -1362,25 +1363,26 @@ void Settings::LoadConfig(std::string path)
 
     // Visual Settigs For Diff Player
     // For Enemy
-    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Enemy")][XORSTR("Enabled")], &Settings::ESP::FilterEnemy::Chams::enabled);
-    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Enemy")][XORSTR("type")], (int *)&Settings::ESP::FilterEnemy::Chams::type);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Enemy")][XORSTR("enabled")], &Settings::ESP::FilterEnemy::Chams::enabled);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Enemy")][XORSTR("type")], (int*)&Settings::ESP::FilterEnemy::Chams::type);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Enemy")][XORSTR("drawBacktrack")], &Settings::ESP::FilterEnemy::Chams::drawBacktrack);
     // For Local Player
-    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Localplayer")][XORSTR("Enabled")], &Settings::ESP::FilterLocalPlayer::Chams::enabled);
-    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Localplayer")][XORSTR("Fake")], (int *)&Settings::ESP::FilterLocalPlayer::Chams::type);
-    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Localplayer")][XORSTR("Real")], (int *)&Settings::ESP::FilterLocalPlayer::RealChams::type);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("LocalPlayer")][XORSTR("enabled")], &Settings::ESP::FilterLocalPlayer::Chams::enabled);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("LocalPlayer")][XORSTR("fake")], (int *)&Settings::ESP::FilterLocalPlayer::Chams::type);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("LocalPlayer")][XORSTR("real")], (int *)&Settings::ESP::FilterLocalPlayer::RealChams::type);
     // For Alise
-    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Alise")][XORSTR("Enabled")], &Settings::ESP::FilterAlise::Chams::enabled);
-    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Alise")][XORSTR("type")], (int *)&Settings::ESP::FilterAlise::Chams::type);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Alise")][XORSTR("enabled")], &Settings::ESP::FilterAlise::Chams::enabled);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Alise")][XORSTR("type")], (int*)&Settings::ESP::FilterAlise::Chams::type);
     // END Visual Settings
     GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Base")][XORSTR("color")], &Settings::ESP::Chams::Base::color);
 
-    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Arms")][XORSTR("Enabled")], &Settings::ESP::Chams::Arms::enabled);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Arms")][XORSTR("enabled")], &Settings::ESP::Chams::Arms::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Arms")][XORSTR("type")], (int *)&Settings::ESP::Chams::Arms::type);
     GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Arms")][XORSTR("color")], &Settings::ESP::Chams::Arms::color);
-    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Weapon")][XORSTR("Enabled")], &Settings::ESP::Chams::Weapon::enabled);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Weapon")][XORSTR("enabled")], &Settings::ESP::Chams::Weapon::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Weapon")][XORSTR("type")], (int *)&Settings::ESP::Chams::Weapon::type);
     GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Weapon")][XORSTR("color")], &Settings::ESP::Chams::Weapon::color);
-    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Sleeves")][XORSTR("Enabled")], &Settings::ESP::Chams::Sleeves::enabled);
+    GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Sleeves")][XORSTR("enabled")], &Settings::ESP::Chams::Sleeves::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Sleeves")][XORSTR("type")], (int *)&Settings::ESP::Chams::Sleeves::type);
     GetVal(settings[XORSTR("ESP")][XORSTR("Chams")][XORSTR("Sleeves")][XORSTR("color")], &Settings::ESP::Chams::Sleeves::color);
 

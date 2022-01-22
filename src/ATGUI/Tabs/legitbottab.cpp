@@ -463,22 +463,23 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				ImGui::Separator();
 				ImGui::Columns(2, nullptr, false);
 				{
+					ImGui::Checkbox(XORSTR("Backtrack"), &Settings::Backtrack::enabled);
 					switch (currentWeapon)
 					{
-					case ItemDefinitionIndex::WEAPON_DEAGLE:
-					case ItemDefinitionIndex::WEAPON_ELITE:
-					case ItemDefinitionIndex::WEAPON_FIVESEVEN:
-					case ItemDefinitionIndex::WEAPON_GLOCK:
-					case ItemDefinitionIndex::WEAPON_TEC9:
-					case ItemDefinitionIndex::WEAPON_HKP2000:
-					case ItemDefinitionIndex::WEAPON_USP_SILENCER:
-					case ItemDefinitionIndex::WEAPON_P250:
-					case ItemDefinitionIndex::WEAPON_CZ75A:
-					case ItemDefinitionIndex::WEAPON_REVOLVER:
-						break;
-					default:
-						if (ImGui::Checkbox(XORSTR("Auto Scope"), &autoScopeEnabled))
-							UI::UpdateWeaponSettings();
+						case ItemDefinitionIndex::WEAPON_DEAGLE:
+						case ItemDefinitionIndex::WEAPON_ELITE:
+						case ItemDefinitionIndex::WEAPON_FIVESEVEN:
+						case ItemDefinitionIndex::WEAPON_GLOCK:
+						case ItemDefinitionIndex::WEAPON_TEC9:
+						case ItemDefinitionIndex::WEAPON_HKP2000:
+						case ItemDefinitionIndex::WEAPON_USP_SILENCER:
+						case ItemDefinitionIndex::WEAPON_P250:
+						case ItemDefinitionIndex::WEAPON_CZ75A:
+						case ItemDefinitionIndex::WEAPON_REVOLVER:
+							break;
+						default:
+							if (ImGui::Checkbox(XORSTR("Auto Scope"), &autoScopeEnabled))
+								UI::UpdateWeaponSettings();
 					}
 					if (ImGui::Checkbox(XORSTR("Silent Aim"), &silent))
 						UI::UpdateWeaponSettings();
@@ -498,22 +499,27 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				ImGui::NextColumn();
 				{
 					ImGui::PushItemWidth(-1);
+					ImGui::SliderFloat(XORSTR("##BACKTRACK_TIME"), &Settings::Backtrack::time, 0.0f, Settings::CVarsOverride::fakeLatency ? 0.4f : 0.2f);
+					if (Settings::Backtrack::time > (Settings::CVarsOverride::fakeLatency ? 0.4f : 0.2f))
+						Settings::Backtrack::time = 0.2f;
+					ImGui::PopItemWidth();
+
 					switch (currentWeapon)
 					{
-					case ItemDefinitionIndex::WEAPON_DEAGLE:
-					case ItemDefinitionIndex::WEAPON_ELITE:
-					case ItemDefinitionIndex::WEAPON_FIVESEVEN:
-					case ItemDefinitionIndex::WEAPON_GLOCK:
-					case ItemDefinitionIndex::WEAPON_TEC9:
-					case ItemDefinitionIndex::WEAPON_HKP2000:
-					case ItemDefinitionIndex::WEAPON_USP_SILENCER:
-					case ItemDefinitionIndex::WEAPON_P250:
-					case ItemDefinitionIndex::WEAPON_CZ75A:
-					case ItemDefinitionIndex::WEAPON_REVOLVER:
-						break;
-					default:
-						if (ImGui::Checkbox(XORSTR("Scope Control"), &scopeControlEnabled))
-							UI::UpdateWeaponSettings();
+						case ItemDefinitionIndex::WEAPON_DEAGLE:
+						case ItemDefinitionIndex::WEAPON_ELITE:
+						case ItemDefinitionIndex::WEAPON_FIVESEVEN:
+						case ItemDefinitionIndex::WEAPON_GLOCK:
+						case ItemDefinitionIndex::WEAPON_TEC9:
+						case ItemDefinitionIndex::WEAPON_HKP2000:
+						case ItemDefinitionIndex::WEAPON_USP_SILENCER:
+						case ItemDefinitionIndex::WEAPON_P250:
+						case ItemDefinitionIndex::WEAPON_CZ75A:
+						case ItemDefinitionIndex::WEAPON_REVOLVER:
+							break;
+						default:
+							if (ImGui::Checkbox(XORSTR("Scope Control"), &scopeControlEnabled))
+								UI::UpdateWeaponSettings();
 					}
 					if (ImGui::Checkbox(XORSTR("Ignore Jump (Self)"), &ignoreJumpEnabled))
 						UI::UpdateWeaponSettings();

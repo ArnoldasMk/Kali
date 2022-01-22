@@ -15,7 +15,6 @@ std::vector<LagComp::LagCompTickInfo> LagComp::lagCompTicks;
 
 float LagComp::GetLerpTime()
 {
-//  auto network = INetChannel->getNetChannel();
 	int updateRate = cvar->FindVar("cl_updaterate")->GetInt();
 	ConVar *minUpdateRate = cvar->FindVar("sv_minupdaterate");
 	ConVar *maxUpdateRate = cvar->FindVar("sv_maxupdaterate");
@@ -24,7 +23,6 @@ float LagComp::GetLerpTime()
 		updateRate = maxUpdateRate->GetInt();
 
 	float ratio = cvar->FindVar("cl_interp_ratio")->GetFloat();
-
 	if (ratio == 0)
 		ratio = 1.0f;
 
@@ -41,13 +39,17 @@ float LagComp::GetLerpTime()
 static bool IsTickValid(float time) // pasted from polak getting some invalid ticks need some fix
 {
 	float correct = 0;
+	float bt_time = Settings::Backtrack::time;
 
 	correct += LagComp::GetLerpTime();
 	correct = CLAMP(correct, 0.f, cvar->FindVar("sv_maxunlag")->GetFloat());
 
 	float deltaTime = correct - (globalVars->curtime - time);
 
-	if (fabsf(deltaTime) < Settings::Ragebot::backTrack::time)
+	if (Settings::Ragebot::enabled)
+		bt_time = Settings::CVarsOverride::fakeLatency ? 0.4f : 0.2f; // use max time
+
+	if (fabsf(deltaTime) < bt_time)
 		return true;
 
 	return false;
@@ -73,12 +75,12 @@ static void RemoveInvalidTicks()
 
 static void RegisterTicks()
 {
-	const auto localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
+	const auto localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 	const auto curTick = LagComp::lagCompTicks.insert(LagComp::lagCompTicks.begin(), {globalVars->tickcount, globalVars->curtime});
 	
 	for (int i = engine->GetMaxClients(); i > 1 ; i--)
 	{
-		const auto player = (C_BasePlayer *)entityList->GetClientEntity(i);
+		const auto player = (C_BasePlayer*) entityList->GetClientEntity(i);
 
 		if (!player
 		|| player == localplayer
@@ -101,7 +103,7 @@ static void RegisterTicks()
 
 void LagComp::CreateMove(CUserCmd *cmd)
 {
-	if (!Settings::Ragebot::backTrack::enabled)
+	if (!Settings::Backtrack::enabled || !Settings::Ragebot::enabled)
 		return;
 
 	RemoveInvalidTicks();
@@ -116,33 +118,25 @@ void LagComp::CreateMove(CUserCmd *cmd)
 		return;
 
 	float serverTime = localplayer->GetTickBase() * globalVars->interval_per_tick;
+	float fov = 7.0f;
+	static int tickcount = cmd->tick_count;
+	bool has_target = false;
 
-	QAngle angle;
-	engine->GetViewAngles(angle);
-	QAngle rcsAngle = angle + *localplayer->GetAimPunchAngle();
-
-//	if (cmd->buttons & IN_ATTACK && weapon->GetNextPrimaryAttack() <= serverTime)
-//	{
-		float fov = 7.0f;
-
-		static int tickcount = cmd->tick_count;
-		bool has_target = false;
-
-		for (auto &&Tick : LagComp::lagCompTicks)
+	for (auto &&Tick : LagComp::lagCompTicks)
+	{
+		for (auto &record : Tick.records)
 		{
-			for (auto &record : Tick.records)
-			{
-				float tmpFOV = Math::GetFov(cmd->viewangles, Math::CalcAngle(localplayer->GetEyePosition(), record.head));
+			float tmpFOV = Math::GetFov(cmd->viewangles, Math::CalcAngle(localplayer->GetEyePosition(), record.head));
 
-				if (tmpFOV < fov)
-				{
-					fov = tmpFOV;
-					tickcount = Tick.tickCount;
-					has_target = true;
-				}
+			if (tmpFOV < fov)
+			{
+				fov = tmpFOV;
+				tickcount = Tick.tickCount;
+				has_target = true;
 			}
 		}
+	}
 
-		if (has_target)	cmd->tick_count = tickcount;
-//	}
+	if (has_target)
+		cmd->tick_count = tickcount;
 }

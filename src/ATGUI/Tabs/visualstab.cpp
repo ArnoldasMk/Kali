@@ -561,7 +561,7 @@ void VisualsEnemy::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabInde
 					ImGui::Checkbox(XORSTR("Skeleton"), &Settings::ESP::FilterEnemy::Skeleton::enabled);
 					ImGui::Checkbox(XORSTR("Glow"), &Settings::ESP::Glow::enabled);
 					ImGui::Checkbox(XORSTR("Dormant"), &Settings::ESP::showDormant);
-					ImGui::Checkbox(XORSTR("Draw Backtrack Chams"), &Settings::Ragebot::backTrack::draw);
+					ImGui::Checkbox(XORSTR("Draw Backtrack Chams"), &Settings::ESP::FilterEnemy::Chams::drawBacktrack);
 				}
 				ImGui::SameLine();
 				ColorButton::RenderWindow("Enemy Chams Visible", (int)50, ImGui::ColorButton(XORSTR("Chams - Enemy Visible"), (ImVec4)Settings::ESP::enemyVisibleColor.color, 0, ImVec2(19, 19)));
