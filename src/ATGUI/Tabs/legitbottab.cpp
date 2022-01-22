@@ -682,7 +682,6 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 						Settings::Legitbot::weapons.erase(currentWeapon);
 						UI::ReloadWeaponSettings();
 					}
-					ImGui::Separator();
 					ImGui::EndChild();
 				}
 			}
