@@ -41,7 +41,7 @@ namespace Hooker
 	void FindSequenceActivity();
 	void FindAbsFunctions();
 	void FindItemSystem();
-        void FindSendMove();
+//         void FindSendMove();
  	void FindWriteUserCmd();
         void FindRenderBeams();
 
