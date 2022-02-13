@@ -1027,7 +1027,7 @@ void Settings::LoadConfig(std::string path)
             .spreadLimit = LegitweaponSetting[XORSTR("SpreadLimit")][XORSTR("Value")].asFloat(),
             .hitchanceValue = LegitweaponSetting[XORSTR("HitChance")][XORSTR("Value")].asFloat(),
             .backtrackTime = LegitweaponSetting[XORSTR("Backtrack")][XORSTR("Value")].asFloat(),
-            .triggerbotHitchanceValue = LegitweaponSetting[XORSTR("Triggerbot")][XORSTR("Hitchance")][XORSTR("Value")].asFloat(),
+            .triggerbotHitchanceValue = LegitweaponSetting[XORSTR("Triggerbot")][XORSTR("Hitchance")][XORSTR("Value")].asFloat(),   
             .triggerbotRandomDelayLowBound = LegitweaponSetting[XORSTR("Triggerbot")][XORSTR("RandomDelay")][XORSTR("LowBound")][XORSTR("Value")].asFloat(),
             .triggerbotRandomDelayHighBound = LegitweaponSetting[XORSTR("Triggerbot")][XORSTR("RandomDelay")][XORSTR("HighBound")][XORSTR("Value")].asFloat(),
             .triggerbotRandomDelayLastRoll = LegitweaponSetting[XORSTR("Triggerbot")][XORSTR("RandomDelay")][XORSTR("LastRoll")][XORSTR("Value")].asFloat(),

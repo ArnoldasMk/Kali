@@ -544,19 +544,6 @@ void Hooker::FindItemSystem()
 	itemSys += sizeof(void *); // 2nd vtable
 	itemSystem = (CItemSystem *)itemSys;
 }
-void Hooker::FindSendMove()
-{
-	//"E8 ? ? ? ? E8 ? ? ? ? F2 0F 10 0D ? ? ? ? 45 84 E4 F2 0F 5C 0D ? ? ? ? F2 0F 58 C8 F2 0F 11 0D ? ? ? ? 75 12"
-	// meme or legit?
-	uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
-													(unsigned char *)XORSTR("\xE8\x00\x00\x00\x00\xE8\x00\x00\x00\x00\xF2\x0F\x10\x0D\x00\x00\x00\x00\x45\x84\xE4\xF2\x0F\x5C\x0D\x00\x00\x00\x00\xF2\x0F\x58\xC8\xF2\x0F\x11\x0D\x00\x00\x00\x00\x75\x12"),
-													XORSTR("x????x????xxxx????xxxxxxx????xxxxxxxx????xx"));
-	/*
-	    func_address += 6;
-	    func_address = GetAbsoluteAddress(func_address, 1, 6);
-	    WriteUserCmd = reinterpret_cast<WriteUserCmdFn>(func_address);
-	*/
-}
 
 void Hooker::FindWriteUserCmd()
 {
