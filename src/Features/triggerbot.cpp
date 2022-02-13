@@ -12,7 +12,8 @@ bool TriggerCanShoot(C_BasePlayer* localplayer, C_BaseCombatWeapon* activeWeapon
 		return false;
 	if (!activeWeapon || activeWeapon->GetInReload())
 		return false;
-	if (!currentSettings.triggerHitchanceEnabled) {
+	if (!Settings::Triggerbot::Hitchance::enabled) 
+	{
 		if ((activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) <= (activeWeapon->GetCSWpnData()->GetMaxPlayerSpeed() / 3.0f))
 			return true;
 		else
@@ -25,7 +26,7 @@ bool TriggerCanShoot(C_BasePlayer* localplayer, C_BaseCombatWeapon* activeWeapon
 		hitchance = 0.0000001;
 	hitchance = 1 / (hitchance);
 	
-	return hitchance >= (currentSettings.triggerHitchanceValue * 2);
+	return hitchance >= (Settings::Triggerbot::Hitchance::value * 2);
 }
 
 void Triggerbot::CreateMove(CUserCmd *cmd)
@@ -43,7 +44,7 @@ void Triggerbot::CreateMove(CUserCmd *cmd)
 		index = *activeWeapon->GetItemDefinitionIndex();
 	const LegitWeapon_t& currentWeaponSetting = Settings::Legitbot::weapons.at(index);
 
-	if (!currentWeaponSetting.triggerBotEnabled)
+	if (!Settings::Triggerbot::enabled)
 		return;
 
 	if (!inputSystem->IsButtonDown(Settings::Triggerbot::key))

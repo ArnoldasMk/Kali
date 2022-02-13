@@ -5,7 +5,7 @@
 struct bf_write;
 struct dlinfo_t
 {
-	const char* library = nullptr;
+	const char *library = nullptr;
 	uintptr_t address = 0;
 	size_t size = 0;
 };
@@ -13,8 +13,8 @@ struct dlinfo_t
 namespace Hooker
 {
 
-	bool GetLibraryInformation(const char* library, uintptr_t* address, size_t* size);
-	bool HookRecvProp(const char* className, const char* propertyName, std::unique_ptr<RecvPropHook>& recvPropHook);
+	bool GetLibraryInformation(const char *library, uintptr_t *address, size_t *size);
+	bool HookRecvProp(const char *className, const char *propertyName, std::unique_ptr<RecvPropHook> &recvPropHook);
 	void FindIClientMode();
 	void FindGlobalVars();
 	void FindCInput();
@@ -37,12 +37,12 @@ namespace Hooker
 	void FindSetNamedSkybox();
 	void FindPanelArrayOffset();
 	void FindPlayerAnimStateOffset();
-    	void FindPlayerAnimOverlayOffset();
+	void FindPlayerAnimOverlayOffset();
 	void FindSequenceActivity();
 	void FindAbsFunctions();
 	void FindItemSystem();
-//         void FindSendMove();
- 	void FindWriteUserCmd();
-        void FindRenderBeams();
+	void FindSendMove();
+	void FindWriteUserCmd();
+	void FindRenderBeams();
 
 }

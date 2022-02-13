@@ -321,16 +321,32 @@ struct LegitWeapon_t
 	    autoSlow,
 	    predEnabled,
 	    scopeControlEnabled,
-	    triggerBotEnabled,
-	    triggerHitchanceEnabled;
+	    velocityCheck,
+	    backtrackEnabled,
+
+	    triggerbotEnabled,
+	    triggerbotHitchanceEnabled,
+	    triggerbotMagnetEnabled,
+	    triggerbotRandomDelayEnabled,
+	    triggerbotFilterEnemies,
+	    triggerbotFilterAllies,
+	    triggerbotFilterWalls,
+	    triggerbotFilterSmokeCheck,
+	    triggerbotFilterFlashCheck,
+	    triggerbotFilterHead,
+	    triggerbotFilterChest,
+	    triggerbotFilterStomach,
+	    triggerbotFilterArms,
+	    triggerbotFilterLegs;
 
 	int engageLockTTR = 700;
 	Bone bone = BONE_HEAD;
 	SmoothType smoothType = SmoothType::SLOW_END;
 	ButtonCode_t aimkey = ButtonCode_t ::MOUSE_MIDDLE;
+	ButtonCode_t triggerbotkey = ButtonCode_t ::KEY_LALT;
 
-	float smoothAmount = 1.0f;
-	float courseRandomizationAmount = 2.0f,
+	float smoothAmount = 1.0f,
+		 courseRandomizationAmount = 2.0f,
 		 doAimAfterXShotsAmount = 0.0f,
 		 smoothSaltMultiplier = 0.0f,
 		 errorMarginValue = 0.0f,
@@ -342,9 +358,12 @@ struct LegitWeapon_t
 		 rcsAmountY = 2.0f,
 		 autoWallValue = 10.0f,
 		 spreadLimit = 1.0f,
-		 minDamagevalue = 10.0f,
 		 hitchanceValue = 100.f,
-		 triggerHitchanceValue = 100.f;
+		 backtrackTime = 0.2f,
+		 triggerbotHitchanceValue = 100.f,
+		 triggerbotRandomDelayLowBound = 20.f,
+		 triggerbotRandomDelayHighBound = 35.f,
+		 triggerbotRandomDelayLastRoll = 0.f;
 
 	bool desiredBones[31];
 
@@ -352,7 +371,6 @@ struct LegitWeapon_t
 	{
 		for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 		{
-
 			if (this->desiredBones[bone] != another.desiredBones[bone])
 				return false;
 		}
@@ -404,8 +422,29 @@ struct LegitWeapon_t
 			  this->autoSlow == another.autoSlow &&
 			  this->predEnabled == another.predEnabled &&
 			  this->autoAimRealDistance == another.autoAimRealDistance &&
-			  this->triggerBotEnabled == another.triggerBotEnabled &&
-			  this->scopeControlEnabled == another.scopeControlEnabled;
+			  this->scopeControlEnabled == another.scopeControlEnabled &&
+			  this->backtrackEnabled == another.backtrackEnabled &&
+			  this->backtrackTime == another.backtrackTime &&
+			  this->velocityCheck == another.velocityCheck &&
+
+			  this->triggerbotEnabled == another.triggerbotEnabled &&
+			  this->triggerbotHitchanceEnabled == another.triggerbotEnabled &&
+			  this->triggerbotHitchanceValue == another.triggerbotHitchanceValue &&
+			  this->triggerbotRandomDelayEnabled == another.triggerbotRandomDelayEnabled &&
+			  this->triggerbotRandomDelayLowBound == another.triggerbotRandomDelayLowBound &&
+			  this->triggerbotRandomDelayHighBound == another.triggerbotRandomDelayHighBound &&
+			  this->triggerbotRandomDelayLastRoll == another.triggerbotRandomDelayLastRoll &&
+
+			  this->triggerbotFilterEnemies == another.triggerbotFilterEnemies &&
+			  this->triggerbotFilterAllies == another.triggerbotFilterAllies &&
+			  this->triggerbotFilterWalls == another.triggerbotFilterWalls &&
+			  this->triggerbotFilterSmokeCheck == another.triggerbotFilterSmokeCheck &&
+			  this->triggerbotFilterFlashCheck == another.triggerbotFilterFlashCheck &&
+			  this->triggerbotFilterHead == another.triggerbotFilterHead &&
+			  this->triggerbotFilterChest == another.triggerbotFilterChest &&
+			  this->triggerbotFilterStomach == another.triggerbotFilterStomach &&
+			  this->triggerbotFilterArms == another.triggerbotFilterArms &&
+			  this->triggerbotFilterLegs == another.triggerbotFilterLegs;
 	}
 } const defaultSettings{};
 
@@ -605,13 +644,11 @@ namespace Settings
 			}
 		}
 	}
-	/* Default LegitBot Settings */
 	namespace Legitbot
 	{
 		inline bool enabled = false;
 		inline bool silent = false;
 		inline bool friendly = false;
-		inline float minDamage = 10.f;
 		inline Bone bone = BONE_HEAD;
 		inline ButtonCode_t aimkey = ButtonCode_t::MOUSE_MIDDLE;
 		inline bool aimkeyOnly = false;
@@ -872,7 +909,6 @@ namespace Settings
 		{
 			inline bool enabled = false;
 		}
-
 		namespace Filters
 		{
 			inline bool enemies = true;
@@ -886,7 +922,6 @@ namespace Settings
 			inline bool arms = true;
 			inline bool legs = true;
 		}
-
 		namespace RandomDelay
 		{
 			inline bool enabled = false;
@@ -894,10 +929,14 @@ namespace Settings
 			inline int highBound = 35; // in ms
 			inline int lastRoll = 0;
 		}
+		namespace Hitchance
+		{
+			inline bool enabled = false;
+			inline float value = 100;
+		}
 	}
 	namespace SilentWalk
 	{
-
 		inline bool enabled;
 		inline ButtonCode_t key = ButtonCode_t::KEY_Z;
 	}
@@ -913,10 +952,10 @@ namespace Settings
 		inline ButtonCode_t dFlipKey;
 
 		inline bool ExperimentalZFLIP = false;
-		
+
 		namespace Air
 		{
-			namespace Desync 
+			namespace Desync
 			{
 				inline AntiAimDesync type = AntiAimDesync::NONE;
 				inline int jitterLeft;
@@ -945,7 +984,7 @@ namespace Settings
 
 		namespace Stand
 		{
-			namespace Desync 
+			namespace Desync
 			{
 				inline AntiAimDesync type = AntiAimDesync::NONE;
 				inline int jitterLeft;
@@ -972,7 +1011,7 @@ namespace Settings
 
 		namespace Movement
 		{
-			namespace Desync 
+			namespace Desync
 			{
 				inline AntiAimDesync type = AntiAimDesync::NONE;
 				inline int jitterLeft;
@@ -999,7 +1038,7 @@ namespace Settings
 
 		namespace SlowWalk
 		{
-			namespace Desync 
+			namespace Desync
 			{
 				inline AntiAimDesync type = AntiAimDesync::NONE;
 				inline int jitterLeft;
@@ -1077,7 +1116,7 @@ namespace Settings
 	{
 		inline bool VelGraph;
 		inline bool SyncFake;
-		
+
 		namespace tracebullet
 		{
 			inline bool local;
@@ -1171,7 +1210,7 @@ namespace Settings
 				inline ColorVar defuserColor = ImColor(49, 27, 146, 255);
 				inline ColorVar chickenColor = ImColor(255, 193, 7, 255);
 			}
-			
+
 			namespace Skeleton
 			{
 				inline bool enabled = false;
@@ -1203,7 +1242,7 @@ namespace Settings
 				inline ChamsType type = ChamsType::WHITEADDTIVE;
 			}
 
-			namespace HelthBar
+			namespace HealthBar
 			{
 				inline bool enabled = false;
 				inline BarType type = BarType::VERTICAL;
@@ -1261,7 +1300,7 @@ namespace Settings
 				inline bool enabled = false;
 				inline ChamsType type = ChamsType::WHITEADDTIVE;
 			}
-			namespace HelthBar
+			namespace HealthBar
 			{
 				inline bool enabled = false;
 				inline BarType type = BarType::VERTICAL;
@@ -1330,7 +1369,7 @@ namespace Settings
 				inline BoxType type = BoxType::FRAME_2D;
 			}
 
-			namespace HelthBar
+			namespace HealthBar
 			{
 				inline bool enabled = false;
 				inline BarType type = BarType::VERTICAL;
@@ -2018,7 +2057,7 @@ namespace Settings
 	{
 		inline bool enabled;
 	}
-	
+
 	namespace AutoBuy
 	{
 		inline bool enabled = false;
@@ -2029,7 +2068,7 @@ namespace Settings
 		inline bool taser = false;
 		inline bool armor = false;
 	}
-	
+
 	namespace Debug
 	{
 		namespace AutoWall

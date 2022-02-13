@@ -2,13 +2,13 @@
 
 namespace Util
 {
-        namespace GlobalVars
-        {
+    namespace GlobalVars
+    {
 
-    extern int m_nTickbaseShift;
-    extern bool bInSendMove;
-    extern int nSinceUse;
-    extern bool bFirstSendMovePack;
+        extern int m_nTickbaseShift;
+        extern bool bInSendMove;
+        extern int nSinceUse;
+        extern bool bFirstSendMovePack;
 
-	}
+    }
 }

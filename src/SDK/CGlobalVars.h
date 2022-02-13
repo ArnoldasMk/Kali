@@ -16,12 +16,13 @@ public:
 	int simTicksThisFrame;
 	int network_protocol;
 	int m_nTickbaseShift;
-    	bool bInSendMove;
-   	int32_t nSinceUse;
-        bool bFirstSendMovePack;
-	void* pSaveData;
+	bool bInSendMove;
+	int32_t nSinceUse;
+	bool bFirstSendMovePack;
+	void *pSaveData;
 	bool m_bClient;
 	bool m_bRemoteClient;
+
 private:
 	int nTimestampNetworkingBase;
 	int nTimestampRandomizeWindow;

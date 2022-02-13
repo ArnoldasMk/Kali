@@ -1446,8 +1446,8 @@ static void DrawPlayer(C_BasePlayer *player)
 		if (Settings::ESP::FilterEnemy::Boxes::enabled)
 			DrawBox(playerColor, x, y, w, h, player, Settings::ESP::FilterEnemy::Boxes::type);
 
-		if (Settings::ESP::FilterEnemy::HelthBar::enabled)
-			DrawPlayerHealthBars(player, x, y, w, h, playerColor, Settings::ESP::FilterEnemy::HelthBar::type);
+		if (Settings::ESP::FilterEnemy::HealthBar::enabled)
+			DrawPlayerHealthBars(player, x, y, w, h, playerColor, Settings::ESP::FilterEnemy::HealthBar::type);
 
 		if (Settings::ESP::FilterEnemy::Tracers::enabled)
 			DrawTracer(player, Settings::ESP::FilterEnemy::Tracers::type);
@@ -1466,8 +1466,8 @@ static void DrawPlayer(C_BasePlayer *player)
 		if (Settings::ESP::FilterAlise::Boxes::enabled)
 			DrawBox(playerColor, x, y, w, h, player, Settings::ESP::FilterAlise::Boxes::type);
 
-		if (Settings::ESP::FilterAlise::HelthBar::enabled) // Drawing the helth bar
-			DrawPlayerHealthBars(player, x, y, w, h, playerColor, Settings::ESP::FilterAlise::HelthBar::type);
+		if (Settings::ESP::FilterAlise::HealthBar::enabled) // Drawing the helth bar
+			DrawPlayerHealthBars(player, x, y, w, h, playerColor, Settings::ESP::FilterAlise::HealthBar::type);
 
 		if (Settings::ESP::FilterAlise::Tracers::enabled)
 			DrawTracer(player, Settings::ESP::FilterAlise::Tracers::type);
@@ -1487,8 +1487,8 @@ static void DrawPlayer(C_BasePlayer *player)
 		if (Settings::ESP::FilterLocalPlayer::Boxes::enabled)
 			DrawBox(playerColor, x, y, w, h, player, Settings::ESP::FilterLocalPlayer::Boxes::type);
 
-		if (Settings::ESP::FilterLocalPlayer::HelthBar::enabled)
-			DrawPlayerHealthBars(player, x, y, w, h, playerColor, Settings::ESP::FilterLocalPlayer::HelthBar::type);
+		if (Settings::ESP::FilterLocalPlayer::HealthBar::enabled)
+			DrawPlayerHealthBars(player, x, y, w, h, playerColor, Settings::ESP::FilterLocalPlayer::HealthBar::type);
 
 		if (Settings::ESP::FilterLocalPlayer::Tracers::enabled)
 			DrawTracer(player, Settings::ESP::FilterLocalPlayer::Tracers::type);

@@ -887,12 +887,13 @@ void Legitbot::CreateMove(CUserCmd *cmd)
 				}
 
 				angle = Math::CalcAngle(localEye, bestSpot);
-				if (Settings::Legitbot::Smooth::enabled && Settings::Legitbot::Curve::enabled) 
+				if (Settings::Legitbot::Curve::enabled)
 				{
 					float dist = Math::ClampYaw(angle.y - oldAngle.y);
-					if (dist > 180.0f) dist = 360.0f - dist;
+					if (dist > 180.0f)
+						dist = 360.0f - dist;
 					bestSpot += Vector(0, 0, Settings::Legitbot::Curve::value * dist);
-					angle = Math::CalcAngle(localEye, bestSpot);		
+					angle = Math::CalcAngle(localEye, bestSpot);
 				}
 
 				angle = Math::CalcAngle(localEye, bestSpot);
@@ -1041,7 +1042,32 @@ void Legitbot::UpdateValues()
 	Settings::Legitbot::ScopeControl::enabled = currentWeaponSetting.scopeControlEnabled;
 	Settings::Legitbot::HitChance::enabled = currentWeaponSetting.hitchanceEnabled;
 	Settings::Legitbot::HitChance::value = currentWeaponSetting.hitchanceValue;
+	Settings::Legitbot::AutoAim::realDistance = currentWeaponSetting.autoAimRealDistance;
+	Settings::Legitbot::AutoShoot::velocityCheck = currentWeaponSetting.velocityCheck;
+	Settings::Backtrack::enabled = currentWeaponSetting.backtrackEnabled;
+	Settings::Backtrack::time = currentWeaponSetting.backtrackTime;
+
+	Settings::Triggerbot::enabled = currentWeaponSetting.triggerbotEnabled;
+	Settings::Triggerbot::key = currentWeaponSetting.triggerbotkey;
+	Settings::Triggerbot::Magnet::enabled = currentWeaponSetting.triggerbotMagnetEnabled;
+	Settings::Triggerbot::RandomDelay::enabled = currentWeaponSetting.triggerbotRandomDelayEnabled;
+	Settings::Triggerbot::RandomDelay::lowBound = currentWeaponSetting.triggerbotRandomDelayLowBound;
+	Settings::Triggerbot::RandomDelay::highBound = currentWeaponSetting.triggerbotRandomDelayHighBound;
+	Settings::Triggerbot::RandomDelay::lastRoll = currentWeaponSetting.triggerbotRandomDelayLastRoll;
+	Settings::Triggerbot::Hitchance::enabled = currentWeaponSetting.triggerbotHitchanceEnabled;
+	Settings::Triggerbot::Hitchance::value = currentWeaponSetting.triggerbotHitchanceValue;
+
+	Settings::Triggerbot::Filters::enemies = currentWeaponSetting.triggerbotFilterEnemies;
+	Settings::Triggerbot::Filters::allies = currentWeaponSetting.triggerbotFilterAllies;
+	Settings::Triggerbot::Filters::walls = currentWeaponSetting.triggerbotFilterWalls;
+	Settings::Triggerbot::Filters::smokeCheck = currentWeaponSetting.triggerbotFilterSmokeCheck;
+	Settings::Triggerbot::Filters::flashCheck = currentWeaponSetting.triggerbotFilterFlashCheck;
+	Settings::Triggerbot::Filters::head = currentWeaponSetting.triggerbotFilterHead;
+	Settings::Triggerbot::Filters::chest = currentWeaponSetting.triggerbotFilterChest;
+	Settings::Triggerbot::Filters::stomach = currentWeaponSetting.triggerbotFilterStomach;
+	Settings::Triggerbot::Filters::arms = currentWeaponSetting.triggerbotFilterArms;
+	Settings::Triggerbot::Filters::legs = currentWeaponSetting.triggerbotFilterLegs;
+
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 		Settings::Legitbot::AutoAim::desiredBones[bone] = currentWeaponSetting.desiredBones[bone];
-	Settings::Legitbot::AutoAim::realDistance = currentWeaponSetting.autoAimRealDistance;
 }

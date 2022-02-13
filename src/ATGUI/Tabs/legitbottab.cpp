@@ -20,7 +20,6 @@ inline bool desiredBones[] = {
     false, false, false, false, false,			   // left leg
     false, false, false, false, false			   // right leg
 };
-static bool closestHitbox = false;
 static bool engageLock = false;
 static bool engageLockTR = false; // Target Reacquisition
 static int engageLockTTR = 700;   // Time to Target Reacquisition ( in ms )
@@ -65,9 +64,29 @@ static bool predEnabled = false;
 static bool scopeControlEnabled = false;
 static bool hitchanceEnabled = false;
 static float hitchanceValue = 100.f;
-static bool triggerBotEnabled = false;
-static bool triggerHitchanceEnabled = false;
-static float triggerHitchanceValue = 100.f;
+static bool backtrackEnabled = false;
+static float backtrackTime = 0.2f;
+static bool velocitycheck = false;
+
+static bool triggerbotEnabled = false;
+static ButtonCode_t triggerbotkey = ButtonCode_t::KEY_LALT;
+static bool triggerbotMagnetEnabled = false;
+static bool triggerbotRandomDelayEnabled = false;
+static float triggerbotRandomDelayLowBound = 20.f;
+static float triggerbotRandomDelayHighBound = 35.f;
+static float triggerbotRandomDelayLastRoll = 0.f;
+static bool triggerbotHitchanceEnabled = false;
+static float triggerbotHitchanceValue = 100.f;
+static bool triggerbotFilterEnemies = false;
+static bool triggerbotFilterAllies = false;
+static bool triggerbotFilterWalls = false;
+static bool triggerbotFilterSmokeCheck = false;
+static bool triggerbotFilterFlashCheck = false;
+static bool triggerbotFilterHead = false;
+static bool triggerbotFilterChest = false;
+static bool triggerbotFilterStomach = false;
+static bool triggerbotFilterArms = false;
+static bool triggerbotFilterLegs = false;
 
 void UI::ReloadWeaponSettings()
 {
@@ -86,7 +105,7 @@ void UI::ReloadWeaponSettings()
 	smoothEnabled = Settings::Legitbot::weapons.at(index).smoothEnabled;
 	courseRandomizationEnabled = Settings::Legitbot::weapons.at(index).courseRandomizationEnabled;
 	doAimAfterXShotsEnabled = Settings::Legitbot::weapons.at(index).doAimAfterXShotsEnabled;
-	smoothValue = Settings::Legitbot::weapons.at(index).smoothAmount;
+	smoothValue = Settings::Legitbot::weapons.at(index).smoothAmount;	
 	courseRandomizationValue = Settings::Legitbot::weapons.at(index).courseRandomizationAmount;
 	doAimAfterXShotsValue = Settings::Legitbot::weapons.at(index).doAimAfterXShotsAmount;
 	smoothType = Settings::Legitbot::weapons.at(index).smoothType;
@@ -121,9 +140,30 @@ void UI::ReloadWeaponSettings()
 	autoSlow = Settings::Legitbot::weapons.at(index).autoSlow;
 	predEnabled = Settings::Legitbot::weapons.at(index).predEnabled;
 	scopeControlEnabled = Settings::Legitbot::weapons.at(index).scopeControlEnabled;
-	triggerBotEnabled = Settings::Legitbot::weapons.at(index).triggerBotEnabled;
-	triggerHitchanceValue = Settings::Legitbot::weapons.at(index).triggerHitchanceValue;
-	triggerHitchanceEnabled = Settings::Legitbot::weapons.at(index).triggerHitchanceEnabled;
+	velocitycheck = Settings::Legitbot::weapons.at(index).velocityCheck;
+	backtrackEnabled = Settings::Legitbot::weapons.at(index).backtrackEnabled;
+	backtrackTime = Settings::Legitbot::weapons.at(index).backtrackTime;
+
+	triggerbotEnabled = Settings::Legitbot::weapons.at(index).triggerbotEnabled;
+	triggerbotHitchanceValue = Settings::Legitbot::weapons.at(index).triggerbotHitchanceValue;
+	triggerbotHitchanceEnabled = Settings::Legitbot::weapons.at(index).triggerbotHitchanceEnabled;
+	triggerbotRandomDelayEnabled = Settings::Legitbot::weapons.at(index).triggerbotRandomDelayEnabled;
+	triggerbotMagnetEnabled = Settings::Legitbot::weapons.at(index).triggerbotMagnetEnabled;
+	triggerbotkey = Settings::Legitbot::weapons.at(index).triggerbotkey;
+	triggerbotRandomDelayLowBound = Settings::Legitbot::weapons.at(index).triggerbotRandomDelayLowBound;
+	triggerbotRandomDelayHighBound = Settings::Legitbot::weapons.at(index).triggerbotRandomDelayHighBound;
+	triggerbotRandomDelayLastRoll = Settings::Legitbot::weapons.at(index).triggerbotRandomDelayLastRoll;
+
+	triggerbotFilterEnemies = Settings::Legitbot::weapons.at(index).triggerbotFilterEnemies; //
+	triggerbotFilterAllies = Settings::Legitbot::weapons.at(index).triggerbotFilterAllies;
+	triggerbotFilterWalls = Settings::Legitbot::weapons.at(index).triggerbotFilterWalls;
+	triggerbotFilterSmokeCheck = Settings::Legitbot::weapons.at(index).triggerbotFilterSmokeCheck;
+	triggerbotFilterFlashCheck = Settings::Legitbot::weapons.at(index).triggerbotFilterFlashCheck;
+	triggerbotFilterHead = Settings::Legitbot::weapons.at(index).triggerbotFilterHead; //
+	triggerbotFilterChest = Settings::Legitbot::weapons.at(index).triggerbotFilterChest;
+	triggerbotFilterStomach = Settings::Legitbot::weapons.at(index).triggerbotFilterStomach; //
+	triggerbotFilterArms = Settings::Legitbot::weapons.at(index).triggerbotFilterArms; //
+	triggerbotFilterLegs = Settings::Legitbot::weapons.at(index).triggerbotFilterLegs; //
 
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 		desiredBones[bone] = Settings::Legitbot::weapons.at(index).desiredBones[bone];
@@ -163,13 +203,30 @@ void UI::UpdateWeaponSettings()
 	    .autoSlow = autoSlow,
 	    .predEnabled = predEnabled,
 	    .scopeControlEnabled = scopeControlEnabled,
-	    .triggerBotEnabled = triggerBotEnabled,
-	    .triggerHitchanceEnabled = triggerHitchanceEnabled,
+	    .velocityCheck = velocitycheck,
+	    .backtrackEnabled = backtrackEnabled,
+
+	    .triggerbotEnabled = triggerbotEnabled,
+	    .triggerbotHitchanceEnabled = triggerbotHitchanceEnabled,
+	    .triggerbotMagnetEnabled = triggerbotMagnetEnabled,
+	    .triggerbotRandomDelayEnabled = triggerbotRandomDelayEnabled,
+	    .triggerbotFilterEnemies = triggerbotFilterEnemies,
+	    .triggerbotFilterAllies = triggerbotFilterAllies,
+	    .triggerbotFilterWalls = triggerbotFilterWalls,
+	    .triggerbotFilterSmokeCheck = triggerbotFilterSmokeCheck,
+	    .triggerbotFilterFlashCheck = triggerbotFilterSmokeCheck,
+	    .triggerbotFilterHead = triggerbotFilterHead,
+	    .triggerbotFilterChest = triggerbotFilterChest,
+	    .triggerbotFilterStomach = triggerbotFilterStomach,
+	    .triggerbotFilterArms = triggerbotFilterArms,
+	    .triggerbotFilterLegs = triggerbotFilterLegs,
 
 	    .engageLockTTR = engageLockTTR,
 	    .bone = bone,
 	    .smoothType = smoothType,
 	    .aimkey = aimkey,
+	    .triggerbotkey = triggerbotkey,
+
 	    .smoothAmount = smoothValue,
 	    .courseRandomizationAmount = courseRandomizationValue,
 	    .doAimAfterXShotsAmount = doAimAfterXShotsValue,
@@ -181,10 +238,12 @@ void UI::UpdateWeaponSettings()
 	    .rcsAmountX = rcsAmountX,
 	    .rcsAmountY = rcsAmountY,
 	    .spreadLimit = spreadLimit,
-	    .minDamagevalue = 10.0f,
 	    .hitchanceValue = hitchanceValue,
-	    .triggerHitchanceValue = triggerHitchanceValue,
-
+	    .backtrackTime = backtrackTime,
+	    .triggerbotHitchanceValue = triggerbotHitchanceValue,
+	    .triggerbotRandomDelayLowBound = triggerbotRandomDelayLowBound,
+	    .triggerbotRandomDelayHighBound = triggerbotRandomDelayHighBound,
+	    .triggerbotRandomDelayLastRoll = triggerbotRandomDelayLastRoll,
 	};
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 		settings.desiredBones[bone] = desiredBones[bone];
@@ -446,40 +505,26 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 			ImGui::BeginChild(XORSTR("COL2"), ImVec2(0, 701), true);
 			{
 				ImGui::Separator();
-				ImGui::Text(XORSTR("Aimkey Only"));
+				ImGui::Text(XORSTR("Features"));
 				ImGui::Separator();
 				ImGui::Columns(2, nullptr, false);
 				{
-					if (ImGui::Checkbox(XORSTR("Aimkey"), &aimkeyOnly))
-						UI::UpdateWeaponSettings();
-				}
-				ImGui::NextColumn();
-				{
-					UI::KeyBindButton(&aimkey);
-				}
-				ImGui::EndColumns();
-				ImGui::Separator();
-				ImGui::Text(XORSTR("Other Features"));
-				ImGui::Separator();
-				ImGui::Columns(2, nullptr, false);
-				{
-					ImGui::Checkbox(XORSTR("Backtrack"), &Settings::Backtrack::enabled);
 					switch (currentWeapon)
 					{
-						case ItemDefinitionIndex::WEAPON_DEAGLE:
-						case ItemDefinitionIndex::WEAPON_ELITE:
-						case ItemDefinitionIndex::WEAPON_FIVESEVEN:
-						case ItemDefinitionIndex::WEAPON_GLOCK:
-						case ItemDefinitionIndex::WEAPON_TEC9:
-						case ItemDefinitionIndex::WEAPON_HKP2000:
-						case ItemDefinitionIndex::WEAPON_USP_SILENCER:
-						case ItemDefinitionIndex::WEAPON_P250:
-						case ItemDefinitionIndex::WEAPON_CZ75A:
-						case ItemDefinitionIndex::WEAPON_REVOLVER:
-							break;
-						default:
-							if (ImGui::Checkbox(XORSTR("Auto Scope"), &autoScopeEnabled))
-								UI::UpdateWeaponSettings();
+					case ItemDefinitionIndex::WEAPON_DEAGLE:
+					case ItemDefinitionIndex::WEAPON_ELITE:
+					case ItemDefinitionIndex::WEAPON_FIVESEVEN:
+					case ItemDefinitionIndex::WEAPON_GLOCK:
+					case ItemDefinitionIndex::WEAPON_TEC9:
+					case ItemDefinitionIndex::WEAPON_HKP2000:
+					case ItemDefinitionIndex::WEAPON_USP_SILENCER:
+					case ItemDefinitionIndex::WEAPON_P250:
+					case ItemDefinitionIndex::WEAPON_CZ75A:
+					case ItemDefinitionIndex::WEAPON_REVOLVER:
+						break;
+					default:
+						if (ImGui::Checkbox(XORSTR("Auto Scope"), &autoScopeEnabled))
+							UI::UpdateWeaponSettings();
 					}
 					if (ImGui::Checkbox(XORSTR("Silent Aim"), &silent))
 						UI::UpdateWeaponSettings();
@@ -489,37 +534,27 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 						UI::UpdateWeaponSettings();
 					if (ImGui::Checkbox(XORSTR("Prediction"), &predEnabled))
 						UI::UpdateWeaponSettings();
-					if (ImGui::Checkbox(XORSTR("EngageLock"), &engageLock))
-						UI::UpdateWeaponSettings();
-					if (ImGui::Checkbox(XORSTR("Target Reacquisition"), &engageLockTR))
-						UI::UpdateWeaponSettings();
 					if (ImGui::Checkbox(XORSTR("Distance-Based FOV"), &autoAimRealDistance))
 						UI::UpdateWeaponSettings();
 				}
 				ImGui::NextColumn();
 				{
-					ImGui::PushItemWidth(-1);
-					ImGui::SliderFloat(XORSTR("##BACKTRACK_TIME"), &Settings::Backtrack::time, 0.0f, Settings::CVarsOverride::fakeLatency ? 0.4f : 0.2f);
-					if (Settings::Backtrack::time > (Settings::CVarsOverride::fakeLatency ? 0.4f : 0.2f))
-						Settings::Backtrack::time = 0.2f;
-					ImGui::PopItemWidth();
-
 					switch (currentWeapon)
 					{
-						case ItemDefinitionIndex::WEAPON_DEAGLE:
-						case ItemDefinitionIndex::WEAPON_ELITE:
-						case ItemDefinitionIndex::WEAPON_FIVESEVEN:
-						case ItemDefinitionIndex::WEAPON_GLOCK:
-						case ItemDefinitionIndex::WEAPON_TEC9:
-						case ItemDefinitionIndex::WEAPON_HKP2000:
-						case ItemDefinitionIndex::WEAPON_USP_SILENCER:
-						case ItemDefinitionIndex::WEAPON_P250:
-						case ItemDefinitionIndex::WEAPON_CZ75A:
-						case ItemDefinitionIndex::WEAPON_REVOLVER:
-							break;
-						default:
-							if (ImGui::Checkbox(XORSTR("Scope Control"), &scopeControlEnabled))
-								UI::UpdateWeaponSettings();
+					case ItemDefinitionIndex::WEAPON_DEAGLE:
+					case ItemDefinitionIndex::WEAPON_ELITE:
+					case ItemDefinitionIndex::WEAPON_FIVESEVEN:
+					case ItemDefinitionIndex::WEAPON_GLOCK:
+					case ItemDefinitionIndex::WEAPON_TEC9:
+					case ItemDefinitionIndex::WEAPON_HKP2000:
+					case ItemDefinitionIndex::WEAPON_USP_SILENCER:
+					case ItemDefinitionIndex::WEAPON_P250:
+					case ItemDefinitionIndex::WEAPON_CZ75A:
+					case ItemDefinitionIndex::WEAPON_REVOLVER:
+						break;
+					default:
+						if (ImGui::Checkbox(XORSTR("Scope Control"), &scopeControlEnabled))
+							UI::UpdateWeaponSettings();
 					}
 					if (ImGui::Checkbox(XORSTR("Ignore Jump (Self)"), &ignoreJumpEnabled))
 						UI::UpdateWeaponSettings();
@@ -528,10 +563,6 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 					if (ImGui::Checkbox(XORSTR("Flash Check"), &flashCheck))
 						UI::UpdateWeaponSettings();
 					if (ImGui::Checkbox(XORSTR("Smoke Check"), &smokeCheck))
-						UI::UpdateWeaponSettings();
-					if (ImGui::Checkbox(XORSTR("FriendlyFire"), &friendly))
-						UI::UpdateWeaponSettings();
-					if (ImGui::SliderInt(XORSTR("##TTR"), &engageLockTTR, 0, 1000))
 						UI::UpdateWeaponSettings();
 					switch (currentWeapon)
 					{
@@ -556,6 +587,32 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				}
 			}
 			ImGui::EndColumns();
+			ImGui::Columns(2, nullptr, false);
+			{
+				if (ImGui::Checkbox(XORSTR("EngageLock"), &engageLock))
+					UI::UpdateWeaponSettings();
+				if (ImGui::Checkbox(XORSTR("Target Reacquisition"), &engageLockTR))
+					UI::UpdateWeaponSettings();
+				if (ImGui::Checkbox(XORSTR("Aimkey"), &aimkeyOnly))
+					UI::UpdateWeaponSettings();
+				if (ImGui::Checkbox(XORSTR("Backtrack"), &backtrackEnabled))
+					UI::UpdateWeaponSettings();
+			}
+			ImGui::NextColumn();
+			{
+				if (ImGui::Checkbox(XORSTR("FriendlyFire"), &friendly))
+					UI::UpdateWeaponSettings();
+				ImGui::PushItemWidth(-1);
+				if (ImGui::SliderInt(XORSTR("##TTR"), &engageLockTTR, 0, 1000))
+					UI::UpdateWeaponSettings();
+				UI::KeyBindButton(&aimkey);
+				if (ImGui::SliderFloat(XORSTR("##BACKTRACK_TIME"), &backtrackTime, 0.0f, Settings::CVarsOverride::fakeLatency ? 0.4f : 0.2f))
+					UI::UpdateWeaponSettings();
+				if (backtrackTime > (Settings::CVarsOverride::fakeLatency ? 0.4f : 0.2f))
+					backtrackTime = 0.2f;
+				ImGui::PopItemWidth();
+			}
+			ImGui::EndColumns();
 			ImGui::Separator();
 			ImGui::Text(XORSTR("Semirage Options"));
 			ImGui::Separator();
@@ -566,7 +623,8 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 			}
 			ImGui::NextColumn();
 			{
-				ImGui::Checkbox(XORSTR("Velocity Check"), &Settings::Legitbot::AutoShoot::velocityCheck);
+				if (ImGui::Checkbox(XORSTR("Velocity Check"), &velocitycheck))
+					UI::UpdateWeaponSettings();
 			}
 			ImGui::EndColumns();
 			ImGui::Columns(2, nullptr, false);
@@ -593,48 +651,53 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				ImGui::Separator();
 				ImGui::Columns(2, nullptr, false);
 				{
-					if (ImGui::Checkbox(XORSTR("Enabled"), &triggerBotEnabled))
+					if (ImGui::Checkbox(XORSTR("Triggerbot Enabled"), &triggerbotEnabled))
 						UI::UpdateWeaponSettings();
 				}
 				ImGui::NextColumn();
 				{
 					ImGui::Text(XORSTR("Trigger Key"));
-					UI::KeyBindButton(&Settings::Triggerbot::key);
+					UI::KeyBindButton(&triggerbotkey);
 				}
 				ImGui::EndColumns();
 				ImGui::Columns(2, nullptr, false);
 				{
-					if (ImGui::Checkbox(XORSTR("Hit Chance"), &triggerHitchanceEnabled))
+					if (ImGui::Checkbox(XORSTR("Hit Chance Enabled"), &triggerbotHitchanceEnabled))
 						UI::UpdateWeaponSettings();
 				}
 				ImGui::NextColumn();
 				{
 					ImGui::PushItemWidth(-1);
-					if (ImGui::SliderFloat(XORSTR("##TRIGGERHITCHANCE"), &triggerHitchanceValue, 0, 100, XORSTR("Hitchance: %0.f")))
+					if (ImGui::SliderFloat(XORSTR("##TRIGGERHITCHANCE"), &triggerbotHitchanceValue, 0, 100, XORSTR("Hitchance: %0.f")))
 						UI::UpdateWeaponSettings();
 					ImGui::PopItemWidth();
 				}
 				ImGui::EndColumns();
+				ImGui::Separator();
 				ImGui::Text(XORSTR("Triggerbot Random Delay"));
 				ImGui::Separator();
 				ImGui::Columns(2, nullptr, false);
 				{
-					ImGui::Checkbox(XORSTR("Enabled"), &Settings::Triggerbot::RandomDelay::enabled);
+					if (ImGui::Checkbox(XORSTR("Random Delay Enabled"), &triggerbotRandomDelayEnabled))
+						UI::UpdateWeaponSettings();
 				}
 				ImGui::NextColumn();
 				{
 					ImGui::PushItemWidth(-1);
-					if (Settings::Triggerbot::RandomDelay::lastRoll != 0)
-						ImGui::Text(XORSTR("Last delay: %dms"), Settings::Triggerbot::RandomDelay::lastRoll);
+					if (triggerbotRandomDelayLastRoll != 0)
+						ImGui::Text(XORSTR("Last delay: %dms"), &triggerbotRandomDelayLastRoll);
 					ImGui::Text(XORSTR("Minimum ms"));
-					ImGui::SliderInt(XORSTR("##TRIGGERRANDOMLOW"), &Settings::Triggerbot::RandomDelay::lowBound, 5, 220);
-					if (Settings::Triggerbot::RandomDelay::lowBound >= Settings::Triggerbot::RandomDelay::highBound)
-						Settings::Triggerbot::RandomDelay::highBound = Settings::Triggerbot::RandomDelay::lowBound + 1;
+					if (ImGui::SliderFloat(XORSTR("##TRIGGERRANDOMLOW"), &triggerbotRandomDelayLowBound, 5, 220))
+						UI::UpdateWeaponSettings();
+					if (triggerbotRandomDelayLowBound >= triggerbotRandomDelayHighBound)
+						triggerbotRandomDelayHighBound = triggerbotRandomDelayLowBound + 1;
 					ImGui::Text(XORSTR("Maximum ms"));
-					ImGui::SliderInt(XORSTR("##TRIGGERRANDOMHIGH"), &Settings::Triggerbot::RandomDelay::highBound, (Settings::Triggerbot::RandomDelay::lowBound + 1), 225);
+					if (ImGui::SliderFloat(XORSTR("##TRIGGERRANDOMHIGH"), &triggerbotRandomDelayHighBound, (triggerbotRandomDelayLowBound + 1), 225))
+						UI::UpdateWeaponSettings();
 					ImGui::PopItemWidth();
 				}
 				ImGui::EndColumns();
+				/*
 				ImGui::Separator();
 				ImGui::Text(XORSTR("Triggerbot Auto Knife & Zeus"));
 				ImGui::Separator();
@@ -649,24 +712,35 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 					ImGui::Checkbox(XORSTR("Allies"), &Settings::AutoKnife::Filters::allies);
 				}
 				ImGui::EndColumns();
+				*/
 				ImGui::Separator();
 				ImGui::Text(XORSTR("Triggerbot Filters"));
 				ImGui::Separator();
 				ImGui::Columns(2, nullptr, false);
 				{
-					ImGui::Checkbox(XORSTR("Enemies"), &Settings::Triggerbot::Filters::enemies);
-					ImGui::Checkbox(XORSTR("Walls"), &Settings::Triggerbot::Filters::walls);
-					ImGui::Checkbox(XORSTR("Head"), &Settings::Triggerbot::Filters::head);
-					ImGui::Checkbox(XORSTR("Chest"), &Settings::Triggerbot::Filters::chest);
-					ImGui::Checkbox(XORSTR("Legs"), &Settings::Triggerbot::Filters::legs);
+					if (ImGui::Checkbox(XORSTR("Enemies"), &triggerbotFilterEnemies))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Walls"), &triggerbotFilterWalls))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Head"), &triggerbotFilterHead))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Chest"), &triggerbotFilterChest))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Legs"), &triggerbotFilterLegs))
+						UI::UpdateWeaponSettings();
 				}
 				ImGui::NextColumn();
 				{
-					ImGui::Checkbox(XORSTR("Allies"), &Settings::Triggerbot::Filters::allies);
-					ImGui::Checkbox(XORSTR("Smoke check"), &Settings::Triggerbot::Filters::smokeCheck);
-					ImGui::Checkbox(XORSTR("Flash check"), &Settings::Triggerbot::Filters::flashCheck);
-					ImGui::Checkbox(XORSTR("Stomach"), &Settings::Triggerbot::Filters::stomach);
-					ImGui::Checkbox(XORSTR("Arms"), &Settings::Triggerbot::Filters::arms);
+					if (ImGui::Checkbox(XORSTR("Allies"), &triggerbotFilterAllies))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Smoke check"), &triggerbotFilterSmokeCheck))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Flash check"), &triggerbotFilterFlashCheck))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Stomach"), &triggerbotFilterStomach))
+						UI::UpdateWeaponSettings();
+					if (ImGui::Checkbox(XORSTR("Arms"), &triggerbotFilterArms))
+						UI::UpdateWeaponSettings();
 				}
 				ImGui::EndColumns();
 				ImGui::Separator();

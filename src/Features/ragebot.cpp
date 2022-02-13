@@ -50,7 +50,7 @@ float get_interpolation()
 	return clamp(lerp_ratio / updaterate, cl_interp->GetFloat(), 1.0f);
 }
 
-void GetDamageAndSpots(C_BasePlayer *player, Vector &Spot, int &Damage, int &playerHelth, int &i, const std::unordered_map<int, int> *modelType, const RageWeapon_t &currentSetting)
+void GetDamageAndSpots(C_BasePlayer *player, Vector &Spot, int &Damage, int &playerHealth, int &i, const std::unordered_map<int, int> *modelType, const RageWeapon_t &currentSetting)
 {
 	if (!player || !player->GetAlive() || !currentSetting.desireBones[i])
 		return;
@@ -63,7 +63,7 @@ void GetDamageAndSpots(C_BasePlayer *player, Vector &Spot, int &Damage, int &pla
 					   {
 						   Spot = player->GetBonePosition(BoneID);
 						   Ragebot::ragebotPredictionSystem->BestMultiPoint(player, BoneID, Damage, Spot);
-						   if (Damage >= playerHelth)
+						   if (Damage >= playerHealth)
 							   return;
 
 						   static const int BONE[] = {BONE_LEFT_COLLARBONE,
@@ -77,7 +77,7 @@ void GetDamageAndSpots(C_BasePlayer *player, Vector &Spot, int &Damage, int &pla
 							   Vector bone3D = player->GetBonePosition(BoneID);
 
 							   int bestDamage = AutoWall::GetDamage(bone3D, true);
-							   if (bestDamage >= playerHelth)
+							   if (bestDamage >= playerHealth)
 							   {
 								   Damage = bestDamage;
 								   Spot = bone3D;
@@ -96,7 +96,7 @@ void GetDamageAndSpots(C_BasePlayer *player, Vector &Spot, int &Damage, int &pla
 						    Spot = player->GetBonePosition(BoneID);
 						    Ragebot::ragebotPredictionSystem->BestMultiPoint(player, BoneID, Damage, Spot);
 						    // BestMultiPointDamage(player, BoneID, Damage, Spot);
-						    if (Damage >= playerHelth)
+						    if (Damage >= playerHealth)
 							    return;
 
 						    static const int BONE[] = {
@@ -113,7 +113,7 @@ void GetDamageAndSpots(C_BasePlayer *player, Vector &Spot, int &Damage, int &pla
 							    Vector bone3D = player->GetBonePosition(BoneID);
 
 							    int bestDamage = AutoWall::GetDamage(bone3D, true);
-							    if (bestDamage >= playerHelth)
+							    if (bestDamage >= playerHealth)
 							    {
 								    Damage = bestDamage;
 								    Spot = bone3D;
@@ -132,7 +132,7 @@ void GetDamageAndSpots(C_BasePlayer *player, Vector &Spot, int &Damage, int &pla
 						   Spot = player->GetBonePosition(BoneID);
 						   Ragebot::ragebotPredictionSystem->BestMultiPoint(player, BoneID, Damage, Spot);
 						   // BestMultiPointDamage(player, BoneID, Damage, Spot);
-						   if (Damage >= playerHelth)
+						   if (Damage >= playerHealth)
 							   return;
 
 						   static const int BONE[] = {
@@ -148,7 +148,7 @@ void GetDamageAndSpots(C_BasePlayer *player, Vector &Spot, int &Damage, int &pla
 							   Vector bone3D = player->GetBonePosition(BoneID);
 
 							   int bestDamage = AutoWall::GetDamage(bone3D, true);
-							   if (bestDamage >= playerHelth)
+							   if (bestDamage >= playerHealth)
 							   {
 								   Damage = bestDamage;
 								   Spot = bone3D;
@@ -167,7 +167,7 @@ void GetDamageAndSpots(C_BasePlayer *player, Vector &Spot, int &Damage, int &pla
 						  Spot = player->GetBonePosition(BoneID);
 						  Ragebot::ragebotPredictionSystem->BestMultiPoint(player, BoneID, Damage, Spot);
 						  // BestMultiPointDamage(player, BoneID, Damage, Spot);
-						  if (Damage >= playerHelth)
+						  if (Damage >= playerHealth)
 							  return;
 
 						  static const int BONE[] = {
@@ -183,7 +183,7 @@ void GetDamageAndSpots(C_BasePlayer *player, Vector &Spot, int &Damage, int &pla
 							  Vector bone3D = player->GetBonePosition(BoneID);
 
 							  int bestDamage = AutoWall::GetDamage(bone3D, true);
-							  if (bestDamage >= playerHelth)
+							  if (bestDamage >= playerHealth)
 							  {
 								  Damage = bestDamage;
 								  Spot = bone3D;
@@ -202,7 +202,7 @@ void GetDamageAndSpots(C_BasePlayer *player, Vector &Spot, int &Damage, int &pla
 							Spot = player->GetBonePosition(BoneID);
 							Ragebot::ragebotPredictionSystem->BestMultiPoint(player, BoneID, Damage, Spot);
 							// BestMultiPointDamage(player, BoneID, Damage, Spot);
-							if (Damage >= playerHelth)
+							if (Damage >= playerHealth)
 								return;
 
 							static const int BONE[] = {BONE_LEFT_KNEE,
@@ -220,7 +220,7 @@ void GetDamageAndSpots(C_BasePlayer *player, Vector &Spot, int &Damage, int &pla
 								Vector bone3D = player->GetBonePosition(BoneID);
 
 								int bestDamage = AutoWall::GetDamage(bone3D, true);
-								if (bestDamage >= playerHelth)
+								if (bestDamage >= playerHealth)
 								{
 									Damage = bestDamage;
 									Spot = bone3D;
@@ -245,7 +245,7 @@ void GetDamageAndSpots(C_BasePlayer *player, Vector &Spot, int &Damage, int &pla
 	{
 	case DesireBones::BONE_HEAD:
 		boneID = (*modelType).at(BONE_HEAD);
-		if (playerHelth <= 85)
+		if (playerHealth <= 85)
 			boneID = (*modelType).at(BONE_NECK);
 		if (currentSetting.desiredMultiBones[i])
 			HitboxHead(boneID); // lamda expression because again creating a new method is going to make the source code mess :p
@@ -304,7 +304,7 @@ void GetBestSpotAndDamage(C_BasePlayer *player, C_BasePlayer *localplayer, Vecto
 	Vector spot = Vector(0);
 	int damage = 0.f;
 
-	int playerHelth = player->GetHealth();
+	int playerHealth = player->GetHealth();
 	const std::unordered_map<int, int> *modelType = BoneMaps::GetModelTypeBoneMap(player);
 
 	// static matrix3x4_t boneMatrix[128];
@@ -313,8 +313,8 @@ void GetBestSpotAndDamage(C_BasePlayer *player, C_BasePlayer *localplayer, Vecto
 	static int i;
 	for (i = 0; i < 6; i++)
 	{
-		GetDamageAndSpots(player, spot, damage, playerHelth, i, modelType, currSettings);
-		if (damage >= playerHelth)
+		GetDamageAndSpots(player, spot, damage, playerHealth, i, modelType, currSettings);
+		if (damage >= playerHealth)
 		{
 			if (!Settings::Ragebot::onshot::enabled || !(inputSystem->IsButtonDown(Settings::Ragebot::onshot::button)))
 			{

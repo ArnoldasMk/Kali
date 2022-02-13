@@ -56,7 +56,7 @@ void MainThread()
     Hooker::FindSequenceActivity();
     Hooker::FindAbsFunctions();
     Hooker::FindItemSystem();
-//     Hooker::FindSendMove();
+    Hooker::FindSendMove();
     Hooker::FindWriteUserCmd(); // write user cmd
     SDL2::HookSwapWindow();
     SDL2::HookPollEvent();

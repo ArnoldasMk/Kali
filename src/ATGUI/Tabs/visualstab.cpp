@@ -410,7 +410,7 @@ void VisualsGood::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex
 				{
 					ImGui::Checkbox(XORSTR("Outline Box"), &Settings::ESP::FilterAlise::Boxes::enabled);
 					ImGui::Checkbox(XORSTR("Chams"), &Settings::ESP::FilterAlise::Chams::enabled);
-					ImGui::Checkbox(XORSTR("Health"), &Settings::ESP::FilterAlise::HelthBar::enabled);
+					ImGui::Checkbox(XORSTR("Health"), &Settings::ESP::FilterAlise::HealthBar::enabled);
 					ImGui::Checkbox(XORSTR("Tracers"), &Settings::ESP::FilterAlise::Tracers::enabled);
 				}
 				ImGui::NextColumn();
@@ -418,7 +418,7 @@ void VisualsGood::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex
 					ImGui::PushItemWidth(-1);
 					ImGui::Combo(XORSTR("##BOXTYPE"), (int *)&Settings::ESP::FilterAlise::Boxes::type, BoxTypes, IM_ARRAYSIZE(BoxTypes));
 					ImGui::Combo(XORSTR("##CHAMSTYPE"), (int *)&Settings::ESP::FilterAlise::Chams::type, chamsTypes, IM_ARRAYSIZE(chamsTypes));
-					ImGui::Combo(XORSTR("##BARTYPE"), (int *)&Settings::ESP::FilterAlise::HelthBar::type, BarTypes, IM_ARRAYSIZE(BarTypes));
+					ImGui::Combo(XORSTR("##BARTYPE"), (int *)&Settings::ESP::FilterAlise::HealthBar::type, BarTypes, IM_ARRAYSIZE(BarTypes));
 					ImGui::Combo(XORSTR("##TRACERTYPE"), (int *)&Settings::ESP::FilterAlise::Tracers::type, TracerTypes, IM_ARRAYSIZE(TracerTypes));
 					ImGui::PopItemWidth();
 				}
@@ -467,7 +467,7 @@ void VisualsGood::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex
 					ImGui::Checkbox(XORSTR("Box"), &Settings::ESP::FilterLocalPlayer::Boxes::enabled);
 					ImGui::Checkbox(XORSTR("FakeChams"), &Settings::ESP::FilterLocalPlayer::Chams::enabled);
 					ImGui::Checkbox(XORSTR("RealChams"), &Settings::ESP::FilterLocalPlayer::RealChams::enabled);
-					ImGui::Checkbox(XORSTR("Health"), &Settings::ESP::FilterLocalPlayer::HelthBar::enabled);
+					ImGui::Checkbox(XORSTR("Health"), &Settings::ESP::FilterLocalPlayer::HealthBar::enabled);
 					ImGui::Checkbox(XORSTR("Tracers"), &Settings::ESP::FilterLocalPlayer::Tracers::enabled);
 				}
 				ImGui::NextColumn();
@@ -476,7 +476,7 @@ void VisualsGood::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex
 					ImGui::Combo(XORSTR("##BOXTYPE"), (int *)&Settings::ESP::FilterLocalPlayer::Boxes::type, BoxTypes, IM_ARRAYSIZE(BoxTypes));
 					ImGui::Combo(XORSTR("##FakeCHAMSTYPE"), (int *)&Settings::ESP::FilterLocalPlayer::Chams::type, chamsTypes, IM_ARRAYSIZE(chamsTypes));
 					ImGui::Combo(XORSTR("##RealCHAMSTYPE"), (int *)&Settings::ESP::FilterLocalPlayer::RealChams::type, chamsTypes, IM_ARRAYSIZE(chamsTypes));
-					ImGui::Combo(XORSTR("##BARTYPE"), (int *)&Settings::ESP::FilterLocalPlayer::HelthBar::type, BarTypes, IM_ARRAYSIZE(BarTypes));
+					ImGui::Combo(XORSTR("##BARTYPE"), (int *)&Settings::ESP::FilterLocalPlayer::HealthBar::type, BarTypes, IM_ARRAYSIZE(BarTypes));
 					ImGui::Combo(XORSTR("##TRACERTYPE"), (int *)&Settings::ESP::FilterLocalPlayer::Tracers::type, TracerTypes, IM_ARRAYSIZE(TracerTypes));
 					ImGui::PopItemWidth();
 				}
@@ -541,7 +541,7 @@ void VisualsEnemy::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabInde
 				{
 					ImGui::Checkbox(XORSTR("Box"), &Settings::ESP::FilterEnemy::Boxes::enabled);
 					ImGui::Checkbox(XORSTR("Chams"), &Settings::ESP::FilterEnemy::Chams::enabled);
-					ImGui::Checkbox(XORSTR("Health Bar"), &Settings::ESP::FilterEnemy::HelthBar::enabled);
+					ImGui::Checkbox(XORSTR("Health Bar"), &Settings::ESP::FilterEnemy::HealthBar::enabled);
 					ImGui::Checkbox(XORSTR("Tracers"), &Settings::ESP::FilterEnemy::Tracers::enabled);
 				}
 				ImGui::NextColumn();
@@ -549,7 +549,7 @@ void VisualsEnemy::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabInde
 					ImGui::PushItemWidth(-1);
 					ImGui::Combo(XORSTR("##BOXTYPE"), (int *)&Settings::ESP::FilterEnemy::Boxes::type, BoxTypes, IM_ARRAYSIZE(BoxTypes));
 					ImGui::Combo(XORSTR("##CHAMSTYPE"), (int *)&Settings::ESP::FilterEnemy::Chams::type, chamsTypes, IM_ARRAYSIZE(chamsTypes));
-					ImGui::Combo(XORSTR("##BARTYPE"), (int *)&Settings::ESP::FilterEnemy::HelthBar::type, BarTypes, IM_ARRAYSIZE(BarTypes));
+					ImGui::Combo(XORSTR("##BARTYPE"), (int *)&Settings::ESP::FilterEnemy::HealthBar::type, BarTypes, IM_ARRAYSIZE(BarTypes));
 					ImGui::Combo(XORSTR("##TRACERTYPE"), (int *)&Settings::ESP::FilterEnemy::Tracers::type, TracerTypes, IM_ARRAYSIZE(TracerTypes));
 					ImGui::PopItemWidth();
 				}
