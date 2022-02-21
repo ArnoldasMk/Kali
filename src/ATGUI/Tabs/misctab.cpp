@@ -26,7 +26,6 @@
 
 static char nickname[127] = "";
 
-
 void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 {
 	const char *mainWeapons[] = {"None", "Auto", "AWP", "SSG 08"};
@@ -40,60 +39,49 @@ void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideT
 	const char *grenadeTypes[] = {"FLASH", "SMOKE", "MOLOTOV", "HEGRENADE"};
 	const char *throwTypes[] = {"NORMAL", "RUN", "JUMP", "WALK"};
 
-	ImGui::SetCursorPos(ImVec2(180, 100));
 	ImGui::BeginGroup();
 	{
-		ImGui::Columns(2, nullptr, true);
+		ImGui::Columns(2, nullptr, false);
 		{
-			ImGui::BeginChild(XORSTR("Child1"), ImVec2(0, 0), true);
+			ImGui::BeginChild(XORSTR("Child1"), ImVec2(0, 781), true);
 			{
+				ImGui::Separator();
 				ImGui::Text(XORSTR("Movement"));
 				ImGui::Separator();
 
 				ImGui::Checkbox(XORSTR("Bunny Hop"), &Settings::BHop::enabled);
 
-				ImGui::Columns(1);
-				ImGui::Separator();
-
-				if (Settings::BHop::enabled)
+				ImGui::Columns(2, nullptr, false);
 				{
-					ImGui::Text(XORSTR("Humanizing"));
-					ImGui::Separator();
-					ImGui::Columns(2, nullptr, true);
-					{
-						ImGui::Checkbox(XORSTR("Hop Chance"), &Settings::BHop::Chance::enabled);
-						ImGui::Checkbox(XORSTR("Min Hops"), &Settings::BHop::Hops::enabledMin);
-						ImGui::Checkbox(XORSTR("Max Hops"), &Settings::BHop::Hops::enabledMax);
-						ImGui::Checkbox(XORSTR("Auto Strafe"), &Settings::AutoStrafe::enabled);
-						ImGui::Checkbox(XORSTR("Edge Jump"), &Settings::EdgeJump::enabled);
-					}
-					ImGui::NextColumn();
-					{
-						ImGui::PushItemWidth(-1);
-						ImGui::SliderInt(XORSTR("##BHOPCHANCE"), &Settings::BHop::Chance::value, 0, 100);
-						ImGui::SliderInt(XORSTR("##BHOPMIN"), &Settings::BHop::Hops::Min, 0, 20);
-						ImGui::SliderInt(XORSTR("##BHOPMAX"), &Settings::BHop::Hops::Max, 0, 20);
-						ImGui::PushItemWidth(Settings::AutoStrafe::type == AutostrafeType::AS_RAGE ? ImGui::CalcItemWidth() : -1);
-						ImGui::Combo(XORSTR("##STRAFETYPE"), (int *)&Settings::AutoStrafe::type, strafeTypes, IM_ARRAYSIZE(strafeTypes));
-
-						if (Settings::AutoStrafe::type == AutostrafeType::AS_RAGE)
-						{
-							ImGui::SameLine();
-							ImGui::Checkbox(XORSTR("Silent"), &Settings::AutoStrafe::silent);
-						}
-
-						ImGui::PopItemWidth();
-						UI::KeyBindButton(&Settings::EdgeJump::key);
-					}
-					ImGui::Separator();
+					ImGui::Checkbox(XORSTR("Hop Chance"), &Settings::BHop::Chance::enabled);
+					ImGui::Checkbox(XORSTR("Min Hops"), &Settings::BHop::Hops::enabledMin);
+					ImGui::Checkbox(XORSTR("Max Hops"), &Settings::BHop::Hops::enabledMax);
+					ImGui::Checkbox(XORSTR("Auto Strafe"), &Settings::AutoStrafe::enabled);
+					ImGui::Checkbox(XORSTR("Edge Jump"), &Settings::EdgeJump::enabled);
 				}
+				ImGui::NextColumn();
+				{
+					ImGui::PushItemWidth(-1);
+					ImGui::SliderInt(XORSTR("##BHOPCHANCE"), &Settings::BHop::Chance::value, 0, 100);
+					ImGui::SliderInt(XORSTR("##BHOPMIN"), &Settings::BHop::Hops::Min, 0, 20);
+					ImGui::SliderInt(XORSTR("##BHOPMAX"), &Settings::BHop::Hops::Max, 0, 20);
+					ImGui::PushItemWidth(Settings::AutoStrafe::type == AutostrafeType::AS_RAGE ? ImGui::CalcItemWidth() : -1);
+					ImGui::Combo(XORSTR("##STRAFETYPE"), (int *)&Settings::AutoStrafe::type, strafeTypes, IM_ARRAYSIZE(strafeTypes));
 
-				ImGui::Columns(1);
+					if (Settings::AutoStrafe::type == AutostrafeType::AS_RAGE)
+					{
+						ImGui::SameLine();
+						ImGui::Checkbox(XORSTR("Silent"), &Settings::AutoStrafe::silent);
+					}
+					ImGui::PopItemWidth();
+					UI::KeyBindButton(&Settings::EdgeJump::key);
+				}
+				ImGui::EndColumns();
 				ImGui::Separator();
 				ImGui::Text(XORSTR("Spammer"));
 				ImGui::Separator();
 
-				ImGui::Columns(3, nullptr, true);
+				ImGui::Columns(3, nullptr, false);
 				{
 					ImGui::Checkbox(XORSTR("Kill Messages"), &Settings::Spammer::KillSpammer::enabled);
 				}
@@ -103,7 +91,7 @@ void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideT
 				}
 				ImGui::NextColumn();
 				{
-					if (ImGui::Button(XORSTR("Options###KILL")))
+					if (ImGui::Button(XORSTR("Options###KILL"), ImVec2(-1, 0)))
 						ImGui::OpenPopup(XORSTR("options_kill"));
 
 					ImGui::SetNextWindowSize(ImVec2(565, 268), ImGuiCond_Always);
@@ -141,76 +129,80 @@ void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideT
 				ImGui::Columns(1);
 				ImGui::Checkbox(XORSTR("Radio Commands"), &Settings::Spammer::RadioSpammer::enabled);
 
-				ImGui::Columns(3, nullptr, true);
+				ImGui::Columns(Settings::Spammer::type != SpammerType::SPAMMER_NONE ? 3 : 2, nullptr, false);
 				{
+					ImGui::PushItemWidth(-1);
 					ImGui::Combo(XORSTR("###SPAMMERYPE"), (int *)&Settings::Spammer::type, spammerTypes, IM_ARRAYSIZE(spammerTypes));
+					ImGui::PopItemWidth();
 				}
 				ImGui::NextColumn();
 				{
 					ImGui::Checkbox(XORSTR("Team Chat###SAY_TEAM2"), &Settings::Spammer::say_team);
 				}
-				ImGui::NextColumn();
+				if (Settings::Spammer::type != SpammerType::SPAMMER_NONE)
 				{
-					if (Settings::Spammer::type != SpammerType::SPAMMER_NONE && ImGui::Button(XORSTR("Options###SPAMMER")))
-						ImGui::OpenPopup(XORSTR("options_spammer"));
-
-					if (Settings::Spammer::type == SpammerType::SPAMMER_NORMAL)
-						ImGui::SetNextWindowSize(ImVec2(565, 268), ImGuiCond_Always);
-					else if (Settings::Spammer::type == SpammerType::SPAMMER_POSITIONS)
-						ImGui::SetNextWindowSize(ImVec2(200, 240), ImGuiCond_Always);
-
-					if (Settings::Spammer::type != SpammerType::SPAMMER_NONE && ImGui::BeginPopup(XORSTR("options_spammer")))
+					ImGui::NextColumn();
 					{
+						if (ImGui::Button(XORSTR("Options###SPAMMER"), ImVec2(-1, 0)))
+							ImGui::OpenPopup(XORSTR("options_spammer"));
+
 						if (Settings::Spammer::type == SpammerType::SPAMMER_NORMAL)
-						{
-							static int spammerMessageCurrent = -1;
-							static char spammerMessageBuf[126];
-
-							ImGui::PushItemWidth(445);
-							ImGui::InputText(XORSTR("###SPAMMERMESSAGE"), spammerMessageBuf, IM_ARRAYSIZE(spammerMessageBuf));
-							ImGui::PopItemWidth();
-							ImGui::SameLine();
-
-							if (ImGui::Button(XORSTR("Add")))
-							{
-								if (strlen(spammerMessageBuf) > 0)
-									Settings::Spammer::NormalSpammer::messages.push_back(std::string(spammerMessageBuf));
-
-								strcpy(spammerMessageBuf, "");
-							}
-							ImGui::SameLine();
-
-							if (ImGui::Button(XORSTR("Remove")))
-								if (spammerMessageCurrent > -1 && (int)Settings::Spammer::NormalSpammer::messages.size() > spammerMessageCurrent)
-									Settings::Spammer::NormalSpammer::messages.erase(Settings::Spammer::NormalSpammer::messages.begin() + spammerMessageCurrent);
-
-							ImGui::PushItemWidth(550);
-							ImGui::ListBox("", &spammerMessageCurrent, Settings::Spammer::NormalSpammer::messages, 10);
-							ImGui::PopItemWidth();
-						}
+							ImGui::SetNextWindowSize(ImVec2(565, 268), ImGuiCond_Always);
 						else if (Settings::Spammer::type == SpammerType::SPAMMER_POSITIONS)
-						{
-							ImGui::PushItemWidth(185);
-							ImGui::Combo(XORSTR("###POSITIONSTEAM"), &Settings::Spammer::PositionSpammer::team, teams, IM_ARRAYSIZE(teams));
-							ImGui::PopItemWidth();
-							ImGui::Separator();
-							ImGui::Checkbox(XORSTR("Show Name"), &Settings::Spammer::PositionSpammer::showName);
-							ImGui::Checkbox(XORSTR("Show Weapon"), &Settings::Spammer::PositionSpammer::showWeapon);
-							ImGui::Checkbox(XORSTR("Show Rank"), &Settings::Spammer::PositionSpammer::showRank);
-							ImGui::Checkbox(XORSTR("Show Wins"), &Settings::Spammer::PositionSpammer::showWins);
-							ImGui::Checkbox(XORSTR("Show Health"), &Settings::Spammer::PositionSpammer::showHealth);
-							ImGui::Checkbox(XORSTR("Show Money"), &Settings::Spammer::PositionSpammer::showMoney);
-							ImGui::Checkbox(XORSTR("Show Last Place"), &Settings::Spammer::PositionSpammer::showLastplace);
-						}
+							ImGui::SetNextWindowSize(ImVec2(200, 240), ImGuiCond_Always);
 
-						ImGui::EndPopup();
+						if (ImGui::BeginPopup(XORSTR("options_spammer")))
+						{
+							if (Settings::Spammer::type == SpammerType::SPAMMER_NORMAL)
+							{
+								static int spammerMessageCurrent = -1;
+								static char spammerMessageBuf[126];
+
+								ImGui::PushItemWidth(445);
+								ImGui::InputText(XORSTR("###SPAMMERMESSAGE"), spammerMessageBuf, IM_ARRAYSIZE(spammerMessageBuf));
+								ImGui::PopItemWidth();
+								ImGui::SameLine();
+
+								if (ImGui::Button(XORSTR("Add")))
+								{
+									if (strlen(spammerMessageBuf) > 0)
+										Settings::Spammer::NormalSpammer::messages.push_back(std::string(spammerMessageBuf));
+
+									strcpy(spammerMessageBuf, "");
+								}
+								ImGui::SameLine();
+
+								if (ImGui::Button(XORSTR("Remove")))
+									if (spammerMessageCurrent > -1 && (int)Settings::Spammer::NormalSpammer::messages.size() > spammerMessageCurrent)
+										Settings::Spammer::NormalSpammer::messages.erase(Settings::Spammer::NormalSpammer::messages.begin() + spammerMessageCurrent);
+
+								ImGui::PushItemWidth(550);
+								ImGui::ListBox("", &spammerMessageCurrent, Settings::Spammer::NormalSpammer::messages, 10);
+								ImGui::PopItemWidth();
+							}
+							else if (Settings::Spammer::type == SpammerType::SPAMMER_POSITIONS)
+							{
+								ImGui::PushItemWidth(185);
+								ImGui::Combo(XORSTR("###POSITIONSTEAM"), &Settings::Spammer::PositionSpammer::team, teams, IM_ARRAYSIZE(teams));
+								ImGui::PopItemWidth();
+								ImGui::Separator();
+								ImGui::Checkbox(XORSTR("Show Name"), &Settings::Spammer::PositionSpammer::showName);
+								ImGui::Checkbox(XORSTR("Show Weapon"), &Settings::Spammer::PositionSpammer::showWeapon);
+								ImGui::Checkbox(XORSTR("Show Rank"), &Settings::Spammer::PositionSpammer::showRank);
+								ImGui::Checkbox(XORSTR("Show Wins"), &Settings::Spammer::PositionSpammer::showWins);
+								ImGui::Checkbox(XORSTR("Show Health"), &Settings::Spammer::PositionSpammer::showHealth);
+								ImGui::Checkbox(XORSTR("Show Money"), &Settings::Spammer::PositionSpammer::showMoney);
+								ImGui::Checkbox(XORSTR("Show Last Place"), &Settings::Spammer::PositionSpammer::showLastplace);
+							}
+							ImGui::EndPopup();
+						}
 					}
 				}
 				ImGui::Columns(1);
 				ImGui::Separator();
 				ImGui::Text(XORSTR("FOV"));
 				ImGui::Separator();
-				ImGui::Columns(2, nullptr, true);
+				ImGui::Columns(2, nullptr, false);
 				{
 					ImGui::Checkbox(XORSTR("FOV"), &Settings::FOVChanger::enabled);
 					ImGui::Checkbox(XORSTR("Viewmodel FOV"), &Settings::FOVChanger::viewmodelEnabled);
@@ -227,10 +219,10 @@ void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideT
 				ImGui::Separator();
 				ImGui::Checkbox(XORSTR("Enable Third Person"), &Settings::ThirdPerson::enabled);
 				// ImGui::SameLine(0.0f, -1.0f);{ImGui::Text(XORSTR("Third Person"));}
-				ImGui::Separator();
 				if (Settings::ThirdPerson::enabled)
 				{
-					ImGui::Columns(1, nullptr, true);
+					ImGui::Separator();
+					ImGui::Columns(1, nullptr, false);
 					{
 						ImGui::PushItemWidth(-1);
 						ImGui::SliderFloat(XORSTR("Camera Offset"), &Settings::ThirdPerson::distance, 0.f, 500.f, XORSTR("Camera Offset: %0.f"));
@@ -243,17 +235,9 @@ void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideT
 				ImGui::Separator();
 				ImGui::Text(XORSTR("Grenade Helper"));
 				ImGui::Separator();
-				ImGui::Columns(2, nullptr, true);
+				ImGui::Columns(2, nullptr, false);
 				{
 					ImGui::Checkbox(XORSTR("Enabled ###ghenabled"), &Settings::GrenadeHelper::enabled);
-				}
-				ImGui::NextColumn();
-				{
-					ImGui::Checkbox(XORSTR("Only matching ###match"), &Settings::GrenadeHelper::onlyMatchingInfos);
-				}
-
-				ImGui::Columns(2);
-				{
 					if (ImGui::Button(XORSTR("Aimassist"), ImVec2(-1, 0)))
 						ImGui::OpenPopup(XORSTR("optionAimAssist"));
 					ImGui::SetNextWindowSize(ImVec2(200, 120), ImGuiCond_Always);
@@ -270,6 +254,7 @@ void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideT
 				}
 				ImGui::NextColumn();
 				{
+					ImGui::Checkbox(XORSTR("Only matching ###match"), &Settings::GrenadeHelper::onlyMatchingInfos);
 					if (ImGui::Button(XORSTR("Add Info"), ImVec2(-1, 0)))
 						ImGui::OpenPopup(XORSTR("addinfo_throw"));
 
@@ -334,7 +319,8 @@ void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideT
 				ImGui::Columns(1);
 				ImGui::Separator();
 				ImGui::Checkbox(XORSTR("Force cvars"), &Settings::CVarsOverride::enabled);
-				if (Settings::CVarsOverride::enabled) {
+				if (Settings::CVarsOverride::enabled)
+				{
 					ImGui::Checkbox(XORSTR("Ragdoll gravity"), &Settings::CVarsOverride::ragdoll);
 					ImGui::Checkbox(XORSTR("Fake Ping"), &Settings::CVarsOverride::fakeLatency);
 					ImGui::Checkbox(XORSTR("Fullbright"), &Settings::CVarsOverride::fullbright);
@@ -343,10 +329,12 @@ void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideT
 
 				ImGui::Separator();
 				ImGui::Checkbox(XORSTR("AutoBuy"), &Settings::AutoBuy::enabled);
-				if (Settings::AutoBuy::enabled) {
+				if (Settings::AutoBuy::enabled)
+				{
 					ImGui::Combo(XORSTR("###MAINWAEP"), (int *)&Settings::AutoBuy::main, mainWeapons, IM_ARRAYSIZE(mainWeapons));
 					ImGui::Combo(XORSTR("###SECWAEP"), (int *)&Settings::AutoBuy::secondary, secondaryWeapons, IM_ARRAYSIZE(secondaryWeapons));
-					if (ImGui::BeginCombo(XORSTR("##FilterOptions"), XORSTR("Other"))) {
+					if (ImGui::BeginCombo(XORSTR("##FilterOptions"), XORSTR("Other")))
+					{
 						ImGui::Selectable(XORSTR("Grenades"), &Settings::AutoBuy::nades, ImGuiSelectableFlags_DontClosePopups);
 						ImGui::Selectable(XORSTR("Armor"), &Settings::AutoBuy::armor, ImGuiSelectableFlags_DontClosePopups);
 						ImGui::Selectable(XORSTR("Taser"), &Settings::AutoBuy::taser, ImGuiSelectableFlags_DontClosePopups);
@@ -354,6 +342,7 @@ void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideT
 						ImGui::EndCombo();
 					}
 				}
+				ImGui::Separator();
 				if (ImGui::Button(XORSTR("Configs")))
 					Configs::showWindow = !Configs::showWindow;
 
@@ -362,44 +351,35 @@ void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideT
 		}
 		ImGui::NextColumn();
 		{
-			ImGui::BeginChild(XORSTR("Child2"), ImVec2(0, 0), true);
+			ImGui::BeginChild(XORSTR("Child2"), ImVec2(0, 781), true);
 			{
+				ImGui::Separator();
 				ImGui::Text(XORSTR("Clantag"));
 				ImGui::Separator();
-				ImGui::Columns(2, nullptr, true);
+				ImGui::Columns(2, nullptr, false);
 				{
 					ImGui::PushItemWidth(-1);
 					ImGui::Checkbox(XORSTR("Enabled"), &Settings::ClanTagChanger::enabled);
-					ImGui::PopItemWidth();
-				}
-				ImGui::NextColumn();
-				{
-					ImGui::PushItemWidth(-1);
-					if (ImGui::Button(XORSTR("Update Clantag"), ImVec2(-1, 0)))
-						ClanTagChanger::UpdateClanTagCallback();
-					ImGui::PopItemWidth();
-				}
-				ImGui::Columns(1);
-				ImGui::Separator();
-				ImGui::Columns(2, nullptr, true);
-				{
-					ImGui::PushItemWidth(-1);
 					ImGui::InputText(XORSTR("##CLANTAG"), Settings::ClanTagChanger::value, 30);
 					ImGui::PopItemWidth();
 
-					ImGui::ItemSize(ImVec2(0.0f, 0.0f), 0.0f);
-					ImGui::Text(XORSTR("Animation Delay(ms)"));
+					// ImGui::ItemSize(ImVec2(0.0f, 0.0f), 0.0f);
+					// ImGui::Text(XORSTR("Animation Delay(ms)"));
 				}
 				ImGui::NextColumn();
 				{
 					ImGui::PushItemWidth(-1);
 					if (ImGui::Combo(XORSTR("##ANIMATIONTYPE"), (int *)&Settings::ClanTagChanger::type, animationTypes, IM_ARRAYSIZE(animationTypes)))
 						ClanTagChanger::UpdateClanTagCallback();
-					if (ImGui::SliderInt(XORSTR("##ANIMATIONSPEED"), &Settings::ClanTagChanger::animationSpeed, 500, 2000))
+					if (ImGui::Button(XORSTR("Update Clantag"), ImVec2(-1, 0)))
 						ClanTagChanger::UpdateClanTagCallback();
 					ImGui::PopItemWidth();
 				}
 				ImGui::Columns(1);
+				ImGui::PushItemWidth(-1);
+				if (ImGui::SliderInt(XORSTR("##ANIMATIONSPEED"), &Settings::ClanTagChanger::animationSpeed, 500, 2000, XORSTR("Animation Speed(ms): %0.f")))
+					ClanTagChanger::UpdateClanTagCallback();
+				ImGui::PopItemWidth();
 				ImGui::Separator();
 				ImGui::Text(XORSTR("Nickname"));
 				ImGui::Separator();
@@ -439,16 +419,7 @@ void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideT
 
 					ImGui::EndPopup();
 				}
-				ImGui::Columns(2, nullptr, true);
-				{
-					if (ImGui::Checkbox(XORSTR("Name Stealer"), &Settings::NameStealer::enabled))
-						NameStealer::entityId = -1;
-				}
-				ImGui::NextColumn();
-				{
-					ImGui::Combo("", &Settings::NameStealer::team, teams, IM_ARRAYSIZE(teams));
-				}
-				if (ImGui::Button(XORSTR("Set Banned-Name")))
+				if (ImGui::Button(XORSTR("Set Banned-Name"), ImVec2(-1, 0)))
 				{
 					std::string banText{nickname};
 					banText += " has been permanently banned from official CS:GO servers.";
@@ -461,16 +432,26 @@ void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideT
 					//	    NameChanger::changeName(false, std::string{ "\x1\xB" }.append(std::string{ static_cast<char>(7) }).append(banText).append("\x1").c_str(), 5.0f);
 					NameChanger::changeName(false, res.c_str(), 5.0f);
 				}
+				ImGui::Columns(2, nullptr, false);
+				{
+					if (ImGui::Checkbox(XORSTR("Name Stealer"), &Settings::NameStealer::enabled))
+						NameStealer::entityId = -1;
+				}
+				ImGui::NextColumn();
+				{
+					ImGui::Combo("", &Settings::NameStealer::team, teams, IM_ARRAYSIZE(teams));
+				}
+				ImGui::EndColumns();
 
 				ImGui::Columns(1);
 				ImGui::Separator();
 				ImGui::Text(XORSTR("Other"));
 				ImGui::Separator();
-				ImGui::Columns(2, nullptr, true);
+				ImGui::Columns(2, nullptr, false);
 				{
-						ImGui::Checkbox(XORSTR("AirStuck"), &Settings::Airstuck::enabled);
-						ImGui::Checkbox(XORSTR("Autoblock"), &Settings::Autoblock::enabled);
-						ImGui::Checkbox(XORSTR("Jump Throw"), &Settings::JumpThrow::enabled);
+					ImGui::Checkbox(XORSTR("AirStuck"), &Settings::Airstuck::enabled);
+					ImGui::Checkbox(XORSTR("Autoblock"), &Settings::Autoblock::enabled);
+					ImGui::Checkbox(XORSTR("Jump Throw"), &Settings::JumpThrow::enabled);
 					ImGui::Checkbox(XORSTR("Auto Accept"), &Settings::AutoAccept::enabled);
 					ImGui::Checkbox(XORSTR("Auto Defuse"), &Settings::AutoDefuse::enabled);
 					ImGui::Checkbox(XORSTR("Sniper Crosshair"), &Settings::SniperCrosshair::enabled);
@@ -481,9 +462,9 @@ void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideT
 				}
 				ImGui::NextColumn();
 				{
-						UI::KeyBindButton(&Settings::Airstuck::key);
-						UI::KeyBindButton(&Settings::Autoblock::key);
-						UI::KeyBindButton(&Settings::JumpThrow::key);
+					UI::KeyBindButton(&Settings::Airstuck::key);
+					UI::KeyBindButton(&Settings::Autoblock::key);
+					UI::KeyBindButton(&Settings::JumpThrow::key);
 					ImGui::Checkbox(XORSTR("Show Ranks"), &Settings::ShowRanks::enabled);
 					ImGui::Checkbox(XORSTR("Show Votes"), &Settings::VoteRevealer::enabled);
 					ImGui::Checkbox(XORSTR("Attempt NoFall"), &Settings::NoFall::enabled);
@@ -499,12 +480,12 @@ void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideT
 				}
 				if (ImGui::Button(XORSTR("Reset resolver misses")))
 				{
-					C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+					C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
 					int maxClient = engine->GetMaxClients();
 					for (int i = 1; i < maxClient; ++i)
 					{
 						// indx = i;
-						C_BasePlayer *player = (C_BasePlayer*) entityList->GetClientEntity(i);
+						C_BasePlayer *player = (C_BasePlayer *)entityList->GetClientEntity(i);
 
 						if (!player || player == localplayer || Entity::IsTeamMate(player, localplayer))
 							continue;
@@ -514,12 +495,13 @@ void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideT
 				ImGui::Separator();
 				ImGui::Text(XORSTR("Profile Changer"));
 				ImGui::Separator();
-				ImGui::Columns(1, nullptr, true);
+				ImGui::Columns(1, nullptr, false);
 				{
-					int shaft = 0;
+					ImGui::PushItemWidth(-1);
 					ImGui::Combo(XORSTR("##MUSICTYPE"), (int *)&Settings::ProfileChanger::type, musicType, IM_ARRAYSIZE(musicType));
 					ImGui::InputInt(XORSTR("COIN##ID"), &Settings::ProfileChanger::coinID);
 					ImGui::InputInt(XORSTR("COMP RANK##ID"), &Settings::ProfileChanger::compRank);
+					ImGui::PopItemWidth();
 					if (ImGui::Button(XORSTR("Update profile"), ImVec2(-1, 0)))
 						ProfileChanger::UpdateProfile();
 				}
@@ -538,7 +520,6 @@ void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideT
 					ImGui::EndPopup();
 				}
 				ImGui::PopStyleVar();
-
 				ImGui::EndChild();
 			}
 		}

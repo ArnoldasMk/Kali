@@ -30,7 +30,6 @@ enum
 	SkinChangerTab,
 	MiscTab,
 	PlayerInfo,
-	Dev,
 };
 
 enum
@@ -52,18 +51,17 @@ std::initializer_list<const char *> subtabAimbot = {};
 std::initializer_list<const char *> subtabHvHTab = {};
 std::initializer_list<const char *> subtabVisuals = {"Enemy", "Allies", "Local", "Materials", "Menu"};
 std::initializer_list<const char *> subtabSkinChanger = {"Skins", "Models"};
-std::initializer_list<const char *> subtabMisc = {"Custom"};
+std::initializer_list<const char *> subtabMisc = {};
 std::initializer_list<const char *> subtabPlayerInfo = {};
-std::initializer_list<const char *> subtabDev = {"Options"};
 
-std::vector<std::initializer_list<const char *>> allsubtabs{
+std::vector<std::initializer_list<const char *>> allsubtabs
+{
     subtabAimbot,
     subtabHvHTab,
     subtabVisuals,
     subtabSkinChanger,
     subtabMisc,
     subtabPlayerInfo,
-    subtabDev,
 };
 
 static ImVec2 pos;
@@ -77,27 +75,17 @@ static void BgDecorations()
 	pos = ImGui::GetWindowPos();
 	draw = ImGui::GetWindowDrawList();
 
-	// 645
 	// Background
-	draw->AddRectFilled(ImVec2(pos.x, pos.y), ImVec2(pos.x + 1128, pos.y + 865), ImColor(4, 3, 5), 0);	 // ImColor(8, 8, 8, 200), 0);
-																					 // Header
-	draw->AddRectFilled(ImVec2(pos.x, pos.y + 50), ImVec2(pos.x + 1128, pos.y + 52), ImColor(2, 6, 11)); // ImColor(220, 60, 40));
+	draw->AddRectFilled(ImVec2(pos.x, pos.y), ImVec2(pos.x + 1128, pos.y + 865), ImColor(4, 3, 5), 0);
+	draw->AddRectFilled(ImVec2(pos.x, pos.y + 50), ImVec2(pos.x + 1128, pos.y + 52), ImColor(2, 6, 11));
 	// Footer Border
-	draw->AddRectFilled(ImVec2(pos.x, pos.y), ImVec2(pos.x + 1128, pos.y + 50), ImColor(2, 6, 11), 0, 3); // ImColor(187, 37, 38), 0, 3);
+	draw->AddRectFilled(ImVec2(pos.x, pos.y), ImVec2(pos.x + 1128, pos.y + 50), ImColor(2, 6, 11), 0, 3);
 	// Footer
-	draw->AddRectFilled(ImVec2(pos.x, pos.y + 835), ImVec2(pos.x + 1128, pos.y + 865), ImColor(2, 6, 11), 0, 4 | 8); // ImColor(187, 37, 38), 0, 4 | 8);
-
+	draw->AddRectFilled(ImVec2(pos.x, pos.y + 835), ImVec2(pos.x + 1128, pos.y + 865), ImColor(2, 6, 11), 0, 4 | 8);
 	draw->AddText(info, 13.f, ImVec2(pos.x + 12, pos.y + 845), ImColor(255, 255, 255), "Kali");
-	// draw->AddText(info, 13.f, ImVec2(pos.x + 100, pos.y + 625), ImColor(255, 255, 255), "Counter-Strike: Global Offensive");
-	// draw->AddText(info, 13.f, ImVec2(pos.x + 860, pos.y + 625), ImColor(255, 255, 255), "Kali");
-	//
 	//  Side Panel Bg
-	draw->AddRectFilled(ImVec2(pos.x, pos.y + 55), ImVec2(pos.x + 160, pos.y + 835), ImColor(2, 19, 30, 150)); // mColor(0, 0, 0, 150));
+	draw->AddRectFilled(ImVec2(pos.x, pos.y + 55), ImVec2(pos.x + 160, pos.y + 835), ImColor(2, 19, 30, 150));
 	ImGui::SetCursorPos(ImVec2(10, 10));
-	//
-	// draw->AddRectFilled(ImVec2(pos.x + 595, pos.y + 15), ImVec2(pos.x + 785, pos.y + 35), ImColor(220, 220, 220), 5);
-	// draw->AddText(info, 13.f, ImVec2(pos.x + 600, pos.y + 18), ImColor(136, 136, 134), u8"���� search features �� ���");
-	//
 }
 
 static void Tabs()
@@ -166,24 +154,6 @@ static void VisualsTab()
 	}
 }
 
-static void MiscellaneousTab()
-{
-	switch (subtabs)
-	{
-	case Customizations:
-		MiscCustomizations::RenderMainMenu(pos, draw, subtabs);
-		break;
-		/*
-		case Allies:
-			VisualsGood::RenderMainMenu(pos, draw, subtabs);
-			break;
-		case Local:
-			VisualsLocal::RenderMainMenu(pos, draw, subtabs);
-			break;
-			*/
-	}
-}
-
 void MainMenu::Render()
 {
 	ImVec2 size = ImGui::GetWindowSize();
@@ -216,10 +186,11 @@ void MainMenu::Render()
 			SkinsAndModel::RenderMainMenu(pos, draw, subtabs);
 			break;
 		case MiscTab:
-			MiscellaneousTab();
+			draw->AddRectFilled(ImVec2(pos.x, pos.y + 52), ImVec2(pos.x + 160, pos.y + 836), ImColor(4, 3, 5));
+			MiscCustomizations::RenderMainMenu(pos, draw, subtabs);
 			break;
 		case PlayerInfo:
-			draw->AddRectFilled(ImVec2(pos.x, pos.y + 52), ImVec2(pos.x + 160, pos.y + 832), ImColor(4, 3, 5));
+			draw->AddRectFilled(ImVec2(pos.x, pos.y + 52), ImVec2(pos.x + 160, pos.y + 836), ImColor(4, 3, 5));
 			PlayerInfoTab::RenderMainMenu(pos, draw, subtabs);
 		default:
 			break;

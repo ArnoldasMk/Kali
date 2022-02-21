@@ -225,7 +225,7 @@ void VisualsMaterialConfig::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int si
 					ImGui::Text(XORSTR("Customizations"));
 					ImGui::Separator();
 					ImGui::CheckboxFill(XORSTR("EditMode"), &Settings::MaterialConfig::config.bEditMode);
-					//proxiesTestMode
+					// proxiesTestMode
 					ImGui::CheckboxFill(XORSTR("Compressed Textures"),
 									&Settings::MaterialConfig::config.bCompressedTextures);
 					ImGui::CheckboxFill(XORSTR("Filter Lightmaps"), &Settings::MaterialConfig::config.bFilterLightmaps);
@@ -239,7 +239,7 @@ void VisualsMaterialConfig::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int si
 					ImGui::CheckboxFill(XORSTR("No Transparency"), &Settings::MaterialConfig::config.bNoTransparency);
 					ImGui::CheckboxFill(XORSTR("Software Lighting"),
 									&Settings::MaterialConfig::config.bSoftwareLighting); // Crashes game
-																			    //AllowCheats ?
+																			    // AllowCheats ?
 					ImGui::PushItemWidth(-1);
 
 					ImGui::SliderInt(XORSTR("##MIPLEVELS"), (int *)&Settings::MaterialConfig::config.nShowMipLevels, 0,
@@ -881,22 +881,22 @@ void VisualsLocal::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabInde
 				ImGui::EndColumns();
 				ImGui::Columns(2, nullptr, false);
 				{
-						ImGui::Checkbox(XORSTR("Dlights"), &Settings::Dlights::enabled);
-						ImGui::Checkbox(XORSTR("No Flash"), &Settings::Noflash::enabled);
-						ImGui::Checkbox(XORSTR("No Smoke"), &Settings::NoSmoke::enabled);
-						ImGui::Checkbox(XORSTR("Show Footsteps"), &Settings::ESP::Sounds::enabled);
-						ImGui::Checkbox(XORSTR("Nightmode"), &Settings::Nightmode::enabled);
+					ImGui::Checkbox(XORSTR("Dlights"), &Settings::Dlights::enabled);
+					ImGui::Checkbox(XORSTR("No Flash"), &Settings::Noflash::enabled);
+					ImGui::Checkbox(XORSTR("No Smoke"), &Settings::NoSmoke::enabled);
+					ImGui::Checkbox(XORSTR("Show Footsteps"), &Settings::ESP::Sounds::enabled);
+					ImGui::Checkbox(XORSTR("Nightmode"), &Settings::Nightmode::enabled);
 					ImGui::Checkbox(XORSTR("No View Punch"), &Settings::View::NoViewPunch::enabled);
 					ImGui::Checkbox(XORSTR("Show Hitbox impacts"), &Settings::ESP::showimpacts);
 				}
 				ImGui::NextColumn();
 				{
 					ImGui::PushItemWidth(-1);
-						ImGui::SliderFloat(XORSTR("##DLIGHTRADIUS"), &Settings::Dlights::radius, 0, 1000, XORSTR("Radius: %0.f"));
-						ImGui::SliderFloat(XORSTR("##NOFLASHAMOUNT"), &Settings::Noflash::value, 0, 255, XORSTR("Amount: %0.f"));
-						ImGui::Combo(XORSTR("##SMOKETYPE"), (int *)&Settings::NoSmoke::type, SmokeTypes, IM_ARRAYSIZE(SmokeTypes));
-						ImGui::SliderInt(XORSTR("##SOUNDSTIME"), &Settings::ESP::Sounds::time, 250, 5000, XORSTR("Timeout: %0.f"));
-						ImGui::SliderInt(XORSTR("##NIGHTMODE"), &Settings::Nightmode::value, 0, 100, XORSTR("Nightmode: %0.f"));
+					ImGui::SliderFloat(XORSTR("##DLIGHTRADIUS"), &Settings::Dlights::radius, 0, 1000, XORSTR("Radius: %0.f"));
+					ImGui::SliderFloat(XORSTR("##NOFLASHAMOUNT"), &Settings::Noflash::value, 0, 255, XORSTR("Amount: %0.f"));
+					ImGui::Combo(XORSTR("##SMOKETYPE"), (int *)&Settings::NoSmoke::type, SmokeTypes, IM_ARRAYSIZE(SmokeTypes));
+					ImGui::SliderInt(XORSTR("##SOUNDSTIME"), &Settings::ESP::Sounds::time, 250, 5000, XORSTR("Timeout: %0.f"));
+					ImGui::SliderInt(XORSTR("##NIGHTMODE"), &Settings::Nightmode::value, 0, 100, XORSTR("Nightmode: %0.f"));
 					ImGui::PopItemWidth();
 					ImGui::Checkbox(XORSTR("Draw Molotov"), &Settings::ESP::Drawfire::enabled);
 					ImGui::Checkbox(XORSTR("No Aim Punch"), &Settings::View::NoAimPunch::enabled);
@@ -1033,6 +1033,22 @@ void VisualsMenu::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex
 	ImGui::SetCursorPos(ImVec2(180, 100));
 	ImGui::BeginGroup();
 	{
-		colorPicker(); // Converting Color Picker window in this place
+		ImGui::Columns(2, nullptr, false);
+		{
+			ImGui::BeginChild(XORSTR("##Visuals2"), ImVec2(0, 736), true);
+			{
+				
+			}
+			ImGui::EndChild();
+		}
+		ImGui::NextColumn();
+		{
+			ImGui::BeginChild(XORSTR("##Visuals2"), ImVec2(0, 736), true);
+			{
+
+			}
+			ImGui::EndChild();
+		}
+		ImGui::EndColumns();
 	}
 }

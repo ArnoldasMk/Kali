@@ -40,7 +40,7 @@ VMT *uiEngineVMT = nullptr;
 
 MsgFunc_ServerRankRevealAllFn MsgFunc_ServerRankRevealAll;
 SendClanTagFn SendClanTag;
-//WriteUserCmdFn WriteUserCmd;
+// WriteUserCmdFn WriteUserCmd;
 // FindHudElementFn FindHudElement;
 SetLocalPlayerReadyFn SetLocalPlayerReady;
 
@@ -626,7 +626,6 @@ bool Hooks::WriteUsercmdDeltaToBuffer(void *thisptr, int slot, bf_write *buf, in
 	return true;
 }
 */
-
 
 /*
  FindHudElement = (PatternFinder::FindPatternInModule( XORSTR( "/client_client.so" ),( unsigned char* ) XORSTR("\xE8\x00\x00\x00\x00\x48\x8D\x50\xE0"),XORSTR( "x????xxxx" )) + 1);
