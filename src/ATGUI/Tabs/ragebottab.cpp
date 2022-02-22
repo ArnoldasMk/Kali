@@ -32,7 +32,6 @@ static float HeadScale = 0.1f;
 static bool autoSlow = false;
 static bool scopeControlEnabled = false;
 
-
 void UI::ReloadRageWeaponSettings()
 {
 	ItemDefinitionIndex index = ItemDefinitionIndex::INVALID;
@@ -121,7 +120,7 @@ void RagebotTab::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 	};
 
 	draw->AddRectFilled(ImVec2(pos.x + 180, pos.y + 65), ImVec2(pos.x + 960 - 15, pos.y + 95), ImColor(0, 0, 0, 25), 10);
-	ImGui::SetCursorPos(ImVec2(185, 70));
+	ImGui::SetCursorPos(ImVec2(15, 70));
 	ImGui::BeginGroup();
 	{
 		if (ImGui::CheckboxFill(XORSTR("Enabled"), &Settings::Ragebot::enabled))
@@ -131,13 +130,13 @@ void RagebotTab::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 		}
 	}
 	ImGui::EndGroup();
-	ImGui::SetCursorPos(ImVec2(180, 100));
 	ImGui::BeginGroup();
 	{
+		ImGui::SetCursorPos(ImVec2(10, 100));
 		ImGui::Columns(3, nullptr, false);
 		{
-			ImGui::SetColumnOffset(1, 350);
-			ImGui::PushItemWidth(-10);
+			ImGui::SetColumnOffset(1, 200);
+			ImGui::PushItemWidth(-1);
 			{
 				ImGui::InputText(XORSTR("##FILTERWEAPONS"), filterWeapons, IM_ARRAYSIZE(filterWeapons));
 			}
@@ -151,13 +150,11 @@ void RagebotTab::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				{
 					continue;
 				}
-
 				if (Util::Items::IsKnife(it.first) || Util::Items::IsGlove(it.first) ||
 				    Util::Items::IsUtility(it.first))
 				{
 					continue;
 				}
-
 				const bool item_selected = ((int)it.first == (int)currentWeapon);
 				ImGui::PushID((int)it.first);
 				std::string formattedName;

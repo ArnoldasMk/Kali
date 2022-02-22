@@ -25,6 +25,7 @@ static int subtabs = 0;
 enum
 {
 	AimbotTab,
+	RageTab,
 	HvHTab,
 	Visuals,
 	SkinChangerTab,
@@ -40,23 +41,20 @@ enum
 	Materials,
 	Menu,
 };
-enum
-{
-	Customizations,
-};
 
-const char *TabsNames[] = {"Aimbot", "HvH", "Visuals", "Skin Changer", "Misc", "Player List"};
+const char *TabsNames[] = {"Aimbot", "Rage", "HvH", "Visuals", "Skin Changer", "Misc", "Player List"};
 
 std::initializer_list<const char *> subtabAimbot = {};
+std::initializer_list<const char *> subtabRage = {};
 std::initializer_list<const char *> subtabHvHTab = {};
 std::initializer_list<const char *> subtabVisuals = {"Enemy", "Allies", "Local", "Materials", "Menu"};
 std::initializer_list<const char *> subtabSkinChanger = {"Skins", "Models"};
 std::initializer_list<const char *> subtabMisc = {};
 std::initializer_list<const char *> subtabPlayerInfo = {};
 
-std::vector<std::initializer_list<const char *>> allsubtabs
-{
+std::vector<std::initializer_list<const char *>> allsubtabs{
     subtabAimbot,
+    subtabRage,
     subtabHvHTab,
     subtabVisuals,
     subtabSkinChanger,
@@ -174,6 +172,10 @@ void MainMenu::Render()
 		case AimbotTab:
 			draw->AddRectFilled(ImVec2(pos.x, pos.y + 52), ImVec2(pos.x + 160, pos.y + 836), ImColor(4, 3, 5));
 			Legitbot::RenderMainMenu(pos, draw, subtabs);
+			break;
+		case RageTab:
+			draw->AddRectFilled(ImVec2(pos.x, pos.y + 52), ImVec2(pos.x + 160, pos.y + 836), ImColor(4, 3, 5));
+			RagebotTab::RenderMainMenu(pos, draw, subtabs);
 			break;
 		case HvHTab:
 			draw->AddRectFilled(ImVec2(pos.x, pos.y + 52), ImVec2(pos.x + 160, pos.y + 836), ImColor(4, 3, 5));
