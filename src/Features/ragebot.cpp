@@ -978,6 +978,7 @@ void Ragebot::UpdateValues()
 	Settings::Ragebot::BodyScale = currentRageWeaponSetting.BodyScale;
 	Settings::Ragebot::HeadScale = currentRageWeaponSetting.HeadScale;
 	Settings::Ragebot::mindmgoverride = currentRageWeaponSetting.mindmgoveridekey;
+	Settings::Ragebot::onshot::button = currentRageWeaponSetting.onshotkey;
 
 	for (int bone = 0; bone < 6; bone++)
 	{

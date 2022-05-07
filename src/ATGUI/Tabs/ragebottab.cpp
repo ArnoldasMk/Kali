@@ -31,6 +31,8 @@ static float BodyScale = 0.1f;
 static float HeadScale = 0.1f;
 static bool autoSlow = false;
 static bool scopeControlEnabled = false;
+static ButtonCode_t onshotkey = ButtonCode_t::KEY_3;
+static ButtonCode_t mindmgoveridekey = ButtonCode_t::KEY_5;
 
 void UI::ReloadRageWeaponSettings()
 {
@@ -54,7 +56,8 @@ void UI::ReloadRageWeaponSettings()
 	MinDamage = Settings::Ragebot::weapons.at(index).MinDamage;
 	BodyScale = Settings::Ragebot::weapons.at(index).BodyScale;
 	HeadScale = Settings::Ragebot::weapons.at(index).HeadScale;
-
+	onshotkey = Settings::Ragebot::weapons.at(index).onshotkey;
+	mindmgoveridekey = Settings::Ragebot::weapons.at(index).mindmgoveridekey;
 	for (int BONE = 0; BONE < 6; BONE++)
 	{
 		desireBones[BONE] = Settings::Ragebot::weapons.at(index).desireBones[BONE];
@@ -84,6 +87,8 @@ void UI::UpdateRageWeaponSettings()
 	    .HitChance = HitChange,
 	    .BodyScale = BodyScale,
 	    .HeadScale = HeadScale,
+	    .onshotkey = onshotkey,
+	    .mindmgoveridekey = mindmgoveridekey,
 
 	    .DmagePredictionType = damagePrediction,
 	    .enemySelectionType = enemySelectionType,
@@ -169,7 +174,7 @@ void RagebotTab::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				if (ImGui::Selectable(formattedName.c_str(), item_selected))
 				{
 					currentWeapon = it.first;
-					UI::ReloadWeaponSettings();
+					UI::ReloadRageWeaponSettings();
 				}
 				ImGui::PopID();
 			}
@@ -278,8 +283,8 @@ void RagebotTab::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				ImGui::NextColumn();
 				{
 					ImGui::PushItemWidth(-1);
-					UI::KeyBindButton(&Settings::Ragebot::dmgkey);
-					UI::KeyBindButton(&Settings::Ragebot::onshot::button);
+					UI::KeyBindButton(&mindmgoveridekey);
+					UI::KeyBindButton(&onshotkey);
 					ImGui::PopItemWidth();
 				}
 				ImGui::Separator();
