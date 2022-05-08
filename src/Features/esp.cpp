@@ -2220,7 +2220,7 @@ void ESP::Paint()
 		}
 		else if (client->m_ClassID == EClassIds::CEnvTonemapController)
 		{
-			Nightmode::onTonemap((CEnvTonemapController*)entity);
+			Nightmode::onTonemap((CEnvTonemapController *)entity);
 		}
 		else if (Settings::ESP::Filters::throwables && strstr(client->m_pNetworkName, XORSTR("Projectile")))
 		{
@@ -2268,7 +2268,6 @@ void ESP::Paint()
 				DrawDZItems(entity, localplayer);
 		}
 	}
-	Drawlc();
 	if (Settings::ESP::VelGraph)
 		DrawVelGraph();
 	if (Settings::ESP::FOVCrosshair::enabled)
@@ -2277,7 +2276,10 @@ void ESP::Paint()
 		DrawSpread();
 	if (Settings::NoScopeBorder::enabled && localplayer->IsScoped())
 		DrawScope();
-
+	if (Settings::ESP::DrawAATrace::enabled)
+	{
+		Drawlc();
+	}
 	if (Settings::ThirdPerson::toggled)
 	{
 		DrawAATrace(AntiAim::fakeAngle, AntiAim::realAngle);

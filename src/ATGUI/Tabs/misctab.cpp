@@ -471,6 +471,7 @@ void MiscCustomizations::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideT
 					ImGui::Checkbox(XORSTR("Show Spectator list"), &Settings::ShowSpectators::enabled);
 					ImGui::Checkbox(XORSTR("AWP Quick Switch"), &Settings::QuickSwitch::enabled);
 					ImGui::Checkbox(XORSTR("Disable Anti Untrusted"), &ValveDSCheck::forceUT);
+					ImGui::Checkbox(XORSTR("Force rare animations"), &Settings::Skinchanger::forcerareanim);
 				}
 				ImGui::Columns(1);
 				ImGui::Separator();
