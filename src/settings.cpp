@@ -523,8 +523,9 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("Skeleton")][XORSTR("Enabled")] = Settings::ESP::FilterEnemy::Skeleton::enabled;
     LoadColor(settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("Skeleton")][XORSTR("ally_color")], Settings::ESP::FilterEnemy::Skeleton::allyColor);
     LoadColor(settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("Skeleton")][XORSTR("enemy_color")], Settings::ESP::FilterEnemy::Skeleton::enemyColor);
-    settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("HealthBar")][XORSTR("Enabled")] = Settings::ESP::FilterEnemy::HealthBar::enabled;
+    settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("HealthBar")][XORSTR("Enabled")] = &Settings::ESP::FilterEnemy::HealthBar::enabled;
     settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("HealthBar")][XORSTR("type")] = (int)Settings::ESP::FilterEnemy::HealthBar::type;
+    settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("HealthBar")][XORSTR("color_type")] = (int)Settings::ESP::FilterEnemy::HealthBar::colorType;
     settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("Tracers")][XORSTR("Enabled")] = Settings::ESP::FilterEnemy::Tracers::enabled;
     settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("Tracers")][XORSTR("type")] = (int)Settings::ESP::FilterEnemy::Tracers::type;
     settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("BulletTracers")][XORSTR("Enabled")] = Settings::ESP::FilterEnemy::BulletTracers::enabled;
@@ -569,12 +570,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
     settings[XORSTR("ESP")][XORSTR("Alise")][XORSTR("Tracers")][XORSTR("type")] = (int)Settings::ESP::FilterAlise::Tracers::type;
     settings[XORSTR("ESP")][XORSTR("Alise")][XORSTR("BulletTracers")][XORSTR("Enabled")] = Settings::ESP::FilterAlise::BulletTracers::enabled;
     settings[XORSTR("ESP")][XORSTR("Alise")][XORSTR("PlayerInfo")][XORSTR("Enabled")] = Settings::ESP::FilterAlise::playerInfo::enabled;
-
-    // Various Settings for Health vae
-    //  For Enemy
-    settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("HealthBar")][XORSTR("Enabled")] = &Settings::ESP::FilterEnemy::HealthBar::enabled;
-    settings[XORSTR("ESP")][XORSTR("Enemy")][XORSTR("HealthBar")][XORSTR("type")] = (int *)&Settings::ESP::FilterEnemy::HealthBar::type;
-    // END
 
     settings[XORSTR("ESP")][XORSTR("FOVCrosshair")][XORSTR("Enabled")] = Settings::ESP::FOVCrosshair::enabled;
     settings[XORSTR("ESP")][XORSTR("FOVCrosshair")][XORSTR("filled")] = Settings::ESP::FOVCrosshair::filled;
@@ -1367,7 +1362,7 @@ void Settings::LoadConfig(std::string path)
     GetVal(settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("Skeleton")][XORSTR("ally_color")], &Settings::ESP::FilterLocalPlayer::Skeleton::allyColor);
     GetVal(settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("Skeleton")][XORSTR("enemy_color")], &Settings::ESP::FilterLocalPlayer::Skeleton::enemyColor);
     GetVal(settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("HealthBar")][XORSTR("Enabled")], &Settings::ESP::FilterLocalPlayer::HealthBar::enabled);
-    //GetVal(settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("HealthBar")][XORSTR("color_type")], &Settings::ESP::FilterLocalPlayer::HealthBar::colorType);
+    //GetVal(settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("HealthBar")][XORSTR("color_type")], (int *)Settings::ESP::FilterLocalPlayer::HealthBar::colorType);
     GetVal(settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("HealthBar")][XORSTR("type")], (int *)&Settings::ESP::FilterLocalPlayer::HealthBar::type);
     GetVal(settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("Tracers")][XORSTR("Enabled")], &Settings::ESP::FilterLocalPlayer::Tracers::enabled);
     GetVal(settings[XORSTR("ESP")][XORSTR("Localplayer")][XORSTR("Tracers")][XORSTR("type")], (int *)&Settings::ESP::FilterLocalPlayer::Tracers::type);
