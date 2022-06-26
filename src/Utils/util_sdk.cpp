@@ -1079,7 +1079,7 @@ IMaterial* Util::CreateMaterial(std::string type, std::string texture, bool igno
 	matNum++;
 
 	KeyValues* keyValues = new KeyValues(materialName.c_str());
-	InitKeyValues(keyValues, type.c_str());
+	InitKeyValues(keyValues, type.c_str(), NULL, NULL);
 	LoadFromBuffer(keyValues, materialName.c_str(), materialData.str().c_str(), nullptr, nullptr, nullptr);
 
 	return material->CreateMaterial(materialName.c_str(), keyValues);
@@ -1108,7 +1108,7 @@ IMaterial* Util::CreateMaterial( bool ignorez,std::string envmap, std::string en
 	matNum++;
 
 	KeyValues* keyValues = new KeyValues(materialName.c_str());
-	InitKeyValues(keyValues, "VertexLitGeneric");
+	InitKeyValues(keyValues, "VertexLitGeneric", NULL, NULL);
 	LoadFromBuffer(keyValues, materialName.c_str(), materialData.str().c_str(), nullptr, nullptr, nullptr);
 
 	return material->CreateMaterial(materialName.c_str(), keyValues);
@@ -1140,7 +1140,7 @@ IMaterial* Util::CreateMaterial( std::string type, std::string texture, bool ign
 	matNum++;
 
 	KeyValues* keyValues = new KeyValues(materialName.c_str());
-	InitKeyValues(keyValues, "VertexLitGeneric");
+	InitKeyValues(keyValues, "VertexLitGeneric", NULL, NULL);
 	LoadFromBuffer(keyValues, materialName.c_str(), materialData.str().c_str(), nullptr, nullptr, nullptr);
 
 	return material->CreateMaterial(materialName.c_str(), keyValues);
@@ -1176,7 +1176,7 @@ IMaterial* Util::CreateMaterial2(std::string type, std::string texture, bool ign
     matNum++;
 
     KeyValues* keyValues = new KeyValues(materialName.c_str());
-    InitKeyValues(keyValues, type.c_str());
+    InitKeyValues(keyValues, type.c_str(), NULL, NULL);
     LoadFromBuffer(keyValues, materialName.c_str(), materialData.str().c_str(), nullptr, nullptr, nullptr);
 
     return material->CreateMaterial(materialName.c_str(), keyValues);
@@ -1200,7 +1200,7 @@ IMaterial* Util::CreateMaterial4(std::string type, std::string texture, bool ign
     matNum++;
 
     KeyValues* keyValues = new KeyValues(materialName.c_str());
-    InitKeyValues(keyValues, type.c_str());
+    InitKeyValues(keyValues, type.c_str(), NULL, NULL);
     LoadFromBuffer(keyValues, materialName.c_str(), materialData.str().c_str(), nullptr, nullptr, nullptr);
 
     return material->CreateMaterial(materialName.c_str(), keyValues);
@@ -1231,7 +1231,7 @@ IMaterial* Util::CreateMaterial3(std::string type, std::string texture, bool ign
     matNum++;
 
     KeyValues* keyValues = new KeyValues(materialName.c_str());
-    InitKeyValues(keyValues, type.c_str());
+    InitKeyValues(keyValues, type.c_str(), NULL, NULL);
     LoadFromBuffer(keyValues, materialName.c_str(), materialData.str().c_str(), nullptr, nullptr, nullptr);
 
     return material->CreateMaterial(materialName.c_str(), keyValues);
@@ -1262,7 +1262,7 @@ IMaterial* Util::CreateMaterial3(std::string type, std::string texture, bool ign
     matNum++;
 
     KeyValues* keyValues = new KeyValues(materialName.c_str());
-    InitKeyValues(keyValues, type.c_str());
+    InitKeyValues(keyValues, type.c_str(), NULL, NULL);
     LoadFromBuffer(keyValues, materialName.c_str(), materialData.str().c_str(), nullptr, nullptr, nullptr);
 
     return material->CreateMaterial(materialName.c_str(), keyValues);
