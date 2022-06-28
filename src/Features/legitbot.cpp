@@ -291,49 +291,6 @@ static Vector GetClosestSpot(CUserCmd *cmd, C_BasePlayer *localPlayer, C_BasePla
 	}
 	return tempSpot;
 }
-
-/*
-	static int len = sizeof(Settings::Legitbot::AutoAim::desiredBones) / sizeof(Settings::Legitbot::AutoAim::desiredBones[0]);
-	for (int i = 0; i < len; i++)
-	{
-		if (!Settings::Legitbot::AutoAim::desiredBones[i])
-			continue;
-
-		int boneID = (*modelType).at(i);
-		if (boneID == BONE_INVALID)
-			continue;
-		Vector cbVecTarget = enemy->GetBonePosition(boneID);
-
-		if (aimTargetType == AimTargetType::FOV)
-		{
-			float cbFov = Math::GetFov(viewAngles, Math::CalcAngle(pVecTarget, cbVecTarget));
-
-			if (cbFov < tempFov)
-			{
-				if (Entity::IsVisibleThroughEnemies(enemy, boneID))
-				{
-					tempFov = cbFov;
-					tempSpot = cbVecTarget;
-				}
-			}
-		}
-		else if (aimTargetType == AimTargetType::REAL_DISTANCE)
-		{
-			float cbDistance = pVecTarget.DistTo(cbVecTarget);
-			float cbRealDistance = GetRealDistanceFOV(cbDistance, Math::CalcAngle(pVecTarget, cbVecTarget), cmd);
-
-			if (cbRealDistance < tempDistance)
-			{
-				if (Entity::IsVisibleThroughEnemies(enemy, boneID))
-				{
-					tempDistance = cbRealDistance;
-					tempSpot = cbVecTarget;
-				}
-			}
-		}
-	}
-	return tempSpot;
-*/
 static C_BasePlayer *GetClosestPlayerAndSpot(CUserCmd *cmd, bool visibleCheck, Vector *bestSpot, float *bestDamage, AimTargetType aimTargetType = AimTargetType::FOV)
 {
 	if (Settings::Legitbot::AutoAim::realDistance)
@@ -1011,6 +968,8 @@ void Legitbot::UpdateValues()
 	Settings::Legitbot::Smooth::type = currentWeaponSetting.smoothType;
 	Settings::Legitbot::ErrorMargin::enabled = currentWeaponSetting.errorMarginEnabled;
 	Settings::Legitbot::ErrorMargin::value = currentWeaponSetting.errorMarginValue;
+	Settings::Legitbot::Curve::enabled = currentWeaponSetting.curveEnabled;
+	Settings::Legitbot::Curve::value = currentWeaponSetting.curveAmount;
 	Settings::Legitbot::AutoAim::enabled = currentWeaponSetting.autoAimEnabled;
 	Settings::Legitbot::AutoAim::fov = currentWeaponSetting.LegitautoAimFov;
 	Settings::Legitbot::AutoAim::closestBone = true;

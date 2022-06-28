@@ -50,5 +50,5 @@ void AngleIndicator::Paint()
 
     if (Settings::AntiAim::enabled)
         Draw::AddLine(centerX, centerY, realX, realY, realColor); // Real Line
-    Draw::AddLine(centerX, centerY, lbyX, lbyY, lbyColor); // LBY Line
+    Draw::AddLine(centerX, centerY, lbyX, lbyY, lbyColor);        // LBY Line
 }

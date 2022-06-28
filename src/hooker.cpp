@@ -40,7 +40,6 @@ VMT *uiEngineVMT = nullptr;
 
 MsgFunc_ServerRankRevealAllFn MsgFunc_ServerRankRevealAll;
 SendClanTagFn SendClanTag;
-// WriteUserCmdFn WriteUserCmd;
 // FindHudElementFn FindHudElement;
 SetLocalPlayerReadyFn SetLocalPlayerReady;
 
@@ -544,88 +543,6 @@ void Hooker::FindItemSystem()
 	itemSys += sizeof(void *); // 2nd vtable
 	itemSystem = (CItemSystem *)itemSys;
 }
-/*
-void Hooker::FindWriteUserCmd()
-{
-	//                 push    ebp
-	//                 mov     ebp, esp
-	//                 push    edi
-	//                 push    esi
-	//                 push    ebx
-	//                 sub     esp, 2Ch
-	//                 mov     eax, ds:dword_1528EDC
-	//                 mov     edi, [ebp+arg_0]
-	//                 mov     esi, [ebp+arg_4]
-	//                 mov     ebx, [ebp+arg_8]
-	uintptr_t func_address = PatternFinder::FindPatternInModule(XORSTR("/client_client.so"),
-													(unsigned char *)XORSTR("\x41\x8B\x54\x24\x08"
-																	    "\x48\x8D\x00\x00\x00\x00\x00"),
-													XORSTR("xxxxx"
-														  "xx?????"));
-
-	func_address += 6;
-	func_address = GetAbsoluteAddress(func_address, 1, 6);
-	WriteUserCmd = reinterpret_cast<WriteUserCmdFn>(func_address);
-}
-#include "Hooks/hooks.h"
-#include "interfaces.h"
-#include "Features/fakelag.h"
-#include "Utils/xorstring.h"
-
-typedef bool (*WriteUserCmdDeltFn)(void *thisptr, int slot, bf_write *buf, int from, int to, bool isnewcommand);
-
-bool Hooks::WriteUsercmdDeltaToBuffer(void *thisptr, int slot, bf_write *buf, int from, int to, bool isnewcommand)
-{
-
-	static auto funcAdd = clientVMT->GetOriginalMethod<WriteUserCmdDeltFn>(24);
-	//    funcAdd(thisptr,slot, buf, from, to, isnewcommand );
-
-	if (FakeLag::shift <= 0)
-		return funcAdd(thisptr, slot, buf, from, to, isnewcommand);
-	if (from != -1)
-		return true;
-	if (FakeLag::should_recharge)
-		return funcAdd(thisptr, slot, buf, from, to, isnewcommand);
-	//        cvar->ConsoleDPrintf(XORSTR("ye\n"));
-
-	int *numBackupCommands = (int *)(reinterpret_cast<uintptr_t>(buf) - 0x30);
-	int *numNewCommands = (int *)(reinterpret_cast<uintptr_t>(buf) - 0x2C);
-	int32_t newcommands = *numNewCommands;
-
-	int nextcommmand; //= memory->clientState->lastOutgoingCommand + memory->clientState->chokedCommands + 1;
-	int totalcommands = std::min(FakeLag::shift, 14);
-	from = -1;
-	*numNewCommands = totalcommands;
-	*numBackupCommands = 0;
-	for (to = nextcommmand - newcommands + 1; to <= nextcommmand; to++)
-	{
-		if (!(funcAdd(thisptr, slot, buf, from, to, isnewcommand)))
-		{
-			cvar->ConsoleDPrintf(XORSTR("ye\n"));
-			return false;
-		}
-		from = to;
-	}
-
-	CUserCmd lastRealCmd = inputSystem->GetUserCmd(slot, from);
-	CUserCmd fromcmd;
-	fromcmd = lastRealCmd;
-	CUserCmd tocmd = fromcmd;
-	tocmd.tick_count += 200;
-	tocmd.command_number++;
-
-	for (int i = newcommands; i <= totalcommands; i++)
-	{
-		WriteUserCmd(buf, &tocmd, &fromcmd);
-		fromcmd = tocmd;
-		tocmd.command_number++;
-		tocmd.tick_count++;
-	}
-	FakeLag::shift = 0;
-
-	return true;
-}
-*/
 
 /*
  FindHudElement = (PatternFinder::FindPatternInModule( XORSTR( "/client_client.so" ),( unsigned char* ) XORSTR("\xE8\x00\x00\x00\x00\x48\x8D\x50\xE0"),XORSTR( "x????xxxx" )) + 1);

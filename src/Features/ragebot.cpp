@@ -870,15 +870,6 @@ void Ragebot::CreateMove(CUserCmd *cmd)
 		Settings::Debug::AutoAim::target = Ragebot::BestSpot;
 		RagebotAutoShoot(player, localplayer, activeWeapon, cmd, Ragebot::BestSpot, angle, oldForward, oldSideMove, currentRageWeaponSetting);
 		RagebotAutoCrouch(player, cmd, activeWeapon, currentRageWeaponSetting);
-
-		// bf_write* buf;
-		// CUserCmd* from = cmd;
-		// CUserCmd* to = cmd;
-
-		// to->command_number++;
-		// to->tick_count +=  200;
-		// WriteUserCmd(buf, from, to);
-
 		if (cmd->buttons & IN_ATTACK)
 		{
 

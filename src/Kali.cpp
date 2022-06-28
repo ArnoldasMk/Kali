@@ -56,7 +56,6 @@ void MainThread()
     Hooker::FindSequenceActivity();
     Hooker::FindAbsFunctions();
     Hooker::FindItemSystem();
-    //Hooker::FindWriteUserCmd(); // write user cmd
     SDL2::HookSwapWindow();
     SDL2::HookPollEvent();
 
@@ -85,8 +84,6 @@ void MainThread()
     clientVMT = new VMT(client);
     cvar->ConsoleColorPrintf(ColorRGBA(255, 255, 0), XORSTR("Hooking LevelInitPostEntity\n"));
     clientVMT->HookVM(Hooks::LevelInitPostEntity, 6);
-    //cvar->ConsoleColorPrintf(ColorRGBA(255, 255, 0), XORSTR("Hooking WriteUsercmdDeltaToBuffer\n"));
-    //clientVMT->HookVM(Hooks::WriteUsercmdDeltaToBuffer, 24);
     cvar->ConsoleColorPrintf(ColorRGBA(255, 255, 0), XORSTR("Hooking FrameStageNotify\n"));
     clientVMT->HookVM(Hooks::FrameStageNotify, 37);
     clientVMT->ApplyVMT();

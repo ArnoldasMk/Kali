@@ -5,7 +5,6 @@
 #include "../settings.h"
 #include "../SDK/INetChannel.h"
 
-// source from nimbus bcz i am lezy xd
 #ifndef CLAMP
     #define CLAMP(x, upper, lower) (std::min(upper, std::max(x, lower)))
 #endif

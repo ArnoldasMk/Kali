@@ -274,31 +274,6 @@ struct CUserCmd
 //        inline CUserCmd* GetUserCmd(int nSlot, int sequence_number);
 
 };
-  //      static GetVFunc(void* class_pointer, size_t index) {
-    //            return (*(t**)class_pointer)[index];
-      //  }
-//CUserCmd* GetUserCmd(int nSlot, int sequence_number)
-//{
- //       typedef CUserCmd* (GetUserCmd_t) (void*, int, int);
-  //      return Utils::GetVFunc <GetUserCmd_t>(this, 8) (this, nSlot, sequence_number);
-// clientModeVMT->GetOriginalMethod<WriteUsercmdDeltaToBufferFn>(24);
-
-        // return & m_pCommands [sequence_number% MULTIPLAYER_BACKUP];
-//}
-//void WriteUsercmd(void* buf, CUserCmd* in, CUserCmd* out)
-//{
-//    static DWORD WriteUsercmdF = (DWORD)memory->WriteUsercmd;
-
-//    __asm
-//    {
-//        mov ecx, buf
-//        mov edx, in
-//        push out
-//        call WriteUsercmdF
-//        add esp, 4
-//    }
-//}
-
 
 class IInputSystem : public IAppSystem
 {
