@@ -105,7 +105,7 @@ void UI::ReloadWeaponSettings()
 	smoothEnabled = Settings::Legitbot::weapons.at(index).smoothEnabled;
 	courseRandomizationEnabled = Settings::Legitbot::weapons.at(index).courseRandomizationEnabled;
 	doAimAfterXShotsEnabled = Settings::Legitbot::weapons.at(index).doAimAfterXShotsEnabled;
-	smoothValue = Settings::Legitbot::weapons.at(index).smoothAmount;	
+	smoothValue = Settings::Legitbot::weapons.at(index).smoothAmount;
 	courseRandomizationValue = Settings::Legitbot::weapons.at(index).courseRandomizationAmount;
 	doAimAfterXShotsValue = Settings::Legitbot::weapons.at(index).doAimAfterXShotsAmount;
 	smoothType = Settings::Legitbot::weapons.at(index).smoothType;
@@ -162,8 +162,8 @@ void UI::ReloadWeaponSettings()
 	triggerbotFilterHead = Settings::Legitbot::weapons.at(index).triggerbotFilterHead; //
 	triggerbotFilterChest = Settings::Legitbot::weapons.at(index).triggerbotFilterChest;
 	triggerbotFilterStomach = Settings::Legitbot::weapons.at(index).triggerbotFilterStomach; //
-	triggerbotFilterArms = Settings::Legitbot::weapons.at(index).triggerbotFilterArms; //
-	triggerbotFilterLegs = Settings::Legitbot::weapons.at(index).triggerbotFilterLegs; //
+	triggerbotFilterArms = Settings::Legitbot::weapons.at(index).triggerbotFilterArms;	    //
+	triggerbotFilterLegs = Settings::Legitbot::weapons.at(index).triggerbotFilterLegs;	    //
 
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
 		desiredBones[bone] = Settings::Legitbot::weapons.at(index).desiredBones[bone];
@@ -324,6 +324,7 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				{
 					if (ImGui::Checkbox(XORSTR("Auto Aim"), &autoAimEnabled))
 						UI::UpdateWeaponSettings();
+					SetTooltip("Locks onto enemies within a certain FOV amount");
 				}
 				ImGui::NextColumn();
 				{
@@ -337,6 +338,7 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				{
 					if (ImGui::Checkbox(XORSTR("Recoil Control Enabled"), &rcsEnabled))
 						UI::UpdateWeaponSettings();
+					SetTooltip("Automatically controls recoil");
 					if (ImGui::Checkbox(XORSTR("Recoil Control Always on"), &rcsAlwaysOn))
 						UI::UpdateWeaponSettings();
 				}
@@ -355,6 +357,7 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 				{
 					if (ImGui::Checkbox(XORSTR("Aim Step"), &aimStepEnabled))
 						UI::UpdateWeaponSettings();
+					SetTooltip("Stops you getting VAC auth kicked in Casual / DM");
 				}
 				ImGui::NextColumn();
 				{
@@ -527,17 +530,23 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 					default:
 						if (ImGui::Checkbox(XORSTR("Auto Scope"), &autoScopeEnabled))
 							UI::UpdateWeaponSettings();
+						SetTooltip("Automatically scopes weapons that have them");
 					}
 					if (ImGui::Checkbox(XORSTR("Silent Aim"), &silent))
 						UI::UpdateWeaponSettings();
+					SetTooltip("Prevents the camera from locking to an enemy, doesn't work for demos");
 					if (ImGui::Checkbox(XORSTR("No Shoot"), &noShootEnabled))
 						UI::UpdateWeaponSettings();
+					SetTooltip("Stops you shooting when locking to an enemy");
 					if (ImGui::Checkbox(XORSTR("Auto Slow"), &autoSlow))
 						UI::UpdateWeaponSettings();
+					SetTooltip("Automatically slows your movement speed when an enemy is shootable");
 					if (ImGui::Checkbox(XORSTR("Prediction"), &predEnabled))
 						UI::UpdateWeaponSettings();
+					SetTooltip("Use velocity prediction");
 					if (ImGui::Checkbox(XORSTR("Distance-Based FOV"), &autoAimRealDistance))
 						UI::UpdateWeaponSettings();
+					SetTooltip("Takes perspective into account when calculating FOV");
 				}
 				ImGui::NextColumn();
 				{
@@ -560,12 +569,15 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 					}
 					if (ImGui::Checkbox(XORSTR("Ignore Jump (Self)"), &ignoreJumpEnabled))
 						UI::UpdateWeaponSettings();
+					SetTooltip("Prevents you from aimbotting while jumping");
 					if (ImGui::Checkbox(XORSTR("Ignore Jump (Enemies)"), &ignoreEnemyJumpEnabled))
 						UI::UpdateWeaponSettings();
 					if (ImGui::Checkbox(XORSTR("Flash Check"), &flashCheck))
 						UI::UpdateWeaponSettings();
+					SetTooltip("Disables aimbot while flashed");
 					if (ImGui::Checkbox(XORSTR("Smoke Check"), &smokeCheck))
 						UI::UpdateWeaponSettings();
+					SetTooltip("Ignore players that are blocked by smoke");
 					switch (currentWeapon)
 					{
 					case ItemDefinitionIndex::INVALID:
@@ -581,6 +593,7 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 					case ItemDefinitionIndex::WEAPON_REVOLVER:
 						if (ImGui::Checkbox(XORSTR("Auto Pistol"), &autoPistolEnabled))
 							UI::UpdateWeaponSettings();
+						SetTooltip("Automatically shoots the pistol when holding fire");
 						break;
 					default:
 						break;
@@ -622,19 +635,23 @@ void Legitbot::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 			{
 				if (ImGui::Checkbox(XORSTR("Auto Shoot"), &autoShootEnabled))
 					UI::UpdateWeaponSettings();
+				SetTooltip("Automatically shoots when locking to an enemy");
 			}
 			ImGui::NextColumn();
 			{
 				if (ImGui::Checkbox(XORSTR("Velocity Check"), &velocitycheck))
 					UI::UpdateWeaponSettings();
+				SetTooltip("Prevents you from aimboting while moving");
 			}
 			ImGui::EndColumns();
 			ImGui::Columns(2, nullptr, false);
 			{
 				if (ImGui::Checkbox(XORSTR("Spread Limit"), &spreadLimitEnabled))
 					UI::UpdateWeaponSettings();
+				SetTooltip("Limits the spread on which aimbot would shoot");
 				if (ImGui::Checkbox(XORSTR("Hit Chance"), &hitchanceEnabled))
 					UI::UpdateWeaponSettings();
+				SetTooltip("Aimbot's hitchance %");
 			}
 			ImGui::NextColumn();
 			{
