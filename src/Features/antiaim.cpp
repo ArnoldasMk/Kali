@@ -235,7 +235,24 @@ void AntiAim::CreateMove(CUserCmd *cmd)
             default: break;
         }
     }
-
+    
+    if (Settings::AntiAim::Manual::enabled)
+    {
+        switch (Settings::AntiAim::Manual::direction)
+        {
+            case 1:
+                angle.y += 90.f;
+                break;
+            case 3:
+                angle.y -= 90.f;
+                break;
+            case 2:
+                angle.y -= 180.f;
+                break;
+            default: break;
+        }
+    }
+    
     Math::NormalizeAngles(angle);
     Math::ClampAngles(angle);
     switch (xType)
@@ -260,23 +277,6 @@ void AntiAim::CreateMove(CUserCmd *cmd)
             break;
         default:
             break;
-    }
-
-    if (Settings::AntiAim::Manual::enabled)
-    {
-        switch (Settings::AntiAim::Manual::direction)
-        {
-            case 1:
-                angle.y += 90.f;
-                break;
-            case 3:
-                angle.y -= 90.f;
-                break;
-            case 2:
-                angle.y -= 180.f;
-                break;
-            default: break;
-        }
     }
 
     if (!Settings::FakeLag::enabled && !(inputSystem->IsButtonDown(Settings::SlowWalk::key) && Settings::SlowWalk::mode == SlowMode::SAFETY))
