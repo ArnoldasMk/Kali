@@ -1008,7 +1008,8 @@ void Settings::LoadConfig(std::string path)
             .bone = LegitweaponSetting[XORSTR("TargetBone")].asInt(),
             .smoothType = (SmoothType)LegitweaponSetting[XORSTR("Smooth")][XORSTR("Type")].asInt(),
             .aimkey = Util::GetButtonCode(LegitweaponSetting[XORSTR("AimKey")].asCString()),
-
+            .triggerbotkey = Util::GetButtonCode(LegitweaponSetting[XORSTR("Triggerbot")][XORSTR("Key")].asCString()),
+            
             .smoothAmount = LegitweaponSetting[XORSTR("Smooth")][XORSTR("Amount")].asFloat(),
             .courseRandomizationAmount = LegitweaponSetting[XORSTR("CourseRandomization")][XORSTR("Amount")].asFloat(),
             .doAimAfterXShotsAmount = LegitweaponSetting[XORSTR("DoAimAfterXShots")][XORSTR("Amount")].asFloat(),

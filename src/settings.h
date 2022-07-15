@@ -292,7 +292,6 @@ struct LegitWeapon_t
 {
 	bool silent,
 	    friendly,
-	    closestHitbox,
 	    engageLock,
 	    engageLockTR,
 	    aimkeyOnly,
