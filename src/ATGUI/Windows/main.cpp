@@ -35,8 +35,7 @@ enum
 
 enum
 {
-	Enemy,
-	Allies,
+	ESP,
 	Local,
 	Materials,
 	Menu,
@@ -47,7 +46,7 @@ const char *TabsNames[] = {"Aimbot", "Rage", "HvH", "Visuals", "Skin Changer", "
 std::initializer_list<const char *> subtabAimbot = {};
 std::initializer_list<const char *> subtabRage = {};
 std::initializer_list<const char *> subtabHvHTab = {};
-std::initializer_list<const char *> subtabVisuals = {"Enemy", "Allies", "Local", "Materials", "Menu"};
+std::initializer_list<const char *> subtabVisuals = {"ESP", "Local", "Materials", "Menu"};
 std::initializer_list<const char *> subtabSkinChanger = {"Skins", "Models"};
 std::initializer_list<const char *> subtabMisc = {};
 std::initializer_list<const char *> subtabPlayerInfo = {};
@@ -134,11 +133,8 @@ static void VisualsTab()
 {
 	switch (subtabs)
 	{
-	case Enemy:
-		VisualsEnemy::RenderMainMenu(pos, draw, subtabs);
-		break;
-	case Allies:
-		VisualsGood::RenderMainMenu(pos, draw, subtabs);
+	case ESP:
+		VisualsESP::RenderMainMenu(pos, draw, subtabs);
 		break;
 	case Local:
 		VisualsLocal::RenderMainMenu(pos, draw, subtabs);

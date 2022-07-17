@@ -11,11 +11,7 @@ namespace VisualsMaterialConfig
 {
 	void RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex);
 }
-namespace VisualsGood
-{
-	void RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex);
-}
-namespace VisualsEnemy
+namespace VisualsESP
 {
 	void RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex);
 }

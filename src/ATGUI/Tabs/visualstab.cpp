@@ -387,7 +387,7 @@ void VisualsMaterialConfig::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int si
 	}
 }
 
-void VisualsGood::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
+void VisualsESP::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
 {
 	ImGui::SetCursorPos(ImVec2(185, 70));
 	ImGui::BeginGroup();
@@ -399,9 +399,10 @@ void VisualsGood::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex
 	ImGui::SetCursorPos(ImVec2(180, 100));
 	ImGui::BeginGroup();
 	{
-		ImGui::Columns(2, nullptr, false);
+		ImGui::Columns(3, nullptr, false);
 		{
-			ImGui::BeginChild(XORSTR("##Visuals1"), ImVec2(0, 736), true);
+			ImGui::SetColumnOffset(1, 500);
+			ImGui::BeginChild(XORSTR("##Visuals1"), ImVec2(0, 268), true);
 			{
 				ImGui::Separator();
 				ImGui::Text("Allies ESP");
@@ -430,34 +431,13 @@ void VisualsGood::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex
 					ImGui::Checkbox(XORSTR("Skeleton"), &Settings::ESP::FilterAlise::Skeleton::enabled);
 					ImGui::Checkbox(XORSTR("Glow"), &Settings::ESP::Glow::enabled);
 				}
-				ImGui::Separator();
-				ImGui::Text("Allies Player Info Customizations");
-				ImGui::Separator();
-				ImGui::Checkbox(XORSTR("Clan"), &Settings::ESP::Info::clan);
-				ImGui::Checkbox(XORSTR("Rank"), &Settings::ESP::Info::rank);
-				ImGui::Checkbox(XORSTR("Health"), &Settings::ESP::Info::health);
-				ImGui::Checkbox(XORSTR("Armor"), &Settings::ESP::Info::armor);
-				ImGui::Checkbox(XORSTR("Scoped"), &Settings::ESP::Info::scoped);
-				ImGui::Checkbox(XORSTR("Flashed"), &Settings::ESP::Info::flashed);
-				ImGui::Checkbox(XORSTR("Defuse Kit"), &Settings::ESP::Info::hasDefuser);
-				ImGui::Checkbox(XORSTR("Grabbing Hostage"), &Settings::ESP::Info::grabbingHostage);
-				ImGui::Checkbox(XORSTR("Location"), &Settings::ESP::Info::location);
-				ImGui::Checkbox(XORSTR("FakeDuck"), &Settings::ESP::Info::Fakeduck);
-				ImGui::Checkbox(XORSTR("Name"), &Settings::ESP::Info::name);
-				ImGui::Checkbox(XORSTR("Steam ID"), &Settings::ESP::Info::steamId);
-				ImGui::Checkbox(XORSTR("Weapon"), &Settings::ESP::Info::weapon);
-				ImGui::Checkbox(XORSTR("Reloading"), &Settings::ESP::Info::reloading);
-				ImGui::Checkbox(XORSTR("Planting"), &Settings::ESP::Info::planting);
-				ImGui::Checkbox(XORSTR("Defusing"), &Settings::ESP::Info::defusing);
-				ImGui::Checkbox(XORSTR("Resolver Flags"), &Settings::ESP::Info::rescuing);
-				ImGui::Checkbox(XORSTR("Layers Debug"), &Settings::Debug::AnimLayers::draw);
-				ImGui::Checkbox(XORSTR("Choked Packets"), &Settings::ESP::Info::money);
 			}
 			ImGui::EndChild();
 		}
 		ImGui::NextColumn();
 		{
-			ImGui::BeginChild(XORSTR("##Visuals2"), ImVec2(0, 736), true);
+			ImGui::SetColumnOffset(2, ImGui::GetWindowWidth() / 2 + 226);
+			ImGui::BeginChild(XORSTR("##Visuals2"), ImVec2(0, 268), true);
 			{
 				ImGui::Separator();
 				ImGui::Text("Localplayer ESP");
@@ -489,50 +469,12 @@ void VisualsGood::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex
 					ImGui::Checkbox(XORSTR("Draw AA Trace"), &Settings::ESP::DrawAATrace::enabled);
 					ImGui::Checkbox(XORSTR("Sync fake chams with fakelag"), &Settings::ESP::SyncFake);
 				}
-				ImGui::Separator();
-				ImGui::Text("Localplayer Player Info Customizations");
-				ImGui::Separator();
-				ImGui::Checkbox(XORSTR("Clan"), &Settings::ESP::Info::clan);
-				ImGui::Checkbox(XORSTR("Rank"), &Settings::ESP::Info::rank);
-				ImGui::Checkbox(XORSTR("Health"), &Settings::ESP::Info::health);
-				ImGui::Checkbox(XORSTR("Armor"), &Settings::ESP::Info::armor);
-				ImGui::Checkbox(XORSTR("Scoped"), &Settings::ESP::Info::scoped);
-				ImGui::Checkbox(XORSTR("Flashed"), &Settings::ESP::Info::flashed);
-				ImGui::Checkbox(XORSTR("Defuse Kit"), &Settings::ESP::Info::hasDefuser);
-				ImGui::Checkbox(XORSTR("Grabbing Hostage"), &Settings::ESP::Info::grabbingHostage);
-				ImGui::Checkbox(XORSTR("Location"), &Settings::ESP::Info::location);
-				ImGui::Checkbox(XORSTR("FakeDuck"), &Settings::ESP::Info::Fakeduck);
-				ImGui::Checkbox(XORSTR("Name"), &Settings::ESP::Info::name);
-				ImGui::Checkbox(XORSTR("Steam ID"), &Settings::ESP::Info::steamId);
-				ImGui::Checkbox(XORSTR("Weapon"), &Settings::ESP::Info::weapon);
-				ImGui::Checkbox(XORSTR("Reloading"), &Settings::ESP::Info::reloading);
-				ImGui::Checkbox(XORSTR("Planting"), &Settings::ESP::Info::planting);
-				ImGui::Checkbox(XORSTR("Defusing"), &Settings::ESP::Info::defusing);
-				ImGui::Checkbox(XORSTR("Resolver Flags"), &Settings::ESP::Info::rescuing);
-				ImGui::Checkbox(XORSTR("Layers Debug"), &Settings::Debug::AnimLayers::draw);
-				ImGui::Checkbox(XORSTR("Choked Packets"), &Settings::ESP::Info::money);
 			}
 			ImGui::EndChild();
 		}
-		ImGui::EndColumns();
-	}
-	ImGui::EndGroup();
-}
-void VisualsEnemy::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex)
-{
-	ImGui::SetCursorPos(ImVec2(185, 70));
-	ImGui::BeginGroup();
-	{
-		ImGui::CheckboxFill(XORSTR("Enabled"), &Settings::ESP::enabled);
-	}
-	ImGui::EndGroup();
-
-	ImGui::SetCursorPos(ImVec2(180, 100));
-	ImGui::BeginGroup();
-	{
-		ImGui::Columns(2, nullptr, false);
+		ImGui::NextColumn();
 		{
-			ImGui::BeginChild(XORSTR("##Visuals1"), ImVec2(0, 736), true);
+			ImGui::BeginChild(XORSTR("##Visuals3"), ImVec2(0, 268), true);
 			{
 				ImGui::Separator();
 				ImGui::Text("Enemy ESP");
@@ -570,32 +512,48 @@ void VisualsEnemy::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabInde
 			}
 			ImGui::EndChild();
 		}
-		ImGui::NextColumn();
+		ImGui::EndColumns();
+		ImGui::Columns(2, nullptr, false);
 		{
-			ImGui::BeginChild(XORSTR("##Visuals1"), ImVec2(0, 736), true);
+			ImGui::BeginChild(XORSTR("#PlayerInfo"), ImVec2(0, 268), true);
 			{
 				ImGui::Separator();
-				ImGui::Text("Enemy Player Info Customizations");
+				ImGui::Text("Player Info Customizations");
 				ImGui::Separator();
-				ImGui::Checkbox(XORSTR("Clan"), &Settings::ESP::Info::clan);
-				ImGui::Checkbox(XORSTR("Rank"), &Settings::ESP::Info::rank);
-				ImGui::Checkbox(XORSTR("Health"), &Settings::ESP::Info::health);
-				ImGui::Checkbox(XORSTR("Armor"), &Settings::ESP::Info::armor);
-				ImGui::Checkbox(XORSTR("Scoped"), &Settings::ESP::Info::scoped);
-				ImGui::Checkbox(XORSTR("Flashed"), &Settings::ESP::Info::flashed);
-				ImGui::Checkbox(XORSTR("Defuse Kit"), &Settings::ESP::Info::hasDefuser);
-				ImGui::Checkbox(XORSTR("Grabbing Hostage"), &Settings::ESP::Info::grabbingHostage);
-				ImGui::Checkbox(XORSTR("Location"), &Settings::ESP::Info::location);
-				ImGui::Checkbox(XORSTR("FakeDuck"), &Settings::ESP::Info::Fakeduck);
-				ImGui::Checkbox(XORSTR("Name"), &Settings::ESP::Info::name);
-				ImGui::Checkbox(XORSTR("Steam ID"), &Settings::ESP::Info::steamId);
-				ImGui::Checkbox(XORSTR("Weapon"), &Settings::ESP::Info::weapon);
-				ImGui::Checkbox(XORSTR("Reloading"), &Settings::ESP::Info::reloading);
-				ImGui::Checkbox(XORSTR("Planting"), &Settings::ESP::Info::planting);
-				ImGui::Checkbox(XORSTR("Defusing"), &Settings::ESP::Info::defusing);
-				ImGui::Checkbox(XORSTR("Resolver Flags"), &Settings::ESP::Info::rescuing);
-				ImGui::Checkbox(XORSTR("Layers Debug"), &Settings::Debug::AnimLayers::draw);
-				ImGui::Checkbox(XORSTR("Choked Packets"), &Settings::ESP::Info::money);
+				ImGui::Columns(2, nullptr, false);
+				{
+					ImGui::Checkbox(XORSTR("Clan"), &Settings::ESP::Info::clan);
+					ImGui::Checkbox(XORSTR("Rank"), &Settings::ESP::Info::rank);
+					ImGui::Checkbox(XORSTR("Health"), &Settings::ESP::Info::health);
+					ImGui::Checkbox(XORSTR("Armor"), &Settings::ESP::Info::armor);
+					ImGui::Checkbox(XORSTR("Scoped"), &Settings::ESP::Info::scoped);
+					ImGui::Checkbox(XORSTR("Flashed"), &Settings::ESP::Info::flashed);
+					ImGui::Checkbox(XORSTR("Defuse Kit"), &Settings::ESP::Info::hasDefuser);
+					ImGui::Checkbox(XORSTR("Grabbing Hostage"), &Settings::ESP::Info::grabbingHostage);
+					ImGui::Checkbox(XORSTR("Location"), &Settings::ESP::Info::location);
+					ImGui::Checkbox(XORSTR("Name"), &Settings::ESP::Info::name);
+				}
+				ImGui::NextColumn();
+				{
+					ImGui::Checkbox(XORSTR("Steam ID"), &Settings::ESP::Info::steamId);
+					ImGui::Checkbox(XORSTR("Weapon"), &Settings::ESP::Info::weapon);
+					ImGui::Checkbox(XORSTR("FakeDuck"), &Settings::ESP::Info::Fakeduck);
+					ImGui::Checkbox(XORSTR("Reloading"), &Settings::ESP::Info::reloading);
+					ImGui::Checkbox(XORSTR("Planting"), &Settings::ESP::Info::planting);
+					ImGui::Checkbox(XORSTR("Defusing"), &Settings::ESP::Info::defusing);
+					ImGui::Checkbox(XORSTR("Resolver Flags"), &Settings::ESP::Info::rescuing);
+					ImGui::Checkbox(XORSTR("Layers Debug"), &Settings::Debug::AnimLayers::draw);
+					ImGui::Checkbox(XORSTR("Choked Packets"), &Settings::ESP::Info::money);
+				}
+				ImGui::EndColumns();
+			}
+			ImGui::EndChild();
+		}
+		ImGui::NextColumn();
+		{
+			ImGui::BeginChild(XORSTR("#ESSP"), ImVec2(0, 268), false);
+			{
+				// SOON
 			}
 			ImGui::EndChild();
 		}
@@ -1037,7 +995,6 @@ void VisualsMenu::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex
 		{
 			ImGui::BeginChild(XORSTR("##Visuals2"), ImVec2(0, 736), true);
 			{
-				
 			}
 			ImGui::EndChild();
 		}
@@ -1045,7 +1002,6 @@ void VisualsMenu::RenderMainMenu(ImVec2 &pos, ImDrawList *draw, int sideTabIndex
 		{
 			ImGui::BeginChild(XORSTR("##Visuals2"), ImVec2(0, 736), true);
 			{
-
 			}
 			ImGui::EndChild();
 		}
